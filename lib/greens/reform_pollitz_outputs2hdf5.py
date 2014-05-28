@@ -13,7 +13,7 @@ into a HDF5 file.
         self.no_of_subfaults = NaN
         self.pollitz_outputs_dir = ""
         
-        self.obs_sites = []
+        self.file_stations_in = ""
         
         self.output_filename_hdf5 = ""
 
@@ -32,6 +32,7 @@ into a HDF5 file.
         assert self.visM != NaN
         assert self.visK != NaN
         assert self.lmax != NaN
+        assert self.file_stations_in != ""
         
     def _check_pollitz_outputs_existence(self):
         for day in self.days_of_epochs:
@@ -71,15 +72,20 @@ into a HDF5 file.
                 else:
                     fid['%04d'%day] = (G + fid['0000'])
 
+    def _get_site_cmpt(self):
+        tp = loadtxt(self.file_stations_in,'2f,4a')
+        sites = [ii[1] for ii in tp]
+        site_cmpt=[]
+        for site in sites:
+            site_cmpt.append(site+b'-e')
+            site_cmpt.append(site+b'-n')
+            site_cmpt.append(site+b'-u')
+        return site_cmpt
+
     def _write_info_to_hdf5(self):
-        sites_cmpt=[]
-        for site in self.obs_sites:
-            sites_cmpt.append(site+b'-e')
-            sites_cmpt.append(site+b'-n')
-            sites_cmpt.append(site+b'-u')
             
         with h5py.File(self.output_filename_hdf5, 'a') as fid:            
-            fid['info/rows'] = sites_cmpt
+            fid['info/rows'] = self._get_site_cmpt()
 
             fid['info/He'] = self.He
             fid['info/He'].attrs['unit'] = 'km'
