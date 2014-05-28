@@ -92,6 +92,10 @@ into a HDF5 file.
             
             fid['info/lmax'] = self.lmax
 
+            fid['info/days_of_epochs'] = self.days_of_epochs
+
+            fid['info/no_of_subfaults'] = self.no_of_subfaults
+
     def __call__(self):
         self._assert_initialization()
         self._check_pollitz_outputs_existence()
