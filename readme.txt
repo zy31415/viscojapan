@@ -4,7 +4,7 @@ The final results are organized in a HDF5 file, which is usually called G.h5,
 and served for inversion.
 
 The folder comprises three modlues which are specified in the following:
-
+(Please refer to a design flow chart in doc directory.)
 Module One - earthmodel
 =======================================================
 Specific tasks:
@@ -33,6 +33,9 @@ Module Three - greensfunction
 (5) Freedom to choose which stations to include or not
 (6) Virsulization tools for analysis
 
+Other directories in this package:
+(1) lib - library directory, python library greens is in it.
+(2) doc - documentation
 
 zy
 May 28, 2014
