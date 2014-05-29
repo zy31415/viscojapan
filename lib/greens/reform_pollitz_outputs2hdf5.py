@@ -5,7 +5,9 @@ import h5py
 
 class ReformPollitzOutputs2HDF5(object):
     ''' This class reform the original outputs by STATIC1D & VISCO1D
-into a HDF5 file.
+into a HDF5 file. Provide necessary information about the green functions.
+Use extra_info and extra_info_attr to add more information about the
+green's function.
 '''
     def __init__(self):
         # initialize the following variables!
@@ -21,6 +23,9 @@ into a HDF5 file.
         self.visM = NaN
         self.visK = NaN
         self.lmax = NaN
+
+        self.extra_info = {}
+        self.extra_info_attr = {}
 
 
     def _assert_initialization(self):
@@ -86,8 +91,7 @@ into a HDF5 file.
 
     def _write_info_to_hdf5(self):            
         with h5py.File(self.output_filename_hdf5, 'a') as fid:
-            fid['info/sites'] = self._get_sites()
-            
+            fid['info/sites'] = self._get_sites()            
             fid['info/rows'] = self._get_site_cmpt()
 
             fid['info/He'] = self.He
@@ -105,12 +109,18 @@ into a HDF5 file.
 
             fid['info/no_of_subfaults'] = self.no_of_subfaults
 
+        def _write_extra_info_to_hdf5(self):
+            with h5py.File(self.output_filename_hdf5, 'a') as fid:
+                for key, value in self.extra_info.items():
+                    fid['info/%s'%key]
+
     def __call__(self):
         self._assert_initialization()
         self._check_pollitz_outputs_existence()
         self._check_hdf5_existence()
         self._write_G_to_hdf5()
         self._write_info_to_hdf5()
+        self._write_extra_info_to_hdf5()
 
     
             
