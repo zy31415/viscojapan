@@ -5,24 +5,25 @@ import h5py
 
 class ReformPollitzOutputs2HDF5(object):
     ''' This class reform the original outputs by STATIC1D & VISCO1D
-into a HDF5 file. Provide necessary information about the green functions.
+into a HDF5 file. Provide necessary information about green functions.
 Use extra_info and extra_info_attr to add more information about the
-green's function.
+green's function: These properties are highly recommended:
+
+        He : elastic thickness
+        visM : Maxwellian viscosity
+        visK : Kelvin viscosity
+        lmax_VISCO1D : lmax used in VISCO1D
+
+    etc.
 '''
     def __init__(self):
         # initialize the following variables!
         self.days_of_epochs = []
         self.no_of_subfaults = NaN
-        self.pollitz_outputs_dir = ""
-        
+        self.pollitz_outputs_dir = ""        
         self.file_stations_in = ""
         
         self.output_filename_hdf5 = ""
-
-        self.He = NaN
-        self.visM = NaN
-        self.visK = NaN
-        self.lmax = NaN
 
         self.extra_info = {}
         self.extra_info_attr = {}
@@ -33,10 +34,6 @@ green's function.
         assert self.no_of_subfaults != NaN, "Have you initialize the object?"
         assert self.pollitz_outputs_dir != "", "Have you initialize the object?"
         assert self.output_filename_hdf5 != "", "Have you initialize the object?"
-        assert self.He != NaN
-        assert self.visM != NaN
-        assert self.visK != NaN
-        assert self.lmax != NaN
         assert self.file_stations_in != ""
         
     def _check_pollitz_outputs_existence(self):
@@ -94,17 +91,6 @@ green's function.
             fid['info/sites'] = self._get_sites()            
             fid['info/rows'] = self._get_site_cmpt()
 
-            fid['info/He'] = self.He
-            fid['info/He'].attrs['unit'] = 'km'
-
-            fid['info/visM'] = self.visM
-            fid['info/visM'].attrs['unit'] = 'Pa.s'
-
-            fid['info/visK'] = self.visK
-            fid['info/visK'].attrs['unit'] = 'Pa.s'
-            
-            fid['info/lmax'] = self.lmax
-
             fid['info/days_of_epochs'] = self.days_of_epochs
 
             fid['info/no_of_subfaults'] = self.no_of_subfaults
@@ -112,7 +98,10 @@ green's function.
         def _write_extra_info_to_hdf5(self):
             with h5py.File(self.output_filename_hdf5, 'a') as fid:
                 for key, value in self.extra_info.items():
-                    fid['info/%s'%key]
+                    fid['info/%s'%key] = value
+                    if key in self.extra_info_attr:
+                        for attr_key, attr_value in self.extra_info_attr.items():
+                            fid['info/%s'%key].attrs[attr_key] = attr_value
 
     def __call__(self):
         self._assert_initialization()
