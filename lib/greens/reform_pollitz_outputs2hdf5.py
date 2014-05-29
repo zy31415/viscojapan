@@ -1,9 +1,10 @@
 from os.path import join, exists
 
 from numpy import NaN, loadtxt, asarray
-import h5py
 
-class ReformPollitzOutputs2HDF5(object):
+from .epoch_file import EpochFile
+
+class ReformPollitzOutputs2HDF5(EpochFile):
     ''' This class reform the original outputs by STATIC1D & VISCO1D
 into a HDF5 file. Provide necessary information about green functions.
 Use extra_info and extra_info_attr to add more information about the
@@ -16,14 +17,14 @@ green's function: These properties are highly recommended:
 
     etc.
 '''
-    def __init__(self):
+    def __init__(self, fG):
+        super().__init__(fG)
+
         # initialize the following variables!
         self.days_of_epochs = []
         self.no_of_subfaults = NaN
         self.pollitz_outputs_dir = ""        
         self.file_stations_in = ""
-        
-        self.output_filename_hdf5 = ""
 
         self.extra_info = {}
         self.extra_info_attrs = {}
@@ -33,7 +34,7 @@ green's function: These properties are highly recommended:
         assert len(self.days_of_epochs) != 0, "Have you initialize the object?"
         assert self.no_of_subfaults != NaN, "Have you initialize the object?"
         assert self.pollitz_outputs_dir != "", "Have you initialize the object?"
-        assert self.output_filename_hdf5 != "", "Have you initialize the object?"
+        assert self.fG != "", "Have you initialize the object?"
         assert self.file_stations_in != ""
         
     def _check_pollitz_outputs_existence(self):
@@ -43,7 +44,7 @@ green's function: These properties are highly recommended:
                 assert exists(fn), "File %s is not exists! Abort."%fn
 
     def _check_hdf5_existence(self):
-        assert not exists(self.output_filename_hdf5), \
+        assert not exists(self.fG), \
                "Output HDF5 already exists!"
 
     def _form_file_name(self, day, fltno):
@@ -63,45 +64,31 @@ green's function: These properties are highly recommended:
         G=asarray(G).transpose()
         return G
 
-    def _write_G_to_hdf5(self):
-        with h5py.File(self.output_filename_hdf5, 'w-') as fid:
-            for day in self.days_of_epochs:
-                print(day)
-                G = self._read_a_day(day)
-                if day == 0:
-                    fid['0000'] = G                   
-                else:
-                    fid['%04d'%day] = (G + fid['0000'])
+    def _write_G_to_hdf5(self):    
+        for day in self.days_of_epochs:
+            print(day)
+            G = self._read_a_day(day)
+            if day == 0:
+                self.set_epoch_value(0, G)
+            else:
+                G0 = self.get_epoch_value(0)
+                self.set_epoch_value(day, G + G0)
 
     def _get_sites(self):
         tp = loadtxt(self.file_stations_in,'2f,4a')
         sites = [ii[1] for ii in tp]
         return sites
-    
-    def _get_site_cmpt(self):
-        site_cmpt = []
-        for site in self._get_sites():
-            site_cmpt.append(site+b'-e')
-            site_cmpt.append(site+b'-n')
-            site_cmpt.append(site+b'-u')
-        return site_cmpt
 
-    def _write_info_to_hdf5(self):            
-        with h5py.File(self.output_filename_hdf5, 'a') as fid:
-            fid['info/sites'] = self._get_sites()            
-            fid['info/rows'] = self._get_site_cmpt()
+    def _write_info_to_hdf5(self):
+        self.set_info('sites', self._get_sites())
+        self.set_info('no_of_subfaults', self.no_of_subfaults)
 
-            fid['info/days_of_epochs'] = self.days_of_epochs
-
-            fid['info/no_of_subfaults'] = self.no_of_subfaults
-
-    def _write_extra_info_to_hdf5(self):
-        with h5py.File(self.output_filename_hdf5, 'a') as fid:
-            for key, value in self.extra_info.items():
-                fid['info/%s'%key] = value
-                if key in self.extra_info_attrs:
-                    for attr_key, attr_value in self.extra_info_attrs[key].items():
-                        fid['info/%s'%key].attrs[attr_key] = attr_value
+    def _write_extra_info_to_hdf5(self):        
+        for key, value in self.extra_info.items():
+            self.set_info(key,value)
+        for key, attrs in self.extra_info_attrs.items():
+            for key_attr, value_attr in attrs.items():
+                self.set_info_attr(key, key_attr, value_attr)
 
     def __call__(self):
         self._assert_initialization()

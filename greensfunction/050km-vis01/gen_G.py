@@ -5,13 +5,12 @@ import sys
 sys.path.append('/home/zy/workspace/greens/lib/')
 from greens.reform_pollitz_outputs2hdf5 import ReformPollitzOutputs2HDF5
 
-reform = ReformPollitzOutputs2HDF5()
+reform = ReformPollitzOutputs2HDF5('G.h5')
 
 # intializing the object:
 reform.days_of_epochs = range(0,1201,60)
 reform.no_of_subfaults = 250
 reform.pollitz_outputs_dir = 'outs/'
-reform.output_filename_hdf5 = 'G.h5'
 reform.file_stations_in = './stations.in'
 
 # record these info about the group of green's functions.
