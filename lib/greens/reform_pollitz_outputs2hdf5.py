@@ -26,7 +26,7 @@ green's function: These properties are highly recommended:
         self.output_filename_hdf5 = ""
 
         self.extra_info = {}
-        self.extra_info_attr = {}
+        self.extra_info_attrs = {}
 
 
     def _assert_initialization(self):
@@ -95,13 +95,13 @@ green's function: These properties are highly recommended:
 
             fid['info/no_of_subfaults'] = self.no_of_subfaults
 
-        def _write_extra_info_to_hdf5(self):
-            with h5py.File(self.output_filename_hdf5, 'a') as fid:
-                for key, value in self.extra_info.items():
-                    fid['info/%s'%key] = value
-                    if key in self.extra_info_attr:
-                        for attr_key, attr_value in self.extra_info_attr.items():
-                            fid['info/%s'%key].attrs[attr_key] = attr_value
+    def _write_extra_info_to_hdf5(self):
+        with h5py.File(self.output_filename_hdf5, 'a') as fid:
+            for key, value in self.extra_info.items():
+                fid['info/%s'%key] = value
+                if key in self.extra_info_attrs:
+                    for attr_key, attr_value in self.extra_info_attrs[key].items():
+                        fid['info/%s'%key].attrs[attr_key] = attr_value
 
     def __call__(self):
         self._assert_initialization()

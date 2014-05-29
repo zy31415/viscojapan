@@ -1,4 +1,6 @@
-from greaer import GReader
+import h5py 
+
+from .g_reader import GReader
 
 class DiffG(object):
     ''' This class computes the diffrence of G with respcet to (wrt)
@@ -18,17 +20,17 @@ wrt - with respect to, variable that the change WRT.
         self._get_vars()
 
     def _get_vars(self):
-        with h5py.File(self.G1) as fid:
-            self.var1 = fid['/info/%s'%self.wrt]
+        with h5py.File(self.fG1) as fid:
+            self.var1 = float(fid['/info/%s'%self.wrt][...])
             setattr(self, self.wrt+'1', self.var1)
 
-        with h5py.File(self.G2) as fid:
-            self.var2 = fid['/info/%s'%self.wrt]
+        with h5py.File(self.fG2) as fid:
+            self.var2 = float(fid['/info/%s'%self.wrt][...])
             setattr(self, self.wrt+'2', self.var2)
 
     def get(self, day):
-        G1 = self.G1_reader(day)
-        G2 = self.G2_reader(day)
+        G1 = self.G1_reader.get(day)
+        G2 = self.G2_reader.get(day)
 
         dG = (G2 - G1)/(self.var2 - self.var1)
 
