@@ -4,7 +4,7 @@ from numpy import NaN, loadtxt, asarray
 
 from .epoch_file import EpochFile
 
-class ReformPollitzOutputs2HDF5(EpochFile):
+class PollitzOutputsToEpochFile(EpochFile):
     ''' This class reform the original outputs by STATIC1D & VISCO1D
 into a HDF5 file. Provide necessary information about green functions.
 Use extra_info and extra_info_attr to add more information about the

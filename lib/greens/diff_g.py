@@ -6,31 +6,26 @@ class DiffG(object):
     ''' This class computes the diffrence of G with respcet to (wrt)
 an indicated variable.
 '''
-    def __init__(self, fG1, fG2, wrt):
-        ''' Note:
+    def __init__(self, obj1_epoch_file, obj2_epoch_file, wrt):
+        ''' Arguments:
+obj1_epoch_file : object of EpochFile
+obj2_epoch_file : object of EpochFile
 wrt - with respect to, variable that the change WRT.
 '''
-        self.fG1 = fG1
-        self.fG2 = fG2
+        self.obj1_epoch_file = obj1_epoch_file
+        self.obj2_epoch_file = obj2_epoch_file
         self.wrt = wrt
 
-        self.G1_reader = GReader(self.fG1)
-        self.G2_reader = GReader(self.fG2)
-
-        self._get_vars()
-
     def _get_vars(self):
-        with h5py.File(self.fG1) as fid:
-            self.var1 = float(fid['/info/%s'%self.wrt][...])
-            setattr(self, self.wrt+'1', self.var1)
+        self.var1 = float(self.obj1_epoch_file.get_info(wrt))
+        setattr(self, self.wrt+'1', self.var1)
 
-        with h5py.File(self.fG2) as fid:
-            self.var2 = float(fid['/info/%s'%self.wrt][...])
-            setattr(self, self.wrt+'2', self.var2)
+        self.var2 = float(self.obj2_epoch_file.get_info(wrt))
+        setattr(self, self.wrt+'2', self.var2)
 
-    def get(self, day):
-        G1 = self.G1_reader.get(day)
-        G2 = self.G2_reader.get(day)
+    def get_epoch_value(self, day):
+        G1 = self.obj1_epoch_file.get_epoch_value(day)
+        G2 = self.obj2_epoch_file.get_epoch_value(day)
 
         dG = (G2 - G1)/(self.var2 - self.var1)
 
