@@ -6,12 +6,6 @@ import h5py
 
 from .epoch_file import EpochFile
 
-def _assert_ascending_order(alist):
-    leng = len(alist)
-    assert all(alist[ii] <= alist[ii+1] for ii in range(leng - 1)), \
-           "The list is not in ascending order!"
-    
-
 class GReader(EpochFile):
     ''' This class read and a G file and do temporal interpolation.
 Use sites_file to indicate which stations you want to use.
@@ -60,7 +54,3 @@ Use sites_file to indicate which stations you want to use.
 
         G=(day-t1)/(t2-t1)*(G2-G1)+G1
         return G
-
-if __name__ == '__main__':
-    a=[1,2,3,4,1]
-    _assert_ascending_order(a)
