@@ -2,9 +2,9 @@ from os.path import exists
 
 import h5py
 
-from .epoch_file import EpochFile
+from .epochal_data import EpochalData
 
-class EFReader(EpochFile):
+class EDReader(EpochalData):
     ''' This class can get value from a epoch file at any time.
 '''
     def __init__(self, epoch_file):

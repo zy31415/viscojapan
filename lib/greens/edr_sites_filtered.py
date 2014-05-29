@@ -3,9 +3,9 @@ from os.path import exists
 import h5py
 from numpy import loadtxt
 
-from .ef_reader import EFReader
+from .ed_reader import EDReader
 
-class EFRSitesFiltered(EFReader):
+class EDRSitesFiltered(EDReader):
     ''' Fliter a epoch file reader outputs according a sites list.
 '''
     def __init__(self, epoch_file, sites_file):

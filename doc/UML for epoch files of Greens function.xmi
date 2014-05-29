@@ -30,7 +30,7 @@
         <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="hPqcZGxLIigY" name="string"/>
        </UML:Namespace.ownedElement>
       </UML:Package>
-      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="yVYqk4zcSysN" name="EpochFile">
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="yVYqk4zcSysN" name="EpochalData">
        <UML:GeneralizableElement.generalization>
         <UML:Generalization xmi.idref="9MRhabP4KWxP"/>
        </UML:GeneralizableElement.generalization>
@@ -54,7 +54,7 @@
        </UML:GeneralizableElement.generalization>
       </UML:Class>
       <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="sBJOoGHPzJOI" name="DiffG"/>
-      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Vl8t4EKvPbHC" name="PollitzOutputsToEpochFile">
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Vl8t4EKvPbHC" name="PollitzOutputsToEpochalData">
        <UML:GeneralizableElement.generalization>
         <UML:Generalization xmi.idref="6wXxkG2XGALP"/>
         <UML:Generalization xmi.idref="JV5PRf47tntN"/>

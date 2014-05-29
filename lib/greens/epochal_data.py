@@ -2,7 +2,7 @@ from os.path import exists
 
 import h5py
 
-class EpochFile(object):
+class EpochalData(object):
     ''' This class defines an prototype of accessing a certain kind of
 HDF5 files, which is used for storing large epochal data.
 
