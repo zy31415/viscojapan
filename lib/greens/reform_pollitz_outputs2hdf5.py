@@ -50,8 +50,7 @@ into a HDF5 file.
         return fn2
 
     
-    def _read_a_day(self, day):
-        
+    def _read_a_day(self, day):        
         read_file = lambda fn : loadtxt(fn)[:,2:5].flatten()
         
         G=[]
@@ -72,19 +71,23 @@ into a HDF5 file.
                 else:
                     fid['%04d'%day] = (G + fid['0000'])
 
-    def _get_site_cmpt(self):
+    def _get_sites(self):
         tp = loadtxt(self.file_stations_in,'2f,4a')
         sites = [ii[1] for ii in tp]
-        site_cmpt=[]
-        for site in sites:
+        return sites
+    
+    def _get_site_cmpt(self):
+        site_cmpt = []
+        for site in self._get_sites():
             site_cmpt.append(site+b'-e')
             site_cmpt.append(site+b'-n')
             site_cmpt.append(site+b'-u')
         return site_cmpt
 
-    def _write_info_to_hdf5(self):
+    def _write_info_to_hdf5(self):            
+        with h5py.File(self.output_filename_hdf5, 'a') as fid:
+            fid['info/sites'] = self._get_sites()
             
-        with h5py.File(self.output_filename_hdf5, 'a') as fid:            
             fid['info/rows'] = self._get_site_cmpt()
 
             fid['info/He'] = self.He
