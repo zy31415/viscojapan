@@ -1,5 +1,5 @@
 from numpy import eye, zeros
-from cvxopt import matrix, qp
+from cvxopt import matrix, solvers
 
 class Invert(object):
     def __init__(self):
