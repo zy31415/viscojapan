@@ -25,11 +25,27 @@ etc.
         with h5py.File(self.epoch_file,'a') as fid:
             fid['epochs/%04d'%time] = value
 
-    def get_epoch_value(self, time):
-        assert isinstance(time,int)
-        with h5py.File(self.epoch_file,'r') as fid:
-            out = fid['epochs/%04d'%time][...]
-        return out
+    def get_epoch_value(self, epoch):
+        ''' Get G matrix at a certain epoch.
+'''
+        assert epoch >= 0
+        days_of_epochs = self.get_epochs()
+        max_day = max(days_of_epochs)
+        assert epoch <= max_day, 'Max epoch: %d'%max_day
+        
+        for nth, ti in enumerate(days_of_epochs):
+            if epoch <= ti:
+                break
+
+        t1 = days_of_epochs[nth-1]
+        t2 = days_of_epochs[nth]
+        
+        G1=super().get_epoch_value(t1)
+        G2=super().get_epoch_value(t2)
+
+        G=(epoch-t1)/(t2-t1)*(G2-G1)+G1
+
+        return G
 
     def set_info(self, key, value, **kwargs):
         ''' Set info. **args are attributs
