@@ -8,17 +8,23 @@
 
 import sys
 
+from numpy import log10
+
 sys.path.append('/home/zy/workspace/greens/lib')
 from greens.formulate_occam import FormulatOccam
 from greens.jacobian_vec import JacobianVec
 from greens.ed_sites_filtered import EDSitesFiltered
 from greens.diff_ed import DiffED
 from greens.epochal_data import EpochalData
+from greens.invert import Invert
 from days import days
 
 file_G1 = '../greensfunction/050km-vis00/G.h5'
 file_G2 = '../greensfunction/050km-vis01/G.h5'
 sites_file = 'sites'
+
+visM = 5.83983824100718e+18
+log10_visM = log10(visM)
 
 f_m0 = 'model.h5'
 m0 = EpochalData(f_m0)
@@ -36,7 +42,7 @@ jac = JacobianVec(dG, m0)
 
 form = FormulatOccam()
 form.epochs = days
-form.non_lin_par_vals = [5.83983824100718e+18]
+form.non_lin_par_vals = [log10_visM]
 form.non_lin_JacobianVecs = [jac]
 form.G = G1
 form.d = obs
