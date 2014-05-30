@@ -1,4 +1,4 @@
-from numpy import eye, zeros
+from numpy import eye, zeros, dot
 from cvxopt import matrix, solvers
 
 class Invert(object):
@@ -9,8 +9,15 @@ class Invert(object):
 
     def __call__(self):
         G = self.G
+
         npar = G.shape[1]
         I = eye(npar)
+
+        d = self.d
+
+        npar = G.shape[1]
+        I = eye(npar)
+        I[-1,-1] = 0.
 
         _P = dot(G.T,G) + self.alpha**2*I
         P = matrix(_P)
