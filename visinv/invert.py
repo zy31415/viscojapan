@@ -14,6 +14,7 @@ from greens.jacobian_vec import JacobianVec
 from greens.ed_sites_filtered import EDSitesFiltered
 from greens.diff_ed import DiffED
 from greens.epochal_data import EpochalData
+from greens.invert import Invert
 from days import days
 
 file_G1 = '../greensfunction/050km-vis00/G.h5'
