@@ -18,7 +18,7 @@ from days import days
 
 file_G1 = '../greensfunction/050km-vis00/G.h5'
 file_G2 = '../greensfunction/050km-vis01/G.h5'
-sites_file = 'sites_test'
+sites_file = 'sites'
 
 f_m0 = 'model.h5'
 m0 = EpochalData(f_m0)
@@ -45,4 +45,11 @@ d=form.d_()
 print(d.shape)
 Jac = form.Jacobian()
 print(Jac.shape)
+
+inv = Invert()
+inv.G = Jac
+inv.d = d
+inv.alpha = 1.
+
+inv()
 
