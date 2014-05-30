@@ -1,3 +1,5 @@
+from numpy import hstack
+
 from .stacking import vstack_column_vec, conv_stack
 
 class FormulatOccam(object):
@@ -23,16 +25,19 @@ ccam nonlinear inversion.
         self.d = None
 
     def Jacobian(self):
-        jacobian_nonlin = self.non_lin_JacobianVecs[0]()
+        jac_nl = self.non_lin_JacobianVecs[0](self.epochs)
         for J in self.non_lin_JacobianVecs[1:]:
-            jacobian_nonlin = hstack(jacobian_nonlin,J())
+            jac_nl = hstack((jac_nl, J(self.epochs)))
+            
         G_stacked = conv_stack(self.G, self.epochs)
-        jacobian = hstack(G_stacked, jacobian_nonlin)
-        return Jacobian
+        
+        jacobian = hstack((G_stacked, jac_nl))
+        
+        return jacobian
 
     def d_(self):
         d_ = vstack_column_vec(self.d, self.epochs)
         for J, val in zip(self.non_lin_JacobianVecs, self.non_lin_par_vals):
-            d_ += J*val
+            d_ += (J(self.epochs)*val)
         return d_
     

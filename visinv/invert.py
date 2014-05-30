@@ -41,6 +41,6 @@ form.non_lin_JacobianVecs = [jac]
 form.G = G1
 form.d = obs
 
-form.d_()
-#form.Jacobian()
+#d=form.d_()
+Jac = form.Jacobian()
 

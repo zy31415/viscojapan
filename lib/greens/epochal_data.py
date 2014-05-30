@@ -66,7 +66,6 @@ class EpochalData(EpochalDataBase):
 '''
     def __init__(self, epoch_file):
         super().__init__(epoch_file)
-        assert exists(self.epoch_file), "File %s doesn't exist."%self.epoch_file
         
     def get_epoch_value(self, day):
         ''' Get G matrix at a certain day.

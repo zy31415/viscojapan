@@ -1,3 +1,5 @@
+from numpy import dot
+
 from .diff_ed import DiffED
 from .stacking import vstack_column_vec, conv_stack
 

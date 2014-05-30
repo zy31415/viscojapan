@@ -1,3 +1,4 @@
+from numpy import vstack, zeros
 
 def conv_stack(epoch_data, epochs, warning = True):
     ''' Stack epoch_data according to time indicated by epochs to
@@ -32,7 +33,7 @@ def vstack_column_vec(epoch_data, epochs):
     _check_if_column_vector(epoch_data)
     res = epoch_data.get_epoch_value(epochs[0])
     for epoch in epochs[1:]:
-        res = vstack(res,epoch_data.get_epoch_value(epoch))
+        res = vstack((res,epoch_data.get_epoch_value(epoch)))
     return res
         
     
