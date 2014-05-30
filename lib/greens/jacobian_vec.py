@@ -23,7 +23,7 @@ The one-dimension equivalence is derivative of a curve at certain point.
 Arguments:
     dG - DiffED object.
     m0 - EpochalData object.
-        linear model parameter, cumulative slip
+        linear model parameter, incremental slip
          on the fault.
 '''
         self.dG = dG
@@ -35,7 +35,7 @@ nonlinear parameter wrt at epochs.
 Return:
     Jacobian vector    
 '''
-        dG_stacked = conv_stack(self.dG, epochs, warning = True)
+        dG_stacked = conv_stack(self.dG, epochs)
         m_stacked = vstack_column_vec(self.m0, epochs)
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)

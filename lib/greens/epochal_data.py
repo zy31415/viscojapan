@@ -26,7 +26,7 @@ etc.
             fid['epochs/%04d'%time] = value
 
     def get_epoch_value(self, time):
-        assert isinstance(time,int)
+        assert isinstance(time,int), "Time should be int type."
         with h5py.File(self.epoch_file,'r') as fid:
             out = fid['epochs/%04d'%time][...]
         return out
@@ -82,7 +82,7 @@ class EpochalData(EpochalDataBase):
 
         days_of_epochs = self.get_epochs()
         
-        if day in days_of_epochs:            
+        if day in days_of_epochs:
             return super().get_epoch_value(day)
         
         for nth, ti in enumerate(days_of_epochs):

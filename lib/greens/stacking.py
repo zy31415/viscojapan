@@ -1,6 +1,6 @@
 from numpy import vstack, zeros
 
-def conv_stack(epoch_data, epochs, warning = True):
+def conv_stack(epoch_data, epochs, warning = False):
     ''' Stack epoch_data according to time indicated by epochs to
 matrix that represents convolution.
 '''
