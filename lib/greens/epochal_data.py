@@ -2,7 +2,7 @@ from os.path import exists
 
 import h5py
 
-class EpochalData(object):
+class EpochalDataBase(object):
     ''' This class defines an prototype of accessing a certain kind of
 HDF5 files, which is used for storing large epochal data.
 
@@ -25,27 +25,11 @@ etc.
         with h5py.File(self.epoch_file,'a') as fid:
             fid['epochs/%04d'%time] = value
 
-    def get_epoch_value(self, epoch):
-        ''' Get G matrix at a certain epoch.
-'''
-        assert epoch >= 0
-        days_of_epochs = self.get_epochs()
-        max_day = max(days_of_epochs)
-        assert epoch <= max_day, 'Max epoch: %d'%max_day
-        
-        for nth, ti in enumerate(days_of_epochs):
-            if epoch <= ti:
-                break
-
-        t1 = days_of_epochs[nth-1]
-        t2 = days_of_epochs[nth]
-        
-        G1=super().get_epoch_value(t1)
-        G2=super().get_epoch_value(t2)
-
-        G=(epoch-t1)/(t2-t1)*(G2-G1)+G1
-
-        return G
+    def get_epoch_value(self, time):
+        assert isinstance(time,int)
+        with h5py.File(self.epoch_file,'r') as fid:
+            out = fid['epochs/%04d'%time][...]
+        return out
 
     def set_info(self, key, value, **kwargs):
         ''' Set info. **args are attributs
@@ -76,4 +60,32 @@ etc.
     def has_info(self, key):
         with h5py.File(self.epoch_file,'r') as fid:
             return 'info/%s'%key in fid
+
+class EpochalData(EpochalDataBase):
+    ''' This class can get value from a epoch file at any time.
+'''
+    def __init__(self, epoch_file):
+        super().__init__(epoch_file)
+        assert exists(self.epoch_file), "File %s doesn't exist."%self.epoch_file
         
+    def get_epoch_value(self, day):
+        ''' Get G matrix at a certain day.
+'''
+        assert day >= 0
+        days_of_epochs = self.get_epochs()
+        max_day = max(days_of_epochs)
+        assert day <= max_day, 'Max day: %d'%max_day
+        
+        for nth, ti in enumerate(days_of_epochs):
+            if day <= ti:
+                break
+
+        t1 = days_of_epochs[nth-1]
+        t2 = days_of_epochs[nth]
+        
+        G1=super().get_epoch_value(t1)
+        G2=super().get_epoch_value(t2)
+
+        G=(day-t1)/(t2-t1)*(G2-G1)+G1
+
+        return G        
