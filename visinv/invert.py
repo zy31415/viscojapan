@@ -46,3 +46,10 @@ print(d.shape)
 Jac = form.Jacobian()
 print(Jac.shape)
 
+inv = Invert()
+inv.G = Jac
+inv.d = d
+inv.alpha = 1.
+
+# inv()
+
