@@ -1,12 +1,9 @@
 from numpy import vstack, zeros
 
-def conv_stack(epoch_data, epochs, warning = False):
+def conv_stack(epoch_data, epochs):
     ''' Stack epoch_data according to time indicated by epochs to
 matrix that represents convolution.
 '''
-    if Warning:
-        print("    Caution: Function conv_stack is running. Large memory required.")
-        
     N = len(epochs)
 
     sh1, sh2 = epoch_data.get_epoch_value(0).shape

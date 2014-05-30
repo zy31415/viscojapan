@@ -40,7 +40,6 @@ Return:
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
         
-        print("    Caution: Large matrix-vecto product.")
         jac = dot(dG_stacked,m_stacked)
 
         return jac
