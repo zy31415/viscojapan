@@ -1,8 +1,11 @@
 
-def conv_stack(epoch_data, epochs):
+def conv_stack(epoch_data, epochs, warning = True):
     ''' Stack epoch_data according to time indicated by epochs to
 matrix that represents convolution.
 '''
+    if Warning:
+        print("    Caution: Function conv_stack is running. Large memory required.")
+        
     N = len(epochs)
 
     sh1, sh2 = epoch_data.get_epoch_value(0).shape
@@ -19,11 +22,17 @@ matrix that represents convolution.
               nth*sh2:(nth+1)*sh2] = G_
     return G
 
-def vertical_stack(epoch_data, epochs):
+def _check_if_column_vector(epoch_data):
+    sh = epoch_data.get_epoch_value(0).shape
+    assert len(sh) ==2, "Wrong dimension. Must be column vector."
+    assert sh[1] == 1, "Column number should 1."
+    
+
+def vstack_column_vector(epoch_data, epochs):
+    _check_if_column_vector(epoch_data)
     res = epoch_data.get_epoch_value(epochs[0])
     for epoch in epochs[1:]:
         res = vstack(res,epoch_data.get_epoch_value(epoch))
-
     return res
         
     

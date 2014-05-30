@@ -14,7 +14,7 @@ reform.pollitz_outputs_dir = 'outs/'
 reform.file_stations_in = './stations.in'
 
 # record these info about the group of green's functions.
-visM = 2E19
+visM = 5.839838E18
 extra_info = {
     'He' : 50,
     'visM' : visM,

@@ -17,8 +17,8 @@ green's function: These properties are highly recommended:
 
     etc.
 '''
-    def __init__(self, fG):
-        super().__init__(fG)
+    def __init__(self, epoch_file):
+        super().__init__(epoch_file)
 
         # initialize the following variables!
         self.days_of_epochs = []
@@ -34,7 +34,7 @@ green's function: These properties are highly recommended:
         assert len(self.days_of_epochs) != 0, "Have you initialize the object?"
         assert self.no_of_subfaults != NaN, "Have you initialize the object?"
         assert self.pollitz_outputs_dir != "", "Have you initialize the object?"
-        assert self.fG != "", "Have you initialize the object?"
+        assert self.epoch_file != "", "Have you initialize the object?"
         assert self.file_stations_in != ""
         
     def _check_pollitz_outputs_existence(self):
@@ -44,7 +44,7 @@ green's function: These properties are highly recommended:
                 assert exists(fn), "File %s is not exists! Abort."%fn
 
     def _check_hdf5_existence(self):
-        assert not exists(self.fG), \
+        assert not exists(self.epoch_file), \
                "Output HDF5 already exists!"
 
     def _form_file_name(self, day, fltno):

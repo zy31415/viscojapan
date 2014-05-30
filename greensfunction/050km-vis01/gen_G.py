@@ -3,9 +3,9 @@ from numpy import inf, log10
 
 import sys
 sys.path.append('/home/zy/workspace/greens/lib/')
-from greens.reform_pollitz_outputs2hdf5 import ReformPollitzOutputs2HDF5
+from greens.pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
 
-reform = ReformPollitzOutputs2HDF5('G.h5')
+reform = PollitzOutputsToEpochalData('G.h5')
 
 # intializing the object:
 reform.days_of_epochs = range(0,1201,60)

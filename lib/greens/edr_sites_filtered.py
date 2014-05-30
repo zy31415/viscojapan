@@ -1,7 +1,7 @@
 from os.path import exists
 
 import h5py
-from numpy import loadtxt
+from numpy import loadtxt, asarray
 
 from .ed_reader import EDReader
 

@@ -56,5 +56,8 @@ etc.
         with h5py.File(self.epoch_file,'r') as fid:
             out = sorted([int(ii) for ii in fid['epochs'].keys()])
         return out
-        
+
+    def has_info(self, key):
+        with h5py.File(self.epoch_file,'r') as fid:
+            return 'info/%s'%key in fid
         
