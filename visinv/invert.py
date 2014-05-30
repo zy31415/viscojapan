@@ -38,24 +38,24 @@ obs = EDSitesFiltered(f_d, sites_file)
 visM = 5.83983824100718e+18
 log10_visM = log10(visM)
 
-jac = JacobianVec(dG, m0)
+jac_1 = JacobianVec(dG, m0)
 
 form = FormulatOccam()
 form.epochs = days
 form.non_lin_par_vals = [log10_visM]
-form.non_lin_JacobianVecs = [jac]
+form.non_lin_JacobianVecs = [jac_1]
 form.G = G1
 form.d = obs
 
-d=form.d_()
-print(d.shape)
-Jac = form.Jacobian()
-print(Jac.shape)
+d_=form.d_()
+print(d_.shape)
+jacobian = form.Jacobian()
+print(jacobian.shape)
 
 inv = Invert()
-inv.G = Jac
-inv.d = d
-inv.alpha = 1.
+inv.G = jacobian
+inv.d = d_
+inv.alpha = 100.
 
 inv()
 
