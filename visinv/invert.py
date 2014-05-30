@@ -18,7 +18,7 @@ from days import days
 
 file_G1 = '../greensfunction/050km-vis00/G.h5'
 file_G2 = '../greensfunction/050km-vis01/G.h5'
-sites_file = 'sites_test'
+sites_file = 'sites'
 
 f_m0 = 'model.h5'
 m0 = EpochalData(f_m0)
@@ -41,6 +41,8 @@ form.non_lin_JacobianVecs = [jac]
 form.G = G1
 form.d = obs
 
-#d=form.d_()
+d=form.d_()
+print(d.shape)
 Jac = form.Jacobian()
+print(Jac.shape)
 
