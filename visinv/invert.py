@@ -42,5 +42,7 @@ form.G = G1
 form.d = obs
 
 d=form.d_()
+print(d.shape)
 Jac = form.Jacobian()
+print(Jac.shape)
 
