@@ -7,7 +7,7 @@ def _check_shape_for_matrix_product(A,B):
     assert (len(sh1) == 2) and (len(sh2) == 2), "Wrong shape."
     assert sh1[1] == sh2[0], "Shape doesn't match!"
 
-class Jacobian_Vec(object):
+class JacobianVec(object):
     ''' This class defines the derivatives (a Jacobian vector,
 which is a column of a Jacobian matrix) of a system described by
 epochal data with respect a non-linear parameter at place indicated
@@ -20,7 +20,7 @@ The one-dimension equivalence is derivative of a curve at certain point.
         '''
 Arguments:
     dG - DiffED object.
-    m0 - EDReader object.
+    m0 - EpochalData object.
         linear model parameter, cumulative slip
          on the fault.
 '''

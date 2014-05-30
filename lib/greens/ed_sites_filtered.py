@@ -3,9 +3,9 @@ from os.path import exists
 import h5py
 from numpy import loadtxt, asarray
 
-from .ed_reader import EDReader
+from .epochal_data import EpochalData
 
-class EDRSitesFiltered(EDReader):
+class EDSitesFiltered(EpochalData):
     ''' Fliter a epoch file reader outputs according a sites list.
 '''
     def __init__(self, epoch_file, sites_file):

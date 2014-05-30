@@ -28,7 +28,7 @@ def _check_if_column_vector(epoch_data):
     assert sh[1] == 1, "Column number should 1."
     
 
-def vstack_column_vector(epoch_data, epochs):
+def vstack_column_vec(epoch_data, epochs):
     _check_if_column_vector(epoch_data)
     res = epoch_data.get_epoch_value(epochs[0])
     for epoch in epochs[1:]:
