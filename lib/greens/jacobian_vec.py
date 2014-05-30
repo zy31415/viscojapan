@@ -1,5 +1,5 @@
 from .diff_ed import DiffED
-from .stacking import vstack_column_vector, conv_stack
+from .stacking import vstack_column_vec, conv_stack
 
 def _check_shape_for_matrix_product(A,B):
     sh1 = A.shape
@@ -34,7 +34,7 @@ Return:
     Jacobian vector    
 '''
         dG_stacked = conv_stack(self.dG, epochs, warning = True)
-        m_stacked = vstack_column_vector(self.m0, epochs)
+        m_stacked = vstack_column_vec(self.m0, epochs)
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
         

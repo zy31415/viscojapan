@@ -1,3 +1,5 @@
+from .stacking import vstack_column_vec, conv_stack
+
 class FormulatOccam(object):
     ''' This class prpare matrix Jac and vector d_ for O
 ccam nonlinear inversion.
@@ -29,7 +31,7 @@ ccam nonlinear inversion.
         return Jacobian
 
     def d_(self):
-        d_ = vstack_colum_vec(self.d)
+        d_ = vstack_column_vec(self.d, self.epochs)
         for J, val in zip(self.non_lin_JacobianVecs, self.non_lin_par_vals):
             d_ += J*val
         return d_
