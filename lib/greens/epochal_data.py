@@ -66,14 +66,24 @@ class EpochalData(EpochalDataBase):
 '''
     def __init__(self, epoch_file):
         super().__init__(epoch_file)
+
+    def _assert_within_range(self,day):
+        days_of_epochs = self.get_epochs()
+            
+        max_day = max(days_of_epochs)
+        min_day = min(days_of_epochs)
+        assert day <= max_day, 'Max day: %d'%max_day
+        assert day >= min_day, 'Min day: %d'%min_day
         
     def get_epoch_value(self, day):
         ''' Get G matrix at a certain day.
 '''
-        assert day >= 0
+        self._assert_within_range(day)
+
         days_of_epochs = self.get_epochs()
-        max_day = max(days_of_epochs)
-        assert day <= max_day, 'Max day: %d'%max_day
+        
+        if day in days_of_epochs:            
+            return super().get_epoch_value(day)
         
         for nth, ti in enumerate(days_of_epochs):
             if day <= ti:
