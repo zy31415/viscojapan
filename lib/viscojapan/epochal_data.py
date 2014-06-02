@@ -25,10 +25,12 @@ etc.
         with h5py.File(self.epoch_file,'a') as fid:
             fid['epochs/%04d'%time] = value
 
-    def get_epoch_value(self, time):
-        assert isinstance(time,int), "Time should be int type."
+    def get_epoch_value(self, epoch):
+        assert isinstance(epoch,int), "Time should be int type."
+        epochs = self.get_epochs()
+        assert epoch in epochs, "Not in the database!"
         with h5py.File(self.epoch_file,'r') as fid:
-            out = fid['epochs/%04d'%time][...]
+            out = fid['epochs/%04d'%epoch][...]
         return out
 
     def set_info(self, key, value, **kwargs):
@@ -60,6 +62,11 @@ etc.
     def has_info(self, key):
         with h5py.File(self.epoch_file,'r') as fid:
             return 'info/%s'%key in fid
+        
+    def iter_epoch_values(self):
+        epochs = self.get_epochs()
+        for epoch in epochs:
+            yield epoch, self.get_epoch_value(epoch)
 
 class EpochalData(EpochalDataBase):
     ''' This class can get value from a epoch file at any time.
@@ -97,4 +104,5 @@ class EpochalData(EpochalDataBase):
 
         G=(day-t1)/(t2-t1)*(G2-G1)+G1
 
-        return G        
+        return G
+

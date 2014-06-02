@@ -1,5 +1,8 @@
+from tempfile import mkstemp
+
 from numpy import dot
 
+from .epochal_data import EpochalData
 from .diff_ed import DiffED
 from .stacking import vstack_column_vec, conv_stack
 
@@ -27,7 +30,20 @@ Arguments:
          on the fault.
 '''
         self.dG = dG
-        self.m0 = m0    
+        self.m0 = m0
+
+    def _create_incremental_slip_file(self, slip):
+        
+        fid, fname = mkstemp(dir='/home/zy/tmp/')
+        inc_slip = EpochalData(fname)
+        epochs = slip.get_epochs()
+        val = slip.get_epoch_value(0)
+        inc_slip.set_epoch_value(0,val)        
+        for epoch in epochs[1:]:
+            tp = slip.get_epoch_value(epoch)
+            inc_slip.set_epoch_value(epoch,tp - val)
+            val = tp
+        return fname
 
     def __call__(self, epochs):
         ''' This function returns Jacobian vector with respect to
@@ -36,6 +52,7 @@ Return:
     Jacobian vector    
 '''
         dG_stacked = conv_stack(self.dG, epochs)
+        f_incr_slip = self._create_incremental_slip_file(self.
         m_stacked = vstack_column_vec(self.m0, epochs)
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
