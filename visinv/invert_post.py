@@ -11,7 +11,7 @@ import sys
 from numpy import log10
 
 sys.path.append('/home/zy/workspace/greens/lib')
-from greens.formulate_occam import FormulatOccam
+from greens.formulate_occam import FormulatOccamPostseismic
 from greens.jacobian_vec import JacobianVec
 from greens.ed_sites_filtered import EDSitesFiltered
 from greens.diff_ed import DiffED
@@ -32,7 +32,7 @@ dG = DiffED(G1, G2, 'log10_visM')
 f_m0 = 'model.h5'
 m0 = EpochalData(f_m0)
 
-f_d = 'cumu_post.h5'
+f_d = 'post.h5'
 obs = EDSitesFiltered(f_d, sites_file)
 
 visM = 5.83983824100718e+18
@@ -40,7 +40,7 @@ log10_visM = log10(visM)
 
 jac_1 = JacobianVec(dG, m0)
 
-form = FormulatOccam()
+form = FormulatOccamPostseismic()
 form.epochs = days
 form.non_lin_par_vals = [log10_visM]
 form.non_lin_JacobianVecs = [jac_1]
