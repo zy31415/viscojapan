@@ -8,7 +8,7 @@ matrix that represents convolution.
 
     sh1, sh2 = epoch_data.get_epoch_value(0).shape
 
-    G=zeros((sh1*N, sh2*N))
+    G=zeros((sh1*N, sh2*N), dtype='float')
     for nth in range(0, N):
         t1 = epochs[nth]
         for mth in range(nth, N):
