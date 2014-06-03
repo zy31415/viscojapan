@@ -8,7 +8,7 @@
 
 import sys
 
-from numpy import log10
+from numpy import log10, logspace
 import pickle
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
