@@ -59,7 +59,7 @@ solution = inv()
 
 invres = InversionResults()
 invres.solution = solution
-invres.epochs = epochs
+invres.epochs = days
 invres.nlin_par_names = ['log10_visM']
 invres.init()
 invres.gen_inverted_incr_slip_file('pred_incr_slip.h5')
