@@ -41,6 +41,10 @@ etc.
             for key_attr, value_attr in kwargs.items():
                 fid['info/%s'%key].attrs[key_attr] = value_attr
 
+    def set_info_dic(self, info_dic):
+        for key, val in info_dic.items():
+            self.set_info(key,val)
+
     def set_info_attr(self,key, key_attr, value_attr):
         with h5py.File(self.epoch_file,'a') as fid:
             fid['info/%s'%key].attrs[key_attr] = value_attr
