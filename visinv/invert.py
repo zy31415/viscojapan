@@ -20,7 +20,7 @@ from viscojapan.invert import Invert
 from viscojapan.post_inversion import InversionResults
 from days import days
 
-sites_file = 'sites'
+sites_file = 'sites_test'
 
 file_G1 = '../greensfunction/050km-vis00/G.h5'
 G1 = EDSitesFiltered(file_G1, sites_file)
