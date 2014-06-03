@@ -1,0 +1,41 @@
+from .slip import EpochalIncrSlip, EpochalSlip
+
+class InversionResults(object):
+    def __init__(self):
+        self.solution = None
+        self.epochs = None
+        self.nlin_par_names = []
+
+        self.num_of_subfaults = 250
+
+    def init(self):
+        self.num_of_nlin_pars = len(self.nlin_par_names)
+        self.incr_slip_arr = self.solution['x'][0:-self.num_of_nlin_pars]
+        self.nlin_par_vals = self.solution['x'][-self.num_of_nlin_pars:]
+        
+        for pn, val in zip(self.nlin_par_names,
+                           self.nlin_par_vals):
+            setattr(self,pn,val)
+
+    def gen_inverted_incr_slip_file(self, incr_slip_file):
+        incr_slip = EpochalIncrSlip(incr_slip_file)
+        for nth, epoch in enumerate(self.epochs):
+            incr_slip.set_epoch_value(epoch,self.incr_slip_arr[
+                nth*self.num_of_subfaults,
+                (nth+1)*self.num_of_subfaults])
+
+    def gen_inverted_slip_file(self, slip_file):
+        slip = EpochalSlip(slip_file)
+        for nth, epoch in enumerate(self.epochs):
+            if nth == 0:
+                val0 = self.incr_slip_arr[nth*self.num_of_subfaults,
+                                          (nth+1)*self.num_of_subfaults]
+            else:
+                val = self.incr_slip_arr[nth*self.num_of_subfaults,
+                                         (nth+1)*self.num_of_subfaults]
+                val0 += val
+            slip.set_epoch_value(epoch,val0)
+
+    def get_predicated_obs(self):
+        pass
+        
