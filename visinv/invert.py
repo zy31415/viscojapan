@@ -29,8 +29,6 @@ G2 = EDSitesFiltered(file_G2, sites_file)
 
 dG = DiffED(G1, G2, 'log10_visM')
 
-f_m0 = 'model.h5'
-m0 = EpochalData(f_m0)
 
 f_d = 'cumu_post.h5'
 obs = EDSitesFiltered(f_d, sites_file)
@@ -38,7 +36,8 @@ obs = EDSitesFiltered(f_d, sites_file)
 visM = 5.83983824100718e+18
 log10_visM = log10(visM)
 
-jac_1 = JacobianVec(dG, m0)
+f_slip0 = 'slip0.h5'
+jac_1 = JacobianVec(dG, f_slip0)
 
 form = FormulatOccam()
 form.epochs = days
@@ -48,9 +47,7 @@ form.G = G1
 form.d = obs
 
 d_=form.d_()
-print(d_.shape)
 jacobian = form.Jacobian()
-print(jacobian.shape)
 
 inv = Invert()
 inv.G = jacobian

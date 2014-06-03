@@ -14,7 +14,6 @@ class EpochalSlip(EpochalData):
 
 def slip_to_incr_slip(f_slip, f_incr_slip):
     assert exists(f_slip)
-    assert not exists(f_incr_slip)
     
     slip = EpochalSlip(f_slip)
     epochs = slip.get_epochs()
@@ -29,9 +28,9 @@ def slip_to_incr_slip(f_slip, f_incr_slip):
         else:
             incr_slip.set_epoch_value(epoch, val-val0)
             val0 = val
+    incr_slip.copy_info_from_file(f_slip)
 
 def incr_slip_to_slip(f_incr_slip, f_slip):
-    assert not exists(f_slip)
     assert exists(f_incr_slip)
 
     incr_slip = EpochalIncrSlip(f_incr_slip)
@@ -46,4 +45,6 @@ def incr_slip_to_slip(f_incr_slip, f_slip):
         else:
             val0 += val
         slip.set_epoch_value(epoch, val0)
+
+    slip.copy_info_from_file(f_incr_slip)
 
