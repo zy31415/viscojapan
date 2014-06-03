@@ -17,6 +17,7 @@ from viscojapan.ed_sites_filtered import EDSitesFiltered
 from viscojapan.diff_ed import DiffED
 from viscojapan.epochal_data import EpochalData
 from viscojapan.invert import Invert
+from viscojapan.post_inversion import InversionResults
 from days import days
 
 sites_file = 'sites'
@@ -54,5 +55,12 @@ inv.G = jacobian
 inv.d = d_
 inv.alpha = 100.
 
-inv()
+solution = inv()
 
+invres = InversionResults()
+invres.solution = solution
+invres.epochs = days
+invres.nlin_par_names = ['log10_visM']
+invres.init()
+invres.gen_inverted_incr_slip_file('pred_incr_slip.h5')
+invres.gen_inverted_slip_file('pred_slip.h5')
