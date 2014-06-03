@@ -68,6 +68,12 @@ etc.
         for epoch in epochs:
             yield epoch, self.get_epoch_value(epoch)
 
+    def copy_info_from_file(self, epoch_file):
+        with h5py.File(epoch_file,'r') as from_file:
+            with  h5py.File(self.epoch_file,'a') as to_file:
+                from_file.copy('info/',to_file)
+
+
 class EpochalData(EpochalDataBase):
     ''' This class can get value from a epoch file at any time.
 '''
