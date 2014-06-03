@@ -9,7 +9,6 @@
 import sys
 
 from numpy import log10
-import pickle
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.formulate_occam import FormulatOccam
@@ -51,14 +50,10 @@ form.d = obs
 d_=form.d_()
 jacobian = form.Jacobian()
 
-for nth, alpha in enumerate(logspace(-5,3,30)):    
-    inv = Invert()
-    inv.G = jacobian
-    inv.d = d_
-    inv.alpha = alpha
+inv = Invert()
+inv.G = jacobian
+inv.d = d_
+inv.alpha = 100.
 
-    solution = inv()
-    with open('outs/res_%02d.pkl'%nth,'b') as fid:
-        pickle.dump((alpha,solution),fid)
-    
+solution = inv()
 
