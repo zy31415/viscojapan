@@ -23,7 +23,7 @@ from days import days
 
 sites_file = 'sites'
 
-file_G1 = '../greensfunction/050km-vis00/G.h5'
+file_G1 = '../greensfunction/050km-vis02/G.h5'
 G1 = EDSitesFiltered(file_G1, sites_file)
 
 file_G2 = '../greensfunction/050km-vis01/G.h5'
@@ -35,8 +35,9 @@ dG = DiffED(G1, G2, 'log10_visM')
 f_d = 'cumu_post.h5'
 obs = EDSitesFiltered(f_d, sites_file)
 
-visM = 5.83983824100718e+18
+visM = G1.get_info('visM')
 log10_visM = log10(visM)
+print('Initial Maxwellian viscosity: %g'%visM)
 
 f_slip0 = 'slip0.h5'
 jac_1 = JacobianVec(dG, f_slip0)

@@ -2,8 +2,8 @@
 from numpy import inf, log10
 
 import sys
-sys.path.append('/home/zy/workspace/greens/lib/')
-from greens.pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
+sys.path.append('/home/zy/workspace/viscojapan/lib/')
+from viscojapan.pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
 
 reform = PollitzOutputsToEpochalData('G.h5')
 
@@ -14,7 +14,8 @@ reform.pollitz_outputs_dir = 'outs/'
 reform.file_stations_in = './stations.in'
 
 # record these info about the group of green's functions.
-visM = 5.839838E18
+visM = 5.839838E+18
+print("Viscosity is %g"%visM)
 extra_info = {
     'He' : 50,
     'visM' : visM,
