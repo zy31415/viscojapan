@@ -1,5 +1,9 @@
+from tempfile import mkstemp
+from os.path import exists
+
 from numpy import dot
 
+from .slip import slip_to_incr_slip
 from .diff_ed import DiffED
 from .stacking import vstack_column_vec, conv_stack
 
@@ -13,21 +17,20 @@ class JacobianVec(object):
     ''' This class defines the derivatives (a Jacobian vector,
 which is a column of a Jacobian matrix) of a system described by
 epochal data with respect a non-linear parameter at place indicated
-by a model parameter.
+by a slip0del parameter.
 
 The one-dimension equivalence is derivative of a curve at certain point.
 
 '''
-    def __init__(self, dG, m0):
+    def __init__(self, dG, f_slip0):
         '''
 Arguments:
     dG - DiffED object.
-    m0 - EpochalData object.
-        linear model parameter, incremental slip
-         on the fault.
+    slip0 - slip on the fault as initial value.
 '''
         self.dG = dG
-        self.m0 = m0    
+        self.f_slip0 = f_slip0
+        assert exists(self.f_slip0)
 
     def __call__(self, epochs):
         ''' This function returns Jacobian vector with respect to
@@ -36,7 +39,13 @@ Return:
     Jacobian vector    
 '''
         dG_stacked = conv_stack(self.dG, epochs)
-        m_stacked = vstack_column_vec(self.m0, epochs)
+
+        fid, f_incr_slip = mkstemp(dir='/home/zy/tmp/')
+        slip_to_incr_slip(self.f_slip0,f_incr_slip)
+
+        incr_slip = EpochalIncrSlip(f_incr_slip)
+
+        m_stacked = vstack_column_vec(incr_slip, epochs)
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
         
