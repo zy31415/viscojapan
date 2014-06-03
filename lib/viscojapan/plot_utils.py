@@ -19,15 +19,15 @@ def get_pos(sites):
         lats.append(tp[1])
     return lons,lats
 
-_fault_file='/home/zy/workspace/greens/faults/fault_60km.h5'
+_fault_file='/home/zy/workspace/visinv2/flt_250/fault.h5'
 
 def moment(slip):
     ''' Compute moment.
 '''
     with File(_fault_file) as fid:
-        fl=float(fid['subflt_len_stk'][...])
-        fw=float(fid['subflt_wid_dip'][...])
-        shr=fid['meshes/shear'][...][1:,1:]
+        fl=float(fid['subflt_len'][...])
+        fw=float(fid['subflt_wid'][...])
+        shr=fid['meshes/shear'][...]
     mos=shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
     mo=sum(mos)
     mw=2./3.*log10(mo)-6. 
@@ -39,6 +39,7 @@ class Map(Basemap):
         self.region_code=None
         self.x_interval=2.
         self.y_interval=2.
+        self.if_init=False
 
     def init(self):
         if self.region_code is not None:
@@ -52,6 +53,8 @@ class Map(Basemap):
                 self.region_box=(140,41.8,146.2,45.8)
             elif self.region_code=='near':
                 self.region_box=(136,34,146,42)
+            elif self.region_code=='all':
+                self.region_box=(136,34,146,42)
             else:
                 raise ValueError()
         
@@ -62,7 +65,8 @@ class Map(Basemap):
                          urcrnrlon=self.region_box[2],urcrnrlat=self.region_box[3],
                          resolution='l',area_thresh=100.,projection='eqdc',
                          lon_0=self.lon_0,lat_0=self.lat_0,
-                         lat_1=self.lat_0-5,lat_2=self.lat_0+5)
+                         lat_1=self.lat_0-5,lat_2=self.lat_0+5,
+                         celestial=False)
 
         self.drawcoastlines(color='green',zorder=-1)
 
@@ -71,6 +75,8 @@ class Map(Basemap):
         self.drawmeridians(arange(-180.,181.,self.x_interval),zorder=-1,labels=[0,0,0,1])
         self.drawmapboundary(color='k')
 
+        self.if_init=True
+
         return self
 
     def plot_disp(self,d,sites,
@@ -78,44 +84,83 @@ class Map(Basemap):
                   color='black',scale=None):
         ''' Plot displacment
 '''
+        assert self.if_init, "Have you init the class?"
         lons,lats=get_pos(sites)
-        xpt,ypt=self(lons,lats)
         es=d[0::3]
         ns=d[1::3]
         us=d[2::3]
-        Qu=self.quiver(xpt,ypt,es,ns,
-                    color=color,scale=scale,edgecolor=color)
+        Qu=self.quiver(lons,lats,es,ns,
+                    color=color,scale=scale,edgecolor=color,latlon=True)
         qk=quiverkey(Qu,X,Y,U,label,
                             labelpos='N')
 
     def plot_fslip(self,m,cmap=None,clim=None):
         '''
 '''
-        with File('/home/zy/workspace/greens/faults/fault_60km.h5') as fid:
-            LLons=fid['meshes/LLons'][...][1:,1:]
-            LLats=fid['meshes/LLats'][...][1:,1:]
-            
-        mm=m.reshape([-1,40])
-        xpt,ypt=self(LLons,LLats)
-        self.pcolor(xpt,ypt,mm,zorder=-1,cmap=cmap)
+        assert self.if_init, "Have you init the class?"
+        with File(_fault_file) as fid:
+            LLons=fid['grids/LLons'][...]
+            LLats=fid['grids/LLats'][...]
+
+        mm=m.reshape([-1,25])
+        self.pcolor(LLons,LLats,mm,latlon=True,cmap=cmap)        
         cb=colorbar()
         plt.clim(clim)
-        cb.set_label('disp.(m)')
+        cb.set_label('slip(m)')
         mo,mw=moment(m)
         title('Mo=%.3g,Mw=%.2f'%(mo,mw))
         
 
-    def plot_fault(self,fno,ms=15):
-        with File('/home/zy/workspace/greens/faults/fault_60km.h5') as fid:
-            LLons=fid['meshes/LLons'][...][1:,1:]
-            LLats=fid['meshes/LLats'][...][1:,1:]
+    def plot_fault(self,fno=None,ms=15):
+        assert self.if_init, "Have you init the class?"
+        with File(_fault_file) as fid:
+            LLons=fid['grids/LLons'][...]
+            LLats=fid['grids/LLats'][...]
+        assert ms<250 and ms>=0, "Fault No. out of range."
+            
+        self.plot(LLons,LLats,color='gray',latlon=True)
+        self.plot(ascontiguousarray(LLons.T),
+                  ascontiguousarray(LLats.T),
+                  color='gray',latlon=True)
+        if fno is not None:
+            xpt,ypt=self(LLons,LLats)
+            xpt1=xpt[0:-1,0:-1]
+            ypt1=ypt[0:-1,0:-1]
 
-        xpt,ypt=self(LLons,LLats)        
-        self.plot(xpt,ypt,color='gray')
-        self.plot(xpt.T,ypt.T,color='gray')
-        self.plot(xpt.flatten()[fno],ypt.flatten()[fno],
-             marker='*',color='red',ms=ms)
+            xpt2=xpt[1:,1:]
+            ypt2=ypt[1:,1:]
+
+            x0=(xpt1.flatten()[fno]+xpt2.flatten()[fno])/2.
+            y0=(ypt1.flatten()[fno]+ypt2.flatten()[fno])/2.
+
+            
+            self.plot(x0,y0,marker='*',color='red',ms=ms)
         
-        
+
+def plot_L(nres,nsol,alphas=None,lanos=None,
+           label=None,color='blue'):
+    '''
+alphas - regularization parameters array
+lanos - array that indicates which alphas pairs are labeled.
+        None means label every two.
+label - L-curve label
+'''
+    assert len(nres)==len(nsol)
+    if alphas is not None:
+        assert len(nres)==len(alphas)
+    # plot L-curve
+    loglog(nres,nsol,'o-',label=label,color=color)
+
+    if alphas is not None:
+        if lanos is None:
+            lanos = range(0,len(alphas),2)
+        for ano in lanos:
+            text(nres[ano],nsol[ano],'%d/%.2G'%(ano,alphas[ano]),color='red')
+
+    xlabel('Residual Norm ($\log_{10}{||Gm-d||_2}$)')
+    ylabel('Solution Norm ($\log_{10}{||m||_2}$)')
+    grid('on')
+    
+    
 
     
