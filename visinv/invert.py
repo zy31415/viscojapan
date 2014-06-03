@@ -10,13 +10,13 @@ import sys
 
 from numpy import log10
 
-sys.path.append('/home/zy/workspace/greens/lib')
-from greens.formulate_occam import FormulatOccam
-from greens.jacobian_vec import JacobianVec
-from greens.ed_sites_filtered import EDSitesFiltered
-from greens.diff_ed import DiffED
-from greens.epochal_data import EpochalData
-from greens.invert import Invert
+sys.path.append('/home/zy/workspace/viscojapan/lib')
+from viscojapan.formulate_occam import FormulatOccam
+from viscojapan.jacobian_vec import JacobianVec
+from viscojapan.ed_sites_filtered import EDSitesFiltered
+from viscojapan.diff_ed import DiffED
+from viscojapan.epochal_data import EpochalData
+from viscojapan.invert import Invert
 from days import days
 
 sites_file = 'sites'

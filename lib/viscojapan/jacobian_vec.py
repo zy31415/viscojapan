@@ -3,7 +3,7 @@ from os.path import exists
 
 from numpy import dot
 
-from .slip import slip_to_incr_slip
+from .slip import slip_to_incr_slip, EpochalIncrSlip
 from .diff_ed import DiffED
 from .stacking import vstack_column_vec, conv_stack
 
