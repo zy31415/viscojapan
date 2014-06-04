@@ -21,7 +21,7 @@ class Invert(object):
         q = -dot(G.T,d)
 
         # non-negative constraint
-        GG = identity(npar, dtype='float')
+        GG = -1.0 * identity(npar, dtype='float')
         h = zeros((npar,1), dtype='float')
         
         sol = solvers.qp(matrix(P),matrix(q),
