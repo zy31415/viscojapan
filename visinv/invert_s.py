@@ -18,6 +18,7 @@ from viscojapan.diff_ed import DiffED
 from viscojapan.epochal_data import EpochalData
 from viscojapan.invert import Invert
 from viscojapan.post_inversion import InversionResults
+from viscojapan.tikhonov_regularization import TikhonovSecondOrder
 from days import days
 
 
