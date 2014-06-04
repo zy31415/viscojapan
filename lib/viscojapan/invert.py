@@ -1,35 +1,30 @@
 from numpy import eye, zeros, dot
-from cvxopt import matrix, solvers
+from cvxopt import matrix, solvers, spmatrix
 
 class Invert(object):
     def __init__(self):
         self.G = None
         self.d = None
         self.alpha = None
+        self.tikhonov_regularization = None
 
     def __call__(self):
         G = self.G
-
-        npar = G.shape[1]
-        I = eye(npar)
-
         d = self.d
-
         npar = G.shape[1]
-        I = eye(npar)
-        I[-1,-1] = 0.
 
-        _P = dot(G.T,G) + self.alpha**2*I
-        P = matrix(_P)
+        self.regularization_matrix =\
+            self.tikhonov_regularization.regularization_matirx()
+        
+        P = dot(G.T,G) + (self.alpha**2) * self.regularization_matirx
+        
+        q = -dot(G.T,d)
 
-        _q = -dot(G.T,d)
-        q = matrix(_q)
-
-        _GG = -I
-        GG = matrix(_GG)
-
-        _h = zeros(npar)
-        h = matrix(_h)
-        sol = solvers.qp(P,q,GG,h)
+        # non-negative constraint
+        GG = spmatrix(1.0, range(npar), range(npar))
+        h = spmatirx(nan,[],[],(npar,1),tc='d')
+        
+        sol = solvers.qp(matrix(P),matrix(q),
+                         GG,h)
 
         return sol
