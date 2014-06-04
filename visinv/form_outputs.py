@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import pickle
 
@@ -18,7 +20,8 @@ for ano, alpha in enumerate(logspace(-5,3,30)):
     invres.nlin_par_names = ['log10_visM']
 
     invres.init()
-    info_dic = {'alpha':alpha}
+    info_dic = {'alpha':alpha,
+                'tik_order':2,}
     incr_slip_file = 'outs/incr_slip_%02d.h5'%ano
     slip_file = 'outs/slip_%02d.h5'%ano
     invres.gen_inverted_incr_slip_file(incr_slip_file, info_dic)
