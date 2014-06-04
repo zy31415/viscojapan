@@ -1,5 +1,5 @@
-from numpy import eye, zeros, dot
-from cvxopt import matrix, solvers, spmatrix
+from numpy import zeros, dot, nan, identity
+from cvxopt import matrix, solvers
 
 class Invert(object):
     def __init__(self):
@@ -21,10 +21,10 @@ class Invert(object):
         q = -dot(G.T,d)
 
         # non-negative constraint
-        GG = spmatrix(1.0, range(npar), range(npar))
-        h = spmatirx(nan,[],[],(npar,1),tc='d')
+        GG = identity(npar, dtype='float')
+        h = zeros((npar,1), dtype='float')
         
         sol = solvers.qp(matrix(P),matrix(q),
-                         GG,h)
+                         matrix(GG),matrix(h))
 
         return sol
