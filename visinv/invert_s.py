@@ -18,7 +18,9 @@ from viscojapan.diff_ed import DiffED
 from viscojapan.epochal_data import EpochalData
 from viscojapan.invert import Invert
 from viscojapan.post_inversion import InversionResults
+from viscojapan.tikhonov_regularization import TikhonovSecondOrder
 from days import days
+
 
 sites_file = 'sites'
 
@@ -40,6 +42,7 @@ log10_visM = log10(visM)
 f_slip0 = 'slip0.h5'
 jac_1 = JacobianVec(dG, f_slip0)
 
+# FormulatOccam 
 form = FormulatOccam()
 form.epochs = days
 form.non_lin_par_vals = [log10_visM]
@@ -50,10 +53,19 @@ form.d = obs
 d_=form.d_()
 jacobian = form.Jacobian()
 
+# regularization
+reg = TikhonovSecondOrder(nrows_slip=10, ncols_slip=25)
+reg.row_norm_length = 1
+reg.col_norm_length = 28./23.03
+reg.num_epochs = len(epochs)
+reg.num_nlin_pars = 1
+
+# Inversion
 inv = Invert()
 inv.G = jacobian
 inv.d = d_
 inv.alpha = 100.
+inv.tikhonov_regularization = reg
 
 solution = inv()
 
