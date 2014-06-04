@@ -1,11 +1,18 @@
-from scipy.sparse import block_diag, bmat, eye, block_diag, coo_matrix, hstack
+from scipy.sparse import block_diag, bmat, eye, block_diag, coo_matrix, hstack, vstack
 
-def hstack_zeros_padding(mat, num_cols):
-    ''' Add zeros columns for non linear parameters
+def zeros_padding(mat, num_cols):
+    ''' Add zeros columns and rows for non linear parameters
 '''
+    # add zero cols
     sh = mat.shape
-    padding = coo_matrix((sh[0], num_cols),dtype='float')
-    mat = hstack([mat,padding])
+    col_padding = coo_matrix((sh[0], num_cols),dtype='float')
+    mat = hstack([mat, col_padding])
+
+    # add zero rows
+    sh = mat.shape
+    row_padding = coo_matrix((sh[1], num_cols),dtype='float')
+    mat = vstack([mat, row_padding])
+    
     return mat
 
 class TikhonovRegularization:
@@ -23,8 +30,7 @@ class TikhonovRegularization:
         mat = self.regularization_matrix_each_epoch()
         blocks = [mat]*self.num_epochs
         mat = block_diag(blocks, dtype = 'float')
-        mat = hstack_zeros_padding(mat, self.num_nlin_pars)
-        mat = mat.T.dot(mat)
+        mat = zeros_padding(mat, self.num_nlin_pars)
         return mat
 
 class TikhonovZerothOrder(TikhonovRegularization):
@@ -54,74 +60,71 @@ class TikhonovSecondOrder(TikhonovRegularization):
         B = -2. * eye(num_cols-2, num_cols, k=1, dtype='float')
         C = eye(num_cols-2, num_cols, k=2, dtype='float')
         return A+B+C
-        
-    def row_roughening(self):
-        ''' Roughening between rows.
-'''
-        mat = self.roughening_matrix(self.nrows_slip)
-        
-        return block_diag([mat]*self.ncols_slip)
-
-    def row_roughening_normed(self):
-        return self.row_roughening() / (self.row_norm_length**2)
-
 
     def col_roughening(self):
         ''' Roughening between columns.
 '''
-        A = eye(self.nrows_slip, dtype='float')
-        B = -2. * eye(self.nrows_slip, dtype='float')
-        block = []
-        for nth in range(0, self.ncols_slip-2):
-            block.append([None]*self.ncols_slip)
-        
-        for n in range(0,self.ncols_slip-2):
-            block[n][n] = A
-        for n in range(0,self.ncols_slip-2):
-            block[n][n+1] = B
-        for n in range(0,self.ncols_slip-2):
-            block[n][n+2] = A
-        return bmat(block, dtype='float')
+        mat = self.roughening_matrix(self.ncols_slip)
+        mat = block_diag([mat]*self.nrows_slip)
+        return mat 
 
     def col_roughening_normed(self):
         return self.col_roughening() / (self.col_norm_length**2)
+
+    def row_roughening(self):
+        ''' Roughening between rows.
+'''
+        A = eye(self.ncols_slip, dtype='float')
+        B = -2. * eye(self.ncols_slip, dtype='float')
+
+        block = []
+        for nth in range(0, self.nrows_slip-2):
+            block.append([None]*self.nrows_slip)
+        
+        for n in range(0,self.nrows_slip-2):
+            block[n][n] = A
+        for n in range(0,self.nrows_slip-2):
+            block[n][n+1] = B
+        for n in range(0,self.nrows_slip-2):
+            block[n][n+2] = A
+
+        mat = bmat(block, dtype='float')
+        return mat
+
+    def row_roughening_normed(self):
+        return self.row_roughening() / (self.row_norm_length**2)
+
 
     def finite_difference_matrix(self, num_cols):
         A = -1. * eye(num_cols-1, num_cols, k=0, dtype='float')
         B = eye(num_cols-1, num_cols, k=1, dtype='float')
         C = A + B
         return C
-        
+
     def row_col_roughening(self):
-        B = self.finite_difference_matrix(self.nrows_slip)
+        B = self.finite_difference_matrix(self.ncols_slip)
         A = -B
-        A, B
+
         block = []
-        for nth in range(0, self.ncols_slip-1):
-            block.append([None]*self.ncols_slip)
-        for n in range(0,self.ncols_slip-1):
+        for nth in range(0, self.nrows_slip-1):
+            block.append([None]*self.nrows_slip)
+            
+        for n in range(0,self.nrows_slip-1):
             block[n][n] = A
-        for n in range(0,self.ncols_slip-1):
+        for n in range(0,self.nrows_slip-1):
             block[n][n+1] = B
-        return bmat(block, dtype='float')
+        mat =  bmat(block, dtype='float')  
+        return mat
 
     def row_col_roughening_normed(self):
         return self.row_col_roughening() / self.row_norm_length / self.col_norm_length
 
-    def regularization_matrix_unnormed(self):
-        row = self.row_roughening()
-        col = self.col_roughening()
-        row_col = self.row_col_roughening()
-
-        return row.T.dot(row) + col.T.dot(col) +row_col.T.dot(row_col)
-    
-    def regularization_matrix_each_epoch(self):
+    def roughening_matrix_each_epoch(self):
         row = self.row_roughening_normed()
         col = self.col_roughening_normed()
         row_col = self.row_col_roughening_normed()
 
         return row.T.dot(row) + col.T.dot(col) +row_col.T.dot(row_col)
-
 
         
     
