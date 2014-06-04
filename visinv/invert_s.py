@@ -24,14 +24,13 @@ from days import days as epochs
 
 sites_file = 'sites'
 
-file_G1 = '../greensfunction/050km-vis00/G.h5'
+file_G1 = '../greensfunction/050km-vis02/G.h5'
 G1 = EDSitesFiltered(file_G1, sites_file)
 
 file_G2 = '../greensfunction/050km-vis01/G.h5'
 G2 = EDSitesFiltered(file_G2, sites_file)
 
 dG = DiffED(G1, G2, 'log10_visM')
-
 
 f_d = 'cumu_post.h5'
 obs = EDSitesFiltered(f_d, sites_file)
