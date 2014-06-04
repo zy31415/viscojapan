@@ -1,16 +1,16 @@
 from scipy.sparse import block_diag, bmat, eye, block_diag, coo_matrix, hstack, vstack
 
-def zeros_padding(mat, num_cols):
+def zeros_padding(mat, n):
     ''' Add zeros columns and rows for non linear parameters
 '''
     # add zero cols
     sh = mat.shape
-    col_padding = coo_matrix((sh[0], num_cols),dtype='float')
+    col_padding = coo_matrix((sh[0], n),dtype='float')
     mat = hstack([mat, col_padding])
 
     # add zero rows
     sh = mat.shape
-    row_padding = coo_matrix((sh[1], num_cols),dtype='float')
+    row_padding = coo_matrix((n, sh[1]),dtype='float')
     mat = vstack([mat, row_padding])
     
     return mat
@@ -118,13 +118,15 @@ class TikhonovSecondOrder(TikhonovRegularization):
 
     def row_col_roughening_normed(self):
         return self.row_col_roughening() / self.row_norm_length / self.col_norm_length
-
-    def roughening_matrix_each_epoch(self):
+        
+    def regularization_matrix_each_epoch(self):
         row = self.row_roughening_normed()
         col = self.col_roughening_normed()
         row_col = self.row_col_roughening_normed()
+        
+        mat  = row.T.dot(row) + col.T.dot(col) +row_col.T.dot(row_col)
 
-        return row.T.dot(row) + col.T.dot(col) +row_col.T.dot(row_col)
+        return mat 
 
         
     

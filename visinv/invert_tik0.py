@@ -71,7 +71,7 @@ for nth, alpha in enumerate(logspace(-5,3,30)):
     solution = inv()
 
     solution = inv()
-    with open('outs/res_%02d.pkl'%nth,'wb') as fid:
+    with open('outs_tik0/res_%02d.pkl'%nth,'wb') as fid:
         pickle.dump((alpha,solution),fid)
     
 
