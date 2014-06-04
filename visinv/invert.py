@@ -52,7 +52,7 @@ form.d = obs
 d_=form.d_()
 jacobian = form.Jacobian()
 
-for nth, alpha in enumerate(logspace(-5,3,30)):    
+for nth, alpha in enumerate(logspace(-3,1,30)):    
     inv = Invert()
     inv.G = jacobian
     inv.d = d_
