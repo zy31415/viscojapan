@@ -21,24 +21,13 @@ def get_pos(sites):
 
 _fault_file='/home/zy/workspace/visinv2/flt_250/fault.h5'
 
-def moment(slip):
-    ''' Compute moment.
-'''
-    with File(_fault_file) as fid:
-        fl=float(fid['subflt_len'][...])
-        fw=float(fid['subflt_wid'][...])
-        shr=fid['meshes/shear'][...]
-    mos=shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
-    mo=sum(mos)
-    mw=2./3.*log10(mo)-6. 
-    return mo, mw
-
 class Map(Basemap):
     def __init__(self):
         self.region_box=(136,34,146,42)
         self.region_code=None
         self.x_interval=2.
-        self.y_interval=2.
+        self.y_interval=2.        
+        self.fault_model_file = _fault_file
         self.if_init=False
 
     def init(self):
@@ -98,7 +87,7 @@ class Map(Basemap):
         '''
 '''
         assert self.if_init, "Have you init the class?"
-        with File(_fault_file) as fid:
+        with File(self.fault_model_file) as fid:
             LLons=fid['grids/LLons'][...]
             LLats=fid['grids/LLats'][...]
 
@@ -107,13 +96,13 @@ class Map(Basemap):
         cb=colorbar()
         plt.clim(clim)
         cb.set_label('slip(m)')
-        mo,mw=moment(m)
+        mo,mw = self.moment(m)
         title('Mo=%.3g,Mw=%.2f'%(mo,mw))
         
 
     def plot_fault(self,fno=None,ms=15):
         assert self.if_init, "Have you init the class?"
-        with File(_fault_file) as fid:
+        with File(self.fault_model_file) as fid:
             LLons=fid['grids/LLons'][...]
             LLats=fid['grids/LLats'][...]
         assert ms<250 and ms>=0, "Fault No. out of range."
@@ -135,8 +124,19 @@ class Map(Basemap):
 
             
             self.plot(x0,y0,marker='*',color='red',ms=ms)
-        
 
+    def moment(self, slip):
+        ''' Compute moment.
+'''
+        with File(self.fault_model_file) as fid:
+            fl=float(fid['subflt_len'][...])
+            fw=float(fid['subflt_wid'][...])
+            shr=fid['meshes/shear'][...]
+        mos = shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
+        mo = sum(mos)
+        mw = 2./3.*log10(mo)-6. 
+        return mo, mw
+            
 def plot_L(nres,nsol,alphas=None,lanos=None,
            label=None,color='blue'):
     '''
