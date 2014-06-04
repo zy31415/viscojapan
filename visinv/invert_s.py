@@ -19,7 +19,7 @@ from viscojapan.epochal_data import EpochalData
 from viscojapan.invert import Invert
 from viscojapan.post_inversion import InversionResults
 from viscojapan.tikhonov_regularization import TikhonovSecondOrder
-from days import days
+from days import days as epochs
 
 
 sites_file = 'sites'
@@ -44,7 +44,7 @@ jac_1 = JacobianVec(dG, f_slip0)
 
 # FormulatOccam 
 form = FormulatOccam()
-form.epochs = days
+form.epochs = epochs
 form.non_lin_par_vals = [log10_visM]
 form.non_lin_JacobianVecs = [jac_1]
 form.G = G1

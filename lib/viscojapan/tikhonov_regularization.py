@@ -24,6 +24,7 @@ class TikhonovRegularization:
         blocks = [mat]*self.num_epochs
         mat = block_diag(blocks, dtype = 'float')
         mat = hstack_zeros_padding(mat, self.num_nlin_pars)
+        mat = mat.T.dot(mat)
         return mat
 
 class TikhonovZerothOrder(TikhonovRegularization):
