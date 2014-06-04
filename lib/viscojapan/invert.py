@@ -14,9 +14,9 @@ class Invert(object):
         npar = G.shape[1]
 
         self.regularization_matrix =\
-            self.tikhonov_regularization.regularization_matirx()
+            self.tikhonov_regularization.regularization_matrix()
         
-        P = dot(G.T,G) + (self.alpha**2) * self.regularization_matirx
+        P = dot(G.T,G) + (self.alpha**2) * self.regularization_matrix
         
         q = -dot(G.T,d)
 
