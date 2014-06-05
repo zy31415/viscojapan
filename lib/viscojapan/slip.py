@@ -1,12 +1,17 @@
 from os.path import exists
 
-from .epochal_data import EpochalDataBase, EpochalData
+from .epochal_data import EpochalData
 
-class EpochalIncrSlip(EpochalDataBase):
+class EpochalIncrSlip(EpochalData):
     ''' Note that no time interpolation in this class.
 '''
     def __init__(self, file_incr_slip):
         super().__init__(file_incr_slip)
+
+    def get_epoch_value(self, epoch):
+        epochs = self.get_epochs()
+        assert epoch in epochs, "Interpolation is not allowed in this class."
+        retun super().get_epoch_value(epoch)
 
 class EpochalSlip(EpochalData):
     def __init__(self, file_slip):
