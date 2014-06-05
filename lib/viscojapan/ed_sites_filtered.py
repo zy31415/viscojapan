@@ -35,6 +35,5 @@ class EDSitesFiltered(EpochalData):
 
     def get_epoch_value(self,time):
         out = super().get_epoch_value(time)
-        print(time, out.shape)
         ch = self._gen_filter()
         return out[ch,:]
