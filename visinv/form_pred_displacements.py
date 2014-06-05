@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
+from numpy import logspace
+
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.inversion import Inversion
 from viscojapan.post_inversion_form_pred_displacements import FormPredDisplacements
@@ -21,6 +23,7 @@ inv.init()
 #inv.save_raw('test.pkl')
 
 for ano, alpha in enumerate(logspace(-5,3,30)):
+    print(ano, alpha)
     inv.load_raw('outs_tik2/res_%02d.pkl'%ano)
     form_disp = FormPredDisplacements(inv)
     form_disp.gen_pred_displacements_file('outs_tik2/pred_disp_%02d.pkl'%ano)

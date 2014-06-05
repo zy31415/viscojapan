@@ -21,8 +21,6 @@ class FormPredDisplacements(object):
         npars = m[-num_nlin_pars:]
 
         d = dot(G1,slip)
-        
-        print(npars - npars0)
 
         delta_d = dot(G2, npars - npars0)
 
