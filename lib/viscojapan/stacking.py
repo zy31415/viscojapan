@@ -21,7 +21,9 @@ matrix that represents convolution.
     return G
 
 def _check_if_column_vector(epoch_data):
-    sh = epoch_data.get_epoch_value(0).shape
+    val = epoch_data.get_epoch_value(0)
+    print(val.shape)
+    sh = val.shape
     assert len(sh) ==2, "Wrong dimension. Must be column vector."
     assert sh[1] == 1, "Column number should 1."
     

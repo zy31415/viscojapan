@@ -38,7 +38,7 @@ class FormPredDisplacements(object):
         obs = EpochalData(file_name)
         for nth, epoch in enumerate(epochs):
             obs.set_epoch_value(epoch, self.d[nth*self.num_of_observation:\
-                                              (nth+1)*self.num_of_observation,0])
+                                              (nth+1)*self.num_of_observation,:])
         
 
         
