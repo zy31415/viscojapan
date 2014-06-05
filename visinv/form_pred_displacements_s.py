@@ -19,8 +19,9 @@ alpha = 100
 inv.init()
 # inv.invert(alpha)
 #inv.save_raw('test.pkl')
+inv.load_raw('test.pkl')
 
-for ano, alpha in enumerate(logspace(-5,3,30)):
-    inv.load_raw('outs_tik2/res_%02d.pkl'%ano)
-    form_disp = FormPredDisplacements(inv)
-    form_disp.gen_pred_displacements_file('outs_tik2/pred_disp_%02d.pkl'%ano)
+
+form_disp = FormPredDisplacements(inv)
+
+form_disp.gen_pred_displacements_file('test_disp.h5')
