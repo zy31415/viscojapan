@@ -33,7 +33,7 @@ def slip_to_incr_slip(f_slip, f_incr_slip):
         else:
             incr_slip.set_epoch_value(epoch, val-val0)
             val0 = val
-    incr_slip.copy_info_from_file(f_slip)
+    incr_slip.copy_info_from(f_slip)
 
 def incr_slip_to_slip(f_incr_slip, f_slip):
     assert exists(f_incr_slip)
