@@ -17,5 +17,10 @@ inv.epochs = epochs
 alpha = 100
 inv.init()
 # inv.invert(alpha)
-inv.save_raw('test.pkl')
+#inv.save_raw('test.pkl')
+inv.load_raw('test.pkl')
 
+
+form_disp = FormPredDisplacements(inv)
+
+form_disp.gen_pred_displacements_file('test_disp.h5')

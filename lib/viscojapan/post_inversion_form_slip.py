@@ -45,6 +45,3 @@ class FormSlip(object):
                 val0 += val
             slip.set_epoch_value(epoch,val0)
 
-    def get_predicated_obs(self):
-        pass
-        
