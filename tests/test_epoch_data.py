@@ -16,44 +16,49 @@ if exists(epoch_file1):
     
 epochs = range(1, 10)
 
-# test EpochalData.set_epoch_value()
+ep = EpochalData(epoch_file1)
+
+# test ep.set_epoch_value()
 for epoch in epochs:
-    EpochalData.set_epoch_value(epoch_file1,epoch, epoch*ones((10,1)))
+    ep.set_epoch_value(epoch, epoch*ones((10,1)))
 
-# test EpochalData.get_epoch_value()
+# test ep.get_epoch_value()
 
-EpochalData.get_epoch_value(epoch_file1,1)
+ep.get_epoch_value(1)
 
-EpochalData.set_info(epoch_file1,'sites',[b'a',b'b',b'c',b'd',b'e',
+ep.set_info('sites',[b'a',b'b',b'c',b'd',b'e',
                                           b'f',b'g',b'h',b'i'],
                      unit = 'meter')
 
-# test reading:
-# test EpochalData.get_epochs()
-epochs = EpochalData.get_epochs(epoch_file1)
+### test reading:
+### test ep.get_epochs()
+epochs = ep.get_epochs()
 print(epochs)
 
-# test EpochalData.get_epoch_value()
+### test ep.get_epoch_value()
 for epoch in range(1,10):
-    val = EpochalData.get_epoch_value(epoch_file1,1)
+    val = ep.get_epoch_value(epoch)
     print(val)
-
-# test interpolation
+##
+### test interpolation
 for epoch in range(1,9):
-    val = EpochalData.get_epoch_value(epoch_file1,epoch+0.1) 
+    val = ep.get_epoch_value(epoch+0.1) 
     print(val)
 
-sites = EpochalData.get_info(epoch_file1, 'sites')
+sites = ep.get_info('sites')
 print(sites)
-
-print(EpochalData.has_info(epoch_file1,'sites'))
-print(EpochalData.has_info(epoch_file1,'xxxx'))
-
-for epoch, val in EpochalData.iter_epoch_values(epoch_file1):
+##
+print(ep.has_info('sites'))
+print(ep.has_info('xxxx'))
+##
+for epoch, val in ep.iter_epoch_values():
     print(epoch, val)
-
+##
 epoch_file2 = 'test2.h5'
 if exists(epoch_file2):
     os.remove(epoch_file2)
-    
-EpochalData.copy_info(epoch_file1, epoch_file2)
+
+ep2 = EpochalData(epoch_file2)
+ep2.copy_info_from(epoch_file1)
+
+ep.copy_info_to('test3.h5')
