@@ -1,31 +1,24 @@
 from numpy import asarray
 
 from .slip import EpochalIncrSlip, EpochalSlip
-from ed_sites_filtered import EDSitesFiltered
-from epochal_data import EpochalData
+from .ed_sites_filtered import EDSitesFiltered
+from .epochal_data import EpochalData
 
-class PostProcessing(object):
+class PostInversionProcessing(object):
     def __init__(self, inversion):
-        self.solution = None
-        self.epochs = None
-        self.nlin_par_names = []
-        self.nlin_par_vals0 = []
-
-        self.G = None
-        self.d = None
-        self.num_obs = None
-        self.file_pred = None
-
-        self.num_of_subfaults = 250
-
-    def init(self):
-        self.num_of_nlin_pars = len(self.nlin_par_names)
-        self.incr_slip_arr = asarray(self.solution['x'])[0:-self.num_of_nlin_pars]
-        self.nlin_par_vals = asarray(self.solution['x'])[-self.num_of_nlin_pars:]
-        self.nlin_par_vals = self.nlin_par_vals.flatten()
+        self.inversion = inversion
         
-        for pn, val in zip(self.nlin_par_names,
-                           self.nlin_par_vals):
+    def init(self):
+        assert hasattr(self.inversion, 'solution'), "Have you run the program?"
+        self.m = asarray(self.inversion.solution['x'],float)
+        
+        self.num_of_nlin_pars = len(self.formulate_occam.non_lin_par_vals)
+        
+        self.incr_slip_arr = self.m[0:-self.num_of_nlin_pars]
+        self.nlin_par_vals = self.m[-self.num_of_nlin_pars:]
+        
+        for pn, val in zip(self.formulate_occam.nlin_par_names,
+                           self.formulate_occam.nlin_par_vals):
             setattr(self,pn,val)
 
     def gen_inverted_incr_slip_file(self, incr_slip_file, info_dic={}):

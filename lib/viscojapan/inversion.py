@@ -8,7 +8,10 @@ from .formulate_occam import FormulatOccam
 from .tikhonov_regularization import TikhonovSecondOrder
 from .least_square import LeastSquare
 from .diff_ed import DiffED
+
 class Inversion:
+    ''' Connet relative objects to work together to do inversion.
+'''
     def __init__(self):
         self.sites_file = ''
 
@@ -21,6 +24,14 @@ class Inversion:
 
         self.epochs = []
 
+    def _formulate_occam(self): 
+        formulate_occam = FormulatOccam()
+        formulate_occam.epochs = self.epochs
+        formulate_occam.non_lin_par_vals = [self.log10_visM]
+        formulate_occam.non_lin_JacobianVecs = [self.jac_1]
+        formulate_occam.G = self.G1
+        formulate_occam.d = self.obs
+        self.formulate_occam = formulate_occam
         
     def init(self):
         self.G1 = EDSitesFiltered(self.file_G1, self.sites_file)
@@ -35,14 +46,7 @@ class Inversion:
 
         self.jac_1 = JacobianVec(self.dG, self.f_slip0)
 
-        # FormulatOccam 
-        formulate_occam = FormulatOccam()
-        formulate_occam.epochs = self.epochs
-        formulate_occam.non_lin_par_vals = [self.log10_visM]
-        formulate_occam.non_lin_JacobianVecs = [self.jac_1]
-        formulate_occam.G = self.G1
-        formulate_occam.d = self.obs
-        self.formulate_occam = formulate_occam
+        self._formulate_occam()
 
         self.d_ = self.formulate_occam.d_()
         self.jacobian = self.formulate_occam.Jacobian()

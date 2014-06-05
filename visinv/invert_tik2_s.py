@@ -3,6 +3,7 @@ import sys
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.inversion import Inversion
+from viscojapan.post_inversion_processing import PostInversionProcessing
 from days import days as epochs
 
 inv = Inversion()
@@ -16,5 +17,6 @@ inv.epochs = epochs
 
 alpha = 100
 inv.init()
-inv.invert(alpha)
+# inv.invert(alpha)
 inv.save_raw('test.pkl')
+
