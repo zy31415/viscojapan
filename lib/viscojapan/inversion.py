@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import pickle
 
->>>>>>> 38f69ddeadbcc1feeb23220d97c1d73586bb6cea
 from numpy import log10
 
 from .ed_sites_filtered import EDSitesFiltered
@@ -69,15 +66,9 @@ class Inversion:
         self.least_square.alpha = alpha
         self.solution = self.least_square()
     
-<<<<<<< HEAD
-    def save_raw_results(self, file_name):
-        with open(file_name,'wb') as fid:
-            pickle.dump((self.alpha, self.solution),fid)
-=======
     def save_raw(self, file_name):
         with open(file_name,'wb') as fid:
             pickle.dump((self.least_square.alpha, self.solution),fid)
->>>>>>> 38f69ddeadbcc1feeb23220d97c1d73586bb6cea
 
     def post_processing(self):
         pass
