@@ -19,28 +19,28 @@ class EpochalData(object):
         assert epoch <= max_day, 'Max day: %d'%max_day
         assert epoch >= min_day, 'Min day: %d'%min_day
 
+    def _get_epoch_value(self, epoch):
+        epochs = self.get_epochs()
+        assert epoch in epochs
+        with h5py.File(self.epoch_file,'r') as fid:
+            out = fid['epochs/%04d'%epoch][...]
+        return out
+    
     def get_epoch_value(self, epoch):
         self._assert_within_range(epoch)
+                              
+        for nth, ti in enumerate(epochs):
+            if epoch <= ti:
+                break
+        t1 = epochs[nth-1]
+        t2 = epochs[nth]
         
-        epochs = self.get_epochs()
+        G1=self._get_epoch_value(t1)
+        G2=self._get_epoch_value(t2)
 
-        if epoch in epochs:
-            with h5py.File(self.epoch_file,'r') as fid:
-                out = fid['epochs/%04d'%epoch][...]
-            return out
-        else:                                 
-            for nth, ti in enumerate(epochs):
-                if epoch <= ti:
-                    break
-            t1 = epochs[nth-1]
-            t2 = epochs[nth]
-            
-            G1=self.get_epoch_value(t1)
-            G2=self.get_epoch_value(t2)
+        G=(epoch-t1)/(t2-t1)*(G2-G1)+G1
 
-            G=(epoch-t1)/(t2-t1)*(G2-G1)+G1
-
-            return G
+        return G
 
     def set_info(self, key, value, **kwargs):
         ''' Set info. **args are attributs
