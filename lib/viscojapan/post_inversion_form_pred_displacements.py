@@ -5,7 +5,7 @@ from .epochal_data import EpochalData
 class FormPredDisplacements(object):
     def __init__(self, inversion):
         self.inversion = inversion
-        self.num_of_observation = 1300
+        self.num_of_observation = None
 
     def _gen_predicated(self):
         m = asarray(self.inversion.solution['x'],float).flatten()

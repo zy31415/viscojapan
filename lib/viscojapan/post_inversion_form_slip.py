@@ -24,7 +24,7 @@ class FormSlip(object):
         incr_slip = EpochalIncrSlip(incr_slip_file)
         for nth, epoch in enumerate(self.epochs):
             incr_slip.set_epoch_value(epoch,self.incr_slip_arr[
-                nth*self.num_of_subfaults:(nth+1)*self.num_of_subfaults, 0])
+                nth*self.num_of_subfaults:(nth+1)*self.num_of_subfaults, :])
 
         incr_slip.set_info('incr_slip_arr', self.incr_slip_arr)
         incr_slip.set_info('num_of_subfaults', self.num_of_subfaults)

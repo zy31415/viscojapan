@@ -51,5 +51,5 @@ def incr_slip_to_slip(f_incr_slip, f_slip):
             val0 += val
         slip.set_epoch_value(epoch, val0)
 
-    slip.copy_info_from_file(f_incr_slip)
+    slip.copy_info_from(f_incr_slip)
 

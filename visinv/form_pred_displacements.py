@@ -26,4 +26,5 @@ for ano, alpha in enumerate(logspace(-5,3,30)):
     print(ano, alpha)
     inv.load_raw('outs_tik2/res_%02d.pkl'%ano)
     form_disp = FormPredDisplacements(inv)
+    form_disp.num_of_observation = 3900
     form_disp.gen_pred_displacements_file('outs_tik2/pred_disp_%02d.h5'%ano)
