@@ -3,6 +3,7 @@ import sys
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.inversion import Inversion
+from viscojapan.post_inversion_form_pred_displacements import FormPredDisplacements
 from days import days as epochs
 
 inv = Inversion()
