@@ -4,8 +4,8 @@ from .slip import EpochalIncrSlip, EpochalSlip
 from ed_sites_filtered import EDSitesFiltered
 from epochal_data import EpochalData
 
-class InversionResults(object):
-    def __init__(self):
+class PostProcessing(object):
+    def __init__(self, inversion):
         self.solution = None
         self.epochs = None
         self.nlin_par_names = []
