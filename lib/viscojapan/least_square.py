@@ -1,7 +1,7 @@
 from numpy import zeros, dot, nan, identity
 from cvxopt import matrix, solvers
 
-class Invert(object):
+class LeastSquare(object):
     def __init__(self):
         self.G = None
         self.d = None
