@@ -1,4 +1,4 @@
-from numpy import asarray
+from numpy import asarray, dot
 
 from .epochal_data import EpochalData
 
@@ -21,6 +21,8 @@ class FormPredDisplacements(object):
         npars = m[-num_nlin_pars:]
 
         d = dot(G1,slip)
+        
+        print(npars - npars0)
 
         delta_d = dot(G2, npars - npars0)
 
@@ -34,8 +36,8 @@ class FormPredDisplacements(object):
         epochs = self.inversion.epochs
 
         obs = EpochalData(file_name)
-        for nth, epoch in enumerate(self.epochs):
-            obs.set_epoch_value(epoch, self.d[nth*self.num_of_observation,
+        for nth, epoch in enumerate(epochs):
+            obs.set_epoch_value(epoch, self.d[nth*self.num_of_observation:\
                                               (nth+1)*self.num_of_observation])
         
 
