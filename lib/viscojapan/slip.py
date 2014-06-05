@@ -11,7 +11,7 @@ class EpochalIncrSlip(EpochalData):
     def get_epoch_value(self, epoch):
         epochs = self.get_epochs()
         assert epoch in epochs, "Interpolation is not allowed in this class."
-        retun super().get_epoch_value(epoch)
+        return super().get_epoch_value(epoch)
 
 class EpochalSlip(EpochalData):
     def __init__(self, file_slip):
