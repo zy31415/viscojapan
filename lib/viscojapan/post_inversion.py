@@ -1,12 +1,20 @@
 from numpy import asarray
 
 from .slip import EpochalIncrSlip, EpochalSlip
+from ed_sites_filtered import EDSitesFiltered
+from epochal_data import EpochalData
 
 class InversionResults(object):
     def __init__(self):
         self.solution = None
         self.epochs = None
         self.nlin_par_names = []
+        self.nlin_par_vals0 = []
+
+        self.G = None
+        self.d = None
+        self.num_obs = None
+        self.file_pred = None
 
         self.num_of_subfaults = 250
 
@@ -46,5 +54,19 @@ class InversionResults(object):
             slip.set_epoch_value(epoch,val0)
 
     def get_predicated_obs(self):
-        pass
+        G1 = self.G[:,0:-self.num_of_nlin_pars]
+        G2 = self.G[-self.num_of_nlin_pars:]
+
+        res = dot(G1, self.incr_slip_arr)
+        delta = self.nlin_par_vals - self.nlin_par_vals0
+        res += dot(G2, delta)
+
+        pred =  EpochalData(self.file_pred)
+
+        
+        for nth, epoch in enumerate(epochs):
+            val = res[nth*self.num_obs : (nth+1)*self.num_obs]
+            pred.set_epochal_value(epoch,nth)
+            
+            
         
