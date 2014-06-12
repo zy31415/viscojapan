@@ -6,7 +6,7 @@ from h5py import File
 def get_pos_dic():
     ''' Return a dictionary of position of all stations.
 '''
-    tp=loadtxt('/home/zy/workspace/utils/llh','4a,3f')
+    tp=loadtxt('/home/zy/workspace/viscojapan/share/llh','4a,3f')
     return {ii[0]:ii[1] for ii in tp}
 
 def get_pos(sites):
@@ -21,6 +21,11 @@ def get_pos(sites):
 
 _fault_file='/home/zy/workspace/visinv2/flt_250/fault.h5'
 
+def append_title(string):
+    ax=gca()
+    title = ax.get_title()
+    ax.set_title(title+string)
+    
 class Map(Basemap):
     def __init__(self):
         self.region_box=(136,34,146,42)
@@ -158,9 +163,9 @@ label - L-curve label
             text(nres[ano],nsol[ano],'%d/%.2G'%(ano,alphas[ano]),color='red')
 
     xlabel('Residual Norm ($\log_{10}{||Gm-d||_2}$)')
-    ylabel('Solution Norm ($\log_{10}{||m||_2}$)')
+    ylabel('Solution Roughness ($\log_{10}{||Lm||_2}$)')
     grid('on')
     
-    
+
 
     
