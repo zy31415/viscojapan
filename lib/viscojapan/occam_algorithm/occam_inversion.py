@@ -54,23 +54,44 @@ class OccamInversion:
         reg.num_epochs = len(self.epochs)
         reg.num_nlin_pars = 1
         return reg
+
+    def init(self):
+        ''' The computation of the following three variable is quite time
+cosuming. Because I need to do inversion for a series of alphas, I need to
+pre-compute these three variable so that I don't need to compute them
+everytime the alpha values changes.
+
+Before. pickle this class, I need to delete these three variables, because
+they take a lot memory and space.
+
+jacobian
+d_
+tikhonov_regularization
+'''
+        formulate_occam = self._formulate_occam()
+        
+        self.jacobian = formulate_occam.Jacobian()
+        self.d_ = formulate_occam.d_()
+        self.tikhonov_regularization = self._tikhonov_regularization()
         
 
     def invert(self, alpha):
         least_square = LeastSquare()
-
-        formulate_occam = self._formulate_occam()
-        least_square.G = formulate_occam.Jacobian()
-        least_square.d = formulate_occam.d_()
-
-        least_square.tikhonov_regularization = self._tikhonov_regularization()
+        
+        least_square.G = self.jacobian
+        least_square.d = self.d_
+        least_square.tikhonov_regularization = self.tikhonov_regularization
         
         least_square.alpha = alpha
         self.alpha =  alpha
         
         self.solution = least_square()
 
-    def pickle(self,fn):        
+    def pickle(self,fn):
+        self.jacobian = None
+        #self.d_ = None
+        #self.tikhonov_regularization = None
+        
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
 
