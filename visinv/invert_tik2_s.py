@@ -22,5 +22,5 @@ inv.save_raw('test.pkl')
 import pickle
 
 with open('whole.pkl','wb') as fid:
-    pickle.dump(fid,inv)
+    pickle.dump(inv,fid)
     
