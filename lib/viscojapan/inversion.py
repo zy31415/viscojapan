@@ -2,7 +2,7 @@ import pickle
 
 from numpy import log10
 
-from .ed_sites_filtered import EDSitesFiltered
+from .epochal_data.ed_sites_filtered import EpochalG, EpochalDisplacement
 from .jacobian_vec import JacobianVec
 from .formulate_occam import FormulatOccam
 from .tikhonov_regularization import TikhonovSecondOrder
@@ -51,11 +51,11 @@ class Inversion:
         self.tikhonov_regularization = reg
         
     def init(self):
-        self.G1 = EDSitesFiltered(self.file_G1, self.sites_file)
-        self.G2 = EDSitesFiltered(self.file_G2, self.sites_file)
+        self.G1 = EpochalG(self.file_G1, self.sites_file)
+        self.G2 = EpochalG(self.file_G2, self.sites_file)
         self.dG = DiffED(self.G1, self.G2, 'log10_visM')
 
-        self.obs = EDSitesFiltered(self.f_d, self.sites_file)
+        self.obs = EpochalDisplacement(self.f_d, self.sites_file)
 
         self.visM = self.G1.get_info('visM')
         self.log10_visM = log10(self.visM)
