@@ -34,14 +34,6 @@ class OccamInversion:
         formulate_occam.d = self.obs
         self.formulate_occam = formulate_occam
 
-    def _least_square(self):
-        # Inversion
-        least_square = LeastSquare()
-        least_square.G = self.jacobian
-        least_square.d = self.d_
-        least_square.tikhonov_regularization = self.tikhonov_regularization
-        self.least_square = least_square
-
     def _tikhonov_regularization(self):
         # regularization
         reg = TikhonovSecondOrder(nrows_slip=10, ncols_slip=25)
@@ -53,8 +45,8 @@ class OccamInversion:
         
     def init(self):
         self.G1 = EpochalG(self.file_G1, self.sites_file)
-        self.G2 = EpochalG(self.file_G2, self.sites_file)
-        self.dG = DiffED(self.G1, self.G2, 'log10_visM')
+        G2 = EpochalG(self.file_G2, self.sites_file)
+        self.dG = DiffED(self.G1, G2, 'log10_visM')
 
         self.obs = EpochalDisplacement(self.f_d, self.sites_file)
 
@@ -75,8 +67,15 @@ class OccamInversion:
         self._least_square()
 
     def invert(self, alpha):
-        self.least_square.alpha = alpha
-        self.solution = self.least_square()
+        least_square = LeastSquare()
+        least_square.G = self.jacobian
+        least_square.d = self.d_
+        least_square.tikhonov_regularization = self.tikhonov_regularization
+        
+        least_square.alpha = alpha
+        self.alpha =  alpha
+        
+        self.solution = least_square()
     
     def save_raw(self, file_name):
         with open(file_name,'wb') as fid:
@@ -88,12 +87,7 @@ class OccamInversion:
                    pickle.load(fid)
 
     def pickle(self,fn):
-        self.formulate_occam = None
-
-        self.alpha = self.least_square.alpha
-        self.least_square = None
-        
-        self.tikhonov_regularization = None
+        self.formulate_occam = None        
 
         self.jacobian = None
         self.d_ = None
