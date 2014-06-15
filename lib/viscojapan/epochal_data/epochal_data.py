@@ -3,6 +3,8 @@ from os.path import exists
 import h5py
 
 class EpochalData(object):
+    ''' Use this class to CREATE and READ epochal data file.
+'''
     def __init__(self,epoch_file):
         self.epoch_file = epoch_file
 
