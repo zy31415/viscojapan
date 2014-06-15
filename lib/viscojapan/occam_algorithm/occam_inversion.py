@@ -10,7 +10,7 @@ from .tikhonov_regularization import TikhonovSecondOrder
 from .least_square import LeastSquare
 
 
-class Inversion:
+class OccamInversion:
     ''' Connet relative objects to work together to do inversion.
 '''
     def __init__(self):
