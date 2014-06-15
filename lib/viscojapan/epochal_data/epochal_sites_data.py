@@ -46,3 +46,5 @@ class EpochalSitesFilteredData(EpochalSitesData):
         out = super().get_epoch_value(time)
         ch = self._gen_filter()
         return out[ch,:]
+
+class 

@@ -23,6 +23,7 @@ class TestEpochalSitesFilteredData(unittest.TestCase):
         create_a_sites_data_file(self.sites_data_file)
         self.filter_sites_file = os.path.join(_dir_data,'filter_sites')
         self.filter_sites = loadtxt(self.filter_sites_file,'4a')
+        self.num_of_sites = len(self.filter_sites)
 
     def test(self):
         sites_data_obj = EpochalSitesFilteredData(self.sites_data_file,
@@ -31,6 +32,7 @@ class TestEpochalSitesFilteredData(unittest.TestCase):
         epochs = sites_data_obj.get_epochs()
         for epoch in epochs:
             val = sites_data_obj.get_epoch_value(epoch)
+            self.assertEqual(self.num_of_sites*3,len(val))
 
         for epoch in epochs[:-1]:
             val = sites_data_obj.get_epoch_value(epoch+0.1)
