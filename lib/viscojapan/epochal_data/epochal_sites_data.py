@@ -47,4 +47,11 @@ class EpochalSitesFilteredData(EpochalSitesData):
         ch = self._gen_filter()
         return out[ch,:]
 
-class 
+class EpochalG(EpochalSitesFilteredData):
+    def __init__(self,epoch_file, filter_sites_file):
+        super().__init__(epoch_file, filter_sites_file)
+
+class EpochalDisplacement(EpochalSitesFilteredData):
+    def __init__(self,epoch_file, filter_sites_file):
+        super().__init__(epoch_file, filter_sites_file)
+    
