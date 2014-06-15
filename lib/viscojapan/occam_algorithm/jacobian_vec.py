@@ -3,8 +3,8 @@ from os.path import exists
 
 from numpy import dot
 
-from .epochal_data.epochal_slip import slip_to_incr_slip, EpochalIncrSlip
-from .epochal_data.diff_ed import DiffED
+from ..epochal_data.epochal_slip import slip_to_incr_slip, EpochalIncrSlip
+from ..epochal_data.diff_ed import DiffED
 from .stacking import vstack_column_vec, conv_stack
 
 def _check_shape_for_matrix_product(A,B):
