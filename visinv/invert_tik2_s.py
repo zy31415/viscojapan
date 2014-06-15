@@ -13,9 +13,9 @@ inv.file_G2 = '../greensfunction/050km-vis01/G.h5'
 inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
+inv.init()
 
 alpha = 100
-inv.init()
 inv.invert(alpha)
 inv.pickle('test.pkl')
     

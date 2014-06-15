@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
+from numpy import logspace
+
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.occam_algorithm.occam_inversion import OccamInversion
 from days import days as epochs
