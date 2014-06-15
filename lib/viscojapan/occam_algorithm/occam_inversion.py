@@ -60,7 +60,7 @@ class OccamInversion:
         least_square = LeastSquare()
 
         formulate_occam = self._formulate_occam()
-        least_square.G = formulate_occam.jacobian()
+        least_square.G = formulate_occam.Jacobian()
         least_square.d = formulate_occam.d_()
 
         least_square.tikhonov_regularization = self._tikhonov_regularization()
