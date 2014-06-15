@@ -90,7 +90,7 @@ tikhonov_regularization
     def pickle(self,fn):
         self.jacobian = None
         self.d_ = None
-        self.tikhonov_regularization = None
+        #self.tikhonov_regularization = None
         
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
