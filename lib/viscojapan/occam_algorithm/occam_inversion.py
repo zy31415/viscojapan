@@ -2,15 +2,15 @@ import pickle
 
 from numpy import log10
 
-from .epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
-from .epochal_data.diff_ed import DiffED
+from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
+from ..epochal_data.diff_ed import DiffED
 from .jacobian_vec import JacobianVec
 from .formulate_occam import FormulatOccam
-from .tikhonov_regularization import TikhonovSecondOrder
-from .least_square import LeastSquare
+from ..least_square.tikhonov_regularization import TikhonovSecondOrder
+from ..least_square.least_square import LeastSquare
 
 
-class Inversion:
+class OccamInversion:
     ''' Connet relative objects to work together to do inversion.
 '''
     def __init__(self):
