@@ -94,6 +94,10 @@ class OccamInversion:
         self.least_square = None
         
         self.tikhonov_regularization = None
+
+        self.jacobian = None
+        self.d_ = None
+        self.tikhonov_regularization = None
         
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
