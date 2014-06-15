@@ -2,10 +2,10 @@
 import sys
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
-from viscojapan.inversion import Inversion
+from viscojapan.occam_algorithm.occam_inversion import OccamInversion
 from days import days as epochs
 
-inv = Inversion()
+inv = OccamInversion()
 
 inv.sites_file = 'sites'
 inv.file_G1 = '../greensfunction/050km-vis02/G.h5'
