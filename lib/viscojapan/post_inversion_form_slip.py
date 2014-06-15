@@ -1,6 +1,6 @@
 from numpy import asarray
 
-from .slip import EpochalIncrSlip, EpochalSlip
+from .epochal_data.epochal_data import EpochalData
 
 class FormSlip(object):
     def __init__(self):
@@ -21,7 +21,7 @@ class FormSlip(object):
             setattr(self,pn,val)
 
     def gen_inverted_incr_slip_file(self, incr_slip_file, info_dic={}):
-        incr_slip = EpochalIncrSlip(incr_slip_file)
+        incr_slip = EpochalData(incr_slip_file)
         for nth, epoch in enumerate(self.epochs):
             incr_slip.set_epoch_value(epoch,self.incr_slip_arr[
                 nth*self.num_of_subfaults:(nth+1)*self.num_of_subfaults, :])
@@ -32,16 +32,4 @@ class FormSlip(object):
         for par in self.nlin_par_names:
             incr_slip.set_info(par, getattr(self,par))
         incr_slip.set_info_dic(info_dic)
-
-    def gen_inverted_slip_file(self, slip_file):
-        slip = EpochalSlip(slip_file)
-        for nth, epoch in enumerate(self.epochs):
-            if nth == 0:
-                val0 = self.incr_slip_arr[nth*self.num_of_subfaults:
-                                          (nth+1)*self.num_of_subfaults,0]
-            else:
-                val = self.incr_slip_arr[nth*self.num_of_subfaults:
-                                         (nth+1)*self.num_of_subfaults,0]
-                val0 += val
-            slip.set_epoch_value(epoch,val0)
 

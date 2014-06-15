@@ -17,10 +17,5 @@ inv.epochs = epochs
 alpha = 100
 inv.init()
 inv.invert(alpha)
-inv.save_raw('test.pkl')
-
-import pickle
-
-with open('whole.pkl','wb') as fid:
-    pickle.dump(inv,fid)
+inv.pickle('test.pkl')
     
