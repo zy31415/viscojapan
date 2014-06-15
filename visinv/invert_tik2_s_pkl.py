@@ -2,10 +2,10 @@
 import sys
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
-from viscojapan.occam_algorithm.occam_inversion import OccamInversion
+from viscojapan.inversion import Inversion
 from days import days as epochs
 
-inv = OccamInversion()
+inv = Inversion()
 
 inv.sites_file = 'sites'
 inv.file_G1 = '../greensfunction/050km-vis02/G.h5'
@@ -20,7 +20,7 @@ inv.invert(alpha)
 inv.save_raw('test.pkl')
 
 import pickle
+with open('inversion')
+pickle.dump()
 
-with open('whole.pkl','wb') as fid:
-    pickle.dump(fid,inv)
-    
+
