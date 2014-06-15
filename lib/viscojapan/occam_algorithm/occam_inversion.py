@@ -87,4 +87,15 @@ class OccamInversion:
             self.alpha, self.solution = \
                    pickle.load(fid)
 
+    def pickle(self,fn):
+        self.formulate_occam = None
+
+        self.alpha = self.least_square.alpha
+        self.least_square = None
+        
+        self.tikhonov_regularization = None
+        
+        with open(fn, 'wb') as fid:
+            pickle.dump(self, fid)
+
         

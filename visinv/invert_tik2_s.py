@@ -14,15 +14,8 @@ inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
 
-inv.save_raw('test.pkl')
-
 alpha = 100
 inv.init()
 inv.invert(alpha)
-
-
-import pickle
-
-with open('whole.pkl','wb') as fid:
-    pickle.dump(fid,inv)
+inv.pickle('test.pkl')
     
