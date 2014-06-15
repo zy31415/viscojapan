@@ -9,7 +9,7 @@ class TestOccamInversion(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test():
+    def test(self):
         inv = OccamInversion()
         inv.sites_file = 'sites'
         inv.file_G1 = '../greensfunction/050km-vis02/G.h5'
@@ -20,7 +20,7 @@ class TestOccamInversion(unittest.TestCase):
         alpha = 100
         inv.init()
         inv.invert(alpha)
-        inv.save_raw('test.pkl')
+        inv.pickle('test.pkl')
 
 if __name__=='__main__':
     unittest.main()
