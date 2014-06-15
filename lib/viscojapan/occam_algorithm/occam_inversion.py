@@ -86,8 +86,7 @@ class OccamInversion:
             self.alpha, self.solution = \
                    pickle.load(fid)
 
-    def pickle(self,fn):
-        self.formulate_occam = None        
+    def pickle(self,fn):       
 
         self.jacobian = None
         self.d_ = None
