@@ -68,10 +68,10 @@ jacobian
 d_
 tikhonov_regularization
 '''
-        formulate_occam = self._formulate_occam()
-        
+        formulate_occam = self._formulate_occam()        
         self.jacobian = formulate_occam.Jacobian()
         self.d_ = formulate_occam.d_()
+        
         self.tikhonov_regularization = self._tikhonov_regularization()
         
 
@@ -89,7 +89,7 @@ tikhonov_regularization
 
     def pickle(self,fn):
         self.jacobian = None
-        #self.d_ = None
+        self.d_ = None
         #self.tikhonov_regularization = None
         
         with open(fn, 'wb') as fid:
