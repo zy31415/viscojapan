@@ -34,4 +34,3 @@ def vstack_column_vec(epoch_data, epochs):
         res = vstack((res,epoch_data.get_epoch_value(epoch)))
     return res
         
-    
