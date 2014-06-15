@@ -20,7 +20,7 @@ class TestOccamInversion(unittest.TestCase):
         alpha = 100
         inv.init()
         inv.invert(alpha)
-        inv.save_raw('test.pkl')
+        inv.pickle('test.pkl')
 
 if __name__=='__main__':
     unittest.main()
