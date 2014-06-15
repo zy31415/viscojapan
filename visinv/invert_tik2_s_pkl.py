@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import sys
 
-from numpy import logspace
-
 sys.path.append('/home/zy/workspace/viscojapan/lib')
-from viscojapan.occam_algorithm.occam_inversion import OccamInversion
+from viscojapan.inversion import Inversion
 from days import days as epochs
 
-inv = OccamInversion()
+inv = Inversion()
 
 inv.sites_file = 'sites'
 inv.file_G1 = '../greensfunction/050km-vis02/G.h5'
@@ -16,9 +14,13 @@ inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
 
-for ano, alpha in enumerate(logspace(-5,3,30)):
-    inv.init()
-    inv.invert(alpha)
-    inv.save_raw('outs_tik2/res_%02d.pkl'%ano)
+alpha = 100
+inv.init()
+inv.invert(alpha)
+inv.save_raw('test.pkl')
+
+import pickle
+with open('inversion')
+pickle.dump()
 
 
