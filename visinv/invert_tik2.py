@@ -5,7 +5,7 @@ from numpy import logspace
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.occam_algorithm.occam_inversion import OccamInversion
-from days import days as epochs
+from days_test import days as epochs
 
 inv = OccamInversion()
 
@@ -16,10 +16,10 @@ inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
 inv.init()
-inv.init_least_square()
 
 for ano, alpha in enumerate(logspace(-5,3,30)):
+    inv.init_least_square()
     inv.invert(alpha)
-    inv.pickle('outs_tik2/res_%02d.pkl'%ano)
+    inv.pickle('outs/res_%02d.pkl'%ano)
 
 
