@@ -1,5 +1,6 @@
 from os.path import exists
 
+from scipy.sparse import bmat
 from numpy import vstack, zeros
 
 from .epochal_data import EpochalData
@@ -23,6 +24,25 @@ matrix that represents convolution.
             G[mth*sh1:(mth+1)*sh1,
               nth*sh2:(nth+1)*sh2] = G_
     return G
+
+def conv_stack_sparse(epoch_data, epochs):
+    ''' Stack epoch_data according to time indicated by epochs to
+matrix that represents convolution.
+'''
+    N = len(epochs)
+    G=[]
+    for nth in range(N):
+        G.append([None]*N)
+
+    for nth in range(0, N):
+        t1 = epochs[nth]
+        for mth in range(nth, N):
+            t2 = epochs[mth]
+            #print(t2,t1,t2-t1)
+            _G = epoch_data.get_epoch_value(t2-t1)
+            G[mth][nth] = _G
+    G_sparse = bmat(G)
+    return G_sparse
 
 def _assert_column_vector(res):
     sh = res.shape
