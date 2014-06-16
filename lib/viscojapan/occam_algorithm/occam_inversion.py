@@ -5,6 +5,7 @@ from numpy import log10, asarray
 
 from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
 from ..epochal_data.diff_ed import DiffED
+from ..epochal_data.stacking import break_col_vec_into_epoch_file
 from ..least_square.tikhonov_regularization import TikhonovSecondOrder
 from ..least_square.least_square import LeastSquare
 from .formulate_occam import JacobianVec, Jacobian, D_
@@ -133,7 +134,13 @@ tikhonov_regularization
             fid['slip'] = get_results_slip
 
     def save_results_to_epochal_file(self, epochal_file):
+<<<<<<< HEAD
         pass
+=======
+        vec = get_results_slip()
+        break_col_vec_into_epoch_file(vec, self.epochs, epochal_file)
+        
+>>>>>>> 943bdbf9936227cbf05e68daf4a93ed78f3078bc
         
     
 

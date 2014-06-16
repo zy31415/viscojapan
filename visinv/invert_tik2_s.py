@@ -18,7 +18,6 @@ inv.init_least_square()
 
 alpha = 100
 inv.invert(alpha)
-inv.save_results('res.h5')
-inv.pickle('test.pkl')
-
-    
+#inv.pickle('test.pkl')
+inv.save_raw_results('raw_res.h5')
+inv.save_results_to_epochal_file('epochal_res.h5')
