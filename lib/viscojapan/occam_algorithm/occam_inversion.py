@@ -39,6 +39,7 @@ class OccamInversion:
         jacobian = Jacobian()
         jacobian.G = self.G1
         jacobian.jacobian_vecs = self.jacobian_vecs
+        jacobian.epochs = self.epochs
         self.jacobian = jacobian
         
     def _init_d_(self):
@@ -100,8 +101,8 @@ tikhonov_regularization
         self.solution = least_square()
 
     def pickle(self,fn):
-        self.jacobian = None
-        self.d_ = None
+        self.jacobian_mat = None
+        self.d__vec = None
         #self.tikhonov_regularization = None
         
         with open(fn, 'wb') as fid:

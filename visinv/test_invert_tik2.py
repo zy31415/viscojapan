@@ -19,6 +19,7 @@ class TestOccamInversion(unittest.TestCase):
         inv.epochs = epochs
         alpha = 100
         inv.init()
+        inv.init_least_square()
         inv.invert(alpha)
         inv.pickle('test.pkl')
 
