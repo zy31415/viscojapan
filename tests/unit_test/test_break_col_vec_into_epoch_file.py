@@ -1,10 +1,13 @@
 import unittest
 import os
+from os.path import join
 
 from numpy import ones
 
 from viscojapan.epochal_data.stacking import break_col_vec_into_epoch_file
-from .test_utils import delete_if_exists
+from viscojapan.utils import delete_if_exists, get_this_script_dir
+
+this_test_dir = get_this_script_dir(__file__)
 
 class TestBreakColVecIntoEpochFile(unittest.TestCase):
     def setUp(self):
@@ -15,7 +18,8 @@ class TestBreakColVecIntoEpochFile(unittest.TestCase):
         self.vec = vec
         self.epochs = range(0,10)
 
-        self.h5_file_name = 'test.h5'
+        self.h5_file_name = join(this_test_dir, 'test_break_into_epochal_file.h5')
+        
         delete_if_exists(self.h5_file_name)
 
     def test_basic(self):
@@ -38,9 +42,6 @@ class TestBreakColVecIntoEpochFile(unittest.TestCase):
                   'C':'c'}
         break_col_vec_into_epoch_file(self.vec, self.epochs, self.h5_file_name,
                                       rows_per_epoch=10, info_dic = info_dic)
-
-    def tearDown(self):
-        delete_if_exists(self.h5_file_name)
 
 if __name__ == '__main__':
     unittest.main()
