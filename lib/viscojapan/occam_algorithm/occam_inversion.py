@@ -134,13 +134,9 @@ tikhonov_regularization
             fid['slip'] = get_results_slip
 
     def save_results_to_epochal_file(self, epochal_file):
-<<<<<<< HEAD
-        pass
-=======
         vec = get_results_slip()
         break_col_vec_into_epoch_file(vec, self.epochs, epochal_file)
         
->>>>>>> 943bdbf9936227cbf05e68daf4a93ed78f3078bc
         
     
 
