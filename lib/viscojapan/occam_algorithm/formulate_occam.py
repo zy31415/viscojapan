@@ -1,7 +1,7 @@
 from tempfile import mkstemp
 from os.path import exists
 
-from numpy import dot
+from numpy import dot, hstack
 
 from ..epochal_data.epochal_slip import slip_to_incr_slip, EpochalIncrSlip
 from ..epochal_data.diff_ed import DiffED
