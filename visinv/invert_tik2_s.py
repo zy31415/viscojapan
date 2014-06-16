@@ -14,8 +14,10 @@ inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
 inv.init()
+inv.inti_least_square()
 
 alpha = 100
 inv.invert(alpha)
-inv.pickle('test.pkl')
-    
+#inv.pickle('test.pkl')
+inv.save_raw_results('raw_res.h5')
+inv.save_results_to_epochal_file('epochal_res.h5')
