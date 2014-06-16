@@ -26,8 +26,8 @@ matrix that represents convolution.
     return G
 
 def conv_stack_sparse(epoch_data, epochs):
-    ''' Stack epoch_data according to time indicated by epochs to
-matrix that represents convolution.
+    ''' Sparse stacking is slower.
+See test routine.
 '''
     N = len(epochs)
     G=[]

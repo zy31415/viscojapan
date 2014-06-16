@@ -1,32 +1,69 @@
-from numpy import hstack
+from .stacking import conv_stackfrom tempfile import mkstemp
+from os.path import exists
 
+from numpy import dot
+
+from ..epochal_data.epochal_slip import slip_to_incr_slip, EpochalIncrSlip
+from ..epochal_data.diff_ed import DiffED
 from .stacking import vstack_column_vec, conv_stack
 
-class FormulatOccam(object):
-    ''' This class prpare matrix Jac and vector d_ for O
-ccam nonlinear inversion.
+def _check_shape_for_matrix_product(A,B):
+    sh1 = A.shape
+    sh2 = B.shape
+    assert (len(sh1) == 2) and (len(sh2) == 2), "Wrong shape."
+    assert sh1[1] == sh2[0], "Shape doesn't match!"
+
+class JacobianVec(object):
+    ''' This class defines the derivatives (a Jacobian vector,
+which is a column of a Jacobian matrix) of a system described by
+epochal data with respect a non-linear parameter at place indicated
+by a slip0del parameter.
+
+The one-dimension equivalence is derivative of a curve at certain point.
+
 '''
-    def __init__(self):
+    def __init__(self, dG, f_slip0):
+        '''
+Arguments:
+    dG - DiffED object.
+    slip0 - slip on the fault as initial value.
+'''
+        self.dG = dG
+        self.f_slip0 = f_slip0
+        assert exists(self.f_slip0)
 
-        # epochs used in inversion.
-        self.epochs = []
+    def __call__(self, epochs):
+        ''' This function returns Jacobian vector with respect to
+nonlinear parameter wrt at epochs.
+Return:
+    Jacobian vector    
+'''
+        dG_stacked = conv_stack(self.dG, epochs)
+
+        fid, f_incr_slip = mkstemp(dir='/home/zy/tmp/')
+        slip_to_incr_slip(self.f_slip0,f_incr_slip)
+
+        incr_slip = EpochalIncrSlip(f_incr_slip)
+
+        m_stacked = vstack_column_vec(incr_slip, epochs)
+
+        _check_shape_for_matrix_product(dG_stacked, m_stacked)
         
-        # list of inital values of non_linear parameters
-        self.non_lin_par_vals = []
+        jac = dot(dG_stacked,m_stacked)
 
-        # Corresponding JacobianVec for each non_linear parameters
-        self.non_lin_JacobianVecs = []
+        return jac
 
+class Jacobian(self):
+    def __init__(self):
         # EpochalData object of Green's functions
         #  computed with current non-linear parameters.
         self.G = None
-
-        # EpochalData object of observation
-        self.d = None
-
-    def Jacobian(self):
-        jac_nl = self.non_lin_JacobianVecs[0](self.epochs)
-        for J in self.non_lin_JacobianVecs[1:]:
+        
+        self.jacobian_vecs = []
+        
+    def __call__(self):
+        jac_nl = self.jacobian_vecs[0](self.epochs)
+        for J in self.jacobian_vecs[1:]:
             jac_nl = hstack((jac_nl, J(self.epochs)))
             
         G_stacked = conv_stack(self.G, self.epochs)
@@ -35,51 +72,21 @@ ccam nonlinear inversion.
         
         return jacobian
 
-    def d_(self):
-        d_ = vstack_column_vec(self.d, self.epochs)
-        for J, val in zip(self.non_lin_JacobianVecs, self.non_lin_par_vals):
-            d_ += (J(self.epochs)*val)
-        return d_
-
-class FormulatOccamPostseismic(object):
-    ''' This class prpare matrix Jac and vector d_ for O
-ccam nonlinear inversion. Without consider coseismic slip.
-'''
+class D_(object):
     def __init__(self):
 
-        # epochs used in inversion.
-        self.epochs = []
-        
+        # Corresponding JacobianVec for each non_linear parameters
+        self.jacobian_vecs = []
+
         # list of inital values of non_linear parameters
         self.non_lin_par_vals = []
-
-        # Corresponding JacobianVec for each non_linear parameters
-        self.non_lin_JacobianVecs = []
-
-        # EpochalData object of Green's functions
-        #  computed with current non-linear parameters.
-        self.G = None
-
+        
+        self.epochs = []
         # EpochalData object of observation
         self.d = None
 
-    def Jacobian(self):
-        jac_nl = self.non_lin_JacobianVecs[0](self.epochs)
-        for J in self.non_lin_JacobianVecs[1:]:
-            jac_nl = hstack((jac_nl, J(self.epochs)))
-
-        sh = self.d.get_epoch_value(0).shape[0]
-        
-        G_stacked = conv_stack(self.G, self.epochs[1:])
-        
-        jacobian = hstack((G_stacked, jac_nl[sh:]))
-        
-        return jacobian
-
-    def d_(self):
-        d_ = vstack_column_vec(self.d, self.epochs[1:])
-        sh = self.d.get_epoch_value(0).shape[0]
-        for J, val in zip(self.non_lin_JacobianVecs, self.non_lin_par_vals):
-            jac_1 = J(self.epochs)
-            d_ += (jac_1[sh:]*val)
-        return d_    
+    def __call__(self):
+        d_ = vstack_column_vec(self.d, self.epochs)
+        for J, val in zip(self.jacobian_vecs, self.non_lin_par_vals):
+            d_ += (J(self.epochs)*val)
+        return d_
