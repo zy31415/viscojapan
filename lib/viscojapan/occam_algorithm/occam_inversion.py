@@ -1,4 +1,5 @@
 import pickle
+from os.path import exists
 
 from numpy import log10, asarray
 
@@ -113,15 +114,26 @@ tikhonov_regularization
         
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
-
+    
     # post-processing
-    def save_results(self, fn):
+    def get_results_m(self):
+        return asarray(self.solution['x']).shape((-1,1))
+
+    def get_results_slip(self):
+        m = get_results_m()
+        return m[:-self.num_nlin_pars]
+    
+    def save_raw_results(self, fn):
         _assert_file_not_exists(fn)
         with h5py.File(fn) as fid:
-            m = asarray(self.solution['x']).shape((-1,1))
+            m = self.get_m()
             fid['m'] = m
+            fid['alpha'] = self.alpha
             fid['num_nlin_pars'] = self.num_nlin_pars
-            fid['slip'] = m[:-self.num_nlin_pars]
+            fid['slip'] = get_results_slip
+
+    def save_results_to_epochal_file(self, epochal_file):
+        pass
         
     
 
