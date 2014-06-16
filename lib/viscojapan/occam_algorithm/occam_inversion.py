@@ -108,4 +108,7 @@ tikhonov_regularization
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
 
+    # post-processing
+    
+
         
