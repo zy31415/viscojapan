@@ -101,8 +101,8 @@ tikhonov_regularization
         self.solution = least_square()
 
     def pickle(self,fn):
-        self.jacobian = None
-        self.d_ = None
+        self.jacobian_mat = None
+        self.d__vec = None
         #self.tikhonov_regularization = None
         
         with open(fn, 'wb') as fid:
