@@ -7,14 +7,14 @@ from days import days as epochs
 
 inv = OccamInversion()
 
-inv.sites_file = 'sites'
+inv.sites_file = 'sites_test'
 inv.file_G1 = '../greensfunction/050km-vis02/G.h5'
 inv.file_G2 = '../greensfunction/050km-vis01/G.h5'
 inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
 inv.init()
-inv.inti_least_square()
+inv.init_least_square()
 
 alpha = 100
 inv.invert(alpha)
