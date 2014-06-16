@@ -8,7 +8,7 @@ import sys
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.epochal_data.stacking import conv_stack, conv_stack_sparse
 from viscojapan.epochal_data.epochal_data import EpochalData
-from viscojapan.test.test_utils import timeit
+from viscojapan.utils import timeit
 
 class TestConvStacking(unittest.TestCase):
     def setUp(self):

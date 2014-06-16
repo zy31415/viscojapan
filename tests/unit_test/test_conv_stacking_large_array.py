@@ -10,7 +10,7 @@ import pytest
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.epochal_data.stacking import conv_stack, conv_stack_sparse
 from viscojapan.epochal_data.epochal_data import EpochalData
-from viscojapan.test.test_utils import timeit
+from viscojapan.utils import timeit
 
 @pytest.mark.skipif(multiprocessing.cpu_count() < 10,
                     reason="Large memory (e.g. server) needed Server needed to run this test. ")
