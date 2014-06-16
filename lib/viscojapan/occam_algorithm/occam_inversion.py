@@ -103,7 +103,7 @@ tikhonov_regularization
     def pickle(self,fn):
         self.jacobian_mat = None
         self.d__vec = None
-        #self.tikhonov_regularization = None
+        self.regularization_mat = None
         
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
