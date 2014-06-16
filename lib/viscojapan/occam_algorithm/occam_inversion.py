@@ -1,12 +1,15 @@
 import pickle
 
-from numpy import log10
+from numpy import log10, asarray
 
 from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
 from ..epochal_data.diff_ed import DiffED
 from ..least_square.tikhonov_regularization import TikhonovSecondOrder
 from ..least_square.least_square import LeastSquare
 from .formulate_occam import JacobianVec, Jacobian, D_
+
+def _assert_file_not_exists(fn):
+    assert not exists(fn), "File %s exist."%fn
 
 class OccamInversion:
     ''' Connet relative objects to work together to do inversion.
@@ -24,6 +27,9 @@ class OccamInversion:
         self.epochs = []
 
         self.non_lin_par_vals = []
+
+        self.num_nlin_pars = 1
+        self.nlin_par_names = ['log10_visM']
 
     def _init_jacobian_vecs(self):
         self.G1 = EpochalG(self.file_G1, self.sites_file)
@@ -59,7 +65,7 @@ class OccamInversion:
         reg.row_norm_length = 1
         reg.col_norm_length = 28./23.03
         reg.num_epochs = len(self.epochs)
-        reg.num_nlin_pars = 1
+        reg.num_nlin_pars = self.num_nlin_pars
         self.tikhonov_regularization = reg
 
     def init(self):
@@ -103,12 +109,20 @@ tikhonov_regularization
     def pickle(self,fn):
         self.jacobian_mat = None
         self.d__vec = None
-        #self.tikhonov_regularization = None
+        self.regularization_mat = None
         
         with open(fn, 'wb') as fid:
             pickle.dump(self, fid)
 
     # post-processing
+    def save_results(self, fn):
+        _assert_file_not_exists(fn)
+        with h5py.File(fn) as fid:
+            m = asarray(self.solution['x']).shape((-1,1))
+            fid['m'] = m
+            fid['num_nlin_pars'] = self.num_nlin_pars
+            fid['slip'] = m[:-self.num_nlin_pars]
+        
     
 
         

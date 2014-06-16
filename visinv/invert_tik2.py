@@ -15,10 +15,11 @@ inv.file_G2 = '../greensfunction/050km-vis01/G.h5'
 inv.f_d = 'cumu_post.h5'
 inv.f_slip0 = 'slip0.h5'
 inv.epochs = epochs
+inv.init()
+inv.init_least_square()
 
 for ano, alpha in enumerate(logspace(-5,3,30)):
-    inv.init()
     inv.invert(alpha)
-    inv.save_raw('outs_tik2/res_%02d.pkl'%ano)
+    inv.pickle('outs_tik2/res_%02d.pkl'%ano)
 
 
