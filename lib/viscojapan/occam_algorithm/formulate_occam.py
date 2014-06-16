@@ -1,11 +1,11 @@
-from .stacking import conv_stackfrom tempfile import mkstemp
+from tempfile import mkstemp
 from os.path import exists
 
 from numpy import dot
 
 from ..epochal_data.epochal_slip import slip_to_incr_slip, EpochalIncrSlip
 from ..epochal_data.diff_ed import DiffED
-from .stacking import vstack_column_vec, conv_stack
+from ..epochal_data.stacking import vstack_column_vec, conv_stack
 
 def _check_shape_for_matrix_product(A,B):
     sh1 = A.shape
@@ -53,7 +53,7 @@ Return:
 
         return jac
 
-class Jacobian(self):
+class Jacobian(object):
     def __init__(self):
         # EpochalData object of Green's functions
         #  computed with current non-linear parameters.
