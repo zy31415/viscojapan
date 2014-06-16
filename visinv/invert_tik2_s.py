@@ -7,7 +7,7 @@ from days import days as epochs
 
 inv = OccamInversion()
 
-inv.sites_file = 'sites'
+inv.sites_file = 'sites_test'
 inv.file_G1 = '../greensfunction/050km-vis02/G.h5'
 inv.file_G2 = '../greensfunction/050km-vis01/G.h5'
 inv.f_d = 'cumu_post.h5'

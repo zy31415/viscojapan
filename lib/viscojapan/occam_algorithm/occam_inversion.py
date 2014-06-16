@@ -2,6 +2,7 @@ import pickle
 from os.path import exists
 
 from numpy import log10, asarray
+import h5py
 
 from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
 from ..epochal_data.diff_ed import DiffED
@@ -118,23 +119,23 @@ tikhonov_regularization
     
     # post-processing
     def get_results_m(self):
-        return asarray(self.solution['x']).shape((-1,1))
+        return asarray(self.solution['x']).reshape((-1,1))
 
     def get_results_slip(self):
-        m = get_results_m()
+        m = self.get_results_m()
         return m[:-self.num_nlin_pars]
     
     def save_raw_results(self, fn):
         _assert_file_not_exists(fn)
         with h5py.File(fn) as fid:
-            m = self.get_m()
+            m = self.get_results_m()
             fid['m'] = m
             fid['alpha'] = self.alpha
             fid['num_nlin_pars'] = self.num_nlin_pars
-            fid['slip'] = get_results_slip
+            fid['slip'] = self.get_results_slip()
 
     def save_results_to_epochal_file(self, epochal_file):
-        vec = get_results_slip()
+        vec = self.get_results_slip()
         break_col_vec_into_epoch_file(vec, self.epochs, epochal_file)
         
         
