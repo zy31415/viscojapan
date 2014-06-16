@@ -6,7 +6,7 @@ from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
 from ..epochal_data.diff_ed import DiffED
 from ..least_square.tikhonov_regularization import TikhonovSecondOrder
 from ..least_square.least_square import LeastSquare
-from .formulate_occam import FormulatOccam, JacobianVec, Jacobian, D_
+from .formulate_occam import JacobianVec, Jacobian, D_
 
 class OccamInversion:
     ''' Connet relative objects to work together to do inversion.
@@ -39,6 +39,7 @@ class OccamInversion:
         jacobian = Jacobian()
         jacobian.G = self.G1
         jacobian.jacobian_vecs = self.jacobian_vecs
+        jacobian.epochs = self.epochs
         self.jacobian = jacobian
         
     def _init_d_(self):
