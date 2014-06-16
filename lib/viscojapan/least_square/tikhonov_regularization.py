@@ -26,7 +26,7 @@ class TikhonovRegularization:
 '''
         raise NotImplementedError("Implement this function.")
 
-    def regularization_matrix(self):
+    def __call__(self):
         mat = self.regularization_matrix_each_epoch()
         blocks = [mat]*self.num_epochs
         mat = block_diag(blocks, dtype = 'float')

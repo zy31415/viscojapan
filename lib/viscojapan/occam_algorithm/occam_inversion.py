@@ -4,11 +4,9 @@ from numpy import log10
 
 from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
 from ..epochal_data.diff_ed import DiffED
-from .jacobian_vec import JacobianVec
-from .formulate_occam import FormulatOccam
 from ..least_square.tikhonov_regularization import TikhonovSecondOrder
 from ..least_square.least_square import LeastSquare
-
+from .formulate_occam import FormulatOccam, JacobianVec, Jacobian, D_
 
 class OccamInversion:
     ''' Connet relative objects to work together to do inversion.
@@ -25,37 +23,52 @@ class OccamInversion:
 
         self.epochs = []
 
-    def _formulate_occam(self):
-        G1 = EpochalG(self.file_G1, self.sites_file)
+        self.non_lin_par_vals = []
+
+    def _init_jacobian_vecs(self):
+        self.G1 = EpochalG(self.file_G1, self.sites_file)
         G2 = EpochalG(self.file_G2, self.sites_file)
-        dG = DiffED(G1, G2, 'log10_visM')
-
-        obs = EpochalDisplacement(self.f_d, self.sites_file)
-
-        self.visM = G1.get_info('visM')
-        self.log10_visM = log10(self.visM)
-        print('Initial Maxwellian viscosity: %g'%self.visM)
+        dG = DiffED(self.G1, G2, 'log10_visM')
 
         jac_1 = JacobianVec(dG, self.f_slip0)
-        
-        formulate_occam = FormulatOccam()
-        formulate_occam.epochs = self.epochs
-        formulate_occam.non_lin_par_vals = [self.log10_visM]
-        formulate_occam.non_lin_JacobianVecs = [jac_1]
-        formulate_occam.G = G1
-        formulate_occam.d = obs
-        return formulate_occam
 
-    def _tikhonov_regularization(self):
+        self.jacobian_vecs = [jac_1]
+        
+
+    def _init_jacobian(self):
+        jacobian = Jacobian()
+        jacobian.G = self.G1
+        jacobian.jacobian_vecs = self.jacobian_vecs
+        self.jacobian = jacobian
+        
+    def _init_d_(self):
+        d_ = D_()
+        d_.jacobian_vecs = self.jacobian_vecs
+        d_.non_lin_par_vals = self.non_lin_par_vals
+        d_.epochs = self.epochs
+
+        obs = EpochalDisplacement(self.f_d, self.sites_file)
+        d_.d = obs
+
+        self.d_ = d_
+
+    def _init_tikhonov_regularization(self):
         # regularization
         reg = TikhonovSecondOrder(nrows_slip=10, ncols_slip=25)
         reg.row_norm_length = 1
         reg.col_norm_length = 28./23.03
         reg.num_epochs = len(self.epochs)
         reg.num_nlin_pars = 1
-        return reg
+        self.tikhonov_regularization = reg
 
     def init(self):
+        self._init_jacobian_vecs()
+        self._init_jacobian()
+        self._init_d_()
+        self._init_tikhonov_regularization()
+        
+
+    def init_least_square(self):
         ''' The computation of the following three variable is quite time
 cosuming. Because I need to do inversion for a series of alphas, I need to
 pre-compute these three variable so that I don't need to compute them
@@ -67,20 +80,19 @@ they take a lot memory and space.
 jacobian
 d_
 tikhonov_regularization
-'''
-        formulate_occam = self._formulate_occam()        
-        self.jacobian = formulate_occam.Jacobian()
-        self.d_ = formulate_occam.d_()
+'''       
+        self.jacobian_mat = self.jacobian()
+        self.d__vec = self.d_()
         
-        self.tikhonov_regularization = self._tikhonov_regularization()
+        self.regularization_mat = self.tikhonov_regularization()
         
 
     def invert(self, alpha):
         least_square = LeastSquare()
         
-        least_square.G = self.jacobian
-        least_square.d = self.d_
-        least_square.tikhonov_regularization = self.tikhonov_regularization
+        least_square.G = self.jacobian_mat
+        least_square.d = self.d__vec
+        least_square.regularization_matrix = self.regularization_mat
         
         least_square.alpha = alpha
         self.alpha =  alpha
