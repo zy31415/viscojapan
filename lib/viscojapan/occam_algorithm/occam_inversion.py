@@ -39,6 +39,7 @@ class OccamInversion:
         jacobian = Jacobian()
         jacobian.G = self.G1
         jacobian.jacobian_vecs = self.jacobian_vecs
+        jacobian.epochs = self.epochs
         self.jacobian = jacobian
         
     def _init_d_(self):

@@ -60,6 +60,7 @@ class Jacobian(object):
         self.G = None
         
         self.jacobian_vecs = []
+        self.epochs = []
         
     def __call__(self):
         jac_nl = self.jacobian_vecs[0](self.epochs)
