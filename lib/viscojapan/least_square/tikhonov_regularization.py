@@ -1,8 +1,14 @@
 from scipy.sparse import block_diag, bmat, eye, block_diag, coo_matrix, hstack, vstack
 
+from ..utils import _assert_nonnegative_integer
+
 def zeros_padding(mat, n):
     ''' Add zeros columns and rows for non linear parameters
 '''
+    _assert_nonnegative_integer(n)
+    if n==0:
+        return mat
+    
     # add zero cols
     sh = mat.shape
     col_padding = coo_matrix((sh[0], n),dtype='float')
@@ -44,10 +50,10 @@ class TikhonovZerothOrder(TikhonovRegularization):
         return eye(self.nrows_slip * self.ncols_slip, dtype='float')
     
 class TikhonovSecondOrder(TikhonovRegularization):
-    def __init__(self, nrows_slip, ncols_slip):
+    def __init__(self):
         super().__init__()
-        self.nrows_slip = nrows_slip
-        self.ncols_slip = ncols_slip
+        self.nrows_slip = None
+        self.ncols_slip = None
         self.row_norm_length = None
         self.col_norm_length = None
         self.num_epochs = None

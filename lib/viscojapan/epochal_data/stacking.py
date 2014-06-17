@@ -4,7 +4,7 @@ from scipy.sparse import bmat
 from numpy import vstack, zeros
 
 from .epochal_data import EpochalData
-
+from ..utils import _assert_integer, _assert_nonnegative_integer
 def conv_stack(epoch_data, epochs):
     ''' Stack epoch_data according to time indicated by epochs to
 matrix that represents convolution.
@@ -57,13 +57,6 @@ def vstack_column_vec(epoch_data, epochs):
     for epoch in epochs[1:]:
         res = vstack((res,epoch_data.get_epoch_value(epoch)))
     return res
-
-def _assert_integer(var):
-    assert isinstance(var, int), "%s is not an integer."%str(var)
-    
-def _assert_nonnegative_integer(var):
-    _assert_integer(var)
-    assert var >= 0, "%d is not non negative."%str(var)
 
 def _assert_a_is_integer_multiple_of_b(a,b):
     _assert_integer(a)

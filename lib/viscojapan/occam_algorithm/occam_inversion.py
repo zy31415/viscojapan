@@ -10,9 +10,7 @@ from ..epochal_data.stacking import break_col_vec_into_epoch_file
 from ..least_square.tikhonov_regularization import TikhonovSecondOrder
 from ..least_square.least_square import LeastSquare
 from .formulate_occam import JacobianVec, Jacobian, D_
-
-def _assert_file_not_exists(fn):
-    assert not exists(fn), "File %s exist."%fn
+from ..utils import _assert_not_exists
 
 class OccamInversion:
     ''' Connet relative objects to work together to do inversion.
@@ -64,7 +62,9 @@ class OccamInversion:
 
     def _init_tikhonov_regularization(self):
         # regularization
-        reg = TikhonovSecondOrder(nrows_slip=10, ncols_slip=25)
+        reg = TikhonovSecondOrder()
+        reg.nrows_slip = 10
+        reg.ncols_slip = 25
         reg.row_norm_length = 1
         reg.col_norm_length = 28./23.03
         reg.num_epochs = len(self.epochs)
@@ -126,7 +126,7 @@ tikhonov_regularization
         return m[:-self.num_nlin_pars]
     
     def save_raw_results(self, fn):
-        _assert_file_not_exists(fn)
+        _assert_not_exists(fn)
         with h5py.File(fn) as fid:
             m = self.get_results_m()
             fid['m'] = m
