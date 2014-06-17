@@ -130,7 +130,7 @@ class TikhonovSecondOrder(TikhonovRegularization):
         col = self.col_roughening_normed()
         row_col = self.row_col_roughening_normed()
         
-        mat  = row.T.dot(row) + col.T.dot(col) +row_col.T.dot(row_col)
+        mat  = row.T.dot(row) + col.T.dot(col) + 2.*row_col.T.dot(row_col)
 
         return mat 
 

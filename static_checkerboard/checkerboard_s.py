@@ -42,7 +42,7 @@ tik.num_nlin_pars = 0
 lst = LeastSquare()
 lst.G = G
 lst.d = d
-lst.alpha = 0.01
+lst.alpha = 0
 lst.regularization_matrix = tik()
 
 sol = lst()

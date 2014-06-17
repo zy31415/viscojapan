@@ -1,6 +1,7 @@
 import sys
 
-from numpy import dot, asarray, hstack
+from numpy import dot, asarray, hstack, logspace
+from numpy.linalg import norm
 from numpy.random import normal
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
@@ -40,8 +41,8 @@ tik.num_epochs = 1
 tik.num_nlin_pars = 0
 
 results_norms = []
-
-for alpha in logspace(-3,-1,20):    
+roughnesses = []
+for alpha in logspace(-10,1,40):    
     lst = LeastSquare()
     lst.G = G
     lst.d = d
@@ -49,16 +50,19 @@ for alpha in logspace(-3,-1,20):
     lst.regularization_matrix = tik()
 
     sol = lst()
-    slip_inverted = asarray(sol['x']).reshape([10,25])
+    m_inverted = asarray(sol['x'])
 
-    dslip = slip - slip_inverted
-    results_norm = norm(dslip)
+    roughness = dot(dot(m_inverted.T,lst.regularization_matrix.todense())
+                    ,m_inverted)
+    roughness = roughness[0,0]
+    roughnesses.append(roughness)
+
+    dm = m - m_inverted
+    results_norm = norm(dm)
     results_norms.append(results_norm)
 
-# plotting:
-##from pylab import *
-##m = Map()
-##m.init()
-##m.plot_fslip(slip_inverted)
-##show()
+import pickle
+with open('L-curve.pkl','wb') as fid:
+    pickle.dump((results_norms, roughnesses),fid)
+
 
