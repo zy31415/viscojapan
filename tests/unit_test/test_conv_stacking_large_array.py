@@ -18,7 +18,7 @@ class TestConvStacking(unittest.TestCase):
     def setUp(self):
         self.G_file = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
         self.ep_obj = EpochalData(self.G_file)
-        self.epochs = range(10)
+        self.epochs = range(20)
 
     @timeit
     def test_conv_stack(self):
