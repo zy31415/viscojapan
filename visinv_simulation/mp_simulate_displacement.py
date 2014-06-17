@@ -31,15 +31,18 @@ for key in 'sites', 'He', 'lmax', 'visK', 'visM', 'log10_visM':
 
 def compute_epoch(epoch):
     print('Day = %d'%epoch)
-    T = gaussian_slip(0).reshape([-1,1])
-    D = dot(G(epoch),T)
-    for jj in range(1, epoch):
-        T = gaussian_slip(jj) - gaussian_slip(jj-1)
-        T = T.reshape([-1,1])
-        D += dot(G(epoch-jj),T)
-    simu_disp.set_epoch_value(epoch, D)
+    try:    
+        T = gaussian_slip(0).reshape([-1,1])
+        D = dot(G(epoch),T)
+        for jj in range(1, epoch):
+            T = gaussian_slip(jj) - gaussian_slip(jj-1)
+            T = T.reshape([-1,1])
+            D += dot(G(epoch-jj),T)
+        simu_disp.set_epoch_value(epoch, D)
+    except:
+        
 
 if __name__ == '__main__':
-    with Pool(processes=4) as pool:
+    with Pool(processes=20) as pool:
         pool.map(compute_epoch, range(1200))
 

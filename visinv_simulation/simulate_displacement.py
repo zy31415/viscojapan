@@ -28,7 +28,7 @@ for key in 'sites', 'He', 'lmax', 'visK', 'visM', 'log10_visM':
     val = G.get_info(key)
     simu_disp.set_info(key, val)
 
-def compute_epoch(epoch):
+def compute_disp_at_one_epoch(epoch):
     print('Day = %d'%epoch)
     T = gaussian_slip(0).reshape([-1,1])
     D = dot(G(epoch),T)
@@ -36,8 +36,15 @@ def compute_epoch(epoch):
         T = gaussian_slip(jj) - gaussian_slip(jj-1)
         T = T.reshape([-1,1])
         D += dot(G(epoch-jj),T)
+    return D
+
+def set_epoch_value(epoch,D):
     simu_disp.set_epoch_value(epoch, D)
 
-for epoch in range(1200):
-    compute_epoch(epoch)
+def func(epoch):
+    D = compute_disp_at_one_epoch(epoch)
+    set_epoch_value(epoch,D)
+
+for epoch in range(1199,1200):
+    func(epoch)
 
