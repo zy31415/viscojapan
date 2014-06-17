@@ -5,7 +5,7 @@ from pylab import pcolor, savefig, close, colorbar, axis
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.fault.fault_file_reader import FaultFileReader
-from viscojapan.fault.checkerboard import gen_checkerboard_slip
+from viscojapan.fault.checkerboard import gen_checkerboard_slip,gen_checkerboard_slip2
 from viscojapan.utils import get_this_script_dir
 
 this_script_dir = get_this_script_dir(__file__)
@@ -20,7 +20,7 @@ def test_fault_file_reader():
     assert n==10
 
 def test_gen_checkerboard_slip():
-    res = gen_checkerboard_slip(25,10)
+    res = gen_checkerboard_slip(25,10,3,2)
     pcolor(res)
     colorbar()
     axis('equal')
