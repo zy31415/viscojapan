@@ -17,10 +17,10 @@ gaussian_slip.log_mag = 1.
 gaussian_slip.tau = 5.
 
 
-com = ComputeDisplacementInViscousMedia()
-com.file_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
-com.slip = gaussian_slip
-com.file_output = join(this_test_path,'simulated_disp.h5')
+com_disp = ComputeDisplacementInViscousMedia()
+com_disp.file_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
+com_disp.slip = gaussian_slip
+com_disp.file_output = 'simulated_disp.h5'
 
 com_disp.init()
 com_disp.init_output_file()
