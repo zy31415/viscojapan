@@ -39,26 +39,19 @@ tik.col_norm_length = 28./23.03
 tik.num_epochs = 1
 tik.num_nlin_pars = 0
 
-results_norms = []
+lst = LeastSquare()
+lst.G = G
+lst.d = d
+lst.alpha = 0.01
+lst.regularization_matrix = tik()
 
-for alpha in logspace(-3,-1,20):    
-    lst = LeastSquare()
-    lst.G = G
-    lst.d = d
-    lst.alpha = alpha
-    lst.regularization_matrix = tik()
-
-    sol = lst()
-    slip_inverted = asarray(sol['x']).reshape([10,25])
-
-    dslip = slip - slip_inverted
-    results_norm = norm(dslip)
-    results_norms.append(results_norm)
+sol = lst()
+slip_inverted = asarray(sol['x']).reshape([10,25])
 
 # plotting:
-##from pylab import *
-##m = Map()
-##m.init()
-##m.plot_fslip(slip_inverted)
-##show()
+from pylab import *
+m = Map()
+m.init()
+m.plot_fslip(slip_inverted)
+show()
 

@@ -48,6 +48,8 @@ for ano, alpha in enumerate(alphas):
     incr_slip = EpochalData(fn)
     m = vstack_column_vec(incr_slip, epochs)
     m = vstack([m,[0]])
+
+    raise ValueError('This is wrong, because reg_mat here is L^T*L, not L')
     roughness.append(norm(reg_mat.dot(m)))
 
 with h5py.File('L-curve.h5') as fid:
