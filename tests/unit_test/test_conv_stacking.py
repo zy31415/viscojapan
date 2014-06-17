@@ -4,8 +4,6 @@ from numpy.testing import assert_array_equal
 from numpy import asarray
 from nose.plugins.attrib import attr
 
-import sys
-sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.epochal_data.stacking import conv_stack, conv_stack_sparse
 from viscojapan.epochal_data.epochal_data import EpochalData
 from viscojapan.utils import timeit
