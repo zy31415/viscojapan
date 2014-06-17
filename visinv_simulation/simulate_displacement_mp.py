@@ -1,3 +1,4 @@
+from multiprocessing import Pool
 from numpy import dot
 
 from viscojapan.epochal_data.epochal_data import EpochalData
@@ -38,6 +39,7 @@ def compute_epoch(epoch):
         D += dot(G(epoch-jj),T)
     simu_disp.set_epoch_value(epoch, D)
 
-for epoch in range(1200):
-    compute_epoch(epoch)
+if __name__ == '__main__':
+    with Pool(processes=4) as pool:
+        pool.map(compute_epoch, range(1200))
 
