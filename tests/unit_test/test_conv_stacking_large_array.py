@@ -20,11 +20,13 @@ class TestConvStacking(unittest.TestCase):
         self.ep_obj = EpochalData(self.G_file)
         self.epochs = range(20)
 
+    @pytest.mark.slow
     @timeit
     def test_conv_stack(self):
         res = conv_stack(self.ep_obj, self.epochs)
         print(['x']*1000)
-
+    
+    @pytest.mark.slow
     @timeit
     def test_conv_stack_sparse(self):
         res = conv_stack_sparse(self.ep_obj, self.epochs)
