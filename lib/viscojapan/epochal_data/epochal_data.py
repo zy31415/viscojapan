@@ -44,6 +44,9 @@ class EpochalData(object):
 
         return G
 
+    def __call__(self,epoch):
+        return self.get_epoch_value(epoch)
+
     def set_info(self, key, value, **kwargs):
         ''' Set info. **args are attributs
 '''
