@@ -1,4 +1,5 @@
 import os
+from os.path import exists
 import time
 
 def delete_if_exists(fn):
@@ -20,3 +21,13 @@ def timeit(method):
         return result
 
     return timed
+
+def _assert_integer(var):
+    assert isinstance(var, int), "%s is not an integer."%str(var)
+    
+def _assert_nonnegative_integer(var):
+    _assert_integer(var)
+    assert var >= 0, "%d is not non negative."%str(var)
+
+def _assert_not_exists(fn):
+    assert not exists(fn), "File %s exist."%fn
