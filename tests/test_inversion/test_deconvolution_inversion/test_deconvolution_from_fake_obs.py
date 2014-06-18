@@ -34,9 +34,9 @@ class TestDeconvolutionTestFromFakeObs(unittest.TestCase):
         dtest.load_data()
         alpha = 1.
         dtest.invert(alpha)
-        dtest.save_results(self.file_results)
-        dtest.save_results_incr_slip(self.file_slip_results)
-        dtest.save_results_pred_disp(self.file_pred_disp)
+        dtest.res_writer.save_results(self.file_results)
+        dtest.res_writer.save_results_incr_slip(self.file_slip_results)
+        dtest.res_writer.save_results_pred_disp(self.file_pred_disp)
         
 if __name__=='__main__':
     unittest.main()

@@ -10,6 +10,7 @@ from ..epochal_data.stacking import break_col_vec_into_epoch_file
 from ..least_square import LeastSquareTik2
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..utils import _assert_not_exists, overrides
+from ..inv_res_writer import WriterOccamInversion
 
 class OccamInversionTik2(LeastSquareTik2):
     ''' Connet relative objects to work together to do inversion.
@@ -28,6 +29,8 @@ class OccamInversionTik2(LeastSquareTik2):
 
         self.nlin_par_initial_values = [None]
         self.nlin_par_names = ['log10_visM']
+
+        self.res_writer = WriterOccamInversion(self)
 
     def iterate_nlin_par_name_val(self):
         for name, val in zip(self.nlin_par_names, self.nlin_par_initial_values):
@@ -112,23 +115,3 @@ class OccamInversionTik2(LeastSquareTik2):
     def get_filtered_sites(self):
         sites = loadtxt(self.sites_file,'4a')
         return sites
-
-    @overrides(LeastSquareTik2)
-    def save_results(self, fn):
-        super().save_results(fn)
-        with h5py.File(fn) as fid:
-            fid['num_nlin_pars'] = self.num_nlin_pars
-            fid['epochs'] = self.epochs
-            fid['num_epochs'] = self.num_epochs
-            for name, val in self.iterate_nlin_par_name_val():
-                fid['nlin_par_initial_values/%s'%name] = val
-
-    def save_results_incr_slip(self, fn):
-        break_col_vec_into_epoch_file(self.m[0:-self.num_nlin_pars],
-                                      self.epochs, fn)
-
-    def save_results_pred_disp(self, fn):
-        info = {'sites':self.get_filtered_sites()}
-        break_col_vec_into_epoch_file(self.d, self.epochs, fn,
-                                      info_dic = info)
-

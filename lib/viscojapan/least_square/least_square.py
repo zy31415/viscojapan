@@ -40,6 +40,7 @@ class LeastSquare(object):
         self.solution = solvers.qp(matrix(P),matrix(q),
                          matrix(GG),matrix(h))
         self.m = asarray(self.solution['x'],float).reshape((-1,1))
+        self.alpha = alpha
 
     def _predict(self):
         d_pred = dot(self.G, self.m)
@@ -88,5 +89,6 @@ class LeastSquareTik2(LeastSquare):
             fid['d_pred'] = self.d_pred
             fid['roughness'] = self.roughness()
             fid['residual_norm'] = self.residual_norm()
+            fid['alpha'] = self.alpha
         
     
