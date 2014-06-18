@@ -2,13 +2,12 @@ import unittest
 from os.path import join
 
 from viscojapan.gaussian_slip import GaussianSlip
-from viscojapan.compute_displacement_in_viscous_media\
-     import ComputeDisplacementInViscousMedia
+from viscojapan.deconvolution_inversion import ForwardConvolution
 from viscojapan.utils import get_this_script_dir, delete_if_exists
 
 this_test_path = get_this_script_dir(__file__)
 
-class TestComputeDisplacementInViscousMedia(unittest.TestCase):
+class TestForwardConvolution(unittest.TestCase):
     def setUp(self):
         # simulated slip on the fault
         gaussian_slip = GaussianSlip()
@@ -25,7 +24,7 @@ class TestComputeDisplacementInViscousMedia(unittest.TestCase):
         gaussian_slip.log_mag = 1.
         gaussian_slip.tau = 5.
         
-        com = ComputeDisplacementInViscousMedia()
+        com = ForwardConvolution()
         com.file_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
         com.slip = gaussian_slip
         com.file_output = join(this_test_path,'simulated_disp.h5')

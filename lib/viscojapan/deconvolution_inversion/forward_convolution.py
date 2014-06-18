@@ -2,9 +2,9 @@ from multiprocessing import Pool
 
 from numpy import dot
 
-from viscojapan.epochal_data.epochal_data import EpochalData
+from ..epochal_data.epochal_data import EpochalData
 
-class ComputeDisplacementInViscousMedia(object):
+class ForwardConvolution(object):
     def __init__(self):
         self.file_G = None
         self.slip = None

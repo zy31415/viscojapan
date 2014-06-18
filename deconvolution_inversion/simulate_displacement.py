@@ -1,6 +1,5 @@
 from viscojapan.gaussian_slip import GaussianSlip
-from viscojapan.compute_displacement_in_viscous_media\
-     import ComputeDisplacementInViscousMedia
+from viscojapan.deconvolution_inversion import ForwardConvolution
 
 gaussian_slip = GaussianSlip()
 gaussian_slip.num_subflts_in_dip = 10
@@ -17,7 +16,7 @@ gaussian_slip.log_mag = 1.
 gaussian_slip.tau = 5.
 
 
-com_disp = ComputeDisplacementInViscousMedia()
+com_disp = ForwardConvolution()
 com_disp.file_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
 com_disp.slip = gaussian_slip
 com_disp.file_output = 'simulated_disp.h5'
@@ -26,6 +25,8 @@ com_disp.init()
 com_disp.init_output_file()
 
 # multiprocessing routine
+warnings.warn(''' Slow. Need multi-core server for multiprocessing!
+For 20 processes, it takes about one hour.''', UserWarning)
 com_disp.mp_add_epochs(range(1200),20)
 
 # Single process
