@@ -1,7 +1,7 @@
 import pickle
 from os.path import exists
 
-from numpy import log10, asarray
+from numpy import log10, asarray, dot, loadtxt
 import h5py
 
 from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
@@ -86,7 +86,32 @@ class OccamInversionTik2(LeastSquareTik2):
 
     @overrides(LeastSquareTik2)
     def _predict(self):
-        raise NotImplementedError()
+        m = self.m
+        G = self.G
+        num_nlin_pars = self.num_nlin_pars
+        assert num_nlin_pars > 0
+        npars0 = asarray(self.nlin_par_initial_values)
+
+
+        G1 = G[:,:-num_nlin_pars]
+        G2 = G[:,-num_nlin_pars:]
+        
+        slip = m[:-num_nlin_pars]
+        npars = m[-num_nlin_pars:]
+
+        d = dot(G1,slip)
+
+        delta_d = dot(G2, npars - npars0)
+
+        d = d+delta_d
+
+        d = d.reshape([-1,1])
+
+        self.d_pred = d
+
+    def get_filtered_sites(self):
+        sites = loadtxt(self.sites_file,'4a')
+        return sites
 
     @overrides(LeastSquareTik2)
     def save_results(self, fn):
@@ -99,7 +124,8 @@ class OccamInversionTik2(LeastSquareTik2):
                 fid['nlin_par_initial_values/%s'%name] = val
 
     def save_results_slip(self, fn):
-        break_col_vec_into_epoch_file(self.m, self.epochs, fn)
+        break_col_vec_into_epoch_file(self.m[0:-self.num_nlin_pars],
+                                      self.epochs, fn)
 
     def save_results_pred_disp(self, fn):
         info = {'sites':self.get_filtered_sites()}

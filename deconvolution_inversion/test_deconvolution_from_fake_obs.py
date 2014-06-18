@@ -23,3 +23,5 @@ dtest.load_data()
 for ano, alpha in enumerate(alphas):
     dtest.invert(alpha)
     dtest.save_results('outs/res_%02d.h5'%ano)
+    dtest.save_results_slip('outs/slip_%02d.h5'%ano)
+    dtest.save_results_pred_disp('outs/pred_disp_%02d.h5'%ano)
