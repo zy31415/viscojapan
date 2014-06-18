@@ -12,7 +12,7 @@ disp_obs = EpochalData('cumu_post.h5')
 
 
 ano=15
-disp = EpochalData('../../outs_tik2/pred_disp_%02d.h5'%ano)
+disp = EpochalData('../../outs/pred_disp_%02d.h5'%ano)
 epochs = disp.get_epochs()
 
 epoch = 1100

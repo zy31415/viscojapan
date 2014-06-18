@@ -15,7 +15,7 @@ class TestOccamInversionTik2(unittest.TestCase):
         self.results_file = join(this_test_path,'res.h5')
         delete_if_exists(self.results_file )
 
-        self.file_slip_results = join(this_test_path, 'res_slip.h5')
+        self.file_slip_results = join(this_test_path, 'res_incr_slip.h5')
         delete_if_exists(self.file_slip_results)
 
         self.file_pred_disp = join(this_test_path, 'res_pred_disp.h5')
@@ -39,7 +39,7 @@ class TestOccamInversionTik2(unittest.TestCase):
         alpha = 100
         inv.invert(alpha)
         inv.save_results(self.results_file)
-        inv.save_results_slip(self.file_slip_results)
+        inv.save_results_incr_slip(self.file_slip_results)
         inv.save_results_pred_disp(self.file_pred_disp)
         
 

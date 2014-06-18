@@ -123,7 +123,7 @@ class OccamInversionTik2(LeastSquareTik2):
             for name, val in self.iterate_nlin_par_name_val():
                 fid['nlin_par_initial_values/%s'%name] = val
 
-    def save_results_slip(self, fn):
+    def save_results_incr_slip(self, fn):
         break_col_vec_into_epoch_file(self.m[0:-self.num_nlin_pars],
                                       self.epochs, fn)
 

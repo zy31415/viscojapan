@@ -45,7 +45,7 @@ class Deconvolution(LeastSquareTik2):
             fid['num_epochs'] = self.num_epochs
             fid['sites'] = self.get_filtered_sites()
 
-    def save_results_slip(self, fn):
+    def save_results_incr_slip(self, fn):
         break_col_vec_into_epoch_file(self.m, self.epochs, fn)
 
     def save_results_pred_disp(self, fn):
