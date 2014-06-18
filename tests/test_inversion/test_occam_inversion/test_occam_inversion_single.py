@@ -10,7 +10,7 @@ from days import days as epochs
 project_path = '/home/zy/workspace/viscojapan/'
 this_test_path = get_this_script_dir(__file__)
 
-class TestOccamInversionTik2FAST(unittest.TestCase):
+class TestOccamInversionTik2(unittest.TestCase):
     def setUp(self):
         pass
 ##        self.file_raw_results = join(this_test_path,'raw_res.h5')
