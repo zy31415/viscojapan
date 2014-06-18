@@ -1,5 +1,7 @@
-from numpy import zeros, dot, nan, identity
+from numpy import zeros, dot, nan, identity, asarray, sqrt
+from numpy.linalg import norm
 from cvxopt import matrix, solvers
+import h5py
 
 from .tikhonov_regularization import TikhonovSecondOrder
 from ..utils import overrides
@@ -8,21 +10,21 @@ class LeastSquare(object):
     def __init__(self):
         pass
 
-    def load_G(self):
+    def _load_G(self):
         raise NotImplementedError("get_G")
 
-    def load_d(self):
+    def _load_d(self):
         raise NotImplementedError("get_d")
 
-    def load_reg_mat(self):
+    def _load_reg_mat(self):
         raise NotImplementedError("get_reg_mat")
 
     def load_data(self):
-        self.G = self.load_G()
-        self.d = self.load_d()
-        self.reg_mat = self.load_reg_mat()
+        self.G = self._load_G()
+        self.d = self._load_d()
+        self.reg_mat = self._load_reg_mat()
 
-    def invert(self, alpha):
+    def _least_square(self, alpha):
         G = self.G
         d = self.d
         npar = G.shape[1]
@@ -37,17 +39,15 @@ class LeastSquare(object):
         
         self.solution = solvers.qp(matrix(P),matrix(q),
                          matrix(GG),matrix(h))
+        self.m = asarray(self.solution['x'],float).reshape((-1,1))
 
-        return self.solution
+    def _predict(self):
+        d_pred = dot(self.G, self.m)
+        self.d_pred = d_pred
 
-    def get_m(self):
-        m = self.solution['x']
-        return m
-
-    def predict(self):
-        m = self.get_m() 
-        d_pred = dot(self.G, m)
-        return d_pred 
+    def invert(self, alpha):
+        self._least_square(alpha)
+        self._predict()        
 
 class LeastSquareTik2(LeastSquare):
     def __init__(self):
@@ -56,7 +56,7 @@ class LeastSquareTik2(LeastSquare):
         self.num_nlin_pars = None
 
     @overrides(LeastSquare)
-    def load_reg_mat(self):
+    def _load_reg_mat(self):
         # regularization
         tik = TikhonovSecondOrder()
         tik.nrows_slip = 10
@@ -67,6 +67,26 @@ class LeastSquareTik2(LeastSquare):
         tik.num_nlin_pars = self.num_nlin_pars
         
         self.tik_obj = tik
-        reg_mat = tik()
-        return reg_mat
+        self.reg_mat = tik()
+        return self.reg_mat
+
+    def roughness_square(self):
+        rough = dot(self.m.T, self.reg_mat.dot(self.m))[0,0]
+        return rough
+
+    def roughness(self):
+        return sqrt(self.roughness_square())
+
+    def residual_norm(self):
+        nres = norm(self.d -self.d_pred)
+        return nres
+
+    def save_results(self, fn):
+        with h5py.File(fn) as fid:
+            fid['m'] = self.m
+            fid['d'] = self.d
+            fid['d_pred'] = self.d_pred
+            fid['roughness'] = self.roughness()
+            fid['residual_norm'] = self.residual_norm()
+        
     

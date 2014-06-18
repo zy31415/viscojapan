@@ -13,7 +13,7 @@ class CheckerboardTestForStaticInversion(StaticInversionTik2):
         self.filter_site_file = None
 
     @overrides(StaticInversionTik2)
-    def load_G(self):
+    def _load_G(self):
         epochal_G = EpochalG(self.f_G, self.filter_site_file)
         G = epochal_G.get_epoch_value(0)
         return G
@@ -31,5 +31,5 @@ class CheckerboardTestForStaticInversion(StaticInversionTik2):
         return d
 
     @overrides(StaticInversionTik2)
-    def load_d(self):
+    def _load_d(self):
         return self._gen_fake_d()

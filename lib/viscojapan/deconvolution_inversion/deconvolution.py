@@ -18,24 +18,24 @@ class Deconvolution(LeastSquareTik2):
         self.num_nlin_pars = 0
 
     @overrides(LeastSquareTik2)
-    def load_G(self):
+    def _load_G(self):
         G = EpochalG(self.file_G, self.sites_filter_file)
         G_stacked = conv_stack(G, self.epochs)
         return G_stacked
 
     @overrides(LeastSquareTik2)
-    def load_d(self):
+    def _load_d(self):
         disp = EpochalDisplacement(self.file_d, self.sites_filter_file)
         d = vstack_column_vec(disp, self.epochs)
         return d
 
+    @overrides(LeastSquareTik2)
     def save_results(self, fn):
+        super().save_results(fn)
         with h5py.File(fn) as fid:
-            fid['m'] = self.get_m()
             fid['num_nlin_pars'] = self.num_nlin_pars
             fid['epochs'] = self.epochs
             fid['num_epochs'] = self.num_epochs
-            fid['d_pred'] = self.predict()
             
         
         

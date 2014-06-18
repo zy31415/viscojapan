@@ -77,17 +77,17 @@ class D_(object):
     def __init__(self):
 
         # Corresponding JacobianVec for each non_linear parameters
-        self.jacobian_vecs = []
+        self.jacobian_vecs = None
 
         # list of inital values of non_linear parameters
-        self.non_lin_par_vals = []
+        self.nlin_par_values = None
         
-        self.epochs = []
+        self.epochs = None
         # EpochalData object of observation
         self.d = None
 
     def __call__(self):
         d_ = vstack_column_vec(self.d, self.epochs)
-        for J, val in zip(self.jacobian_vecs, self.non_lin_par_vals):
+        for J, val in zip(self.jacobian_vecs, self.nlin_par_values):
             d_ += (J(self.epochs)*val)
         return d_

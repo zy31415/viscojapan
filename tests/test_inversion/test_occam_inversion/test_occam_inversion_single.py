@@ -12,14 +12,8 @@ this_test_path = get_this_script_dir(__file__)
 
 class TestOccamInversionTik2(unittest.TestCase):
     def setUp(self):
-        pass
-##        self.file_raw_results = join(this_test_path,'raw_res.h5')
-##        self.file_epochal_file_resutls = join(this_test_path,
-##                                              'epochal_results.h5')
-##
-##        delete_if_exists(self.file_raw_results)
-##        delete_if_exists(self.file_epochal_file_resutls)
-        
+        self.results_file = join(this_test_path,'res.h5')
+        delete_if_exists(self.results_file )
 
     def test_occam_inversion(self):
         inv = OccamInversionTik2()
@@ -30,14 +24,15 @@ class TestOccamInversionTik2(unittest.TestCase):
         inv.f_slip0 = join(this_test_path,'slip0.h5')
         inv.epochs = epochs
 
+        inv.nlin_par_initial_values = [18.890041118437537]
+        inv.nlin_par_names = ['log10_visM']        
+
         inv.init()
         inv.load_data()
         
         alpha = 100
         inv.invert(alpha)
-        #inv.pickle('test.pkl')
-##        inv.save_raw_results(self.file_raw_results)
-##        inv.save_results_to_epochal_file(self.file_epochal_file_resutls)
+        inv.save_results(self.results_file)
 
 if __name__ == '__main__':
     unittest.main()
