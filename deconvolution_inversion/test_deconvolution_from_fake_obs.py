@@ -22,4 +22,4 @@ dtest.load_data()
 
 for ano, alpha in enumerate(alphas):
     dtest.invert(alpha)
-    dtest.save_results('outs/res_%02d'%ano)
+    dtest.save_results('outs/res_%02d.h5'%ano)

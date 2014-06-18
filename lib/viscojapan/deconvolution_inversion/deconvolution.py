@@ -1,7 +1,10 @@
 import h5py
 
+from numpy import loadtxt
+
 from ..least_square import LeastSquareTik2
-from ..epochal_data import EpochalG, conv_stack, vstack_column_vec, EpochalDisplacement
+from ..epochal_data import EpochalG, conv_stack, vstack_column_vec, \
+     EpochalDisplacement, break_col_vec_into_epoch_file
 from ..utils import overrides
 
 class Deconvolution(LeastSquareTik2):
@@ -29,6 +32,10 @@ class Deconvolution(LeastSquareTik2):
         d = vstack_column_vec(disp, self.epochs)
         return d
 
+    def get_filtered_sites(self):
+        sites = loadtxt(self.sites_filter_file,'4a')
+        return sites
+        
     @overrides(LeastSquareTik2)
     def save_results(self, fn):
         super().save_results(fn)
@@ -36,6 +43,16 @@ class Deconvolution(LeastSquareTik2):
             fid['num_nlin_pars'] = self.num_nlin_pars
             fid['epochs'] = self.epochs
             fid['num_epochs'] = self.num_epochs
+            fid['sites'] = self.get_filtered_sites()
+
+    def save_results_slip(self, fn):
+        break_col_vec_into_epoch_file(self.m, self.epochs, fn)
+
+    def save_results_pred_disp(self, fn):
+        info = {'sites':self.get_filtered_sites()}
+        break_col_vec_into_epoch_file(self.d, self.epochs, fn,
+                                      info_dic = info)
+        
             
         
         

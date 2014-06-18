@@ -14,6 +14,13 @@ class TestDeconvolutionTestFromFakeObs(unittest.TestCase):
     def setUp(self):
         self.file_results = join(this_test_path, 'res.h5')
         delete_if_exists(self.file_results)
+        
+        self.file_slip_results = join(this_test_path, 'res_slip.h5')
+        delete_if_exists(self.file_slip_results)
+
+        self.file_pred_disp = join(this_test_path, 'res_pred_disp.h5')
+        delete_if_exists(self.file_pred_disp)
+        
 
     def test(self):
         dtest = DeconvolutionTestFromFakeObs()
@@ -28,6 +35,8 @@ class TestDeconvolutionTestFromFakeObs(unittest.TestCase):
         alpha = 1.
         dtest.invert(alpha)
         dtest.save_results(self.file_results)
+        dtest.save_results_slip(self.file_slip_results)
+        dtest.save_results_pred_disp(self.file_pred_disp)
         
 if __name__=='__main__':
     unittest.main()
