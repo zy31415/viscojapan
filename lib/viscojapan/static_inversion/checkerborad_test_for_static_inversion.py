@@ -4,6 +4,7 @@ from numpy.random import normal
 from .static_inversion import StaticInversionTik2
 from ..epochal_data import EpochalG
 from ..fault.checkerboard import gen_checkerboard_slip
+from ..utils import gen_error_for_sites
 
 class CheckerboardTestForStaticInversion(StaticInversionTik2):
     def __init__(self):
@@ -24,13 +25,8 @@ class CheckerboardTestForStaticInversion(StaticInversionTik2):
 
         d = dot(self.G,m)
 
-        east_error = normal(0, 6e-3, (1300,1))
-        north_error = normal(0, 6e-3, (1300,1))
-        up_error = normal(0,20e-3,(1300,1))
-        error = hstack((east_error, north_error, up_error))
-        error_flat = error.flatten().reshape([-1,1])
-
-        d += error_flat
+        error = gen_error_for_sites(1300)
+        d += error
         return d
 
     def get_d(self):

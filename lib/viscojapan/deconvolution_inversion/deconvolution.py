@@ -1,11 +1,12 @@
 from ..least_square import LeastSquareTik2
+from ..epochal_data import EpochalG, conv_stack, vstack_column_vec, EpochalDisplacement
 
 class Deconvolution(LeastSquareTik2):
     def __init__(self):
         super().__init__()
 
-        self.G_file = None
-        self.d_file = None
+        self.file_G = None
+        self.file_d = None
         self.sites_filter_file = None
         self.epochs = None
 
@@ -14,12 +15,12 @@ class Deconvolution(LeastSquareTik2):
         self.num_nlin_pars = 0
 
     def get_G(self):
-        G = EpochalG(self.G_file, self.sites_filter_file)
+        G = EpochalG(self.file_G, self.sites_filter_file)
         G_stacked = conv_stack(G, self.epochs)
         return G_stacked
         
     def get_d(self):
-        disp = EpochalDisplacement(self.d_file, self.sites_filter_file)
+        disp = EpochalDisplacement(self.file_d, self.sites_filter_file)
         d = vstack_column_vec(disp, self.epochs)
         return d
         
