@@ -1,5 +1,6 @@
 from os.path import join
 
+from numpy import logspace
 from numpy.random import normal
 
 from viscojapan.deconvolution_inversion import DeconvolutionTestFromFakeObs
@@ -14,7 +15,7 @@ dtest = DeconvolutionTestFromFakeObs()
 
 dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
 dtest.file_fake_d = 'simulated_disp.h5'
-dtest.sites_filter_file = 'sites')
+dtest.sites_filter_file = 'sites'
 dtest.epochs = [0, 100, 1100]
 
 dtest.init()
