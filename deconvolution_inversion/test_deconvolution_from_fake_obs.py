@@ -1,5 +1,6 @@
 from os.path import join
 
+from numpy import logspace
 from numpy.random import normal
 
 from viscojapan.deconvolution_inversion import DeconvolutionTestFromFakeObs
