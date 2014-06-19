@@ -6,7 +6,6 @@ from .regularization import Regularization, \
      TemporalRegularization
 from ..utils import overrides
 
-
 class SpatialTemporalReg(Regularization):
     def __init__(self):
         self.epochs = None
