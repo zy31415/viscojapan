@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
-import sys
-
 import h5py
 from pylab import *
 
-
-sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.plot_utils import plot_L
 
-with h5py.File('../L-curve.h5','r') as fid:
-    roughness = fid['roughness'][...]
-    solution_norms = fid['solution_norms'][...]
+from alphas import alphas
+
+nroughs =[]
+nsol = []
+for ano, alpha in enumerate(alphas):
+    print(ano)
+    with h5py.File('../../outs0/res_%02d.h5'%ano,'r') as fid:
+        roughness = fid['roughness'][...]
+        solution_norms = fid['residual_norm'][...]
+        nroughs.append(roughness)
+        nsol.append(solution_norms)
 
 alphas = logspace(-5,3,30)
-plot_L(solution_norms, roughness, alphas)
+plot_L(nsol, nroughs, alphas)
 legend()
 show()

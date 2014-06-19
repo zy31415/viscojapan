@@ -3,7 +3,7 @@ from numpy import asarray
 from viscojapan.static_inversion import CheckerboardTestForStaticInversion
 from viscojapan.plot_utils import Map
 
-from checkerboard_static import CheckerBoardStatic
+#from checkerboard_static import CheckerBoardStatic
 from alphas import alphas
 
 chb = CheckerboardTestForStaticInversion()

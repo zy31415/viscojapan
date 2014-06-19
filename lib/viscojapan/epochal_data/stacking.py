@@ -63,9 +63,9 @@ def _assert_a_is_integer_multiple_of_b(a,b):
     _assert_integer(b)
     assert a%b ==0 , 'a is not integer multiple of b.'
     return a//b
-    
-def break_col_vec_into_epoch_file(vec, epochs, epoch_file,
-                                  rows_per_epoch=None, info_dic={}):
+
+def _check_input_for_breaking_a_vec(vec, epochs, epoch_file,
+                                  rows_per_epoch=None):
     # check input:
     num_rows = _assert_column_vector(vec)
     num_epochs = len(epochs)
@@ -80,17 +80,42 @@ def break_col_vec_into_epoch_file(vec, epochs, epoch_file,
         
     assert not exists(epoch_file), "File %f exists already."%epoch_file
 
+    return rows_per_epoch
+    
+
+def break_col_vec_into_epoch_file(vec, epochs, epoch_file,
+                                  rows_per_epoch=None, info_dic={}):
+    rows_per_epoch =\
+        _check_input_for_breaking_a_vec(vec, epochs, epoch_file, rows_per_epoch)
+
     # Arguments checking done.
+    print(epoch_file)
     ep = EpochalData(epoch_file)
     for nth, epoch in enumerate(epochs):
         val = vec[nth*rows_per_epoch : (nth+1)*rows_per_epoch, :]
         ep.set_epoch_value(epoch, val)
     
     ep.set_info_dic(info_dic)
-    
 
+def break_m_into_incr_slip_file(vec, epochs, epoch_file,
+                                  rows_per_epoch=None, info_dic={}):
+    break_col_vec_into_epoch_file(vec, epochs, epoch_file,
+                                  rows_per_epoch, info_dic)
+
+def break_m_into_slip_file(vec, epochs, epoch_file,
+                                  rows_per_epoch=None, info_dic={}):
+    rows_per_epoch =\
+        _check_input_for_breaking_a_vec(vec, epochs, epoch_file, rows_per_epoch)
     
-        
+    # Arguments checking done.
+    ep = EpochalData(epoch_file)
+    for nth, epoch in enumerate(epochs):
+        val = vec[0 : rows_per_epoch, :].copy()
+        for mth in range(1, nth+1):
+            val += vec[mth*rows_per_epoch : (mth+1)*rows_per_epoch, :]
+        ep.set_epoch_value(epoch, val)
+    
+    ep.set_info_dic(info_dic)
                
         
     

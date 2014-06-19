@@ -1,6 +1,8 @@
 import h5py
 
-from ..epochal_data import EpochalData, break_col_vec_into_epoch_file
+from ..epochal_data import EpochalData, \
+     break_col_vec_into_epoch_file, \
+     break_m_into_incr_slip_file, break_m_into_slip_file
 from ..utils import _assert_nonnegative_integer, overrides
 
 class InvResWriter(object):
@@ -39,17 +41,31 @@ class WriterDeconvolution(WriterLeastSquareTik2):
         info = {'alpha' : self.inv.alpha,
                 }
         if self.inv.num_nlin_pars == 0:
-            break_col_vec_into_epoch_file(self.inv.m, self.inv.epochs, fn,
-                                          info_dic = info)
+            m = self.inv.m
         else:
-            break_col_vec_into_epoch_file(self.inv.m[0:-self.inv.num_nlin_pars],
-                                      self.inv.epochs, fn, info_dic = info)
+            m = self.inv.m[0:-self.inv.num_nlin_pars]
+        break_m_into_incr_slip_file(m, self.inv.epochs, fn,
+                                      info_dic = info)
 
     def save_results_pred_disp(self, fn):
         info = {'sites' : self.inv.get_filtered_sites(),
                 'alpha' : self.inv.alpha}
         break_col_vec_into_epoch_file(self.inv.d, self.inv.epochs, fn,
                                       info_dic = info)
+
+    def save_results_slip(self, fn):
+        _assert_nonnegative_integer(self.inv.num_nlin_pars)
+
+        info = {'alpha' : self.inv.alpha,
+                }
+        if self.inv.num_nlin_pars == 0:
+            m = self.inv.m
+        else:
+            m = self.inv.m[0:-self.inv.num_nlin_pars]
+
+        break_m_into_slip_file(m, self.inv.epochs, fn,
+                                      info_dic = info)
+
         
 class WriterOccamInversion(WriterDeconvolution):
     def __init__(self, inv):

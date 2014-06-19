@@ -15,8 +15,11 @@ class TestDeconvolutionTestFromFakeObs(unittest.TestCase):
         self.file_results = join(this_test_path, 'res.h5')
         delete_if_exists(self.file_results)
         
-        self.file_slip_results = join(this_test_path, 'res_incr_slip.h5')
-        delete_if_exists(self.file_slip_results)
+        self.file_incr_slip = join(this_test_path, 'res_incr_slip.h5')
+        delete_if_exists(self.file_incr_slip)
+
+        self.file_slip = join(this_test_path, 'res_slip.h5')
+        delete_if_exists(self.file_slip)
 
         self.file_pred_disp = join(this_test_path, 'res_pred_disp.h5')
         delete_if_exists(self.file_pred_disp)
@@ -35,8 +38,9 @@ class TestDeconvolutionTestFromFakeObs(unittest.TestCase):
         alpha = 1.
         dtest.invert(alpha)
         dtest.res_writer.save_results(self.file_results)
-        dtest.res_writer.save_results_incr_slip(self.file_slip_results)
+        dtest.res_writer.save_results_incr_slip(self.file_incr_slip)
         dtest.res_writer.save_results_pred_disp(self.file_pred_disp)
+        dtest.res_writer.save_results_slip(self.file_slip)
         
 if __name__=='__main__':
     unittest.main()
