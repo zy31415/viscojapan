@@ -5,9 +5,10 @@ from ..epochal_data import EpochalData, \
      break_m_into_incr_slip_file, break_m_into_slip_file
 from ..utils import _assert_nonnegative_integer, overrides
 
+
 class InvResWriter(object):
     def __init__(self, inv):
-        self.inv = inv        
+        self.inv = inv
 
 class WriterLeastSquareTik2(InvResWriter):
     def __init__(self, inv):
