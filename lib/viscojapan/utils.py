@@ -37,6 +37,12 @@ def _assert_assending_order(l):
     assert all(l[i] <= l[i+1] for i in range(len(l)-1)) is True, \
            'The arr is not assending.'
 
+def _assert_column_vector(res):
+    sh = res.shape
+    assert len(sh) ==2, "Wrong dimension. Must be column vector."
+    assert sh[1] == 1, "Column number should 1."
+    return sh[0]
+
 # decorator:
 class overrides:
     def __init__(self, super_class):

@@ -1,10 +1,11 @@
-from numpy import sqrt
+from numpy import sqrt, asarray
+from numpy.linalg import norm
 from scipy.sparse import vstack
 
 from .regularization import Regularization, \
      RowRoughening, ColRoughening, RowColRoughening,\
      TemporalRegularization
-from ..utils import overrides
+from ..utils import overrides, _assert_column_vector
 
 class SpatialTemporalReg(Regularization):
     def __init__(self):
@@ -49,29 +50,49 @@ class SpatialTemporalReg(Regularization):
         self._init_spatial_regularization_class(reg)
         return reg()
 
-    def _compute_time_reg_mat(self):
+    def get_spatial_roughness_matrix(self):
+        row_reg = self._compute_row_reg_mat()
+        col_reg = self._compute_col_reg_mat()
+        row_col_reg = self._compute_row_col_reg_mat()
+        
+        res = vstack([row_reg, col_reg, sqrt(2) * row_col_reg])
+        
+        return res
+
+    def get_temporal_roughness_matrix(self):
         reg = TemporalRegularization()
         reg.epochs = self.epochs
         reg.num_subflts = self.num_subfaults()
         reg.num_nlin_pars = self.num_nlin_pars
-
         return reg()        
     
-    def _compute_final_reg_mat(self, alpha, beta):
-        row_reg = self._compute_row_reg_mat()
-        col_reg = self._compute_col_reg_mat()
-        row_col_reg = self._compute_row_col_reg_mat()
-        time_reg = self._compute_time_reg_mat()
-
-        res = vstack([alpha * row_reg,
-               alpha * col_reg,
-               alpha * sqrt(2) * row_col_reg,
-               beta * time_reg])
+    def get_wighted_spatial_temporal_roughness_matrix(self, alpha, beta):
+        spatial_reg = self.get_spatial_roughness_matrix()        
+        time_reg = self.get_temporal_roughness_matrix()
+        res = vstack([alpha * spatial_reg, beta * time_reg])
         return res
         
 
     @overrides(Regularization)
     def __call__(self, alpha, beta):
-        res = self._compute_final_reg_mat(alpha, beta)
+        res = self.get_wighted_spatial_temporal_roughness_matrix(alpha, beta)
         return res
+    
+    def get_spatial_roughness(self, m):
+        _assert_column_vector(m)
+        roughness_mat = self.get_spatial_roughness_matrix()
+        rough = norm(asarray(roughness_mat.dot(m), float))
+        return float(rough)
+
+    def get_temporal_roughness(self, m):
+        _assert_column_vector(m)
+        roughness_mat = self.get_temporal_roughness_matrix()
+        rough = norm(asarray(roughness_mat.dot(m), float))
+        return float(rough)
+    
+        
+
+        
+        
+        
                 

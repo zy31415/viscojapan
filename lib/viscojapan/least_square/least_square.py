@@ -8,7 +8,7 @@ class LeastSquare(object):
         self.d = None
         self.L = None
 
-    def invert(self, alpha):
+    def invert(self):
         G = self.G
         d = self.d
         npar = G.shape[1]
