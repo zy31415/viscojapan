@@ -33,6 +33,10 @@ def _assert_nonnegative_integer(var):
 def _assert_not_exists(fn):
     assert not exists(fn), "File %s exist."%fn
 
+def _assert_assending_order(l):
+    assert all(l[i] <= l[i+1] for i in range(len(l)-1)) is True, \
+           'The arr is not assending.'
+
 # decorator:
 class overrides:
     def __init__(self, super_class):
@@ -51,8 +55,11 @@ def timeit(method):
         result = method(*args, **kw)
         te = time.time()
 
-        print('%r (%r, %r) %2.2f sec' % \
-              (method.__name__, args, kw, te-ts))
+        print('''Summary:
+Method : %r (%r, %r)
+ Time  : %2.2f sec
+ '''%(method.__name__, args, kw, te-ts))
+        
         return result
 
     return timed
