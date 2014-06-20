@@ -13,7 +13,7 @@ project_path = '/home/zy/workspace/viscojapan/'
 
 dtest = DeconvolutionTestFromFakeObs()
 dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
-dtest.file_fake_d = 'simulated_disp.h5'
+dtest.file_d = 'simulated_disp.h5'
 dtest.sites_filter_file = 'sites'
 dtest.epochs = epochs_even
 
@@ -26,6 +26,7 @@ betas = logspace(-4,2,20)
 for ano, alpha in enumerate(alphas):
     for bno, beta in enumerate(betas):
         dtest.invert(alpha, beta)
+        dtest.predict()
         dtest.res_writer.save_results('outs_alpha_beta/res_%02d.h5'%ano)
         dtest.res_writer.save_results_incr_slip('outs_alpha_beta/incr_slip_%02d.h5'%ano)
         dtest.res_writer.save_results_slip('outs_alpha_beta/slip_%02d.h5'%ano)

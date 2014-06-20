@@ -1,2 +1,2 @@
 from .forward_convolution import ForwardConvolution
-from .deconvolution import Deconvolution
+from .deconvolution import Deconvolution, DeconvolutionTestFromFakeObs
