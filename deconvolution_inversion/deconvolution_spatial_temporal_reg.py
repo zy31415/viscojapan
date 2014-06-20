@@ -17,7 +17,6 @@ dtest.file_d = 'simulated_disp.h5'
 dtest.sites_filter_file = 'sites'
 dtest.epochs = epochs_even
 
-dtest.init()
 dtest.load_data()
 
 alphas = logspace(-4,2,20)
@@ -27,8 +26,8 @@ for ano, alpha in enumerate(alphas):
     for bno, beta in enumerate(betas):
         dtest.invert(alpha, beta)
         dtest.predict()
-        dtest.res_writer.save_results('outs_alpha_beta/res_%02d.h5'%ano)
-        dtest.res_writer.save_results_incr_slip('outs_alpha_beta/incr_slip_%02d.h5'%ano)
-        dtest.res_writer.save_results_slip('outs_alpha_beta/slip_%02d.h5'%ano)
-        dtest.res_writer.save_results_pred_disp('outs_alpha_beta/pred_disp_%02d.h5'%ano)
+        dtest.res_writer.save_results('outs_alpha_beta/res_a%02d_b%02d.h5'%(ano,bno))
+        dtest.res_writer.save_results_incr_slip('outs_alpha_beta/incr_slip_a%02d_b%02d.h5'%(ano,bno))
+        dtest.res_writer.save_results_slip('outs_alpha_beta/slip_a%02d_b%02d.h5'%(ano,bno))
+        dtest.res_writer.save_results_pred_disp('outs_alpha_beta/pred_disp_a%02d_b%02d.h5'%(ano,bno))
 
