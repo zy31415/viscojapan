@@ -1,35 +1,22 @@
-from numpy import zeros, dot, nan, identity, asarray, sqrt
+from numpy import zeros, dot, identity, asarray
 from numpy.linalg import norm
 from cvxopt import matrix, solvers
-import h5py
 
-from .tikhonov_regularization import TikhonovSecondOrder
+from .my_regularization import SpatialTemporalReg
 from ..utils import overrides
-        
+
 class LeastSquare(object):
     def __init__(self):
-        pass
+        self.G = None
+        self.d = None
+        self.L = None
 
-    def _load_G(self):
-        raise NotImplementedError("get_G")
-
-    def _load_d(self):
-        raise NotImplementedError("get_d")
-
-    def _load_reg_mat(self):
-        raise NotImplementedError("get_reg_mat")
-
-    def load_data(self):
-        self.G = self._load_G()
-        self.d = self._load_d()
-        self.reg_mat = self._load_reg_mat()
-
-    def _least_square(self, alpha):
+    def invert(self):
         G = self.G
         d = self.d
         npar = G.shape[1]
         
-        P = dot(G.T,G) + (alpha**2) * self.reg_mat
+        P = dot(G.T,G) + self.L.T.dot(self.L)
         
         q = -dot(G.T,d)
 
@@ -40,55 +27,58 @@ class LeastSquare(object):
         self.solution = solvers.qp(matrix(P),matrix(q),
                          matrix(GG),matrix(h))
         self.m = asarray(self.solution['x'],float).reshape((-1,1))
-        self.alpha = alpha
 
-    def _predict(self):
+    def predict(self):
         d_pred = dot(self.G, self.m)
         self.d_pred = d_pred
 
-    def invert(self, alpha):
-        self._least_square(alpha)
-        self._predict()        
+    def get_residual_norm(self):
+        return norm(self.d_pred -  self.d)        
 
 class LeastSquareTik2(LeastSquare):
     def __init__(self):
         super().__init__()
-        self.num_epochs = None
+        self.G = None
+        self.d =None
+        
+        self.nrows_slip = 10
+        self.ncols_slip = 25
+        
+        self.row_norm_length = 1.
+        self.col_norm_length = 28./23.03
+
+        self.epochs = None
         self.num_nlin_pars = None
 
-    @overrides(LeastSquare)
-    def _load_reg_mat(self):
-        # regularization
-        tik = TikhonovSecondOrder()
-        tik.nrows_slip = 10
-        tik.ncols_slip = 25
-        tik.row_norm_length = 1
-        tik.col_norm_length = 28./23.03
-        tik.num_epochs = self.num_epochs
-        tik.num_nlin_pars = self.num_nlin_pars
-        
-        self.tik_obj = tik
-        self.reg_mat = tik()
-        return self.reg_mat
+    def _get_reg_mat(self, alpha, beta):
+        reg = SpatialTemporalReg()
+        reg.nrows_slip = self.nrows_slip
+        reg.ncols_slip = self.ncols_slip
+        reg.row_norm_length = self.row_norm_length
+        reg.col_norm_length = self.col_norm_length
 
-    def roughness_square(self):
-        rough = dot(self.m.T, self.reg_mat.dot(self.m))[0,0]
-        return rough
+        reg.epochs = self.epochs
+        reg.num_nlin_pars = self.num_nlin_pars
 
-    def roughness(self):
-        return sqrt(self.roughness_square())
+        self.regularization_matrix = reg
 
-    def residual_norm(self):
-        nres = norm(self.d -self.d_pred)
-        return nres
+        mat = reg(alpha=alpha, beta=beta)
+        return mat
 
-    def save_results(self, fn):
-        with h5py.File(fn) as fid:
-            fid['m'] = self.m
-            fid['d'] = self.d
-            fid['d_pred'] = self.d_pred
-            fid['roughness'] = self.roughness()
-            fid['residual_norm'] = self.residual_norm()
-            fid['alpha'] = self.alpha
-        
-    
+    @overrides(LeastSquare)    
+    def invert(self, alpha, beta):        
+        self.L = self._get_reg_mat(alpha, beta)
+        self.solution = super().invert()
+        self.alpha = alpha
+        self.beta = beta
+
+    def get_spatial_roughness(self):
+        return self.regularization_matrix.get_spatial_roughness(self.m)
+
+    def get_temporal_roughness(self):
+        if len(self.epochs) < 3:
+            raise ValueError('Two few epochs. Cannot compute temoral roughness.')        
+        return self.regularization_matrix.get_temporal_roughness(self.m)
+
+    def num_epochs(self):
+        return len(self.epochs)

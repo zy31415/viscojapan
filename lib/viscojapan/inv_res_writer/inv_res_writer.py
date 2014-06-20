@@ -19,9 +19,12 @@ class WriterLeastSquareTik2(InvResWriter):
             fid['m'] = self.inv.m
             fid['d'] = self.inv.d
             fid['d_pred'] = self.inv.d_pred
-            fid['roughness'] = self.inv.roughness()
-            fid['residual_norm'] = self.inv.residual_norm()
+            tp = self.inv.get_spatial_roughness()
+            fid['spatial_roughness'] = tp
+            fid['temporal_roughness'] = self.inv.get_temporal_roughness()
+            fid['residual_norm'] = self.inv.get_residual_norm()
             fid['alpha'] = self.inv.alpha
+            fid['beta'] = self.inv.beta
 
 class WriterDeconvolution(WriterLeastSquareTik2):
     def __init__(self, inv):
@@ -33,13 +36,14 @@ class WriterDeconvolution(WriterLeastSquareTik2):
         with h5py.File(fn) as fid:
             fid['num_nlin_pars'] = self.inv.num_nlin_pars
             fid['epochs'] = self.inv.epochs
-            fid['num_epochs'] = self.inv.num_epochs
+            fid['num_epochs'] = self.inv.num_epochs()
             fid['sites'] = self.inv.get_filtered_sites()
 
     def save_results_incr_slip(self, fn):
         _assert_nonnegative_integer(self.inv.num_nlin_pars)
 
         info = {'alpha' : self.inv.alpha,
+                'beta' : self.inv.beta,
                 }
         if self.inv.num_nlin_pars == 0:
             m = self.inv.m
@@ -50,7 +54,8 @@ class WriterDeconvolution(WriterLeastSquareTik2):
 
     def save_results_pred_disp(self, fn):
         info = {'sites' : self.inv.get_filtered_sites(),
-                'alpha' : self.inv.alpha}
+                'alpha' : self.inv.alpha,
+                'beta' : self.inv.beta,}
         break_col_vec_into_epoch_file(self.inv.d, self.inv.epochs, fn,
                                       info_dic = info)
 
@@ -58,6 +63,7 @@ class WriterDeconvolution(WriterLeastSquareTik2):
         _assert_nonnegative_integer(self.inv.num_nlin_pars)
 
         info = {'alpha' : self.inv.alpha,
+                'beta' : self.inv.beta,
                 }
         if self.inv.num_nlin_pars == 0:
             m = self.inv.m

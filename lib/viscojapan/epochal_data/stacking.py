@@ -4,7 +4,8 @@ from scipy.sparse import bmat
 from numpy import vstack, zeros
 
 from .epochal_data import EpochalData
-from ..utils import _assert_integer, _assert_nonnegative_integer
+from ..utils import _assert_integer, _assert_nonnegative_integer, _assert_column_vector
+
 def conv_stack(epoch_data, epochs):
     ''' Stack epoch_data according to time indicated by epochs to
 matrix that represents convolution.
@@ -42,14 +43,7 @@ See test routine.
             _G = epoch_data.get_epoch_value(t2-t1)
             G[mth][nth] = _G
     G_sparse = bmat(G)
-    return G_sparse
-
-def _assert_column_vector(res):
-    sh = res.shape
-    assert len(sh) ==2, "Wrong dimension. Must be column vector."
-    assert sh[1] == 1, "Column number should 1."
-    return sh[0]
-    
+    return G_sparse    
 
 def vstack_column_vec(epoch_data, epochs):
     res = epoch_data.get_epoch_value(epochs[0])
@@ -89,7 +83,6 @@ def break_col_vec_into_epoch_file(vec, epochs, epoch_file,
         _check_input_for_breaking_a_vec(vec, epochs, epoch_file, rows_per_epoch)
 
     # Arguments checking done.
-    print(epoch_file)
     ep = EpochalData(epoch_file)
     for nth, epoch in enumerate(epochs):
         val = vec[nth*rows_per_epoch : (nth+1)*rows_per_epoch, :]
