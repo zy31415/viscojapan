@@ -5,6 +5,7 @@ from numpy import vstack, zeros
 
 from .epochal_data import EpochalData
 from ..utils import _assert_integer, _assert_nonnegative_integer, _assert_column_vector
+
 def conv_stack(epoch_data, epochs):
     ''' Stack epoch_data according to time indicated by epochs to
 matrix that represents convolution.
