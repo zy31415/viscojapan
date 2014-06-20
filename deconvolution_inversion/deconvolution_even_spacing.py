@@ -7,7 +7,7 @@ from viscojapan.deconvolution_inversion import DeconvolutionTestFromFakeObs
 from viscojapan.utils import get_this_script_dir, delete_if_exists
 
 from epochs_even import epochs as epochs_even
-
+print(epochs_even)
 from alphas import alphas
 
 project_path = '/home/zy/workspace/viscojapan/'

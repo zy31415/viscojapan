@@ -16,6 +16,7 @@ dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
 dtest.file_d = 'simulated_disp.h5'
 dtest.sites_filter_file = 'sites'
 dtest.epochs = epochs_even
+dtest.num_err = 1300*len(epochs_even)
 
 dtest.load_data()
 

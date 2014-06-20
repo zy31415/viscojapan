@@ -46,9 +46,10 @@ class Deconvolution(LeastSquareTik2):
 class DeconvolutionTestFromFakeObs(Deconvolution):
     def __init__(self):
         super().__init__()
+        self.num_err = None
 
     def _get_d(self):
         d = super()._get_d()        
-        err = gen_error_for_sites(1300)
+        err = gen_error_for_sites(self.num_err)
         d += err
         return d
