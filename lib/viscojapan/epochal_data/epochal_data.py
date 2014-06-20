@@ -9,7 +9,7 @@ class EpochalData(object):
         self.epoch_file = epoch_file
 
     def set_epoch_value(self, time, value):
-        assert isinstance(time,int)
+        assert isinstance(time,int), 'Time %s is not integer.'%(str(time))
         with h5py.File(self.epoch_file,'a') as fid:
             fid['epochs/%04d'%time] = value
 
