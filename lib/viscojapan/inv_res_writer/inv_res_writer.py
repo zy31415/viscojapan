@@ -43,6 +43,7 @@ class WriterDeconvolution(WriterLeastSquareTik2):
         _assert_nonnegative_integer(self.inv.num_nlin_pars)
 
         info = {'alpha' : self.inv.alpha,
+                'beta' : self.inv.beta,
                 }
         if self.inv.num_nlin_pars == 0:
             m = self.inv.m
@@ -53,7 +54,8 @@ class WriterDeconvolution(WriterLeastSquareTik2):
 
     def save_results_pred_disp(self, fn):
         info = {'sites' : self.inv.get_filtered_sites(),
-                'alpha' : self.inv.alpha}
+                'alpha' : self.inv.alpha,
+                'beta' : self.inv.beta,}
         break_col_vec_into_epoch_file(self.inv.d, self.inv.epochs, fn,
                                       info_dic = info)
 
@@ -61,6 +63,7 @@ class WriterDeconvolution(WriterLeastSquareTik2):
         _assert_nonnegative_integer(self.inv.num_nlin_pars)
 
         info = {'alpha' : self.inv.alpha,
+                'beta' : self.inv.beta,
                 }
         if self.inv.num_nlin_pars == 0:
             m = self.inv.m

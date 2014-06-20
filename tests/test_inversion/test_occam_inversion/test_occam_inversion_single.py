@@ -15,7 +15,10 @@ class TestOccamInversionTik2(unittest.TestCase):
         self.results_file = join(this_test_path,'res.h5')
         delete_if_exists(self.results_file )
 
-        self.file_slip_results = join(this_test_path, 'res_incr_slip.h5')
+        self.file_incr_slip_results = join(this_test_path, 'res_incr_slip.h5')
+        delete_if_exists(self.file_incr_slip_results)
+
+        self.file_slip_results = join(this_test_path, 'res_slip.h5')
         delete_if_exists(self.file_slip_results)
 
         self.file_pred_disp = join(this_test_path, 'res_pred_disp.h5')
@@ -23,11 +26,11 @@ class TestOccamInversionTik2(unittest.TestCase):
 
     def test_occam_inversion(self):
         inv = OccamInversionTik2()
-        inv.sites_file = join(this_test_path,'sites_0093')
+        inv.sites_filter_file = join(this_test_path,'sites_0093')
         inv.file_G1 = join(project_path,'greensfunction/050km-vis02/G.h5')
         inv.file_G2 = join(project_path,'greensfunction/050km-vis01/G.h5')
-        inv.f_d = join(project_path,'tsana/post_fit/cumu_post.h5')
-        inv.f_slip0 = join(this_test_path,'slip0.h5')
+        inv.file_d = join(project_path,'tsana/post_fit/cumu_post.h5')
+        inv.file_slip0 = join(this_test_path,'slip0.h5')
         inv.epochs = epochs
 
         inv.nlin_par_initial_values = [18.890041118437537]
@@ -41,7 +44,8 @@ class TestOccamInversionTik2(unittest.TestCase):
         inv.invert(alpha, beta)
         inv.predict()
         inv.res_writer.save_results(self.results_file)
-        inv.res_writer.save_results_incr_slip(self.file_slip_results)
+        inv.res_writer.save_results_incr_slip(self.file_incr_slip_results)
+        inv.res_writer.save_results_slip(self.file_slip_results)
         inv.res_writer.save_results_pred_disp(self.file_pred_disp)
         
 
