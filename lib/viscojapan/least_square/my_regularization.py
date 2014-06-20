@@ -67,11 +67,14 @@ class SpatialTemporalReg(Regularization):
         return reg()        
     
     def get_wighted_spatial_temporal_roughness_matrix(self, alpha, beta):
-        spatial_reg = self.get_spatial_roughness_matrix()        
-        time_reg = self.get_temporal_roughness_matrix()
-        res = vstack([alpha * spatial_reg, beta * time_reg])
-        return res
-        
+        spatial_reg = self.get_spatial_roughness_matrix()
+
+        if len(self.epochs) >= 3:
+            time_reg = self.get_temporal_roughness_matrix()
+            res = vstack([alpha * spatial_reg, beta * time_reg])
+        else:
+            res = alpha * spatial_reg
+        return res        
 
     @overrides(Regularization)
     def __call__(self, alpha, beta):

@@ -36,8 +36,10 @@ class TestOccamInversionTik2(unittest.TestCase):
         inv.init()
         inv.load_data()
         
-        alpha = 100
-        inv.invert(alpha)
+        alpha = 1.
+        beta = 1.
+        inv.invert(alpha, beta)
+        inv.predict()
         inv.res_writer.save_results(self.results_file)
         inv.res_writer.save_results_incr_slip(self.file_slip_results)
         inv.res_writer.save_results_pred_disp(self.file_pred_disp)

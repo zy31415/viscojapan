@@ -24,7 +24,6 @@ class TestDeconvolution(unittest.TestCase):
         self.file_pred_disp = join(this_test_path, 'res_pred_disp.h5')
         delete_if_exists(self.file_pred_disp)
         
-
     def test(self):
         dtest = Deconvolution()
 
