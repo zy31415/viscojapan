@@ -5,7 +5,7 @@ from pylab import pcolor, savefig, close, colorbar, axis
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.fault.fault_file_reader import FaultFileReader
-from viscojapan.fault.checkerboard import gen_checkerboard_slip,gen_checkerboard_slip2
+from viscojapan.inversion_test.checkerboard import gen_checkerboard_slip,gen_checkerboard_slip2
 from viscojapan.utils import get_this_script_dir
 
 this_script_dir = get_this_script_dir(__file__)

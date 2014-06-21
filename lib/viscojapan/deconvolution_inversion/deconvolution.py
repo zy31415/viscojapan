@@ -4,7 +4,7 @@ from ..least_square import LeastSquareTik2
 from ..epochal_data import EpochalG, conv_stack, vstack_column_vec, \
      EpochalDisplacement
 from ..inv_res_writer import WriterDeconvolution
-from ..utils import gen_error_for_sites
+from ..inversion_test import gen_error_for_sites
 
 class Deconvolution(LeastSquareTik2):
     def __init__(self):

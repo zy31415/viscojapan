@@ -1,12 +1,12 @@
 import unittest
 from os.path import join
 
-from numpy import dot, eye
+from numpy import dot, eye, ones, inf
 
 from viscojapan.least_square import LeastSquare, LeastSquareTik2
 from viscojapan.epochal_data import EpochalG
-from viscojapan.utils import gen_error_for_sites, get_this_script_dir
-from viscojapan.fault.checkerboard import gen_checkerboard_slip
+from viscojapan.utils import get_this_script_dir
+from viscojapan.inversion_test import gen_checkerboard_slip, gen_error_for_sites
 
 this_test_path = get_this_script_dir(__file__)
 
@@ -38,12 +38,22 @@ class TestLeastSquare(unittest.TestCase):
         lst.predict()
         lst.get_residual_norm()
 
+    def test_LeastSquare_weighting(self):
+        lst = LeastSquare()
+        lst.G = self.G
+        lst.d = self.d
+        lst.L = eye(len(self.m_true))
+        lst.sig = ones(len(lst.d))*0.1
+        lst.sig[0] = inf
+        
+        lst.invert()
+        lst.predict()
+        lst.get_residual_norm()
+
     def test_LeastSquareTik2(self):
         lst = LeastSquareTik2()
         lst.G = self.G
         lst.d = self.d
-        lst.epochs = [0]
-        lst.num_nlin_pars = 0
 
         lst.invert(1., 2.)
         lst.predict()

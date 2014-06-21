@@ -1,7 +1,7 @@
 import unittest
 from os.path import join
 
-from viscojapan.gaussian_slip import GaussianSlip
+from viscojapan.inversion_test import GaussianSlip
 from viscojapan.deconvolution_inversion import ForwardConvolution
 from viscojapan.utils import get_this_script_dir, delete_if_exists
 
@@ -27,7 +27,7 @@ class TestForwardConvolution(unittest.TestCase):
         com = ForwardConvolution()
         com.file_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
         com.slip = gaussian_slip
-        com.file_output = join(this_test_path,'simulated_disp.h5')
+        com.file_output = join(this_test_path,'~simulated_disp.h5')
 
         delete_if_exists(com.file_output)
 
@@ -45,4 +45,5 @@ class TestForwardConvolution(unittest.TestCase):
         com_disp.init_output_file()
         com_disp.mp_add_epochs(range(0,20),3)
         
-    
+if __name__=='__main__':
+    unittest.main()

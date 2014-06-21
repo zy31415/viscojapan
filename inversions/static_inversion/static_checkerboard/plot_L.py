@@ -12,4 +12,5 @@ with open('L-curve.pkl','rb') as fid:
     nres, nrough = pickle.load(fid)
 
 plot_L(nres, nrough, alphas)
+savefig('plots/L-curve.png')
 show()

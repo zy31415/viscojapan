@@ -28,9 +28,9 @@ class TestDeconvolution(unittest.TestCase):
         dtest = Deconvolution()
 
         dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
-        dtest.file_d = join(project_path, 'deconvolution_inversion/simulated_disp.h5')
+        dtest.file_d = join(this_test_path, 'simulated_disp.h5')
         dtest.sites_filter_file = join(this_test_path, 'sites_0462')
-        dtest.epochs = [0, 100, 1100]
+        dtest.epochs = [0, 100, 1000]
         alpha = 1.
         beta = 1.
 

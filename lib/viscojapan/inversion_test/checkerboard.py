@@ -4,8 +4,9 @@ from numpy import zeros
 
 from ..utils import _assert_nonnegative_integer
 
-def gen_checkerboard_slip(num_subflts_strike, num_subflts_dip,
-                           strike_patch_size=1, dip_patch_size=1):
+
+def gen_checkerboard_slip(num_subflts_dip, num_subflts_strike,
+                           dip_patch_size=1,  strike_patch_size=1):
     N = num_subflts_strike
     M = num_subflts_dip
     dN = strike_patch_size
