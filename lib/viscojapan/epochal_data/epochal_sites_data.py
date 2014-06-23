@@ -1,9 +1,10 @@
 from os.path import exists
 
 import h5py
-from numpy import loadtxt, asarray
+from numpy import loadtxt, asarray, zeros
 
 from .epochal_data import EpochalData
+from ..utils import overrides
 
 class EpochalSitesData(EpochalData):
     ''' Wrapper of sites data. 
@@ -14,7 +15,28 @@ class EpochalSitesData(EpochalData):
         assert exists(epoch_file), "File %s must be present."%epoch_file
         super().__init__(epoch_file)
         assert self.has_info('sites'), "'sites' key word must be present."
-        
+
+    def get_sites(self):
+        return self.get_info('sites')
+
+    def get_site_cmpt_idx(self, site, cmpt):
+        sites = self.get_sites()
+        idx1 = list(sites).index(site.encode())
+        if cmpt == 'e':
+            idx2 = 3*idx1
+        elif cmpt == 'n':
+            idx2 = 3*idx1 + 1
+        elif cmpt == 'u':
+            idx2 = 3*idx1 + 2
+        else:
+            raise ValueError('No such component.')
+        return idx2
+
+    def get_epoch_value_at_site(self, site, cmpt, epoch):
+        idx = self.get_site_cmpt_idx(site, cmpt)
+        res = self.get_epoch_value(epoch)
+        return res[idx]
+    
 
 class EpochalSitesFilteredData(EpochalSitesData):
     def __init__(self, epoch_file, filter_sites_file):
@@ -42,6 +64,7 @@ class EpochalSitesFilteredData(EpochalSitesData):
         ch1 = asarray([ch*3, ch*3+1, ch*3+2]).T.flatten()
         return ch1
 
+    @overrides(EpochalSitesData)
     def get_epoch_value(self,time):
         out = super().get_epoch_value(time)
         ch = self._gen_filter()
@@ -54,4 +77,11 @@ class EpochalG(EpochalSitesFilteredData):
 class EpochalDisplacement(EpochalSitesFilteredData):
     def __init__(self,epoch_file, filter_sites_file):
         super().__init__(epoch_file, filter_sites_file)
+
+    def get_time_series(self, site, cmpt):
+        epochs = self.get_epochs()
+        ys = zeros(len(epochs))
+        for nth, epoch in enumerate(epochs):
+            ys[nth] = self.get_epoch_value_at_site(site, cmpt, epoch)
+        return ys
     

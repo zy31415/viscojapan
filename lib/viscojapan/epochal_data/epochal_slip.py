@@ -1,21 +1,9 @@
 from os.path import exists
 
 from .epochal_data import EpochalData
+from ..utils import overrides
 
-class EpochalIncrSlip(EpochalData):
-    ''' Note that no time interpolation in this class.
-'''
-    def __init__(self, file_incr_slip):
-        super().__init__(file_incr_slip)
-
-    def get_epoch_value(self, epoch):
-        epochs = self.get_epochs()
-        assert epoch in epochs, "Interpolation is not allowed in this class."
-        return super().get_epoch_value(epoch)
-
-class EpochalSlip(EpochalData):
-    def __init__(self, file_slip):
-        super().__init__(file_slip)
+# function definition
 
 def slip_to_incr_slip(f_slip, f_incr_slip):
     assert exists(f_slip)
@@ -52,4 +40,30 @@ def incr_slip_to_slip(f_incr_slip, f_slip):
         slip.set_epoch_value(epoch, val0)
 
     slip.copy_info_from(f_incr_slip)
+
+# classes definition
+
+class EpochalSlip(EpochalData):
+    def __init__(self, file_slip):
+        super().__init__(file_slip)
+
+    def get_slip_at_subflt(self, irow, icol):
+        epochs = self.get_epochs()
+        ys = []
+        for epoch in epochs:
+            slip = self.get_epoch_vlaue(epoch)
+            ys.append(slip[irow, icol])
+        return asarray(ys,float)
+
+class EpochalIncrSlip(EpochalSlip):
+    ''' Note that no time interpolation in this class.
+'''
+    def __init__(self, file_incr_slip):
+        super().__init__(file_incr_slip)
+
+    @overrides(EpochalSlip)
+    def get_epoch_value(self, epoch):
+        epochs = self.get_epochs()
+        assert epoch in epochs, "Interpolation is not allowed in this class."
+        return super().get_epoch_value(epoch)        
 
