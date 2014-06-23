@@ -1,26 +1,20 @@
-import pickle
 from os.path import exists, join
 from os import makedirs
 
 from numpy import dot, asarray, amax, amin, logspace
 from pylab import show,close, savefig, xlim
 
-from viscojapan.least_square import LeastSquareTik2
-from viscojapan.epochal_data import EpochalG
 from viscojapan.inversion_test import gen_checkerboard_slip, gen_error_for_sites
 from viscojapan.plot_epochal_data.plot_utils import Map
 from viscojapan.plot_utils import plot_L
 from viscojapan.utils import overrides
-
-f_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'
-filter_site_file = 'sites'
-filter_site_seafloor_file = 'sites_with_seafloor'
-
+from viscojapan.least_square import LeastSquareTik2
+from viscojapan.epochal_data import EpochalG
 
 class CheckerboardTest(LeastSquareTik2):
     def __init__(self):
         super().__init__()
-        self.f_G = f_G
+        self.f_G = None
         self.filter_site_file = None
 
     def _init_G(self):
@@ -91,13 +85,3 @@ class CheckerboardTest(LeastSquareTik2):
         savefig(join(outputs_dir, 'L-curve.png'))
         #show()
         close()
-
-if __name__ =='__main__':
-    alphas = logspace(-4,0,30)
-    test1 = CheckerboardTest()
-    test1.filter_site_file = filter_site_seafloor_file
-    test1.make_L_curve(alphas, 'plots_with_seafloor')
-
-    test2 = CheckerboardTest()
-    test2.filter_site_file = filter_site_file
-    test2.make_L_curve(alphas, 'plots')
