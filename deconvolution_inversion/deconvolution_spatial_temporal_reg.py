@@ -20,8 +20,8 @@ dtest.num_err = 1300*len(epochs_even)
 
 dtest.load_data()
 
-alphas = logspace(-4,2,20)
-betas = logspace(-4,2,20)
+alphas = logspace(-4,3,30)
+betas = logspace(-4,3,30)
 
 for ano, alpha in enumerate(alphas):
     for bno, beta in enumerate(betas):
