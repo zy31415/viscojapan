@@ -21,6 +21,10 @@ class Deconvolution(LeastSquareTik2):
         self.epochs = None
         self.num_nlin_pars = 0
 
+        self.outs_dir = None
+        self.alphas = None
+        self.betas = None
+
         self.res_writer = WriterDeconvolution(self)
 
     def _get_G(self):
@@ -40,6 +44,23 @@ class Deconvolution(LeastSquareTik2):
     def get_filtered_sites(self):
         sites = loadtxt(self.sites_filter_file,'4a')
         return sites
+
+    def compute_L_curve(self):
+        if not exists(self.outs_dir):
+            makedirs(self.outs_dir)
+
+        for ano, alpha in enumerate(self.alphas):
+            for bno, beta in enumerate(self.betas):
+                self.invert(alpha, beta)
+                self.predict()
+                self.res_writer.save_results(join(self.outs_dir,
+                            'res_a%02d_b%02d.h5'%(ano,bno)))
+                self.res_writer.save_results_incr_slip(join(self.outs_dir,
+                            'incr_slip_a%02d_b%02d.h5'%(ano,bno)))
+                self.res_writer.save_results_slip(join(self.outs_dir,
+                            'slip_a%02d_b%02d.h5'%(ano,bno)))
+                self.res_writer.save_results_pred_disp(join(self.outs_dir,
+                            'pred_disp_a%02d_b%02d.h5'%(ano,bno)))
         
 
 

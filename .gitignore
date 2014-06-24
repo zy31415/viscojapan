@@ -8,7 +8,7 @@ outs_tik2
 
 *.pdf
 
-tsana/
-
-stat
-
+IGS08/
+CFS_POST/
+POSTRES/
+offsets/
