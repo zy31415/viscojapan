@@ -1,5 +1,7 @@
 from os.path import exists
 
+from numpy import asarray
+
 from .epochal_data import EpochalData
 from ..utils import overrides
 
@@ -51,7 +53,7 @@ class EpochalSlip(EpochalData):
         epochs = self.get_epochs()
         ys = []
         for epoch in epochs:
-            slip = self.get_epoch_vlaue(epoch)
+            slip = self.get_epoch_value(epoch)
             ys.append(slip[irow, icol])
         return asarray(ys,float)
 

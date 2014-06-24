@@ -4,7 +4,6 @@ from ..least_square import LeastSquareTik2
 from ..epochal_data import EpochalG, conv_stack, vstack_column_vec, \
      EpochalDisplacement
 from ..inv_res_writer import WriterDeconvolution
-from ..inversion_test import gen_error_for_sites
 
 class Deconvolution(LeastSquareTik2):
     def __init__(self):
@@ -43,13 +42,4 @@ class Deconvolution(LeastSquareTik2):
         return sites
         
 
-class DeconvolutionTestFromFakeObs(Deconvolution):
-    def __init__(self):
-        super().__init__()
-        self.num_err = None
 
-    def _get_d(self):
-        d = super()._get_d()        
-        err = gen_error_for_sites(self.num_err)
-        d += err
-        return d

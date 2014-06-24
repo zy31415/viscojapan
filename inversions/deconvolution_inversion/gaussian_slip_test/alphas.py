@@ -1,3 +1,3 @@
 from numpy import logspace
 
-alphas = logspace(-5,3,30)
+alphas = logspace(-4,3,30)

@@ -1,13 +1,17 @@
 import os
-from os.path import exists
+from os.path import exists, isdir
 import time
+import shutil
 
 from numpy import hstack
 from numpy.random import normal
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
-        os.remove(fn)
+        if isdir(fn):
+            shutil.rmtree(fn)
+        else:
+            os.remove(fn)
 
 def get_this_script_dir(__file__):
     return os.path.dirname(os.path.realpath(__file__))
