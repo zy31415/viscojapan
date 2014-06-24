@@ -65,7 +65,5 @@ class EpochalIncrSlip(EpochalSlip):
 
     @overrides(EpochalSlip)
     def get_epoch_value(self, epoch):
-        epochs = self.get_epochs()
-        assert epoch in epochs, "Interpolation is not allowed in this class."
-        return super().get_epoch_value(epoch)        
+        return self._get_epoch_value(epoch)        
 
