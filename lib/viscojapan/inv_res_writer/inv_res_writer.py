@@ -18,6 +18,7 @@ class WriterLeastSquareTik2(InvResWriter):
         with h5py.File(fn) as fid:
             fid['m'] = self.inv.m
             fid['d'] = self.inv.d
+            fid['sigma'] = self.inv.sig
             fid['d_pred'] = self.inv.d_pred
             tp = self.inv.get_spatial_roughness()
             fid['spatial_roughness'] = tp
