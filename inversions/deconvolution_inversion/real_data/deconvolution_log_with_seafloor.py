@@ -16,14 +16,14 @@ project_path = '/home/zy/workspace/viscojapan/'
 test = Deconvolution()
 
 dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
-dtest.file_d = 'cumu_post.h5'
-dtest.sites_filter_file = 'sites'
+dtest.file_d = 'cumu_post_with_seafloor.h5'
+dtest.file_sig = 'sites_sd.h5'
+dtest.sites_filter_file = 'sites_with_seafloor'
 dtest.epochs = epochs_log
 
 dtest.load_data()
 
 lcurve = LCurve(dtest)
-
 lcurve.outs_dir = 'outs_log'
 lcurve.alphas = alphas
 lcurve.betas = betas

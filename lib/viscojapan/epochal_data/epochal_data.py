@@ -13,6 +13,10 @@ class EpochalData(object):
         with h5py.File(self.epoch_file,'a') as fid:
             fid['epochs/%04d'%time] = value
 
+    def set_value(self, epoch, index, value):
+        with h5py.File(self.epoch_file, 'a') as fid:
+            fid['epochs/%04d'%epoch][index] = value
+
     def _assert_within_range(self,epoch):
         epochs = self.get_epochs()
             
