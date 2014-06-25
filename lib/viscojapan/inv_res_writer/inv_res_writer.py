@@ -57,7 +57,7 @@ class WriterDeconvolution(WriterLeastSquareTik2):
         info = {'sites' : self.inv.get_filtered_sites(),
                 'alpha' : self.inv.alpha,
                 'beta' : self.inv.beta,}
-        break_col_vec_into_epoch_file(self.inv.d, self.inv.epochs, fn,
+        break_col_vec_into_epoch_file(self.inv.d_pred, self.inv.epochs, fn,
                                       info_dic = info)
 
     def save_results_slip(self, fn):

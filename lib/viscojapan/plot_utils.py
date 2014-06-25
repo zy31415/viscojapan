@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
+from os.path import join
+
 from pylab import *
 from mpl_toolkits.basemap import Basemap
 from h5py import File
 
+from .utils import get_this_script_dir
+
+this_script_dir = get_this_script_dir(__file__)
+
 def get_pos_dic():
     ''' Return a dictionary of position of all stations.
 '''
-    tp=loadtxt('/home/zy/workspace/viscojapan/share/llh','4a,3f')
+    tp=loadtxt(join(this_script_dir, 'sites_with_seafloor'),'4a,2f')
     return {ii[0]:ii[1] for ii in tp}
 
 def get_pos(sites):

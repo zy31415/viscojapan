@@ -62,8 +62,8 @@ class LeastSquare(object):
         return norm(self.d_pred - self.d)
 
     def get_residual_norm_weighted(self):
-        nres = self.get_residual_norm()
-        nres_w = self.W.dot(nres)        
+        res_w = self.W.dot(self.d_pred - self.d)
+        nres_w = norm(res_w)
         return nres_w
     
 
