@@ -6,6 +6,7 @@ from numpy.random import normal
 from viscojapan.deconvolution_inversion import Deconvolution,\
      DeconvolutionTestFromFakeObs
 from viscojapan.utils import get_this_script_dir, delete_if_exists
+from viscojapan.inversion_test.l_curve import LCurve
 
 this_test_path = get_this_script_dir(__file__)
 
@@ -42,17 +43,21 @@ class TestDeconvolution(unittest.TestCase):
         dtest.up_st=20e-3
 
         dtest.load_data()
-        dtest.outs_dir = self.outs_dir
-        dtest.alphas = [0,1]
-        dtest.betas = [0,1]
+
+        lcurve = LCurve(dtest)
         
-        dtest.compute_L_curve()
+        lcurve.outs_dir = self.outs_dir
+        lcurve.alphas = [0,1]
+        lcurve.betas = [0,1]
+
+        lcurve.compute_L_curve()
 
     def test_Deconvoluation(self):
         dtest = Deconvolution()
 
         dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
         dtest.file_d = join(this_test_path, 'simulated_disp.h5')
+        dtest.file_sig = join(this_test_path, 'sites_sd_seafloor.h5')
         dtest.sites_filter_file = join(this_test_path, 'sites_0462')
         dtest.epochs = [0, 100, 1000]
         alpha = 1.
@@ -62,10 +67,13 @@ class TestDeconvolution(unittest.TestCase):
         dtest.invert(alpha, beta)
         dtest.predict()
 
-        dtest.res_writer.save_results(self.file_results)
-        dtest.res_writer.save_results_incr_slip(self.file_incr_slip)
-        dtest.res_writer.save_results_pred_disp(self.file_pred_disp)
-        dtest.res_writer.save_results_slip(self.file_slip)
+        lcurve = LCurve(dtest)
+        
+        lcurve.outs_dir = self.outs_dir
+        lcurve.alphas = [0,1]
+        lcurve.betas = [0,1]
+
+        lcurve.compute_L_curve()
         
 if __name__=='__main__':
     unittest.main()

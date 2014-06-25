@@ -13,6 +13,10 @@ class EpochalData(object):
         with h5py.File(self.epoch_file,'a') as fid:
             fid['epochs/%04d'%time] = value
 
+    def set_value(self, epoch, index, value):
+        with h5py.File(self.epoch_file, 'a') as fid:
+            fid['epochs/%04d'%epoch][index] = value
+
     def _assert_within_range(self,epoch):
         epochs = self.get_epochs()
             
@@ -23,7 +27,7 @@ class EpochalData(object):
 
     def _get_epoch_value(self, epoch):
         epochs = self.get_epochs()
-        assert epoch in epochs
+        assert epoch in epochs, "Interpolation is not allowed in this method."
         with h5py.File(self.epoch_file,'r') as fid:
             out = fid['epochs/%04d'%epoch][...]
         return out
@@ -31,11 +35,14 @@ class EpochalData(object):
     def get_epoch_value(self, epoch):
         self._assert_within_range(epoch)
         epochs = self.get_epochs()
-        for nth, ti in enumerate(epochs):
+        for nth, ti in enumerate(epochs[1:]):
             if epoch <= ti:
                 break
-        t1 = epochs[nth-1]
-        t2 = epochs[nth]
+        t1 = epochs[nth]
+        t2 = epochs[nth+1]
+
+        assert (t1<t2) and (t1<=epoch) and (epoch<=t2), \
+               'Epoch %d should be in %d ~ %d'%(epoch, t1, t2)
         
         G1=self._get_epoch_value(t1)
         G2=self._get_epoch_value(t2)

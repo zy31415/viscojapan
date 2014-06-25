@@ -3,6 +3,7 @@ import os
 from os.path import join
 
 from numpy import loadtxt
+from numpy.testing import assert_equal
 
 from viscojapan.epochal_data.epochal_sites_data import \
      EpochalSitesData, EpochalSitesFilteredData, EpochalDisplacement
@@ -30,6 +31,14 @@ class TestEpochalSitesData(unittest.TestCase):
     def test_EpochalDisplacement(self):
         obj = EpochalDisplacement(self.sites_data_file, self.filter_sites_file)
         ys = obj.get_time_series('G008','e')
+
+    def test_set_epoch_value_at_site(self):
+        sites_data_obj = EpochalSitesData(self.sites_data_file)
+        test_val = 99999.
+        sites_data_obj.set_value_at_site('019B','e',5, test_val)
+        val = sites_data_obj.get_epoch_value_at_site('019B','e',5)
+
+        assert_equal(test_val, val)
         
 
 class TestEpochalSitesFilteredData(unittest.TestCase):

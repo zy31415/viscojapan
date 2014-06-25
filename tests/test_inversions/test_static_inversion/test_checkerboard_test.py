@@ -4,7 +4,7 @@ import unittest
 
 from numpy import logspace
 
-from viscojapan.inversion_test import CheckerboardTest
+from viscojapan.inversion_test.checkerboard_test_for_static_inversion import CheckerboardTest
 from viscojapan.utils import get_this_script_dir
 
 f_G = '/home/zy/workspace/viscojapan/greensfunction/050km-vis02/G.h5'

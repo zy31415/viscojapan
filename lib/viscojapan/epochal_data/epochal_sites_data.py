@@ -36,7 +36,10 @@ class EpochalSitesData(EpochalData):
         idx = self.get_site_cmpt_idx(site, cmpt)
         res = self.get_epoch_value(epoch)
         return res[idx]
-    
+
+    def set_value_at_site(self, site, cmpt, epoch, value):
+        idx = self.get_site_cmpt_idx(site, cmpt)
+        self.set_value(epoch, idx, value)
 
 class EpochalSitesFilteredData(EpochalSitesData):
     def __init__(self, epoch_file, filter_sites_file):
@@ -84,4 +87,15 @@ class EpochalDisplacement(EpochalSitesFilteredData):
         for nth, epoch in enumerate(epochs):
             ys[nth] = self.get_epoch_value_at_site(site, cmpt, epoch)
         return ys
+    
+class EpochalDisplacementSD(EpochalSitesFilteredData):
+    def __init__(self,epoch_file, filter_sites_file):
+        super().__init__(epoch_file, filter_sites_file)
+
+    @overrides(EpochalSitesFilteredData)
+    def get_epoch_value(self, epoch):
+        out = self._get_epoch_value(epoch)
+        ch = self._gen_filter()
+        return out[ch,:]
+        
     
