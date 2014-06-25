@@ -26,3 +26,7 @@ dtest.load_data()
 dtest.invert(alpha = 30., beta = 16.)
 dtest.predict()
 
+dtest.res_writer.save_results('res.h5')
+dtest.res_writer.save_results_incr_slip('res_incr_slip.h5')
+dtest.res_writer.save_results_slip('res_slip.h5')
+dtest.res_writer.save_results_pred_disp('pred_disp.h5')
