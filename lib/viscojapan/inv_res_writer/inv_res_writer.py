@@ -23,6 +23,7 @@ class WriterLeastSquareTik2(InvResWriter):
             fid['spatial_roughness'] = tp
             fid['temporal_roughness'] = self.inv.get_temporal_roughness()
             fid['residual_norm'] = self.inv.get_residual_norm()
+            fid['weighted_residual_norm'] = self.inv.get_residual_norm_weighted()
             fid['alpha'] = self.inv.alpha
             fid['beta'] = self.inv.beta
 
