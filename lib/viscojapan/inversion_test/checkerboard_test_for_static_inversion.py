@@ -6,10 +6,7 @@ from pylab import show,close, savefig, xlim
 
 from viscojapan.inversion_test import gen_checkerboard_slip, gen_error_for_sites
 from viscojapan.plot_epochal_data.plot_utils import Map
-try:
-    from viscojapan.plot_utils import plot_L
-except ImportError:
-    pass    
+#from viscojapan.plot_utils import plot_L
 from viscojapan.utils import overrides
 from viscojapan.least_square import LeastSquareTik2
 from viscojapan.epochal_data import EpochalG

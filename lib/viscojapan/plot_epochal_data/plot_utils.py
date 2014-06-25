@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 from pylab import *
-from mpl_toolkits.basemap import Basemap
+try:
+    from mpl_toolkits.basemap import Basemap
+except ImportError:
+    pass
 from h5py import File
 
 def get_pos_dic():
