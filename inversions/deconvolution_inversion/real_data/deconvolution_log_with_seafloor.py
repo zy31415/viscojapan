@@ -13,7 +13,7 @@ from betas import betas
 project_path = '/home/zy/workspace/viscojapan/'
 
 
-test = Deconvolution()
+dtest = Deconvolution()
 
 dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
 dtest.file_d = 'cumu_post_with_seafloor.h5'
