@@ -11,8 +11,8 @@ plot_L('../../outs_log/res_a??_b??.h5',
        ls='None', marker='.', color='gray')
 
 
-plot_L('../../outs_log/res_a??_b19.h5',
-       'weighted_residual_norm', 'spatial_roughness',)
+##plot_L('../../outs_log/res_a??_b19.h5',
+##       'weighted_residual_norm', 'spatial_roughness',)
 
 ##for bno in 0, 10, 19:
 ##    with h5py.File('../../outs_log/res_a00_b%02d.h5'%bno) as fid:
