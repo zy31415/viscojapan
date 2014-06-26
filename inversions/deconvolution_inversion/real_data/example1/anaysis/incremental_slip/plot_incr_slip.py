@@ -4,7 +4,7 @@ from viscojapan.plot_epochal_data.plot_slip import PlotIncrSlip
 
 from epochs_log import epochs
 
-ano = 15
+ano = 10
 bno = 15
 for epoch in epochs:
     print(epoch)
