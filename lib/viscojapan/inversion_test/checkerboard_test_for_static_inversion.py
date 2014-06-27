@@ -5,7 +5,8 @@ from numpy import dot, asarray, amax, amin, logspace
 from pylab import show,close, savefig, xlim
 
 from viscojapan.inversion_test import gen_checkerboard_slip, gen_error_for_sites
-from viscojapan.plot_epochal_data.plot_utils import Map
+from viscojapan.plots.plot_utils import Map
+from viscojapan.plots.plot_res_file import plot_L
 from viscojapan.utils import overrides
 from viscojapan.least_square import LeastSquareTik2
 from viscojapan.epochal_data import EpochalG

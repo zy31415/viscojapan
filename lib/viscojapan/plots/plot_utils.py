@@ -1,15 +1,20 @@
-#!/usr/bin/env python3
+from os.path import join
+
 from pylab import *
-try:
-    from mpl_toolkits.basemap import Basemap
-except ImportError:
-    pass
+from mpl_toolkits.basemap import Basemap
 from h5py import File
+
+from ..utils import get_this_script_dir
+from ..fault.mo import ComputeMoment
+from ..epochal_data import \
+     EpochalIncrSlip, EpochalDisplacement, EpochalSlip, EpochalData
+
+this_test_path = get_this_script_dir(__file__)
 
 def get_pos_dic():
     ''' Return a dictionary of position of all stations.
 '''
-    tp=loadtxt('/home/zy/workspace/viscojapan/share/llh','4a,3f')
+    tp=loadtxt(join(this_test_path, 'sites_with_seafloor'),'4a, 2f')
     return {ii[0]:ii[1] for ii in tp}
 
 def get_pos(sites):
@@ -80,7 +85,9 @@ class Map(Basemap):
                   color='black',scale=None):
         ''' Plot displacment
 '''
-        assert self.if_init, "Have you init the class?"
+        if not self.if_init:
+            self.init()
+            
         lons,lats=get_pos(sites)
         es=d[0::3]
         ns=d[1::3]
@@ -93,7 +100,9 @@ class Map(Basemap):
     def plot_fslip(self,m,cmap=None,clim=None):
         '''
 '''
-        assert self.if_init, "Have you init the class?"
+        if not self.if_init:
+            self.init()
+            
         with File(self.fault_model_file) as fid:
             LLons=fid['grids/LLons'][...]
             LLats=fid['grids/LLats'][...]
@@ -103,12 +112,19 @@ class Map(Basemap):
         cb=colorbar()
         plt.clim(clim)
         cb.set_label('slip(m)')
-        mo,mw = self.moment(m)
+
+        com_mo = ComputeMoment()
+        com_mo.fault_model_file = self.fault_model_file
+        
+        mo, mw = com_mo.moment(m)
+        
         title('Mo=%.3g,Mw=%.2f'%(mo,mw))
         
 
     def plot_fault(self,fno=None,ms=15):
-        assert self.if_init, "Have you init the class?"
+        if not self.if_init:
+            self.init()
+            
         with File(self.fault_model_file) as fid:
             LLons=fid['grids/LLons'][...]
             LLats=fid['grids/LLats'][...]
@@ -132,41 +148,25 @@ class Map(Basemap):
             
             self.plot(x0,y0,marker='*',color='red',ms=ms)
 
-    def moment(self, slip):
-        ''' Compute moment.
-'''
-        with File(self.fault_model_file) as fid:
-            fl=float(fid['subflt_len'][...])
-            fw=float(fid['subflt_wid'][...])
-            shr=fid['meshes/shear'][...]
-        mos = shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
-        mo = sum(mos)
-        mw = 2./3.*log10(mo)-6. 
-        return mo, mw
-            
-def plot_L(nres,nsol,alphas=None,lanos=None,
-           label=None,color='blue'):
-    '''
-alphas - regularization parameters array
-lanos - array that indicates which alphas pairs are labeled.
-        None means label every two.
-label - L-curve label
-'''
-    assert len(nres)==len(nsol)
-    if alphas is not None:
-        assert len(nres)==len(alphas)
-    # plot L-curve
-    loglog(nres,nsol,'o-',label=label,color=color)
+    def plot_incr_slip_file(self, f_slip, epoch):
+        slip_obj = EpochalIncrSlip(f_slip)
+        slip = slip_obj(epoch)
 
-    if alphas is not None:
-        if lanos is None:
-            lanos = range(0,len(alphas),2)
-        for ano in lanos:
-            text(nres[ano],nsol[ano],'%d/%.2G'%(ano,alphas[ano]),color='red')
+        self.plot_fslip(slip)
 
-    xlabel('Residual Norm ($\log_{10}{||Gm-d||_2}$)')
-    ylabel('Solution Roughness ($\log_{10}{||Lm||_2}$)')
-    grid('on')
+    def plot_slip_file(self, f_slip, epoch):
+        slip_obj = EpochalSlip(f_slip)
+        slip = slip_obj(epoch)
+
+        self.plot_fslip(slip)
+
+    def plot_disp_file(self, f_disp, epoch):
+        disp_obj = EpochalData(f_disp)
+        disp = disp_obj(epoch)
+        sites = disp_obj.get_info('sites')
+        self.plot_disp(disp, sites)
+
+
     
 
 

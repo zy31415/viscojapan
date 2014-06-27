@@ -10,6 +10,7 @@ from viscojapan.utils import get_this_script_dir, delete_if_exists
 from test_utils import create_a_sites_data_file
 
 this_test_path = get_this_script_dir(__file__)
+
 class TestEpochalData(unittest.TestCase):
     def setUp(self):
         self.sites_data_file = join(this_test_path, 'sites_data.h5')

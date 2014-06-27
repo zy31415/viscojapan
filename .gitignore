@@ -12,3 +12,6 @@ IGS08/
 CFS_POST/
 POSTRES/
 offsets/
+post_fit
+pre_fit
+raw_ts

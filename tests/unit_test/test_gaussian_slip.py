@@ -2,7 +2,7 @@ from os.path import join
 
 from pylab import savefig, close, clim
 
-from viscojapan.plot_utils import Map
+from viscojapan.plots.plot_utils import Map
 from viscojapan.inversion_test import GaussianSlip
 from viscojapan.utils import get_this_script_dir
 
