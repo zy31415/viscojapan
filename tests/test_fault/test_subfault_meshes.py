@@ -20,10 +20,8 @@ class TestSubFaultsMeshes(unittest.TestCase):
         sf = SubfaultsMeshes()
         sf.num_subflt_along_strike = 26
         sf.num_subflt_along_dip = 16
-        sf.depth_limit = -50
+        sf.depth_limit = -60
 
-        sf.init()
-        
         sf.save_fault_file(self.file_subfaults)
 
 if __name__=='__main__':

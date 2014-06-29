@@ -34,7 +34,7 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
         self.num_subflt_along_dip = None
         self.depth_limit = None
         
-    def init(self):
+    def _init(self):
         self.y_f = linspace(1e-4, self.flt_dim_strike, self.num_subflt_along_strike)
         self.subflt_dim_strike = self.y_f[1] - self.y_f[0]
 
@@ -56,6 +56,7 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
         self.shear = get_shear(self.ddeps)
 
     def save_fault_file(self, fn):
+        self._init()
         with h5py.File(fn) as fid:
             fid['num_subflt_along_strike'] = self.num_subflt_along_strike
             fid['num_subflt_along_dip'] = self.num_subflt_along_dip
@@ -74,6 +75,9 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
 
             fid['flt_sz_strike'] = self.flt_dim_strike
             fid['flt_sz_strike'].attrs['unit'] = 'km'
+
+            fid['depth_limit'] = self.depth_limit
+            fid['depth_limit'].attrs['unit'] = 'km'
             
             fid['meshes/xx_f'] = self.xx_f.T
             fid['meshes/xx_f'].attrs['unit'] = 'km'

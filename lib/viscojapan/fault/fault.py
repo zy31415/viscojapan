@@ -105,6 +105,8 @@ class FaultFramework(object):
         return vectorize(self._get_dep_scalar, xf)
 
     def get_xf_by_dep_scalar(self, dep):
+        assert dep <= self.DEP[0]
+        assert dep >= self.DEP[-1]
         for nth, di in enumerate(self.DEP):
             if dep > di:
                 break
