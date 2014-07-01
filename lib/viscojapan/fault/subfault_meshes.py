@@ -5,28 +5,6 @@ from numpy import linspace, meshgrid, asarray, loadtxt, nditer, inf
 
 from .transform import FaultCoordinatesTransformation
 
-from ..utils import get_this_script_dir
-
-this_test_path = get_this_script_dir(__file__)
-
-_earth_file= join(this_test_path, 'earth.model')
-
-def get_shear(dep):
-    ''' Get shear modulus
-'''
-    tp=loadtxt(_earth_file,skiprows=1)
-    depi1=(tp[:,0]-6371.)
-    depi2=(tp[:,1]-6371.)
-    sheari=(tp[:,4]*1e10) # Pa
-    shr=[]
-    for depi in nditer(dep):
-        ch=(depi>depi1)&(depi<=depi2)
-        tp=sheari[ch]
-        assert len(tp)==1,'Should be only one chosen'
-        shr.append(tp[0])
-    shr=asarray(shr).reshape(dep.shape)
-    return shr
-
 class SubfaultsMeshes(FaultCoordinatesTransformation):
     def __init__(self):
         super().__init__()
@@ -53,7 +31,7 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
 
         self.ddeps = self.get_dep(self.xx_f)
         self.ddips = self.get_dip(self.xx_f)
-        self.shear = get_shear(self.ddeps)
+        self.shear = self.get_shear(self.ddeps)
 
     def save_fault_file(self, fn):
         self._init()
@@ -100,7 +78,7 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
             fid['meshes/ddips'] = self.ddips.T
             fid['meshes/ddips'].attrs['unit'] = 'degree'
 
-            fid['meshes/shear'] = self.shear
+            fid['meshes/shear'] = self.shear.T
             fid['meshes/shear'].attrs['unit']='Pa.s'
             
         

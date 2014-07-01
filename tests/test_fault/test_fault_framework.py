@@ -6,7 +6,7 @@ from numpy import arange
 from numpy.testing import assert_almost_equal
 from pylab import plt
 
-from viscojapan.fault.fault import FaultFramework, _assert_within_boundary
+from viscojapan.fault.fault_framework import FaultFramework
 from viscojapan.utils import get_this_script_dir
 
 this_test_path = get_this_script_dir(__file__)
@@ -33,7 +33,7 @@ class TestFaultFramework(unittest.TestCase):
         plt.close()
 
     def test_dip(self):
-        xf = arange(1e-4,425)
+        xf = arange(0, 425)
         dips = self.fm.get_dip(xf)
         plt.plot(xf,dips)
         plt.grid('on')
@@ -42,18 +42,8 @@ class TestFaultFramework(unittest.TestCase):
         plt.savefig(join(this_test_path, 'xf_dips.png'))
         plt.close()
 
-    def test_assert_within_boundary(self):
-        self.assertRaises(AssertionError,
-                          _assert_within_boundary, -0.1, self.fm.XF)
-        self.assertRaises(AssertionError,
-                          _assert_within_boundary, 500, self.fm.XF)
-        self.assertRaises(AssertionError,
-                          _assert_within_boundary, -0.1, self.fm.XG)
-        self.assertRaises(AssertionError,
-                          _assert_within_boundary, 500, self.fm.XG)
-
     def test_dep(self):
-        xf = arange(1e-4,425)
+        xf = arange(0, 425)
         deps = self.fm.get_dep(xf)
         plt.plot(xf,deps)
 
@@ -73,7 +63,7 @@ class TestFaultFramework(unittest.TestCase):
                           self.fm.xfault_to_xground, [500])
         self.assertRaises(AssertionError,
                           self.fm.xfault_to_xground, [-0.1])
-        xf = arange(1e-4,425)
+        xf = arange(0, 425)
         xg = self.fm.xfault_to_xground(xf)
 
     def test_xground_to_xfault(self):
@@ -81,11 +71,11 @@ class TestFaultFramework(unittest.TestCase):
                           self.fm.xground_to_xfault, [500])
         self.assertRaises(AssertionError,
                           self.fm.xground_to_xfault, [-0.1])
-        xg = arange(1e-4,393)
+        xg = arange(0, 393)
         xf = self.fm.xground_to_xfault(xg)
 
     def test_xground_xfault_conversion(self):
-        xf = arange(1e-4,425.)
+        xf = arange(0, 425)
         xg = self.fm.xfault_to_xground(xf)
         xf1 = self.fm.xground_to_xfault(xg)
 
@@ -94,7 +84,7 @@ class TestFaultFramework(unittest.TestCase):
     def test_get_xf_by_dep_scalar(self):
         for nth, dep in enumerate(self.fm.DEP):
             xf = self.fm.get_xf_by_dep_scalar(dep)
-            self.assertEqual(xf, self.fm.XF[nth])
+            assert_almost_equal(xf, self.fm.XF[nth])
 
 
 if __name__ == '__main__':

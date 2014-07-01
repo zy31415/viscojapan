@@ -26,7 +26,7 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
         self.assertEqual(y,0)
 
     def test_ground2geo(self):
-        xg = linspace(0.001, 425, 25)
+        xg = linspace(0, 425, 25)
         yg = linspace(0, 700, 30)
         xxg, yyg = meshgrid(xg, yg)
         
@@ -40,7 +40,7 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
         plt.close()
 
     def test_geo2ground(self):
-        xg = linspace(0.001, 425, 25)
+        xg = linspace(0., 425, 25)
         yg = linspace(0, 700, 30)
         xxg, yyg = meshgrid(xg, yg)
         
@@ -52,7 +52,7 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
         assert_almost_equal(yyg, yyg1)
 
     def test_fault2geo(self):
-        xf = linspace(0.001, 424.9, 25)
+        xf = linspace(0., 424.9, 25)
         yf = linspace(0, 700, 30)
         xxf, yyf = meshgrid(xf, yf)
         
@@ -66,7 +66,7 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
         plt.close()
 
     def test_geo2fault(self):
-        xf = linspace(0.001, 424.9, 25)
+        xf = linspace(0., 424.9, 25)
         yf = linspace(0, 700, 30)
         xxf, yyf = meshgrid(xf, yf)
         

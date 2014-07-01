@@ -1,20 +1,11 @@
 import warnings
 
-from numpy import asarray, pi, cos, sin, zeros_like, frompyfunc, vectorize
+from numpy import asarray, pi, cos, sin, zeros_like
 from pyproj import Proj
 
-from ..utils import _assert_assending_order
+from .utils import my_vectorize, _find_section
 
-def vectorize(fn, arr):
-    fn_vec = frompyfunc(fn, 1, 1)
-    res = fn_vec(asarray(arr, float))
-    return asarray(res, float)
-
-def _assert_within_boundary(x, boundary_array):
-    _assert_assending_order(boundary_array)
-    assert x > boundary_array[0], '%f is out of upper edge'%x
-    assert x < boundary_array[-1], '%f is out of lower edge'%x
-
+        
 class FaultFramework(object):
     def __init__(self):
         self._fault_origin()
@@ -65,34 +56,26 @@ class FaultFramework(object):
 
     def _hinge_dep(self):
         # initial depth of the upper edge of the shallowest subfaults.
-        self.DEP0 = -3.
+        self.DEP0 = 3.
 
         # DEP is the depth of the fault hinges
         DEP = [self.DEP0]
         for seg,dip in zip(self.dXF, self.DIP):
-            _y1 = DEP[-1]-seg*sin(dip)
+            _y1 = DEP[-1] + seg*sin(dip)
             DEP.append(_y1)
         self.DEP = DEP
             
     def _get_dip_scalar(self, xf):
-        _assert_within_boundary(xf, self.XF)
-
-        for nth, x in enumerate(self.XF):
-            if xf < x:                
-                break
-
+        nth = _find_section(self.XF, xf)
         dip = self.DIP_D[nth-1]
         return dip      
     
     def get_dip(self, xf):
-        return vectorize(self._get_dip_scalar, xf)
+        return my_vectorize(self._get_dip_scalar, xf)
 
     def _get_dep_scalar(self, xf):
-        _assert_within_boundary(xf, self.XF)
-
-        for nth, x in enumerate(self.XF):
-            if xf < x:                
-                break
+        nth = _find_section(self.XF, xf)
+        
         xf1 = self.XF[nth-1]
         xf2 = self.XF[nth]
         dep1 = self.DEP[nth-1]
@@ -102,14 +85,10 @@ class FaultFramework(object):
         return dep
 
     def get_dep(self, xf):
-        return vectorize(self._get_dep_scalar, xf)
+        return my_vectorize(self._get_dep_scalar, xf)
 
     def get_xf_by_dep_scalar(self, dep):
-        assert dep <= self.DEP[0]
-        assert dep >= self.DEP[-1]
-        for nth, di in enumerate(self.DEP):
-            if dep > di:
-                break
+        nth = _find_section(self.DEP, dep)        
         d1 = self.DEP[nth-1]
         d2 = self.DEP[nth]
         xf1 = self.XF[nth-1]
@@ -120,29 +99,23 @@ class FaultFramework(object):
         
 
     def _xfault_to_xground_scalar(self, xf):
-        _assert_within_boundary(xf, self.XF)
-
-        for nth, x in enumerate(self.XF):
-            if xf < x:                
-                break
+        nth = _find_section(self.XF, xf)
+        
         res = self.XG[nth-1] + (xf - self.XF[nth-1])*cos(self.DIP[nth-1])
         return res
 
     def xfault_to_xground(self, xf):
-        return vectorize(self._xfault_to_xground_scalar, xf)
+        xf = asarray(xf, float)
+        return my_vectorize(self._xfault_to_xground_scalar, xf)
 
     def _xground_to_xfault_scalar(self, xg):
-        _assert_within_boundary(xg, self.XG)
+        nth = _find_section(self.XG, xg)
         
-        for nth, x in enumerate(self.XG):
-            if xg < x:
-                break
-
         res =  self.XF[nth-1] + (xg-self.XG[nth-1])/cos(self.DIP[nth-1])
         return res
 
     def xground_to_xfault(self, xg):
-        return vectorize(self._xground_to_xfault_scalar, xg)
+        return my_vectorize(self._xground_to_xfault_scalar, xg)
         
         
 

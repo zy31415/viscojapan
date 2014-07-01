@@ -119,6 +119,18 @@ class Map(Basemap):
         mo, mw = com_mo.moment(m)
         
         title('Mo=%.3g,Mw=%.2f'%(mo,mw))
+
+    def plot_slip_contours(self, m, colors='white', V=None):
+        if not self.if_init:
+            self.init()
+            
+        with File(self.fault_model_file) as fid:
+            LLons=fid['grids/LLons'][...][1:,1:]
+            LLats=fid['grids/LLats'][...][1:,1:]
+            
+        mm=m.reshape([-1,25])
+        CS = self.contour(LLons,LLats,mm,latlon=True, colors=colors, V=V)
+        plt.clabel(CS, inline=1, fontsize=10)        
         
 
     def plot_fault(self,fno=None,ms=15):
