@@ -6,7 +6,7 @@ from numpy import arange
 from numpy.testing import assert_almost_equal
 from pylab import plt
 
-from viscojapan.fault.fault_framework import FaultFramework
+from viscojapan.fault_model.fault_framework import FaultFramework
 from viscojapan.utils import get_this_script_dir
 
 this_test_path = get_this_script_dir(__file__)

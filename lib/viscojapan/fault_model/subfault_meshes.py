@@ -13,13 +13,13 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
         self.depth_limit = None
         
     def _init(self):
-        self.y_f = linspace(1e-4, self.flt_dim_strike, self.num_subflt_along_strike)
+        self.y_f = linspace(0., self.flt_dim_strike, self.num_subflt_along_strike)
         self.subflt_dim_strike = self.y_f[1] - self.y_f[0]
 
         # Grid point along length of fault in fault coordinates
-        xf_lim = self.get_xf_by_dep_scalar(self.depth_limit)
+        self.xf_lim = self.get_xf_by_dep_scalar(self.depth_limit)
         
-        self.x_f = linspace(1e-4, xf_lim, self.num_subflt_along_dip)
+        self.x_f = linspace(0., self.xf_lim, self.num_subflt_along_dip)
         
         self.subflt_dim_dip = self.x_f[1] - self.x_f[0]
 
@@ -47,7 +47,7 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
             fid['subflt_sz_strike'] = self.subflt_dim_strike
             fid['subflt_sz_strike'].attrs['unit'] = 'km'
 
-            fid['flt_sz_dip'] = self.flt_dim_dip
+            fid['flt_sz_dip'] = self.xf_lim
             fid['flt_sz_dip'].attrs['unit'] = 'km'
 
             fid['flt_sz_strike'] = self.flt_dim_strike

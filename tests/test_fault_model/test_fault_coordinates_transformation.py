@@ -6,7 +6,7 @@ from numpy import arange, meshgrid, ascontiguousarray, linspace
 from numpy.testing import assert_almost_equal
 from pylab import plt
 
-from viscojapan.fault.transform import FaultCoordinatesTransformation
+from viscojapan.fault_model.transform import FaultCoordinatesTransformation
 from viscojapan.utils import get_this_script_dir
 from viscojapan.plots.plot_utils import Map
 

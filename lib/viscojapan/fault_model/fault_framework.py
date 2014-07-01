@@ -3,7 +3,7 @@ import warnings
 from numpy import asarray, pi, cos, sin, zeros_like
 from pyproj import Proj
 
-from .utils import my_vectorize, _find_section
+from ..utils import my_vectorize, _find_section
 
         
 class FaultFramework(object):

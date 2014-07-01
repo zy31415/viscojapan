@@ -5,7 +5,7 @@ from mpl_toolkits.basemap import Basemap
 from h5py import File
 
 from ..utils import get_this_script_dir
-from ..fault.mo import ComputeMoment
+from ..fault_model.mo import ComputeMoment
 from ..epochal_data import \
      EpochalIncrSlip, EpochalDisplacement, EpochalSlip, EpochalData
 
@@ -27,20 +27,20 @@ def get_pos(sites):
         lats.append(tp[1])
     return lons,lats
 
-_fault_file='/home/zy/workspace/visinv2/flt_250/fault.h5'
-
 def append_title(string):
     ax=gca()
     title = ax.get_title()
     ax.set_title(title+string)
-    
+
+_fault_file = '/home/zy/workspace/viscojapan/fault_model/fault_model_He50km/fault_250.h5'
+
 class Map(Basemap):
     def __init__(self):
         self.region_box=(136,34,146,42)
         self.region_code=None
         self.x_interval=2.
         self.y_interval=2.        
-        self.fault_model_file = _fault_file
+        self.fault_file = _fault_file
         self.if_init=False
 
     def init(self):
@@ -103,9 +103,9 @@ class Map(Basemap):
         if not self.if_init:
             self.init()
             
-        with File(self.fault_model_file) as fid:
-            LLons=fid['grids/LLons'][...]
-            LLats=fid['grids/LLats'][...]
+        with File(self.fault_file) as fid:
+            LLons=fid['meshes/LLons'][...]
+            LLats=fid['meshes/LLats'][...]
 
         mm=m.reshape([-1,25])
         self.pcolor(LLons,LLats,mm,latlon=True,cmap=cmap)        
@@ -114,7 +114,7 @@ class Map(Basemap):
         cb.set_label('slip(m)')
 
         com_mo = ComputeMoment()
-        com_mo.fault_model_file = self.fault_model_file
+        com_mo.fault_file = self.fault_file
         
         mo, mw = com_mo.moment(m)
         
@@ -124,9 +124,9 @@ class Map(Basemap):
         if not self.if_init:
             self.init()
             
-        with File(self.fault_model_file) as fid:
-            LLons=fid['grids/LLons'][...][1:,1:]
-            LLats=fid['grids/LLats'][...][1:,1:]
+        with File(self.fault_file) as fid:
+            LLons=fid['meshes/LLons'][...][1:,1:]
+            LLats=fid['meshes/LLats'][...][1:,1:]
             
         mm=m.reshape([-1,25])
         CS = self.contour(LLons,LLats,mm,latlon=True, colors=colors, V=V)
@@ -137,9 +137,9 @@ class Map(Basemap):
         if not self.if_init:
             self.init()
             
-        with File(self.fault_model_file) as fid:
-            LLons=fid['grids/LLons'][...]
-            LLats=fid['grids/LLats'][...]
+        with File(self.fault_file) as fid:
+            LLons=fid['meshes/LLons'][...]
+            LLats=fid['meshes/LLats'][...]
         assert ms<250 and ms>=0, "Fault No. out of range."
             
         self.plot(LLons,LLats,color='gray',latlon=True)
