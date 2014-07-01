@@ -5,12 +5,34 @@ from numpy import linspace, meshgrid, asarray, loadtxt, nditer, inf
 
 from .transform import FaultCoordinatesTransformation
 
-class SubfaultsMeshes(FaultCoordinatesTransformation):
+class SubfaultsMeshesByLength(FaultCoordinatesTransformation):
     def __init__(self):
         super().__init__()
-        self.num_subflt_along_strike = None
-        self.num_subflt_along_dip = None
+        self.subflt_sz_dip = None
+        self.subflt_sz_strike = None
         self.depth_limit = None
+
+    def _compute_num_subflt_along_strike(self):
+        flt_sz_strike = 0.
+        num = 0
+        while(flt_sz_strike <= self.FLT_SZ_STRIKE - self.subflt_sz_strike):
+            flt_sz_strike += self.subflt_sz_strike            
+            num += 1
+
+        self.num_subflt_along_strike = num
+        self.flt_sz_strike = flt_sz_strike
+
+    def _compute_num_subflt_along_dip(self):
+        flt_sz_dip = 0.
+        num = 0
+        dep_bottom = self.DEP[0]
+        flt_sz_dip = 0.
+
+        while dep_bottom < self.depth_limit:
+            flt_sz_dip += self.subflt_sz_dip
+            dep_bottom = self.get_xf_by_dep_scalar(flt_sz_dip)
+            num += 1
+                    
         
     def _init(self):
         self.y_f = linspace(0., self.flt_dim_strike, self.num_subflt_along_strike)
@@ -50,7 +72,7 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
             fid['flt_sz_dip'] = self.xf_lim
             fid['flt_sz_dip'].attrs['unit'] = 'km'
 
-            fid['flt_sz_strike'] = self.flt_dim_strike
+            fid['flt_sz_strike'] = self.flt_sz_strike
             fid['flt_sz_strike'].attrs['unit'] = 'km'
 
             fid['depth_top'] = self.DEP[0]

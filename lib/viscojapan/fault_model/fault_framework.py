@@ -21,10 +21,10 @@ class FaultFramework(object):
 
     def _fault_dimension(self):
         # Total fault width
-        self.flt_dim_dip = 425.
+        self.FLT_SZ_DIP = 425.
 
         # Total fault length
-        self.flt_dim_strike = 700.
+        self.FLT_SZ_STRIKE = 700.
 
     def _fault_orientation(self):
         # Subfaults dips in degree.
