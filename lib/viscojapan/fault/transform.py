@@ -1,9 +1,9 @@
 from numpy import asarray, zeros_like, nan, cos, pi, sin
 from pyproj import Proj
 
-from .fault_framework_in_earth_media import FaultFrameworkInEarthMedia
+from .fault_framework import FaultFramework
 
-class FaultCoordinatesTransformation(FaultFrameworkInEarthMedia):
+class FaultCoordinatesTransformation(FaultFramework):
     """ Coordinates transformations bewteen these three coordinates:
 (1) Geo-coordinates expressed by (lon,lat)
 (2) Ground coordinates expressed by (east,north) in km

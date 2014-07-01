@@ -31,7 +31,6 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
 
         self.ddeps = self.get_dep(self.xx_f)
         self.ddips = self.get_dip(self.xx_f)
-        self.shear = self.get_shear(self.ddeps)
 
     def save_fault_file(self, fn):
         self._init()
@@ -54,8 +53,11 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
             fid['flt_sz_strike'] = self.flt_dim_strike
             fid['flt_sz_strike'].attrs['unit'] = 'km'
 
-            fid['depth_limit'] = self.depth_limit
-            fid['depth_limit'].attrs['unit'] = 'km'
+            fid['depth_top'] = self.DEP[0]
+            fid['depth_top'].attrs['unit'] = 'km'
+            
+            fid['depth_bottom'] = self.depth_limit
+            fid['depth_bottom'].attrs['unit'] = 'km'
             
             fid['meshes/xx_f'] = self.xx_f.T
             fid['meshes/xx_f'].attrs['unit'] = 'km'
@@ -78,8 +80,6 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
             fid['meshes/ddips'] = self.ddips.T
             fid['meshes/ddips'].attrs['unit'] = 'degree'
 
-            fid['meshes/shear'] = self.shear.T
-            fid['meshes/shear'].attrs['unit']='Pa.s'
             
         
         
