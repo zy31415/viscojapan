@@ -12,10 +12,13 @@ Fault Plane Coordinates (FC)
     (xfc, yfc)
     xfc - along strike
     yfc - along dip
-Ground Projection Coordinates (GC)
-    (xgc, ygc)
+    
+Ground Projection Coordinates (PC)
+    (xgc, ypc)
+    
 Geographic Coordinates (GC)
     (lon,lat)
+    
 Explaination see research notes on July 01, 2014.
 07/01/2014
 '''
@@ -33,10 +36,7 @@ Explaination see research notes on July 01, 2014.
 
     def _fault_dimension(self):
         # Total fault width
-        self.FLT_SZ_DIP = 425.
-
-        # Total fault length
-        self.FLT_SZ_STRIKE = 700.
+        self.FLT_SZ_DIP = 425. # km
 
     def _fault_orientation(self):
         # Subfaults dips in degree.
@@ -48,18 +48,18 @@ Explaination see research notes on July 01, 2014.
         self.STRIKE = 195.
 
     def _hinge_coordinates(self):        
-        #                dY_GC[0]      dY_GC[1]
-        # Ground: Y_GC[0]--------Y_GC[1]-------Y_GC[2]---...
+        #                dY_PC[0]      dY_PC[1]
+        # Ground: Y_PC[0]--------Y_PC[1]-------Y_PC[2]---...
         #
         #               dY_FC[0]       dY_FC[1]
         # Fault:  Y_FC[0]--------Y_FC[1]-------Y_FC[2]---...
         #
-        # Y_GC is x coordiantes of ground nodal points in the ground xy coordinates
+        # Y_PC is x coordiantes of ground nodal points in the ground xy coordinates
         #  where the fault kinks, i.e. subfaults x boundaries
-        # Note Y_GC has order!
-        self.Y_GC = asarray([0,98.480775301220802,171.25295477192054,
+        # Note Y_PC has order!
+        self.Y_PC = asarray([0,98.480775301220802,171.25295477192054,
                        217.61214750025991, 394.20166607204533])
-        self.dY_GC = self.Y_GC[1:] - self.Y_GC[0:-1]
+        self.dY_PC = self.Y_PC[1:] - self.Y_PC[0:-1]
 
         # Y_FC is x coordinates of nodal points in fault coordinates
         #  where the fault kinks, i.e. subfaults x boundaries
@@ -110,24 +110,24 @@ Explaination see research notes on July 01, 2014.
         return yfc
         
 
-    def _yfc_to_ygc_scalar(self, yfc):
+    def _yfc_to_ypc_scalar(self, yfc):
         nth = _find_section(self.Y_FC, yfc)
         
-        res = self.Y_GC[nth-1] + (yfc - self.Y_FC[nth-1])*cos(self.DIP[nth-1])
+        res = self.Y_PC[nth-1] + (yfc - self.Y_FC[nth-1])*cos(self.DIP[nth-1])
         return res
 
-    def yfc_to_ygc(self, yfc):
+    def yfc_to_ypc(self, yfc):
         yfc = asarray(yfc, float)
-        return my_vectorize(self._yfc_to_ygc_scalar, yfc)
+        return my_vectorize(self._yfc_to_ypc_scalar, yfc)
 
-    def _ygc_to_yfc_scalar(self, ygc):
-        nth = _find_section(self.Y_GC, ygc)
+    def _ypc_to_yfc_scalar(self, ypc):
+        nth = _find_section(self.Y_PC, ypc)
         
-        res =  self.Y_FC[nth-1] + (ygc-self.Y_GC[nth-1])/cos(self.DIP[nth-1])
+        res =  self.Y_FC[nth-1] + (ypc-self.Y_PC[nth-1])/cos(self.DIP[nth-1])
         return res
 
-    def ygc_to_yfc(self, ygc):
-        return my_vectorize(self._ygc_to_yfc_scalar, ygc)
+    def ypc_to_yfc(self, ypc):
+        return my_vectorize(self._ypc_to_yfc_scalar, ypc)
         
         
 

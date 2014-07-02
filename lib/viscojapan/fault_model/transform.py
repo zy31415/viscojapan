@@ -34,17 +34,20 @@ Fault    <=> Ground   <=> Geo
     def _xy_to_lonlat(self, x, y):
         x = asarray(x)
         y = asarray(y)
+        
         p=Proj(proj='utm', zone=54, ellps='WGS84')
         x0, y0 = p(self.org_lon, self.org_lat)
+        
         x1 = x*1000. + x0
         y1 = y*1000. + y0
+        
         lon, lat = p(x1, y1, inverse = True)
         return lon, lat
 
     def _rotate_north_to_strike(self, x, y):
         x = asarray(x)
         y = asarray(y)
-        alpha = -self.flt_strike*pi/180
+        alpha = -self.STRIKE*pi/180
         x1 = cos(alpha)*x + sin(alpha)*y
         y1 = -sin(alpha)*x + cos(alpha)*y
 
@@ -53,35 +56,40 @@ Fault    <=> Ground   <=> Geo
     def _rotate_strike_to_north(self, x, y):
         x = asarray(x)
         y = asarray(y)
-        alpha = self.flt_strike*pi/180.
+        alpha = self.STRIKE*pi/180.
         x1 = cos(alpha)*x + sin(alpha)*y
         y1 = -sin(alpha)*x + cos(alpha)*y
         return x1,y1
 
-    def fault2ground(self,xf, yf):
-        xf = asarray(xf)
-        yf = asarray(yf)
-        xg = self.xfault_to_xground(xf)
-        yg = yf
-        return xg, yg
+    def _switch_xy(self, x, y):
+        return y, x
 
-    def ground2fault(self, xg, yg):
-        xg = asarray(xg)
-        yg = asarray(yg)
-        xf = self.xground_to_xfault(xg)
-        yf = yg
-        return xf, yf
-
-    def ground2geo(self, xg, yg):
-        x1, y1 = self._rotate_strike_to_north(xg, yg)
+    def ground2geo(self, xp, yp):
+        x, y = self._switch_xy(xp, yp)
+        x1, y1 = self._rotate_strike_to_north(x, y)
         lon, lat = self._xy_to_lonlat(x1, y1)
         return lon, lat
 
     def geo2ground(self, lon, lat):
         x, y = self._lonlat_to_xy(lon, lat)
         x1, y1 = self._rotate_north_to_strike(x, y)
-        return x1, y1
-        
+        xp, yp = self._switch_xy(x1,y1)
+        return xp, yp
+
+    def fault2ground(self,xf, yf):
+        xf = asarray(xf)
+        yf = asarray(yf)
+        yp = self.yfc_to_ypc(yf)
+        xp = xf
+        return xp, yp
+
+    def ground2fault(self, xp, yp):
+        xp = asarray(xp)
+        yp = asarray(yp)
+        yf = self.ypc_to_yfc(yp)
+        xf = xp
+        return xf, yf
+    
     def fault2geo(self, xf, yf):
         xg, yg = self.fault2ground(xf, yf)
         lon, lat = self.ground2geo(xg, yg)
