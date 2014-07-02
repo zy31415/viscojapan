@@ -7,6 +7,18 @@ from ..utils import my_vectorize, _find_section
 
         
 class FaultFramework(object):
+    ''' Three coordinates:
+Fault Plane Coordinates (FC)
+    (xfc, yfc)
+    xfc - along strike
+    yfc - along dip
+Ground Projection Coordinates (GC)
+    (xgc, ygc)
+Geographic Coordinates (GC)
+    (lon,lat)
+Explaination see research notes on July 01, 2014.
+07/01/2014
+'''
     def __init__(self):
         self._fault_origin()
         self._fault_dimension()
@@ -32,27 +44,27 @@ class FaultFramework(object):
         # Subfaults dips in arcs.
         self.DIP = self.DIP_D*pi/180.
         
-        # Fault flt_strike    
-        self.flt_strike = 195.
+        # Fault STRIKE    
+        self.STRIKE = 195.
 
     def _hinge_coordinates(self):        
-        #               dXG[0]      dXG[1]
-        # Ground: XG[0]--------XG[1]-------XG[2]---...
+        #                dY_GC[0]      dY_GC[1]
+        # Ground: Y_GC[0]--------Y_GC[1]-------Y_GC[2]---...
         #
-        #              dXF[0]       dXF[1]
-        # Fault:  XF[0]--------XF[1]-------XF[2]---...
+        #               dY_FC[0]       dY_FC[1]
+        # Fault:  Y_FC[0]--------Y_FC[1]-------Y_FC[2]---...
         #
-        # XG is x coordiantes of ground nodal points in the ground xy coordinates
+        # Y_GC is x coordiantes of ground nodal points in the ground xy coordinates
         #  where the fault kinks, i.e. subfaults x boundaries
-        # Note XG has order!
-        self.XG = asarray([0,98.480775301220802,171.25295477192054,
+        # Note Y_GC has order!
+        self.Y_GC = asarray([0,98.480775301220802,171.25295477192054,
                        217.61214750025991, 394.20166607204533])
-        self.dXG = self.XG[1:] - self.XG[0:-1]
+        self.dY_GC = self.Y_GC[1:] - self.Y_GC[0:-1]
 
-        # XF is x coordinates of nodal points in fault coordinates
+        # Y_FC is x coordinates of nodal points in fault coordinates
         #  where the fault kinks, i.e. subfaults x boundaries
-        self.XF=[0,100.,175.,225.,425.]
-        self.dXF=[100.,75.,50.,200]
+        self.Y_FC=[0,100.,175.,225.,425.]
+        self.dY_FC=[100.,75.,50.,200]
 
     def _hinge_dep(self):
         # initial depth of the upper edge of the shallowest subfaults.
@@ -60,62 +72,62 @@ class FaultFramework(object):
 
         # DEP is the depth of the fault hinges
         DEP = [self.DEP0]
-        for seg,dip in zip(self.dXF, self.DIP):
+        for seg,dip in zip(self.dY_FC, self.DIP):
             _y1 = DEP[-1] + seg*sin(dip)
             DEP.append(_y1)
         self.DEP = DEP
             
-    def _get_dip_scalar(self, xf):
-        nth = _find_section(self.XF, xf)
+    def _get_dip_scalar(self, yfc):
+        nth = _find_section(self.Y_FC, yfc)
         dip = self.DIP_D[nth-1]
         return dip      
     
-    def get_dip(self, xf):
-        return my_vectorize(self._get_dip_scalar, xf)
+    def get_dip(self, yfc):
+        return my_vectorize(self._get_dip_scalar, yfc)
 
-    def _get_dep_scalar(self, xf):
-        nth = _find_section(self.XF, xf)
+    def _get_dep_scalar(self, yfc):
+        nth = _find_section(self.Y_FC, yfc)
         
-        xf1 = self.XF[nth-1]
-        xf2 = self.XF[nth]
+        xf1 = self.Y_FC[nth-1]
+        xf2 = self.Y_FC[nth]
         dep1 = self.DEP[nth-1]
         dep2 = self.DEP[nth]
 
-        dep = (dep2-dep1)/(xf2-xf1)*(xf-xf1) + dep1
+        dep = (dep2-dep1)/(xf2-xf1)*(yfc-xf1) + dep1
         return dep
 
-    def get_dep(self, xf):
-        return my_vectorize(self._get_dep_scalar, xf)
+    def get_dep(self, yfc):
+        return my_vectorize(self._get_dep_scalar, yfc)
 
-    def get_xf_by_dep_scalar(self, dep):
+    def get_yfc_by_dep_scalar(self, dep):
         nth = _find_section(self.DEP, dep)        
         d1 = self.DEP[nth-1]
         d2 = self.DEP[nth]
-        xf1 = self.XF[nth-1]
-        xf2 = self.XF[nth]
+        xf1 = self.Y_FC[nth-1]
+        xf2 = self.Y_FC[nth]
 
-        xf = (xf2-xf1)/(d2-d1)*(dep-d1) + xf1
-        return xf
+        yfc = (xf2-xf1)/(d2-d1)*(dep-d1) + xf1
+        return yfc
         
 
-    def _xfault_to_xground_scalar(self, xf):
-        nth = _find_section(self.XF, xf)
+    def _yfc_to_ygc_scalar(self, yfc):
+        nth = _find_section(self.Y_FC, yfc)
         
-        res = self.XG[nth-1] + (xf - self.XF[nth-1])*cos(self.DIP[nth-1])
+        res = self.Y_GC[nth-1] + (yfc - self.Y_FC[nth-1])*cos(self.DIP[nth-1])
         return res
 
-    def xfault_to_xground(self, xf):
-        xf = asarray(xf, float)
-        return my_vectorize(self._xfault_to_xground_scalar, xf)
+    def yfc_to_ygc(self, yfc):
+        yfc = asarray(yfc, float)
+        return my_vectorize(self._yfc_to_ygc_scalar, yfc)
 
-    def _xground_to_xfault_scalar(self, xg):
-        nth = _find_section(self.XG, xg)
+    def _ygc_to_yfc_scalar(self, ygc):
+        nth = _find_section(self.Y_GC, ygc)
         
-        res =  self.XF[nth-1] + (xg-self.XG[nth-1])/cos(self.DIP[nth-1])
+        res =  self.Y_FC[nth-1] + (ygc-self.Y_GC[nth-1])/cos(self.DIP[nth-1])
         return res
 
-    def xground_to_xfault(self, xg):
-        return my_vectorize(self._xground_to_xfault_scalar, xg)
+    def ygc_to_yfc(self, ygc):
+        return my_vectorize(self._ygc_to_yfc_scalar, ygc)
         
         
 
