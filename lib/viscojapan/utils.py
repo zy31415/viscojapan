@@ -25,6 +25,10 @@ def _assert_nonnegative_integer(var):
     _assert_integer(var)
     assert var >= 0, "%d is not non negative."%str(var)
 
+def _assert_positive_integer(var):
+    _assert_integer(var)
+    assert var > 0, "%d is not positive."%str(var)
+
 def _assert_not_exists(fn):
     assert not exists(fn), "File %s exist."%fn
 
