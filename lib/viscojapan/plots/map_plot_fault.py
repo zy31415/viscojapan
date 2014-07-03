@@ -1,24 +1,22 @@
 from numpy import ascontiguousarray, asarray
 from pylab import plt
 
-from .my_basemap import MyBasemap
+from .map_plot import MapPlot
 from ..fault_model import FaultFileIO
-from ..utils import overrides, _assert_file_exists
+from ..utils import _assert_file_exists, kw_init
 from ..epochal_data import EpochalSlip, EpochalIncrSlip
 
-class MapPlotFault(MyBasemap):
-    def __init__(self, fault_file):
+class MapPlotFault(MapPlot):
+    def __init__(self, fault_file, **kwargs):
         super().__init__()
         self.fault_file = fault_file
+        kw_init(self, kwargs)
+
+        self._init_fault_file()
 
     def _init_fault_file(self):
         _assert_file_exists(self.fault_file)
         self.fault_file_obj =  FaultFileIO(self.fault_file)
-
-    @overrides(MyBasemap)
-    def init(self):
-        self._init_fault_file()
-        super().init()
 
     def _assert_slip_array_shape(self, slip):
         sh = slip.shape
@@ -38,16 +36,13 @@ class MapPlotFault(MyBasemap):
     def plot_slip(self, m, cmap=None, clim=None):
         '''
 '''
-        if not self.if_init:
-            self.init()
-
         m = asarray(m)
         LLons = self.fault_file_obj.LLons
         LLats = self.fault_file_obj.LLats
 
         mm = self._assert_slip_array_shape(m)
 
-        self.pcolor(LLons,LLats,mm,latlon=True,cmap=cmap)        
+        self.basemap.pcolor(LLons,LLats,mm,latlon=True,cmap=cmap)        
         cb = plt.colorbar()
         plt.clim(clim)
         cb.set_label('slip(m)')
@@ -60,15 +55,12 @@ class MapPlotFault(MyBasemap):
 ##        title('Mo=%.3g,Mw=%.2f'%(mo,mw))
 
     def plot_slip_contours(self, m, colors='white', V=None):
-        if not self.if_init:
-            self.init()
-            
         LLons = self.fault_file_obj.LLons[1:,1:]
         LLats = self.fault_file_obj.LLats[1:,1:]
             
         mm = self._assert_slip_array_shape(m)
         
-        CS = self.contour(LLons,LLats,mm,latlon=True, colors=colors, V=V)
+        CS = self.basemap.contour(LLons,LLats,mm,latlon=True, colors=colors, V=V)
         plt.clabel(CS, inline=1, fontsize=10)
 
     def plot_slip_file_contours(self, f_slip, epoch):
@@ -83,16 +75,14 @@ class MapPlotFault(MyBasemap):
         
 
     def plot_fault(self,fno=None,ms=15):
-        if not self.if_init:
-            self.init()
-            
+        
         LLons = self.fault_file_obj.LLons
         LLats = self.fault_file_obj.LLats
         
         assert ms<250 and ms>=0, "Fault No. out of range."
             
-        self.plot(LLons,LLats,color='gray',latlon=True)
-        self.plot(ascontiguousarray(LLons.T),
+        self.basemap.plot(LLons,LLats,color='gray',latlon=True)
+        self.basemap.plot(ascontiguousarray(LLons.T),
                   ascontiguousarray(LLats.T),
                   color='gray',latlon=True)
         if fno is not None:
@@ -107,7 +97,7 @@ class MapPlotFault(MyBasemap):
             y0=(ypt1.flatten()[fno]+ypt2.flatten()[fno])/2.
 
             
-            self.plot(x0,y0,marker='*',color='red',ms=ms)
+            self.basemap.plot(x0,y0,marker='*',color='red',ms=ms)
 
     def plot_incr_slip_file(self, f_slip, epoch):
         slip_obj = EpochalIncrSlip(f_slip)

@@ -14,7 +14,7 @@ this_test_path = get_this_script_dir(__file__)
 
 class TestMapPlotDisplacement(unittest.TestCase):
     def setUp(self):
-        self.file_disp = join(this_test_path,'pred_disp_a11_b00.h5')
+        self.file_disp = join(this_test_path,'share/pred_disp_a11_b00.h5')
 
     def test_MyBasemap(self):
         mybm = MyBasemap()
@@ -23,13 +23,13 @@ class TestMapPlotDisplacement(unittest.TestCase):
         ep = EpochalDisplacement(self.file_disp)
         plot = MapPlotDisplacement()
         plot.plot_disp(ep(0), ep.filter_sites)
-        savefig(join(this_test_path, '~plot_disp.png'))
+        savefig(join(this_test_path, '~plots/plot_disp.png'))
         close()
 
     def test_plot_disp_file(self):
         plot = MapPlotDisplacement()
         plot.plot_disp_file(self.file_disp, 0)
-        savefig(join(this_test_path, '~plot_disp_file.png'))
+        savefig(join(this_test_path, '~plots/plot_disp_file.png'))
         close()
         
 

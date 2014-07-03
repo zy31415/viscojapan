@@ -1,16 +1,21 @@
 from numpy import arange
 from mpl_toolkits.basemap import Basemap
+from ..utils import kw_init
 
 class MyBasemap(Basemap):
-    def __init__(self):
-        self.region_box=(136,34,146,42)
-        self.region_code=None
+    def __init__(self, **kwargs):
+        # initialization parameters and default value
+        self.region_box = None
+        self.region_code = 'near'
         self.x_interval=2.
         self.y_interval=2.
-        self.if_init=False
+
+        kw_init(self, kwargs)
+        
+        self._init()
 
     def _init_set_region_box_by_region_code(self):
-        if self.region_code is not None:
+        if self.region_box is None:
             if self.region_code=='I':
                 self.region_box=(128,30,132.5,34.5)
             elif self.region_code=='A':
@@ -23,7 +28,7 @@ class MyBasemap(Basemap):
             elif self.region_code=='all':
                 self.region_box=(136,34,146,42)
             else:
-                raise ValueError('Region code not defined.')
+                raise ValueError('Invalid Region code.')
         
     def _init_draw_background(self):
         self.drawcoastlines(color='green',zorder=-1)
@@ -43,10 +48,10 @@ class MyBasemap(Basemap):
                          lat_1=lat_0-5,lat_2=lat_0+5,
                          celestial=False)
 
-    def init(self):
+    def _init(self):
         self._init_set_region_box_by_region_code()               
         self._init_basemap()
         self._init_draw_background()
-        self.if_init=True
+
 
 

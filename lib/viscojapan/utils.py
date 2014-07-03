@@ -92,3 +92,8 @@ def _find_section(ARR, val):
             break
         
     return nth + 1
+
+def kw_init(self, kwargs):
+    for name, value in kwargs.items():
+        assert hasattr(self,name), 'Invalid key word arguments.'
+        setattr(self,name, value)
