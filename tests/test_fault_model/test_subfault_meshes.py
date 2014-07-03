@@ -26,8 +26,8 @@ class TestSubFaultsMeshes(unittest.TestCase):
         delete_if_exists(self.file_subfaults)
         
         sf = SubfaultsMeshes()
-        sf.x_f = linspace(0,700, 20)
-        sf.y_f = linspace(0,300, 15)
+        sf.x_f = linspace(0,700, 26)
+        sf.y_f = linspace(0,300, 11)
         sf.save_fault_file(self.file_subfaults)
 
     def test_SubfaultsMeshesByLength(self):
@@ -47,10 +47,10 @@ class TestSubFaultsMeshes(unittest.TestCase):
 
         gen=SubfaultsMeshesByNumber()       
         
-        gen.num_subflt_along_strike = 30
+        gen.num_subflt_along_strike = 25
         gen.flt_sz_strike = 700. # km
         
-        gen.num_subflt_along_dip = 20        
+        gen.num_subflt_along_dip = 10        
         gen.depth_bottom_limit = 50.
 
         gen.save_fault_file(self.file_gen_by_number)

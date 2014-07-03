@@ -102,12 +102,14 @@ class EpochalSitesFilteredData(EpochalSitesData):
         return out[ch,:]
 
 class EpochalG(EpochalSitesFilteredData):
-    def __init__(self,epoch_file, filter_sites_file):
-        super().__init__(epoch_file, filter_sites_file)
+    def __init__(self,epoch_file,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(epoch_file, filter_sites_file, filter_sites)
 
 class EpochalDisplacement(EpochalSitesFilteredData):
-    def __init__(self,epoch_file, filter_sites_file):
-        super().__init__(epoch_file, filter_sites_file)
+    def __init__(self,epoch_file,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(epoch_file, filter_sites_file, filter_sites)
 
     def get_time_series(self, site, cmpt):
         epochs = self.get_epochs()
@@ -117,8 +119,9 @@ class EpochalDisplacement(EpochalSitesFilteredData):
         return ys
     
 class EpochalDisplacementSD(EpochalSitesFilteredData):
-    def __init__(self,epoch_file, filter_sites_file):
-        super().__init__(epoch_file, filter_sites_file)
+    def __init__(self,epoch_file,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(epoch_file, filter_sites_file, filter_sites)
 
     @overrides(EpochalSitesFilteredData)
     def get_epoch_value(self, epoch):

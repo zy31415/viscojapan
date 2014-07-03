@@ -26,8 +26,8 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
         self.y_f = None
         
     def _init(self):
-        self.num_subflt_along_strike = len(self.x_f)
-        self.num_subflt_along_dip =  len(self.y_f)
+        self.num_subflt_along_strike = len(self.x_f)-1
+        self.num_subflt_along_dip =  len(self.y_f)-1
 
         self.subflt_sz_strike = self.x_f[1] - self.x_f[0]
         self.subflt_sz_dip = self.y_f[1] - self.y_f[0]
@@ -135,11 +135,11 @@ class SubfaultsMeshesByNumber(SubfaultsMeshes):
 
     def _gen_y_f(self):
         y_f_limit = self.get_yfc_by_dep_scalar(self.depth_bottom_limit)
-        self.y_f = linspace(0, y_f_limit, self.num_subflt_along_dip)
+        self.y_f = linspace(0, y_f_limit, self.num_subflt_along_dip+1)
        
     def _gen_x_f(self):
         self.x_f = linspace(0, self.flt_sz_strike,
-                            self.num_subflt_along_strike)
+                            self.num_subflt_along_strike+1)
         
     @overrides(SubfaultsMeshes)
     def _init(self):

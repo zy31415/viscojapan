@@ -29,8 +29,11 @@ def _assert_positive_integer(var):
     _assert_integer(var)
     assert var > 0, "%d is not positive."%str(var)
 
-def _assert_not_exists(fn):
+def _assert_file_not_exists(fn):
     assert not exists(fn), "File %s exist."%fn
+
+def _assert_file_exists(fn):
+    assert exists(fn), "File %s doesn't exist."%fn
 
 def _assert_assending_order(l):
     assert all(l[i] <= l[i+1] for i in range(len(l)-1)) is True, \
@@ -41,6 +44,8 @@ def _assert_column_vector(res):
     assert len(sh) ==2, "Wrong dimension. Must be column vector."
     assert sh[1] == 1, "Column number should 1."
     return sh[0]
+
+
 
 # decorator:
 class overrides:

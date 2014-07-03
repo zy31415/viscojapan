@@ -36,13 +36,25 @@ class FaultFileIO(object):
     def num_subflt_along_dip(self):
         with self.read() as fid:
             res = fid['num_subflt_along_dip'][...]
-        return res
+        return int(res)
 
     @num_subflt_along_dip.setter
-    def num_subflt_along_strike(self, val):
+    def num_subflt_along_dip(self, val):
         _assert_positive_integer(val)
         with self.append() as fid:
             fid['num_subflt_along_strike'] = val
+
+    @property
+    def LLons(self):
+        with self.read() as fid:
+            res = fid['meshes/LLons'][...]
+        return res
+
+    @property
+    def LLats(self):
+        with self.read() as fid:
+            res = fid['meshes/LLats'][...]
+        return res
 
     
             
