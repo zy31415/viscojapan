@@ -18,31 +18,22 @@ class MapPlotFault(MapPlot):
         _assert_file_exists(self.fault_file)
         self.fault_file_obj =  FaultFileIO(self.fault_file)
 
-    def _assert_slip_array_shape(self, slip):
-        sh = slip.shape
-        assert len(sh) == 2 , 'Input slip should be column vector or matrix.'
-        
+    def _reshape_as_fault(self, arr):        
         ny = self.fault_file_obj.num_subflt_along_dip
         nx = self.fault_file_obj.num_subflt_along_strike
+        return arr.reshape([ny,nx])
 
-        if sh[1]==1:
-            assert sh[0] == nx*ny, 'Misshape!'
-        else:
-            assert sh[0] == ny, 'Misshape!'
-            assert sh[1] == nx, 'Misshape!'
-
-        return slip.reshape([ny,nx])
-        
-    def plot_slip(self, m, cmap=None, clim=None):
-        '''
-'''
-        m = asarray(m)
+    def pcolor_on_fault(self, val, **kwargs):
         LLons = self.fault_file_obj.LLons
         LLats = self.fault_file_obj.LLats
 
-        mm = self._assert_slip_array_shape(m)
-
-        self.basemap.pcolor(LLons,LLats,mm,latlon=True,cmap=cmap)        
+        vval = self._reshape_as_fault(val)
+        
+        return self.basemap.pcolor(LLons, LLats, vval, latlon=True,
+                            **kwargs)
+        
+    def plot_slip(self, m, cmap=None, clim=None):        
+        self.pcolor_on_fault(m, cmap = cmap) 
         cb = plt.colorbar()
         plt.clim(clim)
         cb.set_label('slip(m)')
@@ -54,13 +45,18 @@ class MapPlotFault(MapPlot):
 ##        
 ##        title('Mo=%.3g,Mw=%.2f'%(mo,mw))
 
-    def plot_slip_contours(self, m, colors='white', V=None):
+    def contour_on_fault(self, val, **kwargs):
         LLons = self.fault_file_obj.LLons[1:,1:]
         LLats = self.fault_file_obj.LLats[1:,1:]
-            
-        mm = self._assert_slip_array_shape(m)
         
-        CS = self.basemap.contour(LLons,LLats,mm,latlon=True, colors=colors, V=V)
+        vval = self._reshape_as_fault(val)
+        
+        CS = self.basemap.contour(LLons, LLats, vval,
+                             latlon=True, **kwargs)
+        return CS
+        
+    def plot_slip_contours(self, m, colors='white', V=None):
+        CS = self.contour_on_fault(m, colors=colors, V=V)
         plt.clabel(CS, inline=1, fontsize=10)
 
     def plot_slip_file_contours(self, f_slip, epoch):
@@ -95,7 +91,6 @@ class MapPlotFault(MapPlot):
 
             x0=(xpt1.flatten()[fno]+xpt2.flatten()[fno])/2.
             y0=(ypt1.flatten()[fno]+ypt2.flatten()[fno])/2.
-
             
             self.basemap.plot(x0,y0,marker='*',color='red',ms=ms)
 

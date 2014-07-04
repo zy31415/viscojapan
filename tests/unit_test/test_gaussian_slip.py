@@ -2,7 +2,7 @@ from os.path import join
 
 from pylab import savefig, close, clim
 
-from viscojapan.plots.plot_utils import Map
+from viscojapan.plots import MapPlotFault
 from viscojapan.inversion_test import GaussianSlip
 from viscojapan.utils import get_this_script_dir
 
@@ -25,9 +25,8 @@ def test():
 
     t = 1100
     z = gaussian_slip(t)
-    m = Map()
-    m.init()
-    m.plot_fslip(z)
+
+    MapPlotFault('/home/zy/workspace/viscojapan/fault_model/fault_model2/fault.h5').plot_slip(z)
     clim([0, gaussian_slip.max_slip(t)])
     savefig(join(this_script_dir,'gaussian_slip.pdf'))
     close()

@@ -18,7 +18,7 @@ class Test_MapPlotSlab(unittest.TestCase):
         plot = MapPlotSlab()        
         plot.plot_top()
         
-        plt.savefig(join(this_test_path, '~plots/plot_slab_top.png'))
+        plt.savefig(join(this_test_path, '~outs/plot_slab_top.png'))
         plt.close()
 
 if __name__ =='__main__':

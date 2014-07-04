@@ -8,7 +8,7 @@ this_file_path = get_this_script_dir(__file__)
 
 class TestFaultFileIO(unittest.TestCase):
     def setUp(self):
-        self.fault_file = join(this_file_path, 'subfaults.h5')
+        self.fault_file = join(this_file_path, 'share/subfaults.h5')
 
     def test(self):
         fio = FaultFileIO(self.fault_file)

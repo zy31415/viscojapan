@@ -29,7 +29,7 @@ class Test_MyBasemap(unittest.TestCase):
                           basemap = bm)
         p2.plot_fault()
 
-        plt.savefig(join(this_script_dir, '~plots/share_basemap.png'))
+        plt.savefig(join(this_script_dir, '~outs/share_basemap.png'))
         plt.close()
         
         

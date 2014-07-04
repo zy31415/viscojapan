@@ -5,8 +5,7 @@ from numpy import dot, asarray, amax, amin, logspace
 from pylab import show,close, savefig, xlim
 
 from viscojapan.inversion_test import gen_checkerboard_slip, gen_error_for_sites
-from viscojapan.plots.plot_utils import Map
-from viscojapan.plots.plot_res_file import plot_L
+from viscojapan.plots import MapPlotFault, plot_L
 from viscojapan.utils import overrides
 from viscojapan.least_square import LeastSquareTik2
 from viscojapan.epochal_data import EpochalG
@@ -62,9 +61,8 @@ class CheckerboardTest(LeastSquareTik2):
         for ano, alpha in enumerate(alphas):
             self.invert(alpha)
 
-            m = Map()
-            m.init()            
-            m.plot_fslip(self.m)
+            mplt = MapPlotFault('/home/zy/workspace/viscojapan/fault_model/fault_model2/fault.h5')
+            mplt.plot_slip(self.m)
             #show()
             savefig(join(outputs_dir, 'slip_%02d.png'%ano))
             close()

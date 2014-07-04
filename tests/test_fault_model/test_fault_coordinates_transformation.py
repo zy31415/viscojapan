@@ -8,7 +8,7 @@ from pylab import plt
 
 from viscojapan.fault_model.transform import FaultCoordinatesTransformation
 from viscojapan.utils import get_this_script_dir
-from viscojapan.plots.plot_utils import Map
+from viscojapan.plots.map_plot import MapPlot
 
 this_test_path = get_this_script_dir(__file__)
 
@@ -16,8 +16,7 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
     def setUp(self):
         self.fm = FaultCoordinatesTransformation()
 
-        self.plt_map = Map()
-        self.plt_map.init()
+        self.plt_map = MapPlot()
 
     def test__lonlat_to_xy(self):
         B0 = self.fm.B0
@@ -44,8 +43,8 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
        
         LLons, LLats = self.fm.ground2geo(xxp, yyp)
 
-        self.plt_map.plot(LLons,LLats,color='gray',latlon=True)
-        self.plt_map.plot(ascontiguousarray(LLons.T),
+        self.plt_map.basemap.plot(LLons,LLats,color='gray',latlon=True)
+        self.plt_map.basemap.plot(ascontiguousarray(LLons.T),
                   ascontiguousarray(LLats.T),
                   color='gray',latlon=True)
         plt.savefig('~test_ground2geo.png')
@@ -82,8 +81,8 @@ class TestFaultCoordinatesTransformation(unittest.TestCase):
         
         LLons, LLats = self.fm.fault2geo(xxf, yyf)
 
-        self.plt_map.plot(LLons,LLats,color='gray',latlon=True)
-        self.plt_map.plot(ascontiguousarray(LLons.T),
+        self.plt_map.basemap.plot(LLons,LLats,color='gray',latlon=True)
+        self.plt_map.basemap.plot(ascontiguousarray(LLons.T),
                   ascontiguousarray(LLats.T),
                   color='gray',latlon=True)
         plt.savefig('~test_fault2geo.png')

@@ -14,6 +14,10 @@ class CheckSubfaultsInput(object):
         self.subflts_dir = None
         self.original_fault_file = None
 
+    def _get_fault_shape(self):
+        fio = FaultFileIO(self.original_fault_file)
+        return (fio.num_subflt_along_dip, fio.num_subflt_along_strike)
+    
     def iterate_files(self):
         for fn in sorted(glob.glob(join(self.subflts_dir, 'flt_????'))):
             yield fn
@@ -51,7 +55,7 @@ class CheckSubfaultsInput(object):
 
     def test_dep_top(self):
         dips = self.read_pars('top')
-        MapPlotFault(fault_file = self.original_fault_file).plot_slip(dips.reshape([-1,1]))
+        MapPlotFault(fault_file = self.original_fault_file).pcolor_on_fault(dips)
         plt.title('top')
         plt.savefig(join(self.outs_dir, 'dep_top.png'))
         plt.close()

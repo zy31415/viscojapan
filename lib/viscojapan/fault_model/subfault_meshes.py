@@ -127,13 +127,15 @@ class SubfaultsMeshesByLength(SubfaultsMeshes):
 
 
 class SubfaultsMeshesByNumber(SubfaultsMeshes):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.num_subflt_along_strike = None
         self.flt_sz_strike = 700. # km
         
         self.num_subflt_along_dip = None        
         self.depth_bottom_limit = None
+
+        kw_init(self, kwargs)
 
     def _gen_y_f(self):
         y_f_limit = self.get_yfc_by_dep_scalar(self.depth_bottom_limit)
