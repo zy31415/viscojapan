@@ -9,17 +9,20 @@ from pylab import plt
 from viscojapan.fault_model.subfault_meshes import SubfaultsMeshes, \
      SubfaultsMeshesByLength, SubfaultsMeshesByNumber
 from viscojapan.utils import get_this_script_dir, delete_if_exists
+from viscojapan.test_utils import MyTestCase
 
 this_test_path = get_this_script_dir(__file__)
 
-class TestSubFaultsMeshes(unittest.TestCase):
+class TestSubFaultsMeshes(MyTestCase):
     def setUp(self):
-        self.file_subfaults = join(this_test_path, '~test_faults.h5')
+        self.this_script = __file__
+        super().setUp()
+        self.file_subfaults = join(self.outs_dir, '~test_faults.h5')
         
-        self.file_gen_by_length = join(this_test_path,
+        self.file_gen_by_length = join(self.outs_dir,
                                        '~test_faults_gen_by_length.h5')
 
-        self.file_gen_by_number = join(this_test_path,
+        self.file_gen_by_number = join(self.outs_dir,
                                        '~test_faults_gen_by_number.h5')
                 
     def test_SubfaultsMeshes(self):
@@ -47,10 +50,10 @@ class TestSubFaultsMeshes(unittest.TestCase):
 
         gen=SubfaultsMeshesByNumber()       
         
-        gen.num_subflt_along_strike = 25
+        gen.num_subflt_along_strike = 2
         gen.flt_sz_strike = 700. # km
         
-        gen.num_subflt_along_dip = 10        
+        gen.num_subflt_along_dip = 4        
         gen.depth_bottom_limit = 50.
 
         gen.save_fault_file(self.file_gen_by_number)

@@ -56,6 +56,39 @@ class FaultFileIO(object):
             res = fid['meshes/LLats'][...]
         return res
 
+    @property
+    def ddeps(self):
+        with self.read() as fid:
+            res = fid['meshes/ddeps'][...]
+        return res
+
+    @property
+    def ddips(self):
+        with self.read() as fid:
+            res = fid['meshes/ddips'][...]
+        return res
+
+    @property
+    def subflt_sz_strike(self):
+        with self.read() as fid:
+            res = fid['subflt_sz_strike'][...]
+        return float(res)
+
+    @property
+    def subflt_sz_dip(self):
+        with self.read() as fid:
+            res = fid['subflt_sz_dip'][...]
+        return float(res)
+
+    @property
+    def flt_strike(self):
+        with self.read() as fid:
+            assert 'flt_strike' in fid
+            res = fid['flt_strike'][...]
+        return float(res)
+
+    
+
     
             
             

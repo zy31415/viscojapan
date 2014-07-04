@@ -4,7 +4,7 @@ import h5py
 from numpy import linspace, meshgrid, asarray, loadtxt, nditer, inf
 
 from .transform import FaultCoordinatesTransformation
-from ..utils import overrides
+from ..utils import overrides, kw_init
 
 
 def accumulate_to_form_array(step_size, limit):
@@ -102,13 +102,15 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
     
             
 class SubfaultsMeshesByLength(SubfaultsMeshes):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.subflt_sz_dip = None
         self.depth_bottom_limit = None
 
         self.flt_sz_strike_limit = 700. # km
         self.subflt_sz_strike = None
+
+        kw_init(self, kwargs)
 
     def _gen_y_f(self):
         y_f_limit = self.get_yfc_by_dep_scalar(self.depth_bottom_limit)

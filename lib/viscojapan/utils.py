@@ -1,5 +1,5 @@
 import os
-from os.path import exists, isdir
+from os.path import exists, isdir, dirname, realpath
 import time
 import shutil
 
@@ -14,7 +14,7 @@ def delete_if_exists(fn):
             os.remove(fn)
 
 def get_this_script_dir(__file__):
-    return os.path.dirname(os.path.realpath(__file__))
+    return dirname(realpath(__file__))
 
 # assertions
 
@@ -97,3 +97,17 @@ def kw_init(self, kwargs):
     for name, value in kwargs.items():
         assert hasattr(self,name), 'Invalid key word arguments.'
         setattr(self,name, value)
+
+# iterate text file
+def if_line_is_commenting(ln):
+    tp = ln.strip()
+    if len(tp)==0:
+        return True
+    if tp[0] == '#':
+        return True
+    return False
+
+def next_non_commenting_line(fid):
+    for ln in fid:
+        if not if_line_is_commenting(ln):
+            yield ln

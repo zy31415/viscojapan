@@ -2,22 +2,24 @@ from os.path import join, exists
 from os import makedirs
 
 from numpy import size
-
 import h5py
 
-def gen_subflts_files(fault_file, out_dir):
+from ..fault_model.fault_file_io import FaultFileIO
+
+def gen_subflts_input_for_pollitz(fault_file, out_dir):
     if not exists(out_dir):
         makedirs(out_dir)
-    with h5py.File(fault_file) as fid:        
-        LLons=fid['meshes/LLons'][...]
-        LLats=fid['meshes/LLats'][...]
-        ddeps=fid['meshes/ddeps'][...]
-        ddips=fid['meshes/ddips'][...]
-        sflen=fid['subflt_sz_strike'][...]
-        stk=fid['flt_strike'][...]
+
+    fid = FaultFileIO(fault_file)
+    LLons=fid.LLons
+    LLats=fid.LLats
+    ddeps=fid.ddeps
+    ddips=fid.ddips
+    sflen=fid.subflt_sz_strike
+    stk=fid.flt_strike
     
-    udep = -ddeps[:-1,:-1].flatten()
-    ldep = -ddeps[1:,:-1].flatten()
+    udep = ddeps[:-1,:-1].flatten()
+    ldep = ddeps[1:,:-1].flatten()
     dip = ddips[1:,1:].flatten()
 
     lat = LLats[1:,1:].flatten()
@@ -32,8 +34,6 @@ def gen_subflts_files(fault_file, out_dir):
 
     n=0
     for ui,li,di,lati,loni in zip(udep,ldep,dip,lat,lon):
-        if li > 60:
-            raise ValueError()
         with open(join(out_dir, 'flt_%04d'%n),'wt') as fid:
             fid.write('%f %f %f\n'%(li,ui,di))
             fid.write('1\n')
@@ -42,4 +42,3 @@ def gen_subflts_files(fault_file, out_dir):
         print(n)
         n+=1
 
-    
