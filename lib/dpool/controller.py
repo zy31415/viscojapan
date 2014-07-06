@@ -25,7 +25,7 @@ from time import sleep
 
 import psutil as ps
 
-from ..utils import next_non_commenting_line, _assert_file_exists
+from .utils import next_non_commenting_line, _assert_file_exists
 
 def assert_num_process(np):
     assert np>0

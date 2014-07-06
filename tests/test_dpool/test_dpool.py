@@ -1,7 +1,7 @@
 from time import sleep
 from random import randrange
 
-from viscojapan.dpool.dpool import DPool, Task
+from dpool.dpool import DPool, Task
 
 tasks = []
 
