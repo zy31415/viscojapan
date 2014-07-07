@@ -15,9 +15,9 @@ class DPoolState(object):
         self.lock_q_finished = Lock()
         self.q_finished = Queue()
 
-        self.lock_running_proc = Lock()
+        self.lock_running_tasks = Lock()
         manager = Manager()
-        self.running_proc = manager.list()
+        self.running_tasks = manager.list()
 
     def _init_q_waiting(self, tasks):
         for task in tasks:
@@ -40,34 +40,34 @@ class DPoolState(object):
         self.lock_q_waiting.release()
         return task
 
-    # about running_proc
-    def register_running_proc(self, pid):
-        with self.lock_running_proc:
-            self.running_proc.append((pid,None))
+    # about running_tasks
+    def register_running_tasks(self, pid):
+        with self.lock_running_tasks:
+            self.running_tasks.append((pid,None))
 
-    def unregister_running_proc(self, pid):
-        with self.lock_running_proc:
+    def unregister_running_tasks(self, pid):
+        with self.lock_running_tasks:
             nth = None
-            for ni, ii in enumerate(self.running_proc):
+            for ni, ii in enumerate(self.running_tasks):
                 if ii[0] == pid:
                     nth = ni
                     break
-            del self.running_proc[nth]
+            del self.running_tasks[nth]
 
-    def pop_running_proc(self):
-        with self.lock_running_proc:
-            res = self.running_proc.pop()
+    def pop_running_tasks(self):
+        with self.lock_running_tasks:
+            res = self.running_tasks.pop()
         return res
             
-    def update_running_proc(self, pid, task):
-        with self.lock_running_proc:                
+    def update_running_tasks(self, pid, task):
+        with self.lock_running_tasks:                
             nth = None
-            for ni, ii in enumerate(self.running_proc):
+            for ni, ii in enumerate(self.running_tasks):
                 if ii[0] == pid:
                     nth = ni
                     break
-            del self.running_proc[nth]
-            self.running_proc.append((pid, task))
+            del self.running_tasks[nth]
+            self.running_tasks.append((pid, task))
 
     # about q_aborted:
     def register_aborted_task(self, task):
@@ -80,9 +80,9 @@ class DPoolState(object):
             self.q_finished.put(task)
 
     
-    def num_running_proc(self):
-        with self.lock_running_proc:
-            res = len(self.running_proc)
+    def num_running_tasks(self):
+        with self.lock_running_tasks:
+            res = len(self.running_tasks)
         return res
 
     def num_waiting_tasks(self):
@@ -114,8 +114,8 @@ class DPoolState(object):
 
     def get_all_running_pids(self):
         pids = []
-        with self.lock_running_proc:
-            for pid in self.running_proc:
+        with self.lock_running_tasks:
+            for pid in self.running_tasks:
                 pids.append(pid)
         return pids
 
@@ -133,7 +133,7 @@ class DPoolState(object):
         out += "    # unfinished tasks : %d\n"%self.num_unfinished_tasks()
         out += "    # waiting tasks : %d\n"%self.num_waiting_tasks()
         out += "    # aborted tasks : %d\n"%self.num_aborted_tasks()
-        out += "    # running processes: %d"%self.num_running_proc()
+        out += "    # running processes: %d"%self.num_running_tasks()
         return out
         
                 

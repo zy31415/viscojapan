@@ -1,7 +1,7 @@
 import unittest
 from os.path import join
 
-from viscojapan.dpool.controller import  Controller
+from dpool.controller import  Controller
 from viscojapan.test_utils import MyTestCase
 
 class TestController(MyTestCase):
@@ -25,7 +25,7 @@ class TestController(MyTestCase):
             )
         con.update()
 
-        self.assertEqual(con.num_processes, 10)
+        self.assertEqual(con.num_processes, 4)
         self.assertEqual(con.sleep_interval, 2)
         
 

@@ -26,7 +26,7 @@ class DPool(object):
         self.dp_state = DPoolState(tasks)
         self.controller = Controller(controller_file)
         self._finished_tasks = []
-        self.processes = []
+        self.running_procs = []
 
     @property
     def num_total_tasks(self):
@@ -35,24 +35,24 @@ class DPool(object):
     def _add_a_process(self):
         p = DPoolProcess(dp_state=self.dp_state)
         p.start()
-        self.processes.append(p)
+        self.running_procs.append(p)
 
     def _add_procs(self, n):
         n = int(n)
         n_left = self.dp_state.num_unfinished_tasks()
         n = min(n, n_left)
         if n > 0:
-            print('    #%d processes will be added.'%n)
+            print('    #%d running processes will be added.'%n)
             for ii in range(n):
                 self._add_a_process()
 
     def _kill_a_process(self):
-        pid, task = self.dp_state.pop_running_proc()        
+        pid, task = self.dp_state.pop_running_tasks()        
         self.register_aborted_task(task)
         self._kill_process(pid)
 
     def _kill_process(self, pid):
-        for p in self.processes:
+        for p in self.running_procs:
             if p.pid == pid:
                 p.terminate()
                 return
@@ -61,7 +61,7 @@ class DPool(object):
     def _kill_procs(self, n):
         n = int(n)
         if n>0:
-            print('    #%d processes will be deleted.'%n)
+            print('    #%d running processes will be deleted.'%n)
             for ii in range(n):
                 self._kill_a_process()
 
@@ -77,7 +77,7 @@ class DPool(object):
                          self.controller.num_processes)
 
     def _join_all_procs(self):
-        for p in self.processes:
+        for p in self.running_procs:
             p.join()
 
     
