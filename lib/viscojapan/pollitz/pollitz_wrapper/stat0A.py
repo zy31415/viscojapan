@@ -1,27 +1,19 @@
-import sys
-##from os.path import exists,join,basename, dirname
-##from os import makedirs
-##from subprocess import Popen, check_output
-##import sys
 from tempfile import TemporaryFile
-##from time import time
-##from shutil import copyfile, rmtree
 
 from .pollitz_wrapper import PollitzWrapper
 
 class stat0A(PollitzWrapper):
     def __init__(self,
                  earth_model_stat = None,
-                 stat0_out = None,
+                 stat0_out = 'stat0.out',
                  l_min = None,
                  l_max = None,
                  fault_bottom_depth = None,
                  fault_top_depth = None,
                  obs_dep = 0.,
-                 output_dir = None,
                  if_skip_on_existing_output = True,
-                 stdout = sys.stdout,
-                 stderr = sys.stderr,
+                 stdout = None,
+                 stderr = None,
                  ):
 
         self.l_min = l_min

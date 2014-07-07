@@ -75,6 +75,12 @@ class PollitzWrapper(object):
     def gen_stdin(self):
         raise NotImplementedError()
 
+    def stdin_to_file(self, file_name):
+        fout = open(file_name, 'wt')
+        with self.gen_stdin() as fid:
+            fout.write(fid.read())
+        fout.close()
+
     def run(self,nice=False):
         ''' Start to run the program.
 '''
