@@ -1,7 +1,9 @@
 from tempfile import TemporaryFile
-from subprocess import check_output
-from .pollitz_wrapper import PollitzWrapper
+
 from date_conversion.date_conversion import asdyr
+
+from .pollitz_wrapper import PollitzWrapper
+from .utils import read_flt_file_for_stdin, read_sites_file_for_stdin
 
 class strainA(PollitzWrapper):
     ''' strainA
@@ -58,15 +60,10 @@ Output file: out
         # temporary file:
         stdin=TemporaryFile('r+')
         stdin.write('Comment Line.\n')
-        stdin.write(check_output("grep -v '#' %s | head -n 1"\
-                                 %(self.file_flt),shell=True).decode())
+        stdin.write(read_flt_file_for_stdin(self.file_flt, 'head'))
         stdin.write("%f %f %f 1.\n"%(t1,t1,t2))
-        stdin.write(check_output("grep -v '#' %s | tail -n +2"\
-                                 %(self.file_flt),shell=True).decode())
-        stdin.write(check_output("grep -v '#' %s | wc -l"\
-                                 %(self.file_sites),shell=True).decode())
-        stdin.write(check_output("grep -v '#' %s"\
-                                 %(self.file_sites),shell=True).decode())
+        stdin.write(read_flt_file_for_stdin(self.file_flt, 'body'))
+        stdin.write(read_sites_file_for_stdin())
         stdin.write("0\n")
         stdin.write("0\n")
         stdin.write("out\n")

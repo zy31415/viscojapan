@@ -14,6 +14,8 @@ class stat0A(PollitzWrapper):
                  if_skip_on_existing_output = True,
                  stdout = None,
                  stderr = None,
+                 cwd = None,
+                 if_keep_cwd = False
                  ):
 
         self.l_min = l_min
@@ -28,6 +30,8 @@ class stat0A(PollitzWrapper):
             if_skip_on_existing_output = if_skip_on_existing_output,
             stdout = stdout,
             stderr = stderr,
+            cwd = cwd,
+            if_keep_cwd = if_keep_cwd
             )
         self._cmd = 'stat0A'
 

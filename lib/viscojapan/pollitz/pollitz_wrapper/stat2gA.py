@@ -1,7 +1,7 @@
 from tempfile import TemporaryFile
-from subprocess import check_output
 
 from .pollitz_wrapper import PollitzWrapper
+from .utils import read_flt_file_for_stdin, read_sites_file_for_stdin
 
 class stat2gA(PollitzWrapper):
     ''' Class wraper of VISCO1D command strainA
@@ -15,6 +15,8 @@ class stat2gA(PollitzWrapper):
                  if_skip_on_existing_output = True,
                  stdout = None,
                  stderr = None,
+                 cwd = None,
+                 if_keep_cwd = False
                  ):
         self.file_flt = file_flt
         self.file_sites = file_sites
@@ -27,6 +29,8 @@ class stat2gA(PollitzWrapper):
             if_skip_on_existing_output = if_skip_on_existing_output,
             stdout = stdout,
             stderr = stderr,
+            cwd = cwd,
+            if_keep_cwd = if_keep_cwd
             )
 
         self._cmd = 'stat2gA'
@@ -36,12 +40,8 @@ class stat2gA(PollitzWrapper):
 '''
         # temporary file:
         stdin = TemporaryFile('r+')
-        stdin.write(check_output("grep -v '#' %s"\
-                                 %(self.file_flt),shell=True).decode())
-        stdin.write(check_output("grep -v '#' %s | wc -l"\
-                                 %(self.file_sites),shell=True).decode())
-        stdin.write(check_output("grep -v '#' %s"\
-                                 %(self.file_sites),shell=True).decode())
+        stdin.write(read_flt_file_for_stdin(self.file_flt, 'whole'))
+        stdin.write(read_sites_file_for_stdin(self.file_sites))
         stdin.write("out")
         stdin.seek(0)
         return stdin

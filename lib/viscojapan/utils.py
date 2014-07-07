@@ -1,5 +1,6 @@
 import os
 from os.path import exists, isdir, dirname, realpath
+from os import makedirs
 import time
 import shutil
 
@@ -12,6 +13,10 @@ def delete_if_exists(fn):
             shutil.rmtree(fn)
         else:
             os.remove(fn)
+
+def create_dir_if_not_exists(path):
+    if not exists(path):
+        makedirs(path)
 
 def get_this_script_dir(__file__):
     return dirname(realpath(__file__))

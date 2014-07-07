@@ -5,9 +5,8 @@ from tempfile import mkdtemp
 from shutil import copyfile, rmtree
 import warnings
 
-def create_dir_if_not_exists(path):
-    if not exists(path):
-        makedirs(path)
+from ...utils import delete_if_exists, create_dir_if_not_exists
+
 
 class PollitzWrapper(object):
     def __init__(self,
@@ -16,6 +15,8 @@ class PollitzWrapper(object):
                  if_skip_on_existing_output = True,
                  stdout = None,
                  stderr = None,
+                 cwd = None,
+                 if_keep_cwd = False
                  ):
         '''
 "input_files" and "output_files" format:
@@ -30,27 +31,34 @@ class PollitzWrapper(object):
         self.stderr = stderr     
 
         # Change cwd for the command. See Popen page.
-        # _cwd is a temporary directory.
-        self._cwd = None
+        # cwd is a temporary directory.
         self._tmp_dir = '/home/zy/tmp/'
+        self._set_cwd(cwd)
+        self.if_keep_cwd = if_keep_cwd
+        
+        
         self._cmd = None
 
     def _check_input_files(self):
         for f_target, f_real in self.input_files.items():
             assert exists(f_real), "Input file %s doesn't not exist!"%f_real
+
+    def _set_cwd(self, cwd):
+        '''cwd == None - means temperary directory is used.'''
+        if cwd is None:
+            create_dir_if_not_exists(self._tmp_dir)
+            self.cwd = mkdtemp(dir=self._tmp_dir)
+        else:
+            create_dir_if_not_exists(cwd)
+            self.cwd = cwd
         
-    def _deploy_temporary_working_directory(self):
+    def _deploy_working_directory(self):
         ''' Copy earth files to temporary working directory.
 '''
-        if not exists(self._tmp_dir):
-            makedirs(self._tmp_dir)
-            
-        self._cwd = mkdtemp(dir=self._tmp_dir)
-
         for f_target, f_real in self.input_files.items():
-            copyfile(f_real, join(self._cwd,basename(f_target)))
+            copyfile(f_real, join(self.cwd, basename(f_target)))
 
-    def _run_command_in_temporary_working_directory(self, nice=False):
+    def _run_command(self, nice=False):
         assert self._cmd != None, "Assign command _cmd."
         cmd = []
         if nice:
@@ -58,19 +66,21 @@ class PollitzWrapper(object):
         cmd.append(self._cmd)
         with self.gen_stdin() as fin:
             Popen(cmd, stdout=self.stdout, stderr=self.stderr,
-                  stdin=fin, cwd=self._cwd).wait()
+                  stdin=fin, cwd=self.cwd).wait()
 
 
-    def _fetch_output_from_temporary_working_directory(self):
+    def _fetch_output_from_working_directory(self):
         for f_target, f_real in self.output_files.items():
-            create_dir_if_not_exists(dirname(f_real))            
+            d_real = dirname(f_real)
+            if d_real != '':
+                create_dir_if_not_exists(d_real)
             # fetch output from the temp dir.
-            copyfile(join(self._cwd, f_target),f_real)
+            copyfile(join(self.cwd, f_target),f_real)
 
-    def _delete_temporary_working_directory(self):
-        if self._cwd is not None:
-            if exists(self._cwd):
-                rmtree(self._cwd)
+    def _delete_working_directory(self):
+        if not self.if_keep_cwd:
+            if self.cwd is not None:
+                delete_if_exists(self.cwd)
 
     def gen_stdin(self):
         raise NotImplementedError()
@@ -93,11 +103,11 @@ class PollitzWrapper(object):
             return
 
         self._check_input_files()    
-        self._deploy_temporary_working_directory()        
-        self._run_command_in_temporary_working_directory(nice=nice)
-        self._fetch_output_from_temporary_working_directory()
-        self._delete_temporary_working_directory()
-
+        self._deploy_working_directory()        
+        self._run_command(nice=nice)
+        self._fetch_output_from_working_directory()
+        self._delete_working_directory()
+        
     def if_outputs_exist(self):
         '''If output file exists.
 '''
@@ -110,6 +120,6 @@ class PollitzWrapper(object):
         self.run(nice =nice)
 
     def __del__(self):
-        self._delete_temporary_working_directory()
+        self._delete_working_directory()
                  
     

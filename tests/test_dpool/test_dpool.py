@@ -16,10 +16,10 @@ class Test_DPool(MyTestCase):
         for n in range(20):
             tasks.append(Task(target = sleep,
                               args = (randrange(10),)))
-            dp = DPool(
-                tasks=tasks,
-                controller_file = join(self.share_dir, 'pool.config.dynamic')
-                )
+        dp = DPool(
+            tasks=tasks,
+            controller_file = join(self.share_dir, 'pool.config.dynamic')
+            )
         dp.run()
 
 if __name__ == '__main__':
