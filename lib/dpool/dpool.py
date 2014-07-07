@@ -71,9 +71,9 @@ class DPool(object):
 
     def _static_pool_adjust_process(self):
         self._add_procs(self.controller.num_processes -
-                        self.dp_state.num_running_proc())
+                        self.dp_state.num_running_tasks())
         
-        self._kill_procs(self.dp_state.num_running_proc() -
+        self._kill_procs(self.dp_state.num_running_tasks() -
                          self.controller.num_processes)
 
     def _join_all_procs(self):
@@ -95,10 +95,7 @@ class DPool(object):
         print('Finished tasks summarize:')
         print('    ......')
         for nth in range(min(N,n),1,-1):
-            print(ll[-nth])
-        
-        
-        
+            print(ll[-nth])        
 
     @property
     def finished_tasks(self):
