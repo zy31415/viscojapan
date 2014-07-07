@@ -1,6 +1,8 @@
 from viscojapan.least_square import LeastSquareTik2
 from viscojapan.epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD
+from viscojapan.plots.plot_utils import Map, plt
+from viscojapan.plots.plot_res_file import plot_L
 
 from alphas import alphas
 
@@ -18,9 +20,26 @@ tik.G = G(0)
 tik.d = d(0)
 tik.sig = sig(0).flatten()
 
-for alpha in alphas:
+nres_weighted = []
+nroughs = []
+for ano, alpha in enumerate(alphas):
     tik.invert(alpha,0.)
+    
     tik.predict()
 
+    nres_weighted.append(tik.get_residual_norm_weighted())
+    nroughs.append(tik.get_spatial_roughness())
+
+    m = Map()   
+    m.plot_fslip(tik.m)
+    m.plot_slip_contours(tik.m)
+    plt.savefig('plots/co_%02d.png'%ano)
+    #plt.show()
+    plt.close()
+
+plot_L(nres_weighted, nroughs, alphas)
+plt.show()
+plt.savefig('L-curve.png')
+plt.close()
 
 

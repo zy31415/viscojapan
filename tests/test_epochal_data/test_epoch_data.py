@@ -10,6 +10,7 @@ from viscojapan.utils import get_this_script_dir, delete_if_exists
 from test_utils import create_a_sites_data_file
 
 this_test_path = get_this_script_dir(__file__)
+
 class TestEpochalData(unittest.TestCase):
     def setUp(self):
         self.sites_data_file = join(this_test_path, 'sites_data.h5')
@@ -25,10 +26,15 @@ class TestEpochalData(unittest.TestCase):
     def test_get_info(self):
         sites = self.ep.get_info('sites')
 
-
     def test_has_info(self):
         self.assertTrue(self.ep.has_info('sites'))
         self.assertFalse(self.ep.has_info('xxxx'))
+
+    def test_getitem(self):
+        self.ep[1]
+        self.ep['sites']
+        self.ep['abc'] = 'abcdef'
+        self.assertEqual(self.ep['abc'],'abcdef')
 
 
 if __name__== '__main__':

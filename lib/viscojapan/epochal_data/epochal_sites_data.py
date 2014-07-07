@@ -16,11 +16,16 @@ class EpochalSitesData(EpochalData):
         super().__init__(epoch_file)
         assert self.has_info('sites'), "'sites' key word must be present."
 
-    def get_sites(self):
+    @property
+    def sites(self):
         return self.get_info('sites')
 
+    @sites.setter
+    def sites(self, sites):
+        self.set_info('sites', sites)
+
     def get_site_cmpt_idx(self, site, cmpt):
-        sites = self.get_sites()
+        sites = self.sites
         idx1 = list(sites).index(site.encode())
         if cmpt == 'e':
             idx2 = 3*idx1
@@ -42,21 +47,44 @@ class EpochalSitesData(EpochalData):
         self.set_value(epoch, idx, value)
 
 class EpochalSitesFilteredData(EpochalSitesData):
-    def __init__(self, epoch_file, filter_sites_file):
+    def __init__(self, epoch_file,
+                 filter_sites_file=None, filter_sites=None):
         super().__init__(epoch_file)
+        if (filter_sites_file is None) and (filter_sites is None):
+            self.filter_sites = self.sites
+        elif (filter_sites_file is not None) and (filter_sites is not None):
+            raise ValueError("Don't offer filter_sites and filter_sites_file at the same time.")
+        elif filter_sites_file is not None:
+            self.filter_sites_file = filter_sites_file
+        elif filter_sites is not None:
+            self.filter_sites = filter_sites
 
+    @property
+    def filter_sites_file(self):
+        return self._filter_sites_file
+
+    @filter_sites_file.setter
+    def filter_sites_file(self, filter_sites_file):
         assert exists(filter_sites_file), \
                "File %s doesn't exist."%filter_sites_file
-        self.filter_sites_file = filter_sites_file
-        filter_sites = loadtxt(self.filter_sites_file,'4a,')
-        self._assert_in_site_list(filter_sites)
-        self.filter_sites = filter_sites                                                 
+        self._filter_sites_file = filter_sites_file
+        self.filter_sites = loadtxt(self.filter_sites_file,'4a,')    
 
-    def _assert_in_site_list(self, sites):
-        # assert sites are in original sites list
-        sites_original = self.get_info('sites')
+    @property
+    def filter_sites(self):
+        return self._filter_sites
+
+    @filter_sites.setter
+    def filter_sites(self, filter_sites):
+        self._assert_in_sites_list(filter_sites)
+        self._filter_sites_file = None
+        self._filter_sites = filter_sites
+
+    def _assert_in_sites_list(self, sites):
+        sites_original = self.sites
         for site in sites:
-            assert site in sites_original, 'No data about %s.'%site
+            assert site in sites_original,\
+                   "%s is not included in sites list of epochal data."%site
 
     def _gen_filter(self):
         sites_original = list(self.get_info('sites'))
@@ -74,12 +102,14 @@ class EpochalSitesFilteredData(EpochalSitesData):
         return out[ch,:]
 
 class EpochalG(EpochalSitesFilteredData):
-    def __init__(self,epoch_file, filter_sites_file):
-        super().__init__(epoch_file, filter_sites_file)
+    def __init__(self,epoch_file,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(epoch_file, filter_sites_file, filter_sites)
 
 class EpochalDisplacement(EpochalSitesFilteredData):
-    def __init__(self,epoch_file, filter_sites_file):
-        super().__init__(epoch_file, filter_sites_file)
+    def __init__(self,epoch_file,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(epoch_file, filter_sites_file, filter_sites)
 
     def get_time_series(self, site, cmpt):
         epochs = self.get_epochs()
@@ -89,8 +119,9 @@ class EpochalDisplacement(EpochalSitesFilteredData):
         return ys
     
 class EpochalDisplacementSD(EpochalSitesFilteredData):
-    def __init__(self,epoch_file, filter_sites_file):
-        super().__init__(epoch_file, filter_sites_file)
+    def __init__(self,epoch_file,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(epoch_file, filter_sites_file, filter_sites)
 
     @overrides(EpochalSitesFilteredData)
     def get_epoch_value(self, epoch):

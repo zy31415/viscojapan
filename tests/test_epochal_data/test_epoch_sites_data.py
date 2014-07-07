@@ -21,7 +21,7 @@ class TestEpochalSitesData(unittest.TestCase):
 
     def test_EpochalSitesData(self):
         sites_data_obj = EpochalSitesData(self.sites_data_file)
-        sites = sites_data_obj.get_sites()
+        sites = sites_data_obj.sites
 
         idx = sites_data_obj.get_site_cmpt_idx('J550','e')
         self.assertEqual(idx, 2427)
@@ -40,26 +40,6 @@ class TestEpochalSitesData(unittest.TestCase):
 
         assert_equal(test_val, val)
         
-
-class TestEpochalSitesFilteredData(unittest.TestCase):
-    def setUp(self):
-        self.sites_data_file = join(this_test_path,'sites_data.h5')
-        create_a_sites_data_file(self.sites_data_file)
-        self.filter_sites_file = os.path.join(this_test_path,'filter_sites')
-        self.filter_sites = loadtxt(self.filter_sites_file,'4a')
-        self.num_of_sites = len(self.filter_sites)
-
-    def test(self):
-        sites_data_obj = EpochalSitesFilteredData(self.sites_data_file,
-                                                  self.filter_sites_file)
-
-        epochs = sites_data_obj.get_epochs()
-        for epoch in epochs:
-            val = sites_data_obj.get_epoch_value(epoch)
-            self.assertEqual(self.num_of_sites*3,len(val))
-
-        for epoch in epochs[:-1]:
-            val = sites_data_obj.get_epoch_value(epoch+0.1)
-        
+       
 if __name__== '__main__':
     unittest.main()
