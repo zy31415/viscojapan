@@ -2,7 +2,7 @@
 ##from os import makedirs
 ##from subprocess import Popen, check_output
 ##import sys
-##from tempfile import TemporaryFile, mkdtemp
+from tempfile import TemporaryFile
 ##from time import time
 ##from shutil import copyfile, rmtree
 
