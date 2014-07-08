@@ -8,6 +8,10 @@ import warnings
 from ...utils import delete_if_exists, create_dir_if_not_exists
 
 
+def _close_file(fid):
+    if (fid is not None) and (not fid.closed):
+        fid.close()
+
 class PollitzWrapper(object):
     def __init__(self,
                  input_files = {},
@@ -67,6 +71,8 @@ class PollitzWrapper(object):
         with self.gen_stdin() as fin:
             Popen(cmd, stdout=self.stdout, stderr=self.stderr,
                   stdin=fin, cwd=self.cwd).wait()
+        _close_file(self.stdout)
+        _close_file(self.stderr)
 
 
     def _fetch_output_from_working_directory(self):
@@ -121,5 +127,7 @@ class PollitzWrapper(object):
 
     def __del__(self):
         self._delete_working_directory()
-                 
-    
+
+        for fid in self.stdout, self.stderr:
+            _close_file(fid)
+            

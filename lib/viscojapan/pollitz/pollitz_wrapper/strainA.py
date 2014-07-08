@@ -63,7 +63,7 @@ Output file: out
         stdin.write(read_flt_file_for_stdin(self.file_flt, 'head'))
         stdin.write("%f %f %f 1.\n"%(t1,t1,t2))
         stdin.write(read_flt_file_for_stdin(self.file_flt, 'body'))
-        stdin.write(read_sites_file_for_stdin())
+        stdin.write(read_sites_file_for_stdin(self.file_sites))
         stdin.write("0\n")
         stdin.write("0\n")
         stdin.write("out\n")
