@@ -86,11 +86,16 @@ class Controller(object):
             raise ValueError('Unreconginzed inputs.')
 
     def _first_time_update(self):
-        with open(self.controller_file) as fid:
-            ln = list(next_non_commenting_line(fid))
+        try:
+            with open(self.controller_file) as fid:
+                ln = list(next_non_commenting_line(fid))
 
-        assert len(ln) == 1, 'File error: multiple entries.'
-        self._parse_line(ln[0])
+            assert len(ln) == 1, 'File error: multiple entries.'
+            self._parse_line(ln[0])
+        except Exception as err:
+            print('Config file %s reading error: %s'%\
+                  (self.controller_file, err))
+            print('    Try again!')
         
     def update(self):
         self._first_time_update()

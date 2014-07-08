@@ -40,6 +40,22 @@ class DPoolState(object):
         self.lock_q_waiting.release()
         return task
 
+    def _find_running_task_by_pid(self,pid):
+        nth = None
+        for ni, ii in enumerate(self.running_tasks):
+            if ii[0] == pid:
+                nth = ni
+                break
+        if nth is None:
+            print("   PID %d is not found."%pid)
+            return None
+        return nth
+
+    def _delete_from_running_tasks_by_pid(self,pid):
+        nth = self._find_running_task_by_pid(pid)
+        if nth is not None:
+            del self.running_tasks[nth]
+
     # about running_tasks
     def register_running_tasks(self, pid):
         with self.lock_running_tasks:
@@ -47,26 +63,19 @@ class DPoolState(object):
 
     def unregister_running_tasks(self, pid):
         with self.lock_running_tasks:
-            nth = None
-            for ni, ii in enumerate(self.running_tasks):
-                if ii[0] == pid:
-                    nth = ni
-                    break
-            del self.running_tasks[nth]
+            self._delete_from_running_tasks_by_pid(pid)
 
     def pop_running_tasks(self):
         with self.lock_running_tasks:
-            res = self.running_tasks.pop()
+            if len(self.running_tasks) > 0:
+                res = self.running_tasks.pop()
+            else:
+                res = (None, None)
         return res
-            
+    
     def update_running_tasks(self, pid, task):
         with self.lock_running_tasks:                
-            nth = None
-            for ni, ii in enumerate(self.running_tasks):
-                if ii[0] == pid:
-                    nth = ni
-                    break
-            del self.running_tasks[nth]
+            self._delete_from_running_tasks_by_pid(pid)
             self.running_tasks.append((pid, task))
 
     # about q_aborted:

@@ -47,11 +47,13 @@ class DPool(object):
                 self._add_a_process()
 
     def _kill_a_process(self):
-        pid, task = self.dp_state.pop_running_tasks()        
-        self.register_aborted_task(task)
-        self._kill_process(pid)
+        pid, task = self.dp_state.pop_running_tasks()
+        if task is not None:
+            self.dp_state.register_aborted_task(task)
+        if pid is not None:
+            self._send_terminate_signal_to_process(pid)
 
-    def _kill_process(self, pid):
+    def _send_terminate_signal_to_process(self, pid):
         for p in self.running_procs:
             if p.pid == pid:
                 p.terminate()

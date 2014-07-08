@@ -20,8 +20,8 @@ def func(file_flt):
 tasks = []
 
 for f in sorted(glob.glob('workspace/subflts/flt_????')):
-    tasks.append(Task(target = func,
-                      args = (f,)))
+    tasks.append(Task(target = func, args = (f,)))
+    
 
 dp = DPool(
     tasks=tasks,

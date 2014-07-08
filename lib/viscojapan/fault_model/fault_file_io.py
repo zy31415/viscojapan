@@ -87,6 +87,21 @@ class FaultFileIO(object):
             res = fid['flt_strike'][...]
         return float(res)
 
+    @property
+    def depth_bottom(self):
+        with self.read() as fid:
+            assert 'depth_bottom' in fid
+            res = fid['depth_bottom'][...]
+        return float(res)
+
+    @property
+    def depth_top(self):
+        with self.read() as fid:
+            assert 'depth_top' in fid
+            res = fid['depth_top'][...]
+        return float(res)
+    
+
     
 
     
