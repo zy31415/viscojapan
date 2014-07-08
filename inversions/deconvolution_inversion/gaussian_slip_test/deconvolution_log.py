@@ -21,7 +21,7 @@ dtest.file_d = 'simulated_disp.h5'
 dtest.sites_filter_file = 'sites_with_seafloor'
 dtest.epochs = epochs_log
 
-dtest.num_err = 1300*len(epochs_log)
+dtest.num_err = 1305*len(epochs_log)
 dtest.east_st=6e-3
 dtest.north_st=6e-3
 dtest.up_st=20e-3

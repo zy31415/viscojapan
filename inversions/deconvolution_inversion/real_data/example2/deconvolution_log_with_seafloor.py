@@ -26,7 +26,7 @@ dtest.load_data()
 lcurve = LCurve(dtest)
 lcurve.outs_dir = 'outs_log'
 lcurve.alphas = alphas
-# lcurve.betas = betas
-lcurve.betas = [9.]
+lcurve.betas = betas
+#lcurve.betas = [9.]
 
 lcurve.compute_L_curve()

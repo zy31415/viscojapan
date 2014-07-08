@@ -1,10 +1,10 @@
 import glob
-from os.path import basename
 
-from viscojapan.pollitz.pollitz_wrapper import stat2gA
+from viscojapan.pollitz.compute_greens_function \
+     import ComputeGreensFunction
 
 subflts_files = \
-              sorted(glob.glob('subflts/flt_????'))
+              sorted(glob.glob('fault_model/subflts/flt_????'))
 
 com = ComputeGreensFunction(
     epochs = [0],
