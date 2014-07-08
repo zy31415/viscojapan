@@ -9,6 +9,7 @@ cmd = stat0A(
     fault_top_depth = 3.,
     obs_dep = 0.,
     if_skip_on_existing_output = True,
+    stdout = open('/dev/null', 'w')
     )
 
 cmd()
