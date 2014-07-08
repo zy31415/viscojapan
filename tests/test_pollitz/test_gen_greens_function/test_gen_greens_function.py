@@ -26,7 +26,8 @@ class Test_ComputeGreensFunction(MyTestCase):
             earth_file_dir =  join(self.share_dir, 'earth_files/'),
             outputs_dir = self.out1,
             subflts_files = subflts_files,
-            controller_file =  join(self.share_dir,'pool.config')
+            controller_file =  join(self.share_dir,'pool.config'),
+            G_file = join(self.outs_dir, 'G.h5')
             )
         com.run()
 
@@ -40,9 +41,11 @@ class Test_ComputeGreensFunction(MyTestCase):
             earth_file_dir =  join(self.share_dir, 'earth_files/'),
             outputs_dir = self.out2,
             subflts_files = subflts_files,
-            controller_file =  join(self.share_dir,'pool.config')
+            controller_file =  join(self.share_dir,'pool.config'),
+            G_file = join(self.outs_dir, 'G.h5')
             )
         com.run()
+        com.gen_epochal_file()
 
 
 if __name__ == '__main__':

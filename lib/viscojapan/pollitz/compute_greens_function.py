@@ -1,6 +1,7 @@
 from os.path import join, basename
 
 from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
+from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
 from dpool import Task, DPool
 
 class ComputeGreensFunction(object):
@@ -12,6 +13,7 @@ class ComputeGreensFunction(object):
                  outputs_dir,
                  subflts_files,
                  controller_file,
+                 G_file,
                  ):
         self.epochs = epochs
         self.file_sites = file_sites
@@ -20,8 +22,10 @@ class ComputeGreensFunction(object):
         self.subflts_files = subflts_files
         self.controller_file = controller_file
         self.outputs_dir = outputs_dir
+        self.G_file = G_file
 
         self.tasks = []
+        self.output_files = []
 
     def _gen_out_file(self, file_flt, epoch):
         outf = join(self.outputs_dir,
@@ -65,11 +69,18 @@ class ComputeGreensFunction(object):
         if epoch == 0:
             for f in self.subflts_files:
                 self.tasks.append(
-                    Task(target = self._stat2gA, args = (f,)))
+                    Task(target = self._stat2gA,
+                         kwargs = {'file_flt':f})
+                    )
+                self.output_files.append(self._gen_out_file(f,0))
         else:
             for f in self.subflts_files:
                 self.tasks.append(
-                    Task(target = self._straina, args = (f, epoch)))
+                    Task(target = self._straina,
+                         kwargs = {'file_flt':f,
+                                   'epoch':epoch})
+                    )
+                self.output_files.append(self._gen_out_file(f,epoch))
 
     def load_tasks(self):
         for epoch in self.epochs:
@@ -81,7 +92,14 @@ class ComputeGreensFunction(object):
             tasks = self.tasks,
             controller_file = self.controller_file)
 
-        dp.run() 
+        dp.run()
 
     def gen_epochal_file(self):
-        pass
+        gen = PollitzOutputsToEpochalData(
+            epochs = self.epochs,
+            G_file = self.G_file,
+            num_subflts = len(self.subflts_files),
+            pollitz_outputs_dir = self.outputs_dir,
+            sites_file = self.file_sites,
+            )
+        gen()

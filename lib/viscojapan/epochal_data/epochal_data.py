@@ -43,6 +43,8 @@ class EpochalData(object):
     def get_epoch_value(self, epoch):
         self._assert_within_range(epoch)
         epochs = self.get_epochs()
+        if epoch in epochs:
+            return self._get_epoch_value(epoch)
         for nth, ti in enumerate(epochs[1:]):
             if epoch <= ti:
                 break

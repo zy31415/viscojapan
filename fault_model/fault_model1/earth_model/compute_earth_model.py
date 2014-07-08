@@ -1,8 +1,8 @@
 from viscojapan.pollitz.pollitz_wrapper import stat0A
 
 cmd = stat0A(
-    earth_model_stat = 'share/earth.model_He50km',
-    stat0_out = 'wrokspace/stat0.out',
+    earth_model_stat = 'earth.model_He50km',
+    stat0_out = 'earth_files/stat0.out',
     l_min = 1,
     l_max = 15000,
     fault_bottom_depth = 50.,

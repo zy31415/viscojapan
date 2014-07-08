@@ -47,6 +47,7 @@ class DPoolState(object):
                 nth = ni
                 break
         if nth is None:
+            #raise ValueError("   PID %d is not found."%pid)
             print("   PID %d is not found."%pid)
             return None
         return nth
