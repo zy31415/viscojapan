@@ -1,5 +1,6 @@
 from subprocess import call
 import os
+import datetime
 
 import psutil as ps
 
@@ -7,6 +8,9 @@ from .controller import Controller
 from .dpool_state import DPoolState
 from .dpool_process import DPoolProcess
 from .task import Task
+
+def mean(arr):
+    return sum(arr)/len(arr)
 
 def free_cpu(interval=0.1):
     cpu_percent = ps.cpu_percent(interval=interval)
@@ -23,14 +27,11 @@ class DPool(object):
                  controller_file = 'pool.config',):
 
         self.tasks = tasks
-        self.dp_state = DPoolState(tasks)
+        self.num_total_tasks = len(tasks)
+        self.dp_state = DPoolState()
         self.controller = Controller(controller_file)
         self._finished_tasks = []
         self.running_procs = []
-
-    @property
-    def num_total_tasks(self):
-        return len(self.tasks)
     
     def _add_a_process(self):
         p = DPoolProcess(dp_state=self.dp_state)
@@ -81,23 +82,57 @@ class DPool(object):
     def _join_all_procs(self):
         for p in self.running_procs:
             p.join()
-
-    
+            
     def cls(self):
         call('clear',shell=True)
         print(self.controller)
         print_free_cpu()
         print(self.dp_state)
-        print()
+        self.print_exe_summary()
         self.print_finished_tasks()
 
-    def print_finished_tasks(self, n=5):
+    def print_finished_tasks(self, n=6):
         ll = self.finished_tasks
         N = self.num_finished_tasks
         print('Finished tasks summarize:')
         print('    ......')
         for nth in range(min(N,n),1,-1):
-            print(ll[-nth])        
+            print(ll[-nth])
+
+    def print_exe_summary(self):
+        print('    # total tasks : %d'%self.num_total_tasks)
+        print('    average exe time: %.2f sec'%\
+              self._compute_average_exe_time())
+        print('    Est. total exe time: %.2f hr'%\
+              (self._compute_total_exe_time()/3600.))
+        print('    Est. finishing at: %s'%\
+              self._compute_finishing_time().strftime("%A %d. %B %Y %H:%M" ))
+        
+    def _compute_average_exe_time(self):
+        ts = []
+        for task in self.finished_tasks:
+            ts.append(task.t_consumed)
+        if len(ts) == 0:
+            return 0.
+        return mean(ts)
+
+    def _compute_total_exe_time(self):
+        t = self._compute_average_exe_time() * \
+            self.num_total_tasks
+        return t
+
+    def _compute_time_needed_to_finish(self):
+        t = self._compute_average_exe_time() * \
+            self.dp_state.num_unfinished_tasks()
+        return t
+
+    def _compute_finishing_time(self):
+        dt = self._compute_time_needed_to_finish()
+        now = datetime.datetime.now()
+
+        ft = now + datetime.timedelta(seconds = dt)
+
+        return ft
 
     @property
     def finished_tasks(self):
@@ -109,6 +144,7 @@ class DPool(object):
         return len(self.finished_tasks)
             
     def run(self):
+        self.dp_state.add_tasks(self.tasks)
         while self.num_finished_tasks < self.num_total_tasks:
             self.cls()
             self.controller.update()

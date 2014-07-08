@@ -1,14 +1,11 @@
 from multiprocessing import Queue, Lock, Manager
 
 class DPoolState(object):
-    def __init__(self, tasks):
+    def __init__(self ):
         self.lock_q_waiting = Lock()
 
-        self.num_total_task = len(tasks)
         self.q_waiting = Queue()
-        self._init_q_waiting(tasks)
-            
-
+        
         self.lock_q_aborted = Lock()
         self.q_aborted = Queue()
 
@@ -19,7 +16,7 @@ class DPoolState(object):
         manager = Manager()
         self.running_tasks = manager.list()
 
-    def _init_q_waiting(self, tasks):
+    def add_tasks(self, tasks):
         for task in tasks:
             self.q_waiting.put(task)
             
@@ -119,9 +116,6 @@ class DPoolState(object):
 
         return n1 + n2
 
-    def print_unfinished_tasks(self):
-        list(self.q_aborted[0])
-
     def get_all_running_pids(self):
         pids = []
         with self.lock_running_tasks:
@@ -140,7 +134,6 @@ class DPoolState(object):
         ''' Output to sumarize pool state.
 '''
         out = "Pool summary:\n"
-        out += "    # unfinished tasks : %d\n"%self.num_unfinished_tasks()
         out += "    # waiting tasks : %d\n"%self.num_waiting_tasks()
         out += "    # aborted tasks : %d\n"%self.num_aborted_tasks()
         out += "    # running processes: %d"%self.num_running_tasks()
