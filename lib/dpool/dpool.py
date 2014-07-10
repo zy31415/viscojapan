@@ -111,6 +111,8 @@ class DPool(object):
     def _compute_average_exe_time(self):
         ts = []
         for task in self.finished_tasks:
+            if task.t_consumed < 0.1:
+                continue
             ts.append(task.t_consumed)
         if len(ts) == 0:
             return 0.

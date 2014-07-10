@@ -82,7 +82,7 @@ class MapPlotFault(MapPlot):
                   ascontiguousarray(LLats.T),
                   color='gray',latlon=True)
         if fno is not None:
-            xpt,ypt=self(LLons,LLats)
+            xpt,ypt=self.basemap(LLons,LLats)
             xpt1=xpt[0:-1,0:-1]
             ypt1=ypt[0:-1,0:-1]
 

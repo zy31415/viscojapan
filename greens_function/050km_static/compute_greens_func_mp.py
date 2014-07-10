@@ -4,7 +4,7 @@ from viscojapan.pollitz.compute_greens_function \
      import ComputeGreensFunction
 
 subflts_files = \
-              sorted(glob.glob('fault_model/subflts/flt_????'))
+              sorted(glob.glob('../../fault_model/fault_model1/subflts/flt_????'))
 
 com = ComputeGreensFunction(
     epochs = [0],
@@ -14,6 +14,5 @@ com = ComputeGreensFunction(
     outputs_dir = 'outs',
     subflts_files = subflts_files,
     controller_file = 'pool.config',
-    G_file = 'G.h5'
     )
 com.run()

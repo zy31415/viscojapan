@@ -13,7 +13,6 @@ class ComputeGreensFunction(object):
                  outputs_dir,
                  subflts_files,
                  controller_file,
-                 G_file,
                  ):
         self.epochs = epochs
         self.file_sites = file_sites
@@ -22,7 +21,6 @@ class ComputeGreensFunction(object):
         self.subflts_files = subflts_files
         self.controller_file = controller_file
         self.outputs_dir = outputs_dir
-        self.G_file = G_file
 
         self.tasks = []
         self.output_files = []
@@ -94,12 +92,3 @@ class ComputeGreensFunction(object):
 
         dp.run()
 
-    def gen_epochal_file(self):
-        gen = PollitzOutputsToEpochalData(
-            epochs = self.epochs,
-            G_file = self.G_file,
-            num_subflts = len(self.subflts_files),
-            pollitz_outputs_dir = self.outputs_dir,
-            sites_file = self.file_sites,
-            )
-        gen()
