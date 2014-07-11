@@ -1,4 +1,5 @@
 from multiprocessing import Queue, Lock, Manager
+from queue import Empty
 
 class DPoolState(object):
     def __init__(self ):
@@ -128,7 +129,7 @@ class DPoolState(object):
         while True:
             try:
                 tasks.append(self.q_finished.get(block=False))
-            except Queue.Empty:
+            except Empty:
                 break
         return tasks
 
