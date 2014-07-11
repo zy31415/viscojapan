@@ -3,16 +3,19 @@ from numpy.linalg import norm
 from scipy.sparse import diags
 from cvxopt import matrix, solvers
 
-from .my_regularization import SpatialTemporalReg
 from ..utils import overrides, _assert_column_vector
 
 class LeastSquare(object):
-    def __init__(self):
-        self.G = None
-        self.d = None
-        self.L = None
-
-        self.sig = None
+    def __init__(self,
+                 G,
+                 d,
+                 L,
+                 sig
+                 ):
+        self.G = G
+        self.d = d
+        self.L = L
+        self.sig = sig
 
     def _check_input(self):        
         sh_G = self.G.shape
@@ -66,51 +69,3 @@ class LeastSquare(object):
         nres_w = norm(res_w)
         return nres_w
     
-
-class LeastSquareTik2(LeastSquare):
-    def __init__(self):
-        super().__init__()
-        self.G = None
-        self.d =None
-        
-        self.nrows_slip = 10
-        self.ncols_slip = 25
-        
-        self.row_norm_length = 1.
-        self.col_norm_length = 28./23.03
-
-        self.epochs = [0]
-        self.num_nlin_pars = 0
-
-    def _get_reg_mat(self, alpha, beta):
-        reg = SpatialTemporalReg()
-        reg.nrows_slip = self.nrows_slip
-        reg.ncols_slip = self.ncols_slip
-        reg.row_norm_length = self.row_norm_length
-        reg.col_norm_length = self.col_norm_length
-
-        reg.epochs = self.epochs
-        reg.num_nlin_pars = self.num_nlin_pars
-
-        self.regularization_matrix = reg
-
-        mat = reg(alpha=alpha, beta=beta)
-        return mat
-
-    @overrides(LeastSquare)    
-    def invert(self, alpha, beta):        
-        self.L = self._get_reg_mat(alpha, beta)
-        self.solution = super().invert()
-        self.alpha = alpha
-        self.beta = beta
-
-    def get_spatial_roughness(self):
-        return self.regularization_matrix.get_spatial_roughness(self.m)
-
-    def get_temporal_roughness(self):
-        if len(self.epochs) < 3:
-            raise ValueError('Two few epochs. Cannot compute temoral roughness.')        
-        return self.regularization_matrix.get_temporal_roughness(self.m)
-
-    def num_epochs(self):
-        return len(self.epochs)

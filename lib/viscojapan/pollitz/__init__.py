@@ -1,1 +1,2 @@
 from .gen_subflts_input import gen_subflts_input_for_pollitz
+from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData

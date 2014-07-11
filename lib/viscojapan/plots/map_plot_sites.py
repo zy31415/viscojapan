@@ -5,7 +5,7 @@ from pylab import quiverkey
 from .map_plot import MapPlot
 
 from ..utils import get_this_script_dir
-from ..epochal_data import EpochalDisplacement
+from ..epochal_data import EpochalDisplacement, EpochalG
 
 this_file_path = get_this_script_dir(__file__)
 
@@ -49,5 +49,13 @@ class MapPlotDisplacement(MapPlot):
         disp = disp_obj(epoch)
         sites = disp_obj.get_info('sites')
         self.plot_disp(disp, sites)
+
+    def plot_G_file(self, f_G, epoch, mth):
+        g = EpochalG(f_G)
+        G = g[epoch]
+        sites = g.get_info('sites')
+        self.plot_disp(G[:,mth],sites)
+        
+        
         
     

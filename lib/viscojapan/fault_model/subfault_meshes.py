@@ -20,8 +20,8 @@ def accumulate_to_form_array(step_size, limit):
 
 
 class SubfaultsMeshes(FaultCoordinatesTransformation):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, control_points):
+        super().__init__(control_points)
         self.x_f = None
         self.y_f = None
         
@@ -102,15 +102,19 @@ class SubfaultsMeshes(FaultCoordinatesTransformation):
     
             
 class SubfaultsMeshesByLength(SubfaultsMeshes):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.subflt_sz_dip = None
-        self.depth_bottom_limit = None
+    def __init__(self,
+                 control_points = None,
+                 subflt_sz_dip = None,
+                 depth_bottom_limit = None,
+                 flt_sz_strike_limit = 700.,
+                 subflt_sz_strike = None,
+                 ):
+        super().__init__(control_points)
+        self.subflt_sz_dip = subflt_sz_dip
+        self.depth_bottom_limit = depth_bottom_limit
+        self.flt_sz_strike_limit = flt_sz_strike_limit # km
+        self.subflt_sz_strike = subflt_sz_strike
 
-        self.flt_sz_strike_limit = 700. # km
-        self.subflt_sz_strike = None
-
-        kw_init(self, kwargs)
 
     def _gen_y_f(self):
         y_f_limit = self.get_yfc_by_dep_scalar(self.depth_bottom_limit)
@@ -127,15 +131,19 @@ class SubfaultsMeshesByLength(SubfaultsMeshes):
 
 
 class SubfaultsMeshesByNumber(SubfaultsMeshes):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.num_subflt_along_strike = None
-        self.flt_sz_strike = 700. # km
-        
-        self.num_subflt_along_dip = None        
-        self.depth_bottom_limit = None
+    def __init__(self,
+                 control_points = None,
+                 num_subflt_along_strike = None,
+                 flt_sz_strike = 700., # km
+                 num_subflt_along_dip = None,
+                 depth_bottom_limit = None
+                 ):
+        super().__init__(control_points)
+        self.num_subflt_along_strike = num_subflt_along_strike
+        self.flt_sz_strike = flt_sz_strike         
+        self.num_subflt_along_dip = num_subflt_along_dip        
+        self.depth_bottom_limit = depth_bottom_limit
 
-        kw_init(self, kwargs)
 
     def _gen_y_f(self):
         y_f_limit = self.get_yfc_by_dep_scalar(self.depth_bottom_limit)

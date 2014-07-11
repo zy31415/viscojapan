@@ -7,6 +7,6 @@ gen_subfault = SubfaultsMeshesByLength(
     subflt_sz_strike = 20.
     )
 
-gen_subfault.save_fault_file('fault.h5')
+gen_subfault.save_fault_file('fault_He50km.h5')
 
 

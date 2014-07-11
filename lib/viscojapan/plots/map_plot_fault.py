@@ -70,19 +70,19 @@ class MapPlotFault(MapPlot):
         self.plot_slip_contours(slip)   
         
 
-    def plot_fault(self,fno=None,ms=15):
+    def plot_fault(self,fno=None,ms=15, color='gray'):
         
         LLons = self.fault_file_obj.LLons
         LLats = self.fault_file_obj.LLats
         
         assert ms<250 and ms>=0, "Fault No. out of range."
             
-        self.basemap.plot(LLons,LLats,color='gray',latlon=True)
+        self.basemap.plot(LLons,LLats,color=color, latlon=True)
         self.basemap.plot(ascontiguousarray(LLons.T),
                   ascontiguousarray(LLats.T),
-                  color='gray',latlon=True)
+                  color=color, latlon=True)
         if fno is not None:
-            xpt,ypt=self(LLons,LLats)
+            xpt,ypt=self.basemap(LLons,LLats)
             xpt1=xpt[0:-1,0:-1]
             ypt1=ypt[0:-1,0:-1]
 

@@ -1,2 +1,4 @@
-from .least_square import LeastSquare, LeastSquareTik2
-from .my_regularization import SpatialTemporalReg
+from .least_square import LeastSquare
+from .roughening import Roughening
+
+
