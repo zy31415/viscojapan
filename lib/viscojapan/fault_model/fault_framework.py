@@ -22,7 +22,10 @@ Geographic Coordinates (GC)
 Explaination see research notes on July 01, 2014.
 07/01/2014
 '''
-    def __init__(self):
+    def __init__(self, control_points):
+
+        self.control_points = control_points
+        
         self._fault_origin()
         self._fault_dimension()
         self._fault_orientation()
@@ -32,20 +35,20 @@ Explaination see research notes on July 01, 2014.
     def _fault_origin(self):        
         # Lon and Lat of a fault corner, which is the origianl point
         #  in fault coordinates.
-        self.B0 = (144.697756238647, 40.25451048457508)
+        self.B0 = self.control_points.B0
 
     def _fault_dimension(self):
         # Total fault width
-        self.FLT_SZ_DIP = 425. # km
+        self.FLT_SZ_DIP = self.control_points.FLT_SZ_DIP 
 
     def _fault_orientation(self):
         # Subfaults dips in degree.
-        self.DIP_D = asarray([10.,14.,22.,28.])
+        self.DIP_D = asarray(self.control_points.DIP_D, float)
         # Subfaults dips in arcs.
         self.DIP = self.DIP_D*pi/180.
         
         # Fault STRIKE    
-        self.STRIKE = 195.
+        self.STRIKE = self.control_points.STRIKE
 
     def _hinge_coordinates(self):        
         #                dY_PC[0]      dY_PC[1]
@@ -57,18 +60,17 @@ Explaination see research notes on July 01, 2014.
         # Y_PC is x coordiantes of ground nodal points in the ground xy coordinates
         #  where the fault kinks, i.e. subfaults x boundaries
         # Note Y_PC has order!
-        self.Y_PC = asarray([0,98.480775301220802,171.25295477192054,
-                       217.61214750025991, 394.20166607204533])
+        self.Y_PC = asarray(self.control_points.Y_PC, float)
         self.dY_PC = self.Y_PC[1:] - self.Y_PC[0:-1]
 
         # Y_FC is x coordinates of nodal points in fault coordinates
         #  where the fault kinks, i.e. subfaults x boundaries
-        self.Y_FC=[0,100.,175.,225.,425.]
-        self.dY_FC=[100.,75.,50.,200]
+        self.Y_FC= asarray(self.control_points.Y_FC, float)
+        self.dY_FC= self.Y_FC[1:] - self.Y_FC[0:-1]
 
     def _hinge_dep(self):
         # initial depth of the upper edge of the shallowest subfaults.
-        self.DEP0 = 3.
+        self.DEP0 = self.control_points.DEP0 
 
         # DEP is the depth of the fault hinges
         DEP = [self.DEP0]
@@ -108,7 +110,6 @@ Explaination see research notes on July 01, 2014.
 
         yfc = (xf2-xf1)/(d2-d1)*(dep-d1) + xf1
         return yfc
-        
 
     def _yfc_to_ypc_scalar(self, yfc):
         nth = _find_section(self.Y_FC, yfc)

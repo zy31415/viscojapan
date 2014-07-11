@@ -1,2 +1,4 @@
-from .least_square import LeastSquare, LeastSquareTik2
+from .least_square import LeastSquare
+from .roughening import Roughening
+
 

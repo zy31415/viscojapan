@@ -13,8 +13,8 @@ Fault    <=> Ground   <=> Geo
 (xf, yf) <=> (xg, yg) <=> (lon, lat)
 
 """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, control_points):
+        super().__init__(control_points)
         self.org_lon = self.B0[0]
         self.org_lat = self.B0[1]
 
