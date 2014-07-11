@@ -6,6 +6,8 @@ from numpy import asarray
 
 from viscojapan.least_square.roughening import \
      RowRoughening, ColRoughening, RowColRoughening, Roughening
+from viscojapan.least_square.temporal_regularization import \
+     TemporalRegularization
 from viscojapan.test_utils import MyTestCase
 
 class Test_Regularization(MyTestCase):
@@ -57,6 +59,14 @@ class Test_Regularization(MyTestCase):
             )
         reg_mat = reg()
         self.plot_mat(reg_mat, 'roughening_mat.png')
+
+    def test_TemporalRegularization(self):
+        reg = TemporalRegularization(
+            num_subflts = 4,
+            epochs = [1, 2, 5]
+            )
+        reg_mat = reg()
+        self.plot_mat(reg_mat, 'temporal_reg_mat.png')
         
 if __name__ == '__main__':
     unittest.main()
