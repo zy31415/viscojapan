@@ -1,6 +1,5 @@
 from multiprocessing import Process
 
-
 class DPoolProcess(Process):
     def __init__(self, dp_state):
         super().__init__()
