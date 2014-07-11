@@ -3,7 +3,6 @@ from numpy.linalg import norm
 from scipy.sparse import diags
 from cvxopt import matrix, solvers
 
-from .my_regularization import SpatialTemporalReg
 from ..utils import overrides, _assert_column_vector
 
 class LeastSquare(object):
