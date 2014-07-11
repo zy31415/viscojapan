@@ -125,9 +125,11 @@ class DPoolState(object):
 
     def get_finished_tasks_list(self):
         tasks = []
-        with self.lock_q_finished:
-            while not self.q_finished.empty():
+        while True:
+            try:
                 tasks.append(self.q_finished.get(block=False))
+            except Queue.Empty:
+                break
         return tasks
 
     def __str__(self):
