@@ -119,15 +119,18 @@ class DPool(object):
             return 0.
         return mean(ts)
 
-    def _compute_total_exe_time(self):
+    def _compute_total_exe_time(self):        
         t = self._compute_average_exe_time() * \
-            self.num_total_tasks / self.dp_state.num_running_tasks()
+            self.num_total_tasks
+        if self.num_running_tasks() > 0:
+            t /= self.num_running_tasks()
         return t
 
     def _compute_time_needed_to_finish(self):
         t = self._compute_average_exe_time() * \
-            self.dp_state.num_unfinished_tasks() / \
-            self.dp_state.num_running_tasks()
+            self.dp_state.num_unfinished_tasks()
+        if self.num_running_tasks() > 0:
+            t /= self.num_running_tasks()
         return t
 
     def _compute_finishing_time(self):
@@ -144,6 +147,9 @@ class DPool(object):
     @property
     def num_finished_tasks(self):
         return len(self.finished_tasks)
+
+    def num_running_tasks(self):
+        return self.dp_state.num_running_tasks()
             
     def run(self):
         self.dp_state.add_tasks(self.tasks)
