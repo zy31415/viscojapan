@@ -8,8 +8,8 @@ from scipy.sparse import vstack
 from viscojapan.least_square import LeastSquare, Roughening, Intensity
 from viscojapan.epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD
-from viscojapan.plots import MapPlotFault
-from viscojapan.plots import plot_L
+#from viscojapan.plots import MapPlotFault
+#from viscojapan.plots import plot_L
 
 from alphas import alphas
 from betas import betas
@@ -60,24 +60,24 @@ def invert(pars):
 
     invert.q.put((ano, bno, nsol, nrough, nres))
 
-    mplt = MapPlotFault('./fault_model/fault_He50km_east.h5')   
-    mplt.plot_slip(tik.m)
-    
-    mplt.plot_slip_contours(tik.m)
-    plt.savefig('plots/co_ano%02d_bno%02d.png'%(ano, bno))
-    #plt.show()
-    plt.close()
+    #mplt = MapPlotFault('./fault_model/fault_He50km_east.h5')   
+    #mplt.plot_slip(tik.m)
+    #
+    #mplt.plot_slip_contours(tik.m)
+    #plt.savefig('plots/co_ano%02d_bno%02d.png'%(ano, bno))
+    ##plt.show()
+    #plt.close()
 
 def invert_init(q):
     invert.q = q
 
 q = Queue()
 
-nproc = 2
+nproc = 15
 pool = Pool(nproc, invert_init, [q])
 
-alphas =  [0,1]
-betas = [0,1]
+#alphas =  [0,1]
+#betas = [0,1]
 
 args = []
 for ano, alpha in enumerate(alphas):
