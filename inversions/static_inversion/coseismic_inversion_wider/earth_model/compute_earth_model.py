@@ -13,3 +13,15 @@ cmd = stat0A(
     )
 
 cmd()
+
+
+cmd = ComputeEarthModelVISCO1D(
+    earth_file = 'earth.model_He50km',
+    l_max = 810,
+    outputs_dir = 'earth_files',
+    if_skip_on_existing_output = True,
+    stdout = None,
+    stderr = None,
+    )
+
+cmd()
