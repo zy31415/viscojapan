@@ -26,7 +26,7 @@ class DPoolState(object):
         return not res
 
     def pop_task(self):
-        if not self.self.q_aborted.empty():
+        if not self.q_aborted.empty():
             task = self.q_aborted.get(block=False)
         elif not self.q_waiting.empty():
             task = self.q_waiting.get(block=False)
