@@ -25,6 +25,7 @@ class ComputeEarthModelVISCO1D(object):
 
     @timeit
     def _decay(self):
+        print("decay is running ... ")
         cmd = decay(
             earth_model = self.earth_file,
             decay_out = self.decay_out,
@@ -38,6 +39,7 @@ class ComputeEarthModelVISCO1D(object):
 
     @timeit
     def _vtordep(self):
+        print("vtordep is running ... ")
         cmd = vtordep(
             earth_model = self.earth_file,
             decay_out = self.decay_out,
@@ -51,6 +53,7 @@ class ComputeEarthModelVISCO1D(object):
 
     @timeit
     def _decay4m(self):
+        print("decay4m is running ... ")
         cmd = decay4m(
             earth_model = self.earth_file,
             decay4_out = self.decay4_out,
@@ -64,6 +67,7 @@ class ComputeEarthModelVISCO1D(object):
 
     @timeit
     def _vsphm(self):
+        print("vsphm is running ... ")
         cmd = vsphm(
             earth_model = self.earth_file,
             decay4_out = self.decay4_out,

@@ -1,5 +1,9 @@
+import os
+
 from viscojapan.pollitz.pollitz_wrapper import stat0A
 from viscojapan.pollitz import ComputeEarthModelVISCO1D
+
+FNULL = open(os.devnull, 'w')
 
 cmd = stat0A(
     earth_model_stat = 'earth.model_He50km',
@@ -21,8 +25,8 @@ cmd = ComputeEarthModelVISCO1D(
     l_max = 810,
     outputs_dir = 'earth_files',
     if_skip_on_existing_output = True,
-    stdout = None,
-    stderr = None,
+    stdout = FNULL,
+    stderr = FNULL,
     )
 
-cmd()
+cmd.run()
