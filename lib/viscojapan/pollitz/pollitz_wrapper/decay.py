@@ -11,8 +11,7 @@ Output file: decay.out
                  earth_model = None,
                  decay_out = 'decay.out',
                  l_min = None,
-                 l_max = None,
-                 
+                 l_max = None,                 
                  if_skip_on_existing_output = True,
                  stdout = None,
                  stderr = None,

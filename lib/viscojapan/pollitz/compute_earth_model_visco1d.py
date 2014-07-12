@@ -28,8 +28,9 @@ class ComputeEarthModelVISCO1D(object):
             decay_out = self.decay_out,
             l_min = 2,
             l_max = self.l_max,
-
             if_skip_on_existing_output = self.if_skip_on_existing_output,
+            stdout = self.stdout,
+            stderr = self.stderr,
             )
         cmd()
 
