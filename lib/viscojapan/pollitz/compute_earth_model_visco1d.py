@@ -1,6 +1,6 @@
 from os.path import join
 from viscojapan.pollitz.pollitz_wrapper import decay, vtordep, decay4m, vsphm
-from ...utils import timeit
+from ..utils import timeit
 
 class ComputeEarthModelVISCO1D(object):
     def __init__(self,
