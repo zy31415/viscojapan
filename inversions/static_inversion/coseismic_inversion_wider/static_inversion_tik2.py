@@ -37,34 +37,29 @@ L2 = Roughening(
     )()
 
 def invert(pars):
-    ano = pars[0]
-    bno = pars[1]
-    alpha = alphas[ano]
+    bno = pars
     beta = betas[bno]
-    L = vstack((alpha * L1, beta * L2))
+    L = beta * L2
     tik = LeastSquare(
         G = G,
         d = d,
         sig = sig,
         L = L)
-    tik.invert(nonnegative=False)
+    tik.invert(nonnegative=True)
     tik.predict()
-
-    tp = L1.dot(tik.m)
-    nsol = dot(tp.T,tp)[0,0]
 
     tp = L2.dot(tik.m)
     nrough = dot(tp.T,tp)[0,0]
 
     nres = tik.get_residual_norm_weighted()
 
-    invert.q.put((ano, bno, nsol, nrough, nres))
+    invert.q.put((bno, nrough, nres))
 
     mplt = MapPlotFault('./fault_model/fault_He50km_east.h5')   
     mplt.plot_slip(tik.m)
     
     mplt.plot_slip_contours(tik.m)
-    plt.savefig('plots/co_ano%02d_bno%02d.png'%(ano, bno))
+    plt.savefig('plots/co_bno%02d.png'%(bno))
     #plt.show()
     plt.close()
 
@@ -77,9 +72,8 @@ nproc = 4
 pool = Pool(nproc, invert_init, [q])
 
 args = []
-for ano, alpha in enumerate(alphas):
-    for bno, beta in enumerate(betas):
-        args.append((ano, bno))
+for bno, beta in enumerate(betas):
+    args.append(bno)
 pool.map(invert, args)
 
 res = []
