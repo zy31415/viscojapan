@@ -9,14 +9,6 @@ class EpochalData(object):
                  epoch_file):
         self.epoch_file = epoch_file
 
-    @property
-    def epoch_file(self):
-        return self._epoch_file
-
-    @epoch_file.setter
-    def epoch_file(self, epoch_file):
-        self._epoch_file = epoch_file
-
     def set_epoch_value(self, time, value):
         assert isinstance(time,int), 'Time %s is not integer.'%(str(time))
         with h5py.File(self.epoch_file,'a') as fid:

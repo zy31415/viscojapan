@@ -22,6 +22,7 @@ class ComputeEarthModelVISCO1D(object):
         self.decay4_out = join(self.outputs_dir, 'decay4.out')
         self.vsph_out = join(self.outputs_dir, 'vsph.out')
 
+    @timeit
     def _decay(self):
         cmd = decay(
             earth_model = self.earth_file,
@@ -34,6 +35,7 @@ class ComputeEarthModelVISCO1D(object):
             )
         cmd()
 
+    @timeit
     def _vtordep(self):
         cmd = vtordep(
             earth_model = self.earth_file,
@@ -46,6 +48,7 @@ class ComputeEarthModelVISCO1D(object):
             stderr = self.stderr)
         cmd()
 
+    @timeit
     def _decay4m(self):
         cmd = decay4m(
             earth_model = self.earth_file,
@@ -58,6 +61,7 @@ class ComputeEarthModelVISCO1D(object):
             stderr = self.stderr)
         cmd()
 
+    @timeit
     def _vsphm(self):
         cmd = vsphm(
             earth_model = self.earth_file,

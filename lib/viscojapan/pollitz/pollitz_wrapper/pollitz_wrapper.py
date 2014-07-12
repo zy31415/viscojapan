@@ -128,6 +128,4 @@ class PollitzWrapper(object):
     def __del__(self):
         self._delete_working_directory()
 
-        for fid in self.stdout, self.stderr:
-            _close_file(fid)
             
