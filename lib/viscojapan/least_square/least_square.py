@@ -38,7 +38,7 @@ class LeastSquare(object):
         self._sig = self.sig / median(self.sig)
         self.W = diags(1./self._sig, offsets=0)
         
-    def invert(self):
+    def invert(self, nonnegative=True):
         self._check_input()
         self._form_weighting_matrix()
         
@@ -50,11 +50,14 @@ class LeastSquare(object):
         q = -dot(Gw.T,dw)
 
         # non-negative constraint
-        GG = -1.0 * identity(self.num_pars, dtype='float')
-        h = zeros((self.num_pars,1), dtype='float')
-        
-        self.solution = solvers.qp(matrix(P),matrix(q),
-                         matrix(GG),matrix(h))
+        if nonnegative:
+            GG = -1.0 * identity(self.num_pars, dtype='float')
+            h = zeros((self.num_pars,1), dtype='float')
+            self.solution = solvers.qp(matrix(P),matrix(q),
+                                       matrix(GG),matrix(h))
+        else:
+            self.solution = solvers.qp(matrix(P),matrix(q))
+            
         self.m = asarray(self.solution['x'],float).reshape((-1,1))
 
     def predict(self):
