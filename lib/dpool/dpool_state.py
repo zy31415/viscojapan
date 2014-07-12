@@ -26,16 +26,10 @@ class DPoolState(object):
         return not res
 
     def pop_task(self):
-        self.lock_q_aborted.acquire()
-        self.lock_q_waiting.acquire()
-
-        if not self.q_aborted.empty():
-            task = self.q_aborted.get()
-        else:
-            task = self.q_waiting.get()
-
-        self.lock_q_aborted.release()
-        self.lock_q_waiting.release()
+        if not self.self.q_aborted.empty():
+            task = self.q_aborted.get(block=False)
+        elif not self.q_waiting.empty():
+            task = self.q_waiting.get(block=False)
         return task
 
     def _find_running_task_by_pid(self,pid):
@@ -99,21 +93,12 @@ class DPoolState(object):
         return n2
 
     def num_aborted_tasks(self):
-        self.lock_q_aborted.acquire()
         n1 = self.q_aborted.qsize()
-        self.lock_q_aborted.release()
         return n1
     
     def num_unfinished_tasks(self):
-        self.lock_q_aborted.acquire()
-        self.lock_q_waiting.acquire()
-
         n1 = self.q_aborted.qsize()
         n2 = self.q_waiting.qsize()
-        
-        self.lock_q_aborted.release()
-        self.lock_q_waiting.release()
-
         return n1 + n2
 
     def get_all_running_pids(self):
