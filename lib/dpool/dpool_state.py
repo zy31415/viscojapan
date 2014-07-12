@@ -26,10 +26,10 @@ class DPoolState(object):
         return not res
 
     def pop_task(self):
-        if not self.self.q_aborted.empty():
+        try:
             task = self.q_aborted.get(block=False)
-        elif not self.q_waiting.empty():
-            task = self.q_waiting.get(block=False)
+        except Empty:
+            task = self.q_waiting.get()
         return task
 
     def _find_running_task_by_pid(self,pid):
