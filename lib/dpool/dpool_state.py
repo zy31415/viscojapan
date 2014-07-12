@@ -89,8 +89,7 @@ class DPoolState(object):
 
     
     def num_running_tasks(self):
-        with self.lock_running_tasks:
-            res = len(self.running_tasks)
+        res = len(self.running_tasks)
         return res
 
     def num_waiting_tasks(self):

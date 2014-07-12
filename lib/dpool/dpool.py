@@ -100,6 +100,7 @@ class DPool(object):
             print(ll[-nth])
 
     def print_exe_summary(self):
+        print("Execution summary:")
         print('    # total tasks : %d'%self.num_total_tasks)
         print('    average exe time: %.2f sec'%\
               self._compute_average_exe_time())
@@ -120,20 +121,19 @@ class DPool(object):
 
     def _compute_total_exe_time(self):
         t = self._compute_average_exe_time() * \
-            self.num_total_tasks
+            self.num_total_tasks / self.dp_state.num_running_tasks()
         return t
 
     def _compute_time_needed_to_finish(self):
         t = self._compute_average_exe_time() * \
-            self.dp_state.num_unfinished_tasks()
+            self.dp_state.num_unfinished_tasks() / \
+            self.dp_state.num_running_tasks()
         return t
 
     def _compute_finishing_time(self):
         dt = self._compute_time_needed_to_finish()
         now = datetime.datetime.now()
-
         ft = now + datetime.timedelta(seconds = dt)
-
         return ft
 
     @property
