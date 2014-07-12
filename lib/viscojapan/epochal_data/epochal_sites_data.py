@@ -4,6 +4,7 @@ import h5py
 from numpy import loadtxt, asarray, zeros
 
 from .epochal_data import EpochalData
+from .stacking import conv_stack, vstack_column_vec
 from ..utils import overrides
 
 class EpochalSitesData(EpochalData):
@@ -106,6 +107,9 @@ class EpochalG(EpochalSitesFilteredData):
                  filter_sites_file=None, filter_sites=None):
         super().__init__(epoch_file, filter_sites_file, filter_sites)
 
+    def conv_stack(self, epochs):
+        return conv_stack(self, epochs)
+
 class EpochalDisplacement(EpochalSitesFilteredData):
     def __init__(self,epoch_file,
                  filter_sites_file=None, filter_sites=None):
@@ -117,6 +121,9 @@ class EpochalDisplacement(EpochalSitesFilteredData):
         for nth, epoch in enumerate(epochs):
             ys[nth] = self.get_epoch_value_at_site(site, cmpt, epoch)
         return ys
+
+    def vstack(self, epochs):
+        return vstack_column_vec(self, epochs)
     
 class EpochalDisplacementSD(EpochalSitesFilteredData):
     def __init__(self,epoch_file,
@@ -128,5 +135,8 @@ class EpochalDisplacementSD(EpochalSitesFilteredData):
         out = self._get_epoch_value(epoch)
         ch = self._gen_filter()
         return out[ch,:]
+
+    def vstack(self, epochs):
+        return vstack_column_vec(self, epochs)
         
     

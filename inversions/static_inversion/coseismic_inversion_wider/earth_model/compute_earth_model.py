@@ -21,8 +21,8 @@ cmd = ComputeEarthModelVISCO1D(
     l_max = 810,
     outputs_dir = 'earth_files',
     if_skip_on_existing_output = True,
-    stdout = open('/dev/null', 'w'),
-    stderr = open('/dev/null', 'w'),
+    stdout = None,
+    stderr = None,
     )
 
-cmd.run()
+cmd()
