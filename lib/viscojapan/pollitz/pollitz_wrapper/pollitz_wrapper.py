@@ -69,6 +69,7 @@ class PollitzWrapper(object):
             cmd = ['nice']
         cmd.append(self._cmd)
         with self.gen_stdin() as fin:
+            fin.seek(0)
             Popen(cmd, stdout=self.stdout, stderr=self.stderr,
                   stdin=fin, cwd=self.cwd).wait()
         _close_file(self.stdout)
@@ -128,6 +129,3 @@ class PollitzWrapper(object):
     def __del__(self):
         self._delete_working_directory()
 
-        for fid in self.stdout, self.stderr:
-            _close_file(fid)
-            

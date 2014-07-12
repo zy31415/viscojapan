@@ -34,7 +34,7 @@ Output file: vtor.out
 
     def gen_stdin(self):
         stdin=TemporaryFile('r+')
-        stdin.write('%f \n'%(self.obs_dep))
+        stdin.write('%f'%(self.obs_dep))
         stdin.seek(0)
         return stdin
     
