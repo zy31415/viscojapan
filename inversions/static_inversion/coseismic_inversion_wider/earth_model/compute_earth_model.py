@@ -1,4 +1,5 @@
 from viscojapan.pollitz.pollitz_wrapper import stat0A
+from viscojapan.pollitz import ComputeEarthModelVISCO1D
 
 cmd = stat0A(
     earth_model_stat = 'earth.model_He50km',
@@ -24,4 +25,4 @@ cmd = ComputeEarthModelVISCO1D(
     stderr = None,
     )
 
-cmd()
+cmd.run()
