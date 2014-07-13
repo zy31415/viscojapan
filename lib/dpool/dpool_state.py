@@ -59,11 +59,11 @@ class DPoolState(object):
             self._delete_from_running_tasks_by_pid(pid)
 
     def pop_running_tasks(self):
-        with self.lock_running_tasks:
-            if len(self.running_tasks) > 0:
-                res = self.running_tasks.pop()
-            else:
-                res = (None, None)
+        try:
+            res = self.running_tasks.pop()
+        except Exception as exp:
+            print(exp)
+            res = (None, None)
         return res
     
     def update_running_tasks(self, pid, task):
