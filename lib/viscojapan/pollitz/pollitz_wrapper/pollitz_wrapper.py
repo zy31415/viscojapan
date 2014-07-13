@@ -72,8 +72,8 @@ class PollitzWrapper(object):
             fin.seek(0)
             Popen(cmd, stdout=self.stdout, stderr=self.stderr,
                   stdin=fin, cwd=self.cwd).wait()
-        _close_file(self.stdout)
-        _close_file(self.stderr)
+        #_close_file(self.stdout)
+        #_close_file(self.stderr)
 
 
     def _fetch_output_from_working_directory(self):
