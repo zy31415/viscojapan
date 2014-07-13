@@ -48,7 +48,9 @@ class DPool(object):
                 self._add_a_process()
 
     def _kill_a_process(self):
+        print('*** kill a process')
         pid, task = self.dp_state.pop_running_tasks()
+        print('***', pid, task)
         if task is not None:
             self.dp_state.register_aborted_task(task)
         if pid is not None:
