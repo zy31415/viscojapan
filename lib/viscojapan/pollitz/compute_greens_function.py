@@ -1,4 +1,4 @@
-from os.path import join, basename
+from os.path import join, basename, exists
 
 from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
 from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
@@ -64,21 +64,23 @@ class ComputeGreensFunction(object):
         cmd()
         
     def _load_tasks(self, epoch):
-        if epoch == 0:
-            for f in self.subflts_files:
-                self.tasks.append(
-                    Task(target = self._stat2gA,
-                         kwargs = {'file_flt':f})
-                    )
-                self.output_files.append(self._gen_out_file(f,0))
-        else:
-            for f in self.subflts_files:
-                self.tasks.append(
-                    Task(target = self._straina,
-                         kwargs = {'file_flt':f,
-                                   'epoch':epoch})
-                    )
-                self.output_files.append(self._gen_out_file(f,epoch))
+        for f in self.subflts_files:
+            output_file_name = self._gen_out_file(f,epoch)
+            if not exists(output_file_name):
+                if epoch == 0:                        
+                    self.tasks.append(
+                        Task(target = self._stat2gA,
+                             kwargs = {'file_flt':f})
+                        )
+                else:
+                    self.tasks.append(
+                        Task(target = self._straina,
+                             kwargs = {'file_flt':f,
+                                       'epoch':epoch})
+                        )
+            else:
+                print('File %s exists!'%output_file_name)                    
+        self.output_files.append(output_file_name)
 
     def load_tasks(self):
         for epoch in self.epochs:

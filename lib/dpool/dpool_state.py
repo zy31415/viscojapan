@@ -78,8 +78,7 @@ class DPoolState(object):
             
     # about q_finished
     def register_finished_task(self, task):
-        with self.lock_q_finished:
-            self.q_finished.put(task)
+        self.q_finished.put(task)
 
     
     def num_running_tasks(self):

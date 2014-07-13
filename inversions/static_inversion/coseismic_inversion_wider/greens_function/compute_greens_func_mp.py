@@ -9,7 +9,7 @@ subflts_files = \
               sorted(glob.glob('../fault_model/subflts/flt_????'))
 
 com = ComputeGreensFunction(
-    epochs = epochs[1:],
+    epochs = epochs[0:],
     file_sites = 'sites_with_seafloor',
     earth_file = '../earth_model/earth.model_He50km',
     earth_file_dir = '../earth_model/earth_files/',
