@@ -13,9 +13,9 @@ class Test_DPool(MyTestCase):
 
     def test(self):
         tasks = []
-        for n in range(20):
+        for n in range(50):
             tasks.append(Task(target = sleep,
-                              args = (randrange(10),)))
+                              args = (randrange(20),)))
         dp = DPool(
             tasks=tasks,
             controller_file = join(self.share_dir, 'pool.config.dynamic')
