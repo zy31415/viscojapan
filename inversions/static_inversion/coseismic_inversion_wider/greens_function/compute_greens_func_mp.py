@@ -17,4 +17,6 @@ com = ComputeGreensFunction(
     subflts_files = subflts_files,
     controller_file = 'pool.config',
     )
-com.run()
+
+if __name__ == '__main__':
+    com.run()
