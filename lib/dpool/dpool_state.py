@@ -73,8 +73,7 @@ class DPoolState(object):
 
     # about q_aborted:
     def register_aborted_task(self, task):
-        with self.lock_q_aborted:
-            self.q_aborted.put(task)
+        self.q_aborted.put(task)
             
     # about q_finished
     def register_finished_task(self, task):
