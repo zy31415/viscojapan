@@ -29,11 +29,13 @@ class DPoolState(object):
         try:
             task = self.q_aborted.get(block=False)
         except Empty:
+            print("    No task availabel in abroted list.")
             try:
-                task = self.q_waiting.get(timeout = 1.)
+                task = self.q_waiting.get(timeout = 10.)
             except Empty:
-                print('No task availabl!')
-        return None
+                print('    No task availabel in waiting list.')
+                task = None
+        return task
 
     def _find_running_task_by_pid(self,pid):
         nth = None

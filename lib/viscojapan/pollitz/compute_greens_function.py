@@ -59,6 +59,7 @@ class ComputeGreensFunction(object):
 
             if_skip_on_existing_output = True,
             stdout = open('/dev/null', 'w'),
+            #stdout = None,
             stderr = None,
             )
         cmd()

@@ -28,6 +28,7 @@ Output file: out
                  if_skip_on_existing_output = True,
                  stdout = None,
                  stderr = None,
+                 if_keep_cwd = False
                  ):
 
         self.file_flt = file_flt
@@ -49,6 +50,7 @@ Output file: out
             if_skip_on_existing_output = if_skip_on_existing_output,
             stdout = stdout,
             stderr = stderr,
+            if_keep_cwd = if_keep_cwd
             )
         self._cmd = 'strainA'
 
