@@ -18,6 +18,5 @@ class DPoolProcess(Process):
             task.run()            
             state.register_finished_task(task)
             task = state.pop_task()
-        
 
         state.unregister_running_tasks(self.pid)
