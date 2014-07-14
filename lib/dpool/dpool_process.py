@@ -11,11 +11,12 @@ class DPoolProcess(Process):
     
     def run(self):
         state = self.dp_state
-        while state.if_has_more_task():                
-            task = state.pop_task()
+        task = state.pop_task()
+        while task is not None:
             task.pid = self.pid
             state.update_running_tasks(self.pid, task)
             task.run()            
             state.register_finished_task(task)
+            task = state.pop_task()
 
         state.unregister_running_tasks(self.pid)

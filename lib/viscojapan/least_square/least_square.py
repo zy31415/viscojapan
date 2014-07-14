@@ -1,6 +1,7 @@
-from numpy import zeros, dot, identity, asarray, ones, median
+from numpy import zeros, dot, identity, asarray, ones, median, ndarray
 from numpy.linalg import norm
-from scipy.sparse import diags
+import scipy.sparse as sparse
+from scipy.sparse.csr import csr_matrix
 from cvxopt import matrix, solvers
 
 from ..utils import overrides, _assert_column_vector
@@ -10,44 +11,71 @@ class LeastSquare(object):
                  G,
                  d,
                  L,
-                 sig
+                 sig = None,
+                 B = None,
                  ):
         self.G = G
         self.d = d
         self.L = L
         self.sig = sig
+        self.B = B
 
-    def _check_input(self):        
-        sh_G = self.G.shape
+        self._check_input()
 
-        self.num_pars = sh_G[1]
-        self.num_obs = sh_G[0]
-        
-        nrows_d = _assert_column_vector(self.d)
-        
-        assert self.num_obs == nrows_d, "Shape of G and d doesn't match."
+    def _check_input(self):
+        ''' Assert the following operation is possible:
+||W G B m - W d|| - ||L B m||
+W - sparse
+G - not sparse
+B - sparse
+L - sparse
+'''
+        self.num_obs = _assert_column_vector(self.d)
 
         if self.sig is None:
-            self.sig = ones(len(self.d))
-        assert len(self.sig) == self.num_obs, "Shape of d and sig should match."
+            self.sig = ones([self.num_obs, 1])
+        len_sig = _assert_column_vector(self.sig)
+        assert len_sig == self.num_obs
+        self._form_weighting_matrix()
+
+        assert self.W.shape[1] == self.G.shape[0]
+
+        if self.B is None:
+            num_pars = self.G.shape[1]
+            self.B = sparse.eye(num_pars)
+
+        self.num_pars = self.B.shape[1]
+            
+        assert self.G.shape[1] == self.B.shape[0]
+
+        assert self.L.shape[1] == self.B.shape[0]
+
+        # assert type:
+        self.W = csr_matrix(self.W)
+        self.B = csr_matrix(self.B)
+        self.L = csr_matrix(self.L)
+        assert isinstance(self.G, ndarray)
         
-        sh_L = self.L.shape
-        assert self.num_pars == sh_L[1], "Shape of G and L doesn't match"
         
     def _form_weighting_matrix(self):        
         self._sig = self.sig / median(self.sig)
-        self.W = diags(1./self._sig, offsets=0)
+        self.W = sparse.diags(1./self._sig.flatten(), offsets=0)
         
     def invert(self, nonnegative=True):
-        self._check_input()
-        self._form_weighting_matrix()
+        ''' Solve the problem:
+||W G B m - W d|| - ||L B m||
+'''
+        WG = self.W.dot(self.G)
+        assert isinstance(WG, ndarray)
+        WGB = csr_matrix.dot(WG, self.B)
         
-        Gw = self.W.dot(self.G)
-        dw = self.W.dot(self.d)
+        Wd = self.W.dot(self.d)
         
-        P = dot(Gw.T,Gw) + self.L.T.dot(self.L)
+        LB = self.L.dot(self.B)
         
-        q = -dot(Gw.T,dw)
+        P = dot(WGB.T,WGB) + LB.T.dot(LB)
+        
+        q = -dot(WGB.T,Wd)
 
         # non-negative constraint
         if nonnegative:
@@ -61,7 +89,7 @@ class LeastSquare(object):
         self.m = asarray(self.solution['x'],float).reshape((-1,1))
 
     def predict(self):
-        d_pred = dot(self.G, self.m)
+        d_pred = dot(self.G, self.B.dot(self.m))
         self.d_pred = d_pred
 
     def get_residual_norm(self):

@@ -45,23 +45,26 @@ class CubicBSpline(object):
             
             
         
-    
+if __name__ == '__main__':
+        
 
-sj = arange(0, 740, 20)
+    sj = arange(0, 740, 50)
 
-func = CubicBSpline(sj=sj)
+    sj_dense = arange(0, 740, 1)
 
-s = arange(0,700,0.5)
+    func = CubicBSpline(sj=sj)
 
-y1  = func.b_spline_average_over_sections(12, sj)
+    s = arange(0,700,50)
+
+    y1  = func.b_spline_average_over_sections(5, s)
 
 
-y2 = func.b_spline(12,s)
+    y2 = func.b_spline(5,sj_dense)
 
-plt.plot((sj[1:]+sj[0:-1])/2,y1, marker='o')
-plt.plot(s,y2,color='red')
+    plt.plot((s[1:]+s[0:-1])/2,y1, marker='o')
+    plt.plot(sj_dense,y2,color='red')
 
-for ii in sj:
-    plt.axvline(ii, color='grey', ls='--')
-plt.show()
+    for ii in sj:
+        plt.axvline(ii, color='grey', ls='--')
+    plt.show()
 

@@ -25,7 +25,7 @@ sig_ep = EpochalDisplacementSD(file_sig, sites_filter_file)
 
 G = G_ep(0)
 d = d_ep(0)
-sig = sig_ep(0).flatten()
+sig = sig_ep(0)
 
 L1 = Intensity(num_pars = 385)()
 
