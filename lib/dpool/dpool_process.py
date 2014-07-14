@@ -12,7 +12,9 @@ class DPoolProcess(Process):
     def run(self):
         state = self.dp_state
         task = state.pop_task()
+        print("*",task)
         while task is not None:
+            print('**',task)
             task.pid = self.pid
             state.update_running_tasks(self.pid, task)
             task.run()            
