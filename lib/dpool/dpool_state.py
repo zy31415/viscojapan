@@ -20,10 +20,6 @@ class DPoolState(object):
     def add_tasks(self, tasks):
         for task in tasks:
             self.q_waiting.put(task)
-            
-##    def if_has_more_task(self):
-##        res = (self.q_aborted.empty() and self.q_waiting.empty())
-##        return not res
 
     def pop_task(self):
         try:
@@ -33,7 +29,8 @@ class DPoolState(object):
                 task = self.q_waiting.get(timeout = 1.)
             except Empty:
                 print('No task availabl!')
-        return None
+                task = None
+        return task
 
     def _find_running_task_by_pid(self,pid):
         nth = None

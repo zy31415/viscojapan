@@ -38,7 +38,7 @@ class CubicBSpline(object):
     def b_spline_average_over_sections(self, j, s):
         res = []
         for s1, s2 in zip(s[0:-1], s[1:]):
-            inter_s = linspace(s1, s2, 500)
+            inter_s = linspace(s1, s2, 50)
             out = self.b_spline(j, inter_s)
             res.append(mean(out))
         return asarray(res)

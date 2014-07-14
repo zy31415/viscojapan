@@ -1,4 +1,5 @@
 from os.path import join, basename, exists
+import os
 
 from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
 from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
