@@ -1,5 +1,6 @@
 from os.path import exists
 
+from numpy import asarray
 import h5py
 
 from ..utils import _assert_positive_integer
@@ -100,6 +101,20 @@ class FaultFileIO(object):
             assert 'depth_top' in fid
             res = fid['depth_top'][...]
         return float(res)
+
+    @property
+    def x_f(self):
+        with self.read() as fid:
+            assert 'x_f' in fid
+            res = fid['x_f'][...]
+        return asarray(res,float)
+
+    @property
+    def y_f(self):
+        with self.read() as fid:
+            assert 'y_f' in fid
+            res = fid['y_f'][...]
+        return asarray(res,float)
     
 
     

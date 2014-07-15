@@ -4,7 +4,7 @@ import scipy.sparse as sparse
 from scipy.sparse.csr import csr_matrix
 from cvxopt import matrix, solvers
 
-from ..utils import overrides, _assert_column_vector
+from ...utils import _assert_column_vector
 
 class LeastSquare(object):
     def __init__(self,
@@ -87,9 +87,10 @@ L - sparse
             self.solution = solvers.qp(matrix(P),matrix(q))
             
         self.m = asarray(self.solution['x'],float).reshape((-1,1))
+        self.Bm = self.B.dot(self.m)
 
     def predict(self):
-        d_pred = dot(self.G, self.B.dot(self.m))
+        d_pred = dot(self.G, self.Bm)
         self.d_pred = d_pred
 
     def get_residual_norm(self):

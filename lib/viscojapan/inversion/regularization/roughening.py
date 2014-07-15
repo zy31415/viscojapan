@@ -1,8 +1,7 @@
 from scipy.sparse import eye, bmat, block_diag, coo_matrix, vstack
 from numpy import sqrt
 
-from ..utils import overrides
-
+from viscojapan.fault_model import FaultFileIO
 from .regularization import Regularization
 
 # define functions
@@ -128,6 +127,19 @@ class Roughening(Regularization):
         res = vstack([row_mat, col_mat, sqrt(2) * row_col_mat])
         
         return res
+
+    @staticmethod
+    def create_from_fault_file(fault_file):
+        fid = FaultFileIO(fault_file)
+        
+        L2 = Roughening(
+            ncols_slip = fid.num_subflt_along_strike,
+            nrows_slip = fid.num_subflt_along_dip,
+            col_norm_length = 1.,
+            row_norm_length = \
+                fid.subflt_sz_dip/fid.subflt_sz_strike,
+            )
+        return L2
 
         
         

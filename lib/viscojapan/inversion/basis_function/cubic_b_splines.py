@@ -1,7 +1,4 @@
-from numpy import arange, frompyfunc, asarray, linspace, mean
-
-from viscojapan.utils import my_vectorize
-
+from numpy import arange, frompyfunc, asarray
 
 class CubicBSplines(object):
     def __init__(self, ds):
@@ -31,26 +28,32 @@ class CubicBSplines(object):
         res = fn_vec(asarray(s - 2.*self.ds, float))
         return asarray(res, float)
 
-    def b_spline_average_over_sections(self, j, s):
-        res = []
-        for s1, s2 in zip(s[0:-1], s[1:]):
-            inter_s = linspace(s1, s2, 50)
-            out = self.b_spline(j, inter_s)
-            res.append(mean(out))
-        return asarray(res)
+    def b_spline_over_sections(self, sj, j):
+        sms = []
+        for s1, s2 in zip(sj[0:-1],sj[1:]):
+            sm = (s1+s2)/2.
+            sms.append(sm)
+
+        sms = asarray(sms)
+
+        y = self.b_spline(sms-sms[j])
+
+        return sms, y        
             
             
         
 if __name__ == '__main__':
     from pylab import plt
+    ds = 20
+    func = CubicBSplines(ds=ds)
 
-    func = CubicBSplines(ds=50)
-    
-    s = arange(-150, 150, 1)
 
-    y = func.b_spline(s)
+    s = arange(0, 701, 20)
+    sm, y = func.b_spline_over_sections(s,30)
+    plt.plot(sm,y,color='red',marker='o')
 
-    plt.plot(s,y,color='red')
+    for si in s:
+        plt.axvline(si, color='gray')
 
     plt.show()
 
