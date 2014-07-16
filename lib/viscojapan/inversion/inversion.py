@@ -14,22 +14,25 @@ class Inversion(object):
         self.basis = basis
 
     def set_data_sd(self):
-        raise NotImplementedError()
+        print('Set data sd ...')
         
     def set_data_W(self):
+        print('Set data W ...')
         _sd = self.sd / median(self.sd)
         self.W = sparse.diags(1./_sd.flatten(), offsets=0)        
 
     def set_data_G(self):
-        raise NotImplementedError()
+        print('Set data G ...')               
 
     def set_data_d(self):
-        raise NotImplementedError()
+        print('Set data d ...') 
 
     def set_data_B(self):
+        print('Set data B ...')
         self.B = self.basis()
 
     def set_data_L(self):
+        print('Set data L ...')
         self.L = self.regularization()
 
     def set_data_all(self):
@@ -47,7 +50,8 @@ class Inversion(object):
         self.set_data_d()
         self.set_data_B()
 
-    def invert(self):        
+    def invert(self):
+        print('Inverting ...')
         self.least_square = LeastSquare(
             G = self.G,
             d = self.d,
@@ -59,6 +63,7 @@ class Inversion(object):
         self.least_square.invert()
 
     def predict(self):
+        print('Predicting ...')
         self.least_square.predict()
 
     def run(self):
@@ -66,6 +71,7 @@ class Inversion(object):
         self.predict()
 
     def save(self, fn, overwrite = False):
+        print('Saving ...')
         if overwrite:
             delete_if_exists(fn)
         ls = self.least_square
