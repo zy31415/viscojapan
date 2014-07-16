@@ -3,30 +3,50 @@ from os.path import join
 from numpy import logspace
 from numpy.random import normal
 
-from viscojapan.deconvolution_inversion import Deconvolution
-from viscojapan.inversion_test.l_curve import LCurve
+from viscojapan.inversion import Deconvolution
+from viscojapan.inversion.regularization import \
+     TemporalRegularization, Roughening, Composite
 
 from epochs_log import epochs as epochs_log
 from alphas import alphas
 from betas import betas
 
-project_path = '/home/zy/workspace/viscojapan/'
+file_G = join(project_path, '../../../greens_function/G.h5')
+file_d = 'cumu_post_with_seafloor.h5'
+file_sd = 'sites_sd.h5'
+file_sites_filter = 'sites_with_seafloor'
 
+fault_file = '../../../fault_model/fault_He50km_east.h5'
 
-dtest = Deconvolution()
+basis = BasisMatrix.create_from_fault_file(fault_file)
 
-dtest.file_G = join(project_path, 'greensfunction/050km-vis02/G.h5')
-dtest.file_d = 'cumu_post_with_seafloor.h5'
-dtest.file_sig = 'sites_sd.h5'
-dtest.sites_filter_file = 'sites_with_seafloor'
-dtest.epochs = epochs_log
+def create_roughening_temporal_regularization(rough, temp):
 
-dtest.load_data()
+    reg_rough = Roughening.create_from_fault_file(fault_file)
+    reg_temp = TemporalRegularization.create_from_fault_file(fault_file, epochs_log)
+    
+    reg = Composite().\
+          add_component(reg_rough, arg=rough, arg_name='roughening').\
+          add_component(reg_temp, arg=temp, arg_name='temporal')
+    
+    return reg
+    
+inv = Deconvolution(
+    file_G = file_G,
+    file_d = file_d,
+    file_sd = file_sd,
+    file_sites_filter = file_sites_filter,
+    epochs = epochs_log,
+    regularization = None,
+    basis = basis
+    )
+inv.set_data_all()
 
-lcurve = LCurve(dtest)
-lcurve.outs_dir = 'outs_log'
-lcurve.alphas = alphas
-lcurve.betas = betas
-#lcurve.betas = [9.]
-
-lcurve.compute_L_curve()
+for ano, alpha in enumerate(alphas):
+    for bno, beta in enumerate(betas):
+        inv.regularization = \
+            create_roughening_temporal_regularization(alpha, beta)
+        inv.set_data_L()
+        inv.run()
+        inv.save('outs/ano_%02d_bno_%02d.h5'%(ano, bno), overwrite=True)
+        

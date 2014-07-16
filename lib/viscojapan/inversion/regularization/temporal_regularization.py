@@ -63,3 +63,15 @@ class TemporalRegularization(Leaf):
     def generate_regularization_matrix(self):
         mat = self.gen_inflated_time_derivative_mat()
         return mat
+
+    @staticmethod
+    def create_from_fault_file(fault_file, epochs):
+        fid = FaultFileIO(fault_file)
+        num_subflts = fid.num_subflt_along_strike * fid.num_subflt_along_dip
+
+        L = TemporalRegularization(
+            num_subflts = num_subflts,
+            epochs = epochs,
+            )
+        
+        return L
