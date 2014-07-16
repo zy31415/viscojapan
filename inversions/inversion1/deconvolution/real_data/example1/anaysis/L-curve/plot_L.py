@@ -1,7 +1,7 @@
 from pylab import show, legend, savefig
 import h5py
 
-from viscojapan.plot.plot_res_file import plot_L
+from viscojapan.plots import plot_L
 
 from alphas import alphas
 from betas import betas

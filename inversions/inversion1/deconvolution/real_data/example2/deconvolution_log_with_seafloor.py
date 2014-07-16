@@ -34,12 +34,13 @@ inv = Deconvolution(
     )
 inv.set_data_except_L()
 
+bno = 10,
+beta = betas[bno]
 for ano, alpha in enumerate(alphas):
-    for bno, beta in enumerate(betas):
-        inv.regularization = \
-               reg = create_roughening_temporal_regularization(
-                   fault_file, epochs_log, alpha, beta)
-        inv.set_data_L()
-        inv.run()
-        inv.save('outs/ano_%02d_bno_%02d.h5'%(ano, bno), overwrite=True)
+    inv.regularization = \
+           reg = create_roughening_temporal_regularization(
+               fault_file, epochs_log, alpha, beta)
+    inv.set_data_L()
+    inv.run()
+    inv.save('outs/ano_%02d_bno_%02d.h5'%(ano, bno), overwrite=True)
         
