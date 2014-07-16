@@ -8,6 +8,8 @@ from pylab import plt
 
 from viscojapan.fault_model.subfault_meshes import SubfaultsMeshes, \
      SubfaultsMeshesByLength, SubfaultsMeshesByNumber
+from viscojapan.fault_model import control_points1, control_points2
+
 from viscojapan.utils import get_this_script_dir, delete_if_exists
 from viscojapan.test_utils import MyTestCase
 
@@ -28,7 +30,7 @@ class TestSubFaultsMeshes(MyTestCase):
     def test_SubfaultsMeshes(self):
         delete_if_exists(self.file_subfaults)
         
-        sf = SubfaultsMeshes()
+        sf = SubfaultsMeshes(control_points1)
         sf.x_f = linspace(0,700, 26)
         sf.y_f = linspace(0,300, 11)
         sf.save_fault_file(self.file_subfaults)
@@ -36,7 +38,7 @@ class TestSubFaultsMeshes(MyTestCase):
     def test_SubfaultsMeshesByLength(self):
         delete_if_exists(self.file_gen_by_length)
         
-        gen = SubfaultsMeshesByLength()
+        gen = SubfaultsMeshesByLength(control_points2)
         gen.subflt_sz_dip = 20.
         gen.depth_bottom_limit = 60.
 
@@ -48,12 +50,12 @@ class TestSubFaultsMeshes(MyTestCase):
     def test_SubfaultsMeshesByNumber(self):
         delete_if_exists(self.file_gen_by_number)
 
-        gen=SubfaultsMeshesByNumber()       
+        gen=SubfaultsMeshesByNumber(control_points2)       
         
-        gen.num_subflt_along_strike = 2
+        gen.num_subflt_along_strike = 4
         gen.flt_sz_strike = 700. # km
         
-        gen.num_subflt_along_dip = 4        
+        gen.num_subflt_along_dip = 3        
         gen.depth_bottom_limit = 50.
 
         gen.save_fault_file(self.file_gen_by_number)

@@ -6,9 +6,12 @@ from numpy import asarray
 
 from viscojapan.inversion.regularization.roughening import \
      RowRoughening, ColRoughening, RowColRoughening, Roughening
-from viscojapan.inversion.regularization import Composite
-from viscojapan.inversion.regularization.temporal_regularization import \
-     TemporalRegularization
+from viscojapan.inversion.regularization import \
+     Composite,TemporalRegularization, \
+     create_roughening_temporal_regularization, \
+     ExpandForAllEpochs
+
+     
 from viscojapan.test_utils import MyTestCase
 
 class Test_Regularization(MyTestCase):
@@ -61,6 +64,21 @@ class Test_Regularization(MyTestCase):
         reg_mat = reg()
         self.plot_mat(reg_mat, 'roughening_mat.png')
 
+    def test_ExpandForAllEpochs(self):
+        reg = Roughening(
+            ncols_slip = 5,
+            nrows_slip = 4,
+            norm_length_strike = 1,
+            norm_length_dip = 1,
+            )
+        
+        expanded_reg = ExpandForAllEpochs(
+            reg = reg,
+            num_epochs = 3)
+
+        reg_mat = expanded_reg()
+        self.plot_mat(reg_mat, 'expanded_for_all.png')
+
     def test_TemporalRegularization(self):
         reg = TemporalRegularization(
             num_subflts = 4,
@@ -69,8 +87,16 @@ class Test_Regularization(MyTestCase):
         reg_mat = reg()
         self.plot_mat(reg_mat, 'temporal_reg_mat.png')
 
-
-
+    def test_create_roughening_temporal_regularization(self):
+        fault_file = join(self.share_dir, 'faults.h5')
+        epochs = [0, 2, 5]
+        rough = 1.0
+        temp = 10.
+        reg = create_roughening_temporal_regularization(
+            fault_file, epochs, rough, temp)
+        reg_mat = reg()
+        self.plot_mat(reg_mat, 'roughening_temporal.png')
+    
         
 if __name__ == '__main__':
     unittest.main()

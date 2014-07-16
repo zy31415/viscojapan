@@ -5,7 +5,8 @@ from numpy.random import normal
 
 from viscojapan.inversion import Deconvolution
 from viscojapan.inversion.regularization import \
-     TemporalRegularization, Roughening, Composite
+     TemporalRegularization, Roughening, Composite, \
+     create_roughening_temporal_regularization
 from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs_log import epochs as epochs_log
@@ -19,19 +20,9 @@ file_sites_filter = 'sites_with_seafloor'
 
 fault_file = '../../../fault_model/fault_He50km_east.h5'
 
-basis = BasisMatrix.create_from_fault_file(fault_file)
-
-def create_roughening_temporal_regularization(rough, temp):
-
-    reg_rough = Roughening.create_from_fault_file(fault_file)
-    reg_temp = TemporalRegularization.create_from_fault_file(fault_file, epochs_log)
-    
-    reg = Composite().\
-          add_component(reg_rough, arg=rough, arg_name='roughening').\
-          add_component(reg_temp, arg=temp, arg_name='temporal')
-    
-    return reg
-    
+basis = BasisMatrix.create_from_fault_file(
+    fault_file, len(epochs_log))
+   
 inv = Deconvolution(
     file_G = file_G,
     file_d = file_d,
@@ -46,7 +37,8 @@ inv.set_data_except_L()
 for ano, alpha in enumerate(alphas):
     for bno, beta in enumerate(betas):
         inv.regularization = \
-            create_roughening_temporal_regularization(alpha, beta)
+               reg = create_roughening_temporal_regularization(
+                   fault_file, epochs_log, alpha, beta)
         inv.set_data_L()
         inv.run()
         inv.save('outs/ano_%02d_bno_%02d.h5'%(ano, bno), overwrite=True)

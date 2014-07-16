@@ -1,4 +1,5 @@
 from scipy.sparse import eye, bmat, block_diag, coo_matrix, vstack
+import scipy.sparse as sparse
 from numpy import sqrt
 
 from viscojapan.fault_model import FaultFileIO
@@ -157,6 +158,19 @@ class Roughening(Composite):
             )
         return L2
 
+class ExpandForAllEpochs(Leaf):
+    def __init__(self,
+                 reg,
+                 num_epochs):
+        self.reg = reg
+        self.num_epochs = num_epochs
+
+    def generate_regularization_matrix(self):
+        regmat = self.reg()
+        L = sparse.block_diag([regmat]*self.num_epochs)
+        return L
         
+        
+                
         
 

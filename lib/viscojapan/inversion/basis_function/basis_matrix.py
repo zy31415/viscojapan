@@ -10,12 +10,14 @@ class BasisMatrix(object):
                  xf,
                  dy_spline,
                  yf,
+                 num_epochs = 1
                  ):
 
         self.dx_spline = dx_spline
         self.xf = xf
         self.dy_spline = dy_spline
         self.yf = yf
+        self.num_epochs = num_epochs
 
     def _spline(self, sj, ds, j):
 
@@ -48,13 +50,15 @@ class BasisMatrix(object):
             for mth, _ in enumerate(self.xf[0:-1]):            
                 slip = self.gen_slip_mesh(mth, nth)
                 res.append(slip.reshape([-1,1]))
-        return hstack(res)
+        res1 = sparse.csr_matrix(hstack(res))
+        res2 = sparse.block_diag([res1]*self.num_epochs)
+        return res2
 
     def gen_basis_matrix_sparse(self):
         return sparse.csr_matrix(self.gen_basis_matrix())
 
     @staticmethod
-    def create_from_fault_file(fault_file):
+    def create_from_fault_file(fault_file, num_epochs = 1):
         fid = FaultFileIO(fault_file)                
 
         dx = fid.subflt_sz_strike
@@ -67,14 +71,16 @@ class BasisMatrix(object):
             dx_spline = dx,
             xf = x_f,
             dy_spline = dy,
-            yf = y_f
+            yf = y_f,
+            num_epochs = num_epochs
             )
         return spline_obj
 
     def __call__(self):
         return self.gen_basis_matrix_sparse()
         
-            
+
+    
             
 
             
