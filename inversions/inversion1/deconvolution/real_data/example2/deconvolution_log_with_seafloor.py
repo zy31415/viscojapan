@@ -6,12 +6,13 @@ from numpy.random import normal
 from viscojapan.inversion import Deconvolution
 from viscojapan.inversion.regularization import \
      TemporalRegularization, Roughening, Composite
+from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs_log import epochs as epochs_log
 from alphas import alphas
 from betas import betas
 
-file_G = join(project_path, '../../../greens_function/G.h5')
+file_G = '../../../greens_function/G.h5'
 file_d = 'cumu_post_with_seafloor.h5'
 file_sd = 'sites_sd.h5'
 file_sites_filter = 'sites_with_seafloor'
@@ -40,7 +41,7 @@ inv = Deconvolution(
     regularization = None,
     basis = basis
     )
-inv.set_data_all()
+inv.set_data_except_L()
 
 for ano, alpha in enumerate(alphas):
     for bno, beta in enumerate(betas):

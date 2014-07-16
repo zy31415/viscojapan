@@ -1,8 +1,6 @@
-from numpy import loadtxt
-
-from ..least_square import LeastSquareWithRegularization
 from ..epochal_data import EpochalG, EpochalDisplacement, EpochalDisplacementSD
 from .inversion import Inversion
+from ..utils import _assert_column_vector
 
 class Deconvolution(Inversion):
     def __init__(self,
@@ -22,19 +20,21 @@ class Deconvolution(Inversion):
 
         super().__init__(
             regularization,
-            basis_matrix,)
+            basis,)
 
     def set_data_sd(self):
         sig = EpochalDisplacementSD(self.file_sd, self.file_sites_filter)
         sig_stacked = sig.vstack(self.epochs)
+        self.sd = sig_stacked
         _assert_column_vector(self.sd)
 
     def set_data_G(self):
         G_ep = EpochalG(self.file_G, self.file_sites_filter)
-        G_stacked = G.conv_stack(self.epochs)
+        G_stacked = G_ep.conv_stack(self.epochs)
+        self.G = G_stacked
 
     def set_data_d(self):
         d_ep = EpochalDisplacement(self.file_d, self.file_sites_filter)
-        self.d = disp.vstack(self.epochs)
+        self.d = d_ep.vstack(self.epochs)
         _assert_column_vector(self.d)
         

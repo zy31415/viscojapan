@@ -1,5 +1,6 @@
 from scipy.sparse import coo_matrix
 
+from viscojapan.fault_model import FaultFileIO
 from ...utils import _assert_nonnegative_integer, _assert_assending_order
 
 from .regularization import Leaf
