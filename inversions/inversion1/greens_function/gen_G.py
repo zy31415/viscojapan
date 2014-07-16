@@ -6,6 +6,8 @@ from epochs import epochs
 
 num_subflts = len(glob('outs/day_0000_flt_????.out'))
 
+#epochs.remove(1020)
+
 gen = PollitzOutputsToEpochalData(
     epochs = epochs,
     G_file = 'G.h5',

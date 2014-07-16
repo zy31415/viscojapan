@@ -1,6 +1,6 @@
 from os.path import join, exists
 
-from numpy import NaN, loadtxt, asarray
+from numpy import NaN, loadtxt, asarray, zeros
 
 from ..epochal_data import EpochalData
 from ..utils import delete_if_exists
@@ -61,19 +61,21 @@ green's function: These properties are highly recommended:
 
     
     def _read_a_day(self, day):        
-        read_file = lambda fn : loadtxt(fn)[:,2:5].flatten()
-        
-        G=[]
+        read_file = lambda fn : loadtxt(fn, usecols=(2,3,4)).flatten()
+
+        num_sites = self.get_num_sites()
+        G = zeros((num_sites*3, self.num_subflts))
         for fltno in range(0, self.num_subflts):
             fn = self._form_file_name(day, fltno)
+            # print("Reading file %s ..."%fn)
             col = read_file(fn)
-            G.append(col)
-        G=asarray(G).transpose()
+            assert col.shape[0] == G.shape[0]
+            G[:,fltno] = col
         return G
 
     def _write_G_to_hdf5(self):    
         for day in self.epochs:
-            print(day)
+            print("Read files at day = %04d ..."%day)
             G = self._read_a_day(day)
             if day == 0:
                 self.G.set_epoch_value(0, G)
@@ -81,13 +83,17 @@ green's function: These properties are highly recommended:
                 G0 = self.G.get_epoch_value(0)
                 self.G.set_epoch_value(day, G + G0)
 
-    def _get_sites(self):
+    def get_sites(self):
         tp = loadtxt(self.sites_file,'4a, 2f')
         sites = [ii[0] for ii in tp]
         return sites
 
+    def get_num_sites(self):
+        return len(self.get_sites())
+
+
     def _write_info_to_hdf5(self):
-        self.G.set_info('sites', self._get_sites())
+        self.G.set_info('sites', self.get_sites())
         self.G.set_info('num_subflts', self.num_subflts)
 
     def _write_extra_info_to_hdf5(self):        
