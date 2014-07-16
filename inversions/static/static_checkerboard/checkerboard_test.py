@@ -1,23 +1,38 @@
 from numpy import logspace
 
-from viscojapan.inversion_test import CheckerboardTest
+from viscojapan.inversion.basis_function import BasisMatrix
+from viscojapan.inversion.regularization import Roughening, Composite
+from viscojapan.inversion.inversion_test.checkerboard_test import \
+     StaticInversionTest
+from viscojapan.inversion.inversion_test.checkerboard_slip import \
+     gen_checkerboard_slip_from_fault_file
 
-from viscojapan.plots import MapPlotFault, plt
+fault_file = 'fault_He50km_east.h5'
 
-f_G = '/home/zy/workspace/viscojapan/inversions/static_inversion/coseismic_inversion_b_spline/greens_function/G.h5'
-f_fault = '/home/zy/workspace/viscojapan/inversions/static_inversion/coseismic_inversion_b_spline/fault_model/fault_He50km_east.h5'
-filter_site_file = 'sites'
-filter_site_seafloor_file = 'sites_with_seafloor'
 
-if __name__ =='__main__':
-    alphas = logspace(-4,0,30)
-    test1 = CheckerboardTest(f_G,
-                             filter_site_file = filter_site_seafloor_file,
-                             fault_file = f_fault,
-                             sd_horizontal = 0.006,
-                             sd_up = 0.02,
-                             dip_patch_size = 4,
-                             strike_patch_size = 4,)
+basis = BasisMatrix.create_from_fault_file(fault_file)
 
-    test1.make_L_curve(alphas, 'plots_with_seafloor')
+slip = gen_checkerboard_slip_from_fault_file(fault_file, 4, 4).reshape([-1,1])
 
+rough = Roughening.create_from_fault_file(fault_file)
+
+inv = StaticInversionTest(
+    file_G = 'G.h5',
+    file_sites_filter = 'sites_with_seafloor',
+    slip_true = slip,
+    sd_horizontal = 6e-3,
+    sd_up = 20e03,
+    regularization = rough,
+    basis = basis
+    )
+inv.set_data_all()
+
+for nth, alpha in enumerate(logspace(-3, 1, 30)):
+    reg = Composite().add_component(component = rough,
+                                    arg = alpha,
+                                    arg_name = 'roughening')
+    inv.regularization = reg
+    inv.set_data_L()
+    inv.run()
+    
+    inv.save('outs/ano_%02d.h5'%nth, overwrite=True)

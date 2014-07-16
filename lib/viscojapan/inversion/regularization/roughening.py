@@ -2,7 +2,7 @@ from scipy.sparse import eye, bmat, block_diag, coo_matrix, vstack
 from numpy import sqrt
 
 from viscojapan.fault_model import FaultFileIO
-from .regularization import Regularization
+from .regularization import Leaf, Composite
 
 # define functions
 def roughening_matrix(num_cols):
@@ -20,12 +20,15 @@ def finite_difference_matrix(num_cols):
         return C
 
 # define classes
-class RowRoughening(Regularization):
+class RowRoughening(Leaf):
     def __init__(self,
                  ncols_slip,
-                 nrows_slip):
+                 nrows_slip,
+                 norm_length_dip = 1.):
+        super().__init__()
         self.ncols_slip = ncols_slip
         self.nrows_slip = nrows_slip
+        self.norm_length_dip = norm_length_dip
         
     def row_roughening(self):
         ''' Roughening between rows.
@@ -48,15 +51,18 @@ class RowRoughening(Regularization):
         return mat
     
     def generate_regularization_matrix(self):
-        return self.row_roughening()
+        return self.row_roughening()/(self.norm_length_dip**2)
 
-class ColRoughening(Regularization):
+class ColRoughening(Leaf):
     def __init__(self,
                  ncols_slip,
-                 nrows_slip
+                 nrows_slip,
+                 norm_length_strike = 1.
                  ):
+        super().__init__()
         self.ncols_slip = ncols_slip
         self.nrows_slip = nrows_slip
+        self.norm_length_strike = norm_length_strike
 
     def col_roughening(self):
         ''' Roughening between columns.
@@ -66,15 +72,20 @@ class ColRoughening(Regularization):
         return mat
 
     def generate_regularization_matrix(self):
-        return self.col_roughening()
+        return self.col_roughening()/(self.norm_length_strike**2)
 
-class RowColRoughening(Regularization):
+class RowColRoughening(Leaf):
     def __init__(self,
                  ncols_slip,
-                 nrows_slip
+                 nrows_slip,
+                 norm_length_strike = 1.,
+                 norm_length_dip = 1.,             
                  ):
+        super().__init__()
         self.ncols_slip = ncols_slip
         self.nrows_slip = nrows_slip
+        self.norm_length_strike = norm_length_strike
+        self.norm_length_dip = norm_length_dip
 
     def row_col_roughening(self):
         B = finite_difference_matrix(self.ncols_slip)
@@ -92,41 +103,46 @@ class RowColRoughening(Regularization):
         return mat
 
     def generate_regularization_matrix(self):
-        return self.row_col_roughening()
+        return self.row_col_roughening()\
+               /self.norm_length_dip/self.norm_length_strike
 
-class Roughening(Regularization):
+class Roughening(Composite):
     def __init__(self,
                  ncols_slip,
-                 nrows_slip,
-                 col_norm_length,
-                 row_norm_length,
+                 nrows_slip,                 
+                 norm_length_dip,
+                 norm_length_strike,                 
                  ):
 
         self.ncols_slip = ncols_slip
         self.nrows_slip = nrows_slip
-        self.col_norm_length = col_norm_length
-        self.row_norm_length = row_norm_length
+        self.norm_length_dip = norm_length_dip
+        self.norm_length_strike = norm_length_strike
 
-    def generate_regularization_matrix(self):
-        row = RowRoughening(
-            ncols_slip = self.ncols_slip,
-            nrows_slip = self.nrows_slip)
-        
         col = ColRoughening(
             ncols_slip = self.ncols_slip,
-            nrows_slip = self.nrows_slip)
+            nrows_slip = self.nrows_slip,
+            norm_length_strike = self.norm_length_strike)
+
+        row = RowRoughening(
+            ncols_slip = self.ncols_slip,
+            nrows_slip = self.nrows_slip,
+            norm_length_dip = self.norm_length_dip)
         
         row_col = RowColRoughening(
             ncols_slip = self.ncols_slip,
-            nrows_slip = self.nrows_slip)
+            nrows_slip = self.nrows_slip,
+            norm_length_strike = self.norm_length_strike,
+            norm_length_dip = self.norm_length_dip)
 
-        row_mat = row()/(self.row_norm_length**2)
-        col_mat = col()/(self.col_norm_length**2)
-        row_col_mat = row_col()/(self.row_norm_length*self.col_norm_length)
+        components = [col, row, row_col]
+        args = [1., 1., sqrt(2)]
+        arg_names = ['col_roughening','row_roughening','row_col_roughening']
         
-        res = vstack([row_mat, col_mat, sqrt(2) * row_col_mat])
-        
-        return res
+        super().__init__(
+                components = components,
+                args = args,
+                arg_names = arg_names)
 
     @staticmethod
     def create_from_fault_file(fault_file):
@@ -135,8 +151,8 @@ class Roughening(Regularization):
         L2 = Roughening(
             ncols_slip = fid.num_subflt_along_strike,
             nrows_slip = fid.num_subflt_along_dip,
-            col_norm_length = 1.,
-            row_norm_length = \
+            norm_length_strike = 1.,
+            norm_length_dip = \
                 fid.subflt_sz_dip/fid.subflt_sz_strike,
             )
         return L2

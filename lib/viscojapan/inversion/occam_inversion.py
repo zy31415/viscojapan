@@ -18,33 +18,29 @@ class OccamInversion():
                  file_G1,
                  file_G2,
                  file_d,
+                 file_sd,
                  file_slip0,
                  file_sites_filter,
                  epochs,
                  nlin_par_initial_values,
                  nlin_par_names,
-                 basis_mat,
-                 reg_mats,
-                 reg_pars,
-                 reg_par_names,
-                 file_output,
+                 regularization,
+                 basis,
                  ):
         
         self.file_G1 = file_G1
         self.file_G2 = file_G2
-
         self.file_d = file_d
-
         self.file_slip0 = file_slip0
-
         self.file_sites_filter = file_sites_filter
-
         self.epochs = epochs
 
         self.nlin_par_initial_values = nlin_par_initial_values
         self.nlin_par_names = nlin_par_names
 
-        self.res_writer = WriterOccamInversion(self)
+        super().__init__(
+            regularization,
+            basis_matrix,)
 
     def iterate_nlin_par_name_val(self):
         for name, val in zip(self.nlin_par_names, self.nlin_par_initial_values):
@@ -90,26 +86,17 @@ class OccamInversion():
         d__vec = d_()
         return d__vec
 
-    def _get_G(self):
-        return self._get_jacobian()
+    def set_G(self):
+        self.G = self._get_jacobian()
 
-    def _get_d(self):
-        return self._load_d_()
+    def set_d(self):
+        self.d = self._load_d_()
 
-    def _load_data(self):
-        self.G = self._get_G()
-        self.d = self._get_d()
-        self.sig = self._get_sig()
-
-    def create_least_square_object(self):
-        self._load_data()
-        self.lease_squre = LeastSquareWithRegularization(
-            G = self.G,
-            d = self.d,
-            sig = self.sig,
-            Ls = self.Ls,
-            B = self.B)
-    
+    def set_data_sd(self):
+        sig_ep = EpochalDisplacementSD(self.file_sd, self.file_sites_filter)
+        self.sd = sig_ep(0)
+        _assert_column_vector(self.sd)
+        
     def predict(self):
         m = self.m
         G = self.G

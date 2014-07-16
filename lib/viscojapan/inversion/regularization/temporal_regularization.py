@@ -1,8 +1,8 @@
 from scipy.sparse import coo_matrix
 
-from ..utils import _assert_nonnegative_integer, _assert_assending_order
+from ...utils import _assert_nonnegative_integer, _assert_assending_order
 
-from .regularization import Regularization
+from .regularization import Leaf
 
 def time_derivative_matrix(epochs):
     _assert_assending_order(epochs)
@@ -47,7 +47,7 @@ def inflate_time_derivative_matrix_by_num_subflts( time_derivative_mat, num_subf
     res = coo_matrix((data, (row, col)),dtype=float)
     return res
 
-class TemporalRegularization(Regularization):
+class TemporalRegularization(Leaf):
     def __init__(self,
                  num_subflts,
                  epochs

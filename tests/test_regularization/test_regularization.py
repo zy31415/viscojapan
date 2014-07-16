@@ -4,9 +4,10 @@ from os.path import join
 from pylab import plt
 from numpy import asarray
 
-from viscojapan.least_square.roughening import \
+from viscojapan.inversion.regularization.roughening import \
      RowRoughening, ColRoughening, RowColRoughening, Roughening
-from viscojapan.least_square.temporal_regularization import \
+from viscojapan.inversion.regularization import Composite
+from viscojapan.inversion.regularization.temporal_regularization import \
      TemporalRegularization
 from viscojapan.test_utils import MyTestCase
 
@@ -54,8 +55,8 @@ class Test_Regularization(MyTestCase):
         reg = Roughening(
             ncols_slip = 5,
             nrows_slip = 4,
-            col_norm_length = 1,
-            row_norm_length = 1,
+            norm_length_strike = 1,
+            norm_length_dip = 1,
             )
         reg_mat = reg()
         self.plot_mat(reg_mat, 'roughening_mat.png')
@@ -67,6 +68,9 @@ class Test_Regularization(MyTestCase):
             )
         reg_mat = reg()
         self.plot_mat(reg_mat, 'temporal_reg_mat.png')
+
+
+
         
 if __name__ == '__main__':
     unittest.main()

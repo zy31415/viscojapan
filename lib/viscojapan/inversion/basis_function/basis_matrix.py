@@ -70,6 +70,10 @@ class BasisMatrix(object):
             yf = y_f
             )
         return spline_obj
+
+    def __call__(self):
+        return self.gen_basis_matrix_sparse()
+        
             
             
 
