@@ -27,7 +27,7 @@ class DPoolState(object):
         except Empty:
             print("    No task availabel in abroted list.")
             try:
-                task = self.q_waiting.get(timeout = 10.)
+                task = self.q_waiting.get(timeout = 2.)
             except Empty:
                 print('    No task availabel in waiting list.')
                 task = None
