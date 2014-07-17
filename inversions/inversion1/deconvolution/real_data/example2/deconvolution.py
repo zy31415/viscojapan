@@ -20,6 +20,8 @@ file_sites_filter = 'sites_with_seafloor'
 
 fault_file = '../../../fault_model/fault_He50km_east.h5'
 
+#epochs_log = [0, 10, 20]
+
 basis = BasisMatrix.create_from_fault_file(
     fault_file, len(epochs_log))
    
@@ -34,7 +36,7 @@ inv = Deconvolution(
     )
 inv.set_data_except_L()
 
-bno = 10,
+bno = 10
 beta = betas[bno]
 for ano, alpha in enumerate(alphas):
     inv.regularization = \
