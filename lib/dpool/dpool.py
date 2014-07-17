@@ -43,14 +43,11 @@ class DPool(object):
         n_left = self.dp_state.num_unfinished_tasks()
         n = min(n, n_left)
         if n > 0:
-            print('    #%d running processes will be added.'%n)
-            for ii in range(n):
-                self._add_a_process()
+            print('    One running processes will be added.')
+            self._add_a_process()
 
     def _kill_a_process(self):
-        print('*** kill a process')
         pid, task = self.dp_state.pop_running_tasks()
-        print('***', pid, task)
         if task is not None:
             self.dp_state.register_aborted_task(task)
         if pid is not None:
@@ -66,9 +63,8 @@ class DPool(object):
     def _kill_procs(self, n):
         n = int(n)
         if n>0:
-            print('    #%d running processes will be deleted.'%n)
-            for ii in range(n):
-                self._kill_a_process()
+            print('    One running processes will be deleted.')
+            self._kill_a_process()
 
     def _dynamic_pool_adjust_process(self):
         self._add_procs(free_cpu() - self.controller.threshold_load)
@@ -76,9 +72,9 @@ class DPool(object):
 
     def _static_pool_adjust_process(self):
         self._add_procs(self.controller.num_processes -
-                        self.dp_state.num_running_tasks())
+                        self.num_running_tasks)
         
-        self._kill_procs(self.dp_state.num_running_tasks() -
+        self._kill_procs(self.num_running_tasks -
                          self.controller.num_processes)
 
     def _join_all_procs(self):
@@ -104,6 +100,7 @@ class DPool(object):
     def print_exe_summary(self):
         print("Execution summary:")
         print('    # total tasks : %d'%self.num_total_tasks)
+        print('    # unhandled tasks : %d'%self.num_unhandled_tasks)
         print('    average exe time: %.2f sec'%\
               self._compute_average_exe_time())
         print('    Est. total exe time: %.2f hr'%\
@@ -124,15 +121,15 @@ class DPool(object):
     def _compute_total_exe_time(self):        
         t = self._compute_average_exe_time() * \
             self.num_total_tasks
-        if self.num_running_tasks() > 0:
-            t /= self.num_running_tasks()
+        if self.num_running_tasks > 0:
+            t /= self.num_running_tasks
         return t
 
     def _compute_time_needed_to_finish(self):
         t = self._compute_average_exe_time() * \
-            self.dp_state.num_unfinished_tasks()
-        if self.num_running_tasks() > 0:
-            t /= self.num_running_tasks()
+            self.num_unfinished_tasks
+        if self.num_running_tasks > 0:
+            t /= self.num_running_tasks
         return t
 
     def _compute_finishing_time(self):
@@ -150,8 +147,17 @@ class DPool(object):
     def num_finished_tasks(self):
         return len(self.finished_tasks)
 
+    @property
     def num_running_tasks(self):
         return self.dp_state.num_running_tasks()
+
+    @property
+    def num_unhandled_tasks(self):
+        return len(self.tasks)
+
+    @property
+    def num_unfinished_tasks(self):
+        return self.num_total_tasks - self.num_finished_tasks
             
     def run(self):
         self.dp_state.add_tasks(self.tasks)
@@ -162,6 +168,7 @@ class DPool(object):
                 self._dynamic_pool_adjust_process()
             elif self.controller.if_fix == 1:
                 self._static_pool_adjust_process()
+            self.dp_state.add_tasks(self.tasks)
 
         self._join_all_procs()
 
