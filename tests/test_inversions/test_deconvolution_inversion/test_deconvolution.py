@@ -66,6 +66,8 @@ class TestDeconvolution(MyTestCase):
 
         inv.set_data_all()
         inv.invert()
+        inv.predict()
+        inv.save(join(self.outs_dir,'test.h5'), overwrite=True)
 
         
 if __name__=='__main__':
