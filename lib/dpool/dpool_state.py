@@ -23,7 +23,7 @@ class DPoolState(object):
         num_loads = self.SIZE_q_waiting - self.num_waiting_tasks()
         for ii in range(num_loads):
             if tasks != []:
-                task = tasks.pop()
+                task = tasks.pop(0)
                 self.q_waiting.put(task)
 
     def pop_task(self):
@@ -73,9 +73,8 @@ class DPoolState(object):
         return res
     
     def update_running_tasks(self, pid, task):
-        with self.lock_running_tasks:                
-            self._delete_from_running_tasks_by_pid(pid)
-            self.running_tasks.append((pid, task))
+        self._delete_from_running_tasks_by_pid(pid)
+        self.running_tasks.append((pid, task))
 
     # about q_aborted:
     def register_aborted_task(self, task):
