@@ -1,3 +1,4 @@
+import subprocess, signal
 from subprocess import call
 import os
 import datetime
@@ -21,6 +22,30 @@ def print_free_cpu():
     print('Free CPU #:')
     print('    %.2f'%free_cpu())
 
+def find_process_by_pid(processes, pid):
+    for p in processes:
+        if p.pid == pid:
+            return p
+    raise ValueError('PID %d is not found.'%pid)
+
+
+def kill_child_processes(parent_pid, sig=signal.SIGTERM):
+        ps_command = subprocess.Popen('pstree -p %d | perl -ne \'print "$1 " while /\((\d+)\)/g\'' %\
+                                      parent_pid,
+                                      shell=True, stdout=subprocess.PIPE)
+        ps_output = ps_command.stdout.read().decode()
+        retcode = ps_command.wait()
+        assert retcode == 0, "ps command returned %d" % retcode
+        print(ps_output)
+        for pid_str in ps_output.split():
+                os.kill(int(pid_str), sig)
+
+
+def remove_process_by_pids(processes, pids):
+    for pid in pids:
+        p = find_process_by_pid(pid)
+        processes.remove(p)
+
 class DPool(object):
     def __init__(self,
                  tasks,
@@ -36,35 +61,46 @@ class DPool(object):
     def _add_a_process(self):
         p = DPoolProcess(dp_state=self.dp_state)
         p.start()
+        print('    PID %d is started.'%p.pid)
         self.running_procs.append(p)
 
     def _add_procs(self, n):
         n = int(n)
-        n_left = self.dp_state.num_unfinished_tasks()
-        n = min(n, n_left)
+        n_left = self.dp_state.num_inline_tasks()
+        n = min(n, n_left)        
         if n > 0:
-            print('    One running processes will be added.')
-            self._add_a_process()
+            print('    %d processes will be added.'%n)
+            for ii in range(n):
+                self._add_a_process()
+
+    def update_running_task(self):
+        pid_tasks = self.dp_state.get_all_running_tasks()
+        pids_to_remove = []
+        for pid, task in pid_tasks:
+            p = find_process_by_pid(self.running_procs, pid)
+            if (task == 'Done'):
+                pids_to_remove.append(pid)
+            p.task = task
+
+        remove_process_by_pids(
+            self.running_procs, pids_to_remove)
 
     def _kill_a_process(self):
-        pid, task = self.dp_state.pop_running_tasks()
-        if task is not None:
-            self.dp_state.register_aborted_task(task)
-        if pid is not None:
-            self._send_terminate_signal_to_process(pid)
-
-    def _send_terminate_signal_to_process(self, pid):
-        for p in self.running_procs:
-            if p.pid == pid:
-                p.terminate()
-                return
-        raise ValueError('Process is not found.')
+        while not hasattr(self.running_procs[-1], 'task'):
+            print(' Updating running task...')
+            self.update_running_task()
+        p = self.running_procs.pop()
+        print("    Termination: PID: %d, Task: %s"%\
+              (p.pid, str(p.task)))
+        kill_child_processes(p.pid)
+        self.dp_state.add_aborted_task(p.task)
 
     def _kill_procs(self, n):
         n = int(n)
         if n>0:
-            print('    One running processes will be deleted.')
-            self._kill_a_process()
+            print('    %d processes will be deleted.'%n)
+            for ii in range(n):
+                self._kill_a_process()
 
     def _dynamic_pool_adjust_process(self):
         self._add_procs(free_cpu() - self.controller.threshold_load)
@@ -101,6 +137,7 @@ class DPool(object):
         print("Execution summary:")
         print('    # total tasks : %d'%self.num_total_tasks)
         print('    # unhandled tasks : %d'%self.num_unhandled_tasks)
+        print("    # running processes: %d"%self.num_running_tasks)
         print('    average exe time: %.2f sec'%\
               self._compute_average_exe_time())
         print('    Est. total exe time: %.2f hr'%\
@@ -140,7 +177,7 @@ class DPool(object):
 
     @property
     def finished_tasks(self):
-        self._finished_tasks += self.dp_state.get_finished_tasks_list()
+        self._finished_tasks += self.dp_state.get_all_finished_tasks()
         return self._finished_tasks
 
     @property
@@ -149,7 +186,7 @@ class DPool(object):
 
     @property
     def num_running_tasks(self):
-        return self.dp_state.num_running_tasks()
+        return len(self.running_procs)
 
     @property
     def num_unhandled_tasks(self):
@@ -164,6 +201,7 @@ class DPool(object):
         while self.num_finished_tasks < self.num_total_tasks:
             self.cls()
             self.controller.update()
+            self.update_running_task()
             if self.controller.if_fix == 0:
                 self._dynamic_pool_adjust_process()
             elif self.controller.if_fix == 1:
