@@ -1,6 +1,6 @@
 from multiprocessing import Process
 
-class DPoolProcess(Process):
+class Worker(Process):
     def __init__(self, dp_state):
         super().__init__()
         self.dp_state = dp_state
@@ -15,7 +15,7 @@ class DPoolProcess(Process):
             print('    Task started: %s on PID %d'%(str(task), self.pid))
             task.run()
             print('    Task end: %s on PID %d'%(str(task), self.pid))
-            state.add_finished_task(task)
+            state.increase_finished_tasks_counter()
             task = state.get_task()
         print('    Process %d is done.'%self.pid)
         state.add_running_task(self.pid, 'Done')
