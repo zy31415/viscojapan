@@ -8,7 +8,6 @@ class Feeder(Process):
 
     def run(self):
         for task in self.tasks:
-            print('    Add %s '%str(task))
             self.dp_state.q_waiting.put(task)
         
         
