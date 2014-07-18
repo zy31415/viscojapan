@@ -7,7 +7,7 @@ import psutil as ps
 
 from .controller import Controller
 from .dpool_state import DPoolState
-from .worker import Worker
+from .dpool_process import DPoolProcess
 from .task import Task
 from .feeder import Feeder
 
@@ -59,13 +59,13 @@ class DPool(object):
         self.dp_state = DPoolState()
         self.controller = Controller(controller_file)
         self._finished_tasks = []
-        self.running_workers = []
+        self.running_procs = []
     
     def _add_a_process(self):
-        p = Worker(dp_state=self.dp_state)
+        p = DPoolProcess(dp_state=self.dp_state)
         p.start()
         print('    PID %d is started.'%p.pid)
-        self.running_workers.append(p)
+        self.running_procs.append(p)
 
     def _add_procs(self, n):
         n = int(n)
@@ -80,19 +80,19 @@ class DPool(object):
         pid_tasks = self.dp_state.get_all_running_tasks()
         pids_to_remove = []
         for pid, task in pid_tasks:
-            p = find_process_by_pid(self.running_workers, pid)
+            p = find_process_by_pid(self.running_procs, pid)
             if (task == 'Done'):
                 pids_to_remove.append(pid)
             p.task = task
 
         remove_process_by_pids(
-            self.running_workers, pids_to_remove)
+            self.running_procs, pids_to_remove)
 
     def _kill_a_process(self):
-        while not hasattr(self.running_workers[-1], 'task'):
+        while not hasattr(self.running_procs[-1], 'task'):
             print(' Updating running task...')
             self.update_running_task()
-        p = self.running_workers.pop()
+        p = self.running_procs.pop()
         print("    Termination: PID: %d, Task: %s"%\
               (p.pid, str(p.task)))
         kill_child_processes(p.pid)
@@ -117,7 +117,7 @@ class DPool(object):
                          self.controller.num_processes)
 
     def _join_all_procs(self):
-        for p in self.running_workers:
+        for p in self.running_procs:
             p.join()
             
     def cls(self):
@@ -185,11 +185,11 @@ class DPool(object):
 
     @property
     def num_finished_tasks(self):
-        return self.dp_state.num_finished_task()
+        return len(self.finished_tasks)
 
     @property
     def num_running_tasks(self):
-        return len(self.running_workers)
+        return len(self.running_procs)
 
     @property
     def num_unhandled_tasks(self):

@@ -1,4 +1,4 @@
-from multiprocessing import Queue, Value
+from multiprocessing import Queue, Lock, Manager
 from queue import Empty
 
 class DPoolState(object):
@@ -8,8 +8,7 @@ class DPoolState(object):
         self.q_waiting = Queue(self.SIZE_q_waiting)
         self.q_running = Queue()
         self.q_aborted = Queue()
-        
-        self.finished_tasks_counter = Value('L')
+        self.q_finished = Queue()
         
     def get_task(self):
         try:
@@ -18,6 +17,10 @@ class DPoolState(object):
         except Empty:
             task = self.q_waiting.get()
         return task
+##            except Empty:
+##                print('    No task availabel in waiting list.')
+##                task = None
+
 
     def add_running_task(self, pid, task):
         self.q_running.put((pid, task))
@@ -27,12 +30,8 @@ class DPoolState(object):
         self.q_aborted.put(task)
             
     # about q_finished
-    def increase_finished_tasks_counter(self):
-        with self.finished_tasks_counter.get_lock():
-            self.finished_tasks_counter.value += 1
-
-    def num_finished_task(self):
-        return self.finished_tasks_counter.value
+    def add_finished_task(self, task):
+        self.q_finished.put(task)
 
     def num_waiting_tasks(self):
         n2 = self.q_waiting.qsize()        
@@ -55,6 +54,15 @@ class DPoolState(object):
             except Empty:
                 break
         return pid_task
+
+    def get_all_finished_tasks(self):
+        tasks = []
+        while True:
+            try:
+                tasks.append(self.q_finished.get(block=False))
+            except Empty:
+                break
+        return tasks
 
     def __str__(self):
         ''' Output to sumarize pool state.
