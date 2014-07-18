@@ -17,10 +17,6 @@ class DPoolState(object):
         except Empty:
             task = self.q_waiting.get()
         return task
-##            except Empty:
-##                print('    No task availabel in waiting list.')
-##                task = None
-
 
     def add_running_task(self, pid, task):
         self.q_running.put((pid, task))
