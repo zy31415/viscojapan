@@ -9,6 +9,7 @@ from .controller import Controller
 from .dpool_state import DPoolState
 from .dpool_process import DPoolProcess
 from .task import Task
+from .feeder import Feeder
 
 def mean(arr):
     return sum(arr)/len(arr)
@@ -199,7 +200,9 @@ class DPool(object):
         return self.num_total_tasks - self.num_finished_tasks
             
     def run(self):
-        self.dp_state.add_tasks(self.tasks)
+        feeder = Feeder(self.tasks, self.dp_state)
+        feeder.start()
+        
         while self.num_finished_tasks < self.num_total_tasks:
             self.cls()
             self.controller.update()
@@ -208,8 +211,8 @@ class DPool(object):
                 self._dynamic_pool_adjust_process()
             elif self.controller.if_fix == 1:
                 self._static_pool_adjust_process()
-            self.dp_state.add_tasks(self.tasks)
 
+        feeder.join()
         self._join_all_procs()
 
         print('Done.')

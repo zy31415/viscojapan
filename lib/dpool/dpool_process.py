@@ -5,10 +5,7 @@ class DPoolProcess(Process):
         super().__init__()
         self.dp_state = dp_state
 
-##    def start(self):
-##        super().start()
-##        self.dp_state.register_running_tasks(self.pid)
-    
+   
     def run(self):
         state = self.dp_state
         task = state.get_task()
@@ -22,9 +19,3 @@ class DPoolProcess(Process):
             task = state.get_task()
         print('    Process %d is done.'%self.pid)
         state.add_running_task(self.pid, 'Done')
-
-##    def terminate(self,*args, **kwargs):
-##        print("    PID:%d terminated! Aborted tasks: %s"%\
-##              (self.pid, str(self.task)))
-##        self.dp_state.add_aborted_task(self.task)
-##        super().terminate(*args, **kwargs)
