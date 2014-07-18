@@ -36,9 +36,11 @@ def kill_child_processes(parent_pid, sig=signal.SIGTERM):
         ps_output = ps_command.stdout.read().decode()
         retcode = ps_command.wait()
         assert retcode == 0, "ps command returned %d" % retcode
-        print(ps_output)
         for pid_str in ps_output.split():
+            try:
                 os.kill(int(pid_str), sig)
+            except ProcessLookupError as err:
+                print('    ',str(err))                
 
 
 def remove_process_by_pids(processes, pids):
