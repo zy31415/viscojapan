@@ -89,14 +89,15 @@ class DPool(object):
             self.running_procs, pids_to_remove)
 
     def _kill_a_process(self):
-        while not hasattr(self.running_procs[-1], 'task'):
-            print(' Updating running task...')
-            self.update_running_task()
-        p = self.running_procs.pop()
-        print("    Termination: PID: %d, Task: %s"%\
-              (p.pid, str(p.task)))
-        kill_child_processes(p.pid)
-        self.dp_state.add_aborted_task(p.task)
+        if len(self.running_procs) > 0:
+            while not hasattr(self.running_procs[-1], 'task'):
+                print(' Updating running task...')
+                self.update_running_task()
+            p = self.running_procs.pop()
+            print("    Termination: PID: %d, Task: %s"%\
+                  (p.pid, str(p.task)))
+            kill_child_processes(p.pid)
+            self.dp_state.add_aborted_task(p.task)
 
     def _kill_procs(self, n):
         n = int(n)
