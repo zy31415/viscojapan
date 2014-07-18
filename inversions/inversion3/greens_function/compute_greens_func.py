@@ -11,7 +11,7 @@ subflts_files = \
 
 #############################
 
-earth_file_dir = '../earth_model/earth_model_files_He45km/'
+earth_file_dir = '../earth_model/earth_model_files_He45km_lmax810/'
 
 com_He45km = ComputeGreensFunction(
     epochs = epochs,
@@ -25,7 +25,7 @@ com_He45km = ComputeGreensFunction(
 
 ###################################
 
-earth_file_dir = '../earth_model/earth_model_files_He50km/'
+earth_file_dir = '../earth_model/earth_model_files_He50km_lmax810/'
 
 com_He50km = ComputeGreensFunction(
     epochs = epochs,
@@ -39,7 +39,7 @@ com_He50km = ComputeGreensFunction(
 
 ##################################
 
-earth_file_dir = '../earth_model/earth_model_files_He55km/'
+earth_file_dir = '../earth_model/earth_model_files_He55km_lmax810/'
 
 com_He55km = ComputeGreensFunction(
     epochs = epochs,

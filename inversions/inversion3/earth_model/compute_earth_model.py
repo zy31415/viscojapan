@@ -11,6 +11,8 @@ fid = FaultFileIO('../fault_model/fault_He50km.h5')
 fault_bottom_depth = fid.depth_bottom
 fault_top_depth = fid.depth_top
 
+lmax = 900
+
 ######################
 earth_file_dir = 'earth_model_files_He45km/'
 
@@ -28,7 +30,7 @@ cmd1_He45km = stat0A(
 
 cmd2_He45km = ComputeEarthModelVISCO1D(
     earth_file = join(earth_file_dir, 'earth.model_He45km'),
-    l_max = 810,
+    l_max = lmax,
     outputs_dir = earth_file_dir,
     if_skip_on_existing_output = True,
     stdout = FNULL,
@@ -52,7 +54,7 @@ cmd1_He50km = stat0A(
 
 cmd2_He50km = ComputeEarthModelVISCO1D(
     earth_file = join(earth_file_dir, 'earth.model_He50km'),
-    l_max = 810,
+    l_max = lmax,
     outputs_dir = earth_file_dir,
     if_skip_on_existing_output = True,
     stdout = FNULL,
@@ -76,7 +78,7 @@ cmd1_He55km = stat0A(
 
 cmd2_He55km = ComputeEarthModelVISCO1D(
     earth_file = join(earth_file_dir, 'earth.model_He55km'),
-    l_max = 810,
+    l_max = lmax,
     outputs_dir = earth_file_dir,
     if_skip_on_existing_output = True,
     stdout = FNULL,
