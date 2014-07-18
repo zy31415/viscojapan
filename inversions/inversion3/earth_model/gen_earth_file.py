@@ -15,7 +15,7 @@ gen = GenerateEarthModelFile(
     visK = inf,
     visM = visM,    
     )
-gen.save('earth_model_files_He45km/earth.model_45km')
+gen.save('earth_model_files_He45km/earth.model_He45km')
 
 gen = GenerateEarthModelFile(
     raw_file = raw_file_He50km,
@@ -23,7 +23,7 @@ gen = GenerateEarthModelFile(
     visK = inf,
     visM = visM,    
     )
-gen.save('earth_model_files_He50km/earth.model_50km')
+gen.save('earth_model_files_He50km/earth.model_He50km')
 
 gen = GenerateEarthModelFile(
     raw_file = raw_file_He55km,
@@ -31,4 +31,4 @@ gen = GenerateEarthModelFile(
     visK = inf,
     visM = visM,    
     )
-gen.save('earth_model_files_He55km/earth.model_55km')
+gen.save('earth_model_files_He55km/earth.model_He55km')
