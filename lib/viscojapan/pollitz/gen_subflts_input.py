@@ -6,9 +6,11 @@ import h5py
 
 from ..fault_model.fault_file_io import FaultFileIO
 
-def gen_subflts_input_for_pollitz(fault_file, out_dir):
+def gen_subflts_input_for_pollitz(fault_file, out_dir, rake=90.):
     if not exists(out_dir):
         makedirs(out_dir)
+
+    rake = rake
 
     fid = FaultFileIO(fault_file)
     LLons=fid.LLons
@@ -37,8 +39,8 @@ def gen_subflts_input_for_pollitz(fault_file, out_dir):
         with open(join(out_dir, 'flt_%04d'%n),'wt') as fid:
             fid.write('%f %f %f\n'%(li,ui,di))
             fid.write('1\n')
-            fid.write('%f %f %f %f %f %f\n'%\
-                      (lati,loni,sflen,stk,90.,1.))
+            fid.write('%f %f %f %.3f %.3f %f\n'%\
+                      (lati,loni,sflen,stk,rake,1.))
         print(n)
         n+=1
 
