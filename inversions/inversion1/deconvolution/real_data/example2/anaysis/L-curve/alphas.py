@@ -1,1 +1,1 @@
-../../../alphas.py
+../../alphas.py
