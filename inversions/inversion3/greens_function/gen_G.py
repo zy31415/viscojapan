@@ -6,7 +6,6 @@ from viscojapan.pollitz import PollitzOutputsToEpochalData
 from epochs import epochs
 
 ################################
-
 num_subflts = len(glob('outs_He45km/day_0000_flt_????.out'))
 
 gen_G_He45km = PollitzOutputsToEpochalData(
@@ -46,11 +45,14 @@ parser.add_argument('model', type=str, nargs=1,
                     choices = ['He45km','He50km','He55km'],
                     )
 args = parser.parse_args()
+model = args.model[0]
 
-if args.model == 'He45km':
+if model == 'He45km':
     gen_G_He45km()
-elif args.model == 'He50km':
+elif model == 'He50km':
     gen_G_He50km()
-elif args.model == 'He55km':
+elif model == 'He55km':
     gen_G_He55km()
+else:
+    raise ValueError('Wrong options.')
 
