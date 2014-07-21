@@ -1,6 +1,8 @@
 from glob import glob
 import argparse
 
+from numpy import inf
+
 from viscojapan.pollitz import PollitzOutputsToEpochalData
 
 from epochs import epochs
