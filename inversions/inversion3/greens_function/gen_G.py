@@ -1,6 +1,8 @@
 from glob import glob
 import argparse
 
+from numpy import inf
+
 from viscojapan.pollitz import PollitzOutputsToEpochalData
 
 from epochs import epochs
@@ -15,11 +17,13 @@ gen_G_He45km = PollitzOutputsToEpochalData(
     pollitz_outputs_dir = 'outs_He45km/',
     sites_file = 'sites_with_seafloor',
     )
+
 gen_G_He45km.extra_info ={
     'He':45,
     'visM':5.839838E+18,
     'visK':inf,
     }
+
 gen_G_He45km.extra_info_attrs ={
     'He':{'unit':'km'},
     'visM':{'unit':'Pa.s'},
@@ -37,6 +41,18 @@ gen_G_He50km = PollitzOutputsToEpochalData(
     sites_file = 'sites_with_seafloor',
     )
 
+gen_G_He50km.extra_info ={
+    'He':50,
+    'visM':5.839838E+18,
+    'visK':inf,
+    }
+
+gen_G_He50km.extra_info_attrs ={
+    'He':{'unit':'km'},
+    'visM':{'unit':'Pa.s'},
+    'visK':{'unit':'Pa.s'},
+    }
+
 ################################
 num_subflts = len(glob('outs_He55km/day_0000_flt_????.out'))
 
@@ -47,6 +63,18 @@ gen_G_He55km = PollitzOutputsToEpochalData(
     pollitz_outputs_dir = 'outs_He55km/',
     sites_file = 'sites_with_seafloor',
     )
+
+gen_G_He55km.extra_info ={
+    'He':55,
+    'visM':5.839838E+18,
+    'visK':inf,
+    }
+
+gen_G_He55km.extra_info_attrs ={
+    'He':{'unit':'km'},
+    'visM':{'unit':'Pa.s'},
+    'visK':{'unit':'Pa.s'},
+    }
 
 ###################################
 parser = argparse.ArgumentParser(description='Generate G matrix.')
