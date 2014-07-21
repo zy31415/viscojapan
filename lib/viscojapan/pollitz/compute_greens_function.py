@@ -96,3 +96,6 @@ class ComputeGreensFunction(object):
 
         dp.run()
 
+    def __call__(self):
+        self.run()
+
