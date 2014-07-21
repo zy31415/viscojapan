@@ -15,7 +15,7 @@ from epochs import epochs
 mod_str = 'He50km_Vis5.8E18_Rake90'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
-model1 = PollitzOutputsToEpochalData(
+model0 = PollitzOutputsToEpochalData(
     epochs = epochs,
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
@@ -23,14 +23,14 @@ model1 = PollitzOutputsToEpochalData(
     sites_file = 'sites_with_seafloor',
     )
 
-model1.extra_info ={
+model0.extra_info ={
     'He':50,
     'visM':5.8E+18,
     'visK':inf,
     'rake':90
     }
 
-model1.extra_info_attrs ={
+model0.extra_info_attrs ={
     'He':{'unit':'km'},
     'visM':{'unit':'Pa.s'},
     'visK':{'unit':'Pa.s'},
@@ -71,7 +71,7 @@ model1.extra_info_attrs ={
 # (3) rake - 90.
 mod_str = 'He55km_Vis5.8E18_Rake90'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
-model1 = PollitzOutputsToEpochalData(
+model2 = PollitzOutputsToEpochalData(
     epochs = epochs,
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
@@ -79,14 +79,14 @@ model1 = PollitzOutputsToEpochalData(
     sites_file = 'sites_with_seafloor',
     )
 
-model1.extra_info ={
+model2.extra_info ={
     'He':55,
     'visM':5.8E+18,
     'visK':inf,
-    'rake':90
+    'rake':90.
     }
 
-model1.extra_info_attrs ={
+model2.extra_info_attrs ={
     'He':{'unit':'km'},
     'visM':{'unit':'Pa.s'},
     'visK':{'unit':'Pa.s'},
@@ -97,9 +97,9 @@ model1.extra_info_attrs ={
 # (1) viscosity - 5.839838E+18 Pa.s
 # (2) elastic depth - 50km
 # (3) rake - 95.
-mod_str = 'He55km_Vis5.8E18_Rake90'
+mod_str = 'He50km_Vis5.8E18_Rake95'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
-model1 = PollitzOutputsToEpochalData(
+model3 = PollitzOutputsToEpochalData(
     epochs = epochs,
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
@@ -107,14 +107,14 @@ model1 = PollitzOutputsToEpochalData(
     sites_file = 'sites_with_seafloor',
     )
 
-model1.extra_info ={
-    'He':55,
+model3.extra_info ={
+    'He':50,
     'visM':5.8E+18,
     'visK':inf,
-    'rake':90
+    'rake':95.
     }
 
-model1.extra_info_attrs ={
+model3.extra_info_attrs ={
     'He':{'unit':'km'},
     'visM':{'unit':'Pa.s'},
     'visK':{'unit':'Pa.s'},
