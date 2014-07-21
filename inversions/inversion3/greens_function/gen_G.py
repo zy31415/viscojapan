@@ -15,6 +15,16 @@ gen_G_He45km = PollitzOutputsToEpochalData(
     pollitz_outputs_dir = 'outs_He45km/',
     sites_file = 'sites_with_seafloor',
     )
+gen_G_He45km.extra_info ={
+    'He':45,
+    'visM':5.839838E+18,
+    'visK':inf,
+    }
+gen_G_He45km.extra_info_attrs ={
+    'He':{'unit':'km'},
+    'visM':{'unit':'Pa.s'},
+    'visK':{'unit':'Pa.s'},
+    }
 
 ################################
 num_subflts = len(glob('outs_He50km/day_0000_flt_????.out'))
