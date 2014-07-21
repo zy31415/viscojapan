@@ -66,6 +66,7 @@ class ComputeGreensFunction(object):
         cmd()
         
     def _load_tasks(self, epoch):
+        assert len(self.subflts_files)>0, "No faults files found."
         for f in self.subflts_files:
             output_file_name = self._gen_out_file(f,epoch)
             if not exists(output_file_name):
