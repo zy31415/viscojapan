@@ -1,5 +1,3 @@
-from pylab import plt
-
 from viscojapan.fault_model.control_points import control_points2
 from viscojapan.fault_model import SubfaultsMeshesByLength
 

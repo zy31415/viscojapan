@@ -49,6 +49,8 @@ green's function: These properties are highly recommended:
 
     def _check_hdf5_existence(self):
         if self.G_file_overwrite:
+            if exists(self.G_file):
+                print('Output HDF5 %s will be overwritten.'%self.G_file)
             delete_if_exists(self.G_file)
         else:
             assert not exists(self.G_file), \
