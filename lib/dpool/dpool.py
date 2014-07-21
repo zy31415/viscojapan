@@ -204,7 +204,8 @@ class DPool(object):
         feeder = Feeder(self.tasks, self.dp_state)
         feeder.start()
         
-        while self.num_finished_tasks < self.num_total_tasks:
+        #while self.num_finished_tasks < self.num_total_tasks:
+        while True
             self.cls()
             self.controller.update()
             self.update_running_task()
