@@ -23,3 +23,10 @@ slab1.0/
 fault_model1/workspace/
 
 .idea/
+
+*.pyc
+*.h5
+*.odg#
+
+# ~ is for temporary files and directories
+~*
