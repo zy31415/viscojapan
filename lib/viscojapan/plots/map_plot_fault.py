@@ -3,14 +3,13 @@ from pylab import plt
 
 from .map_plot import MapPlot
 from ..fault_model import FaultFileIO
-from ..utils import _assert_file_exists, kw_init
+from ..utils import _assert_file_exists
 from ..epochal_data import EpochalSlip, EpochalIncrSlip
 
 class MapPlotFault(MapPlot):
-    def __init__(self, fault_file, **kwargs):
-        super().__init__()
+    def __init__(self, fault_file, basemap = None):
+        super().__init__(basemap = basemap)
         self.fault_file = fault_file
-        kw_init(self, kwargs)
 
         self._init_fault_file()
 

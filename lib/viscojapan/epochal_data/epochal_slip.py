@@ -4,6 +4,7 @@ from numpy import asarray
 
 from .epochal_data import EpochalData
 from ..utils import overrides
+from .stacking import vstack_column_vec
 
 # function definition
 
@@ -65,5 +66,9 @@ class EpochalIncrSlip(EpochalSlip):
 
     @overrides(EpochalSlip)
     def get_epoch_value(self, epoch):
-        return self._get_epoch_value(epoch)        
+        return self._get_epoch_value(epoch)
+
+    def vstack(self):
+        epochs = self.get_epochs()
+        return vstack_column_vec(self, epochs)
 

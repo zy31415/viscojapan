@@ -24,7 +24,9 @@ class Regularization(object):
         return self().dot(m)
 
     def solution_norm(self, m):
-        tp = self().dot(m)
+        L = self()
+        npar = L.shape[1]
+        tp = L.dot(m[0:npar])
         res = dot(tp.T,tp)[0,0]
         return res
 

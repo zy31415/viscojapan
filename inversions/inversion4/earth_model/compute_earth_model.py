@@ -11,7 +11,7 @@ fid = FaultFileIO('../fault_model/fault_He50km.h5')
 fault_bottom_depth = fid.depth_bottom
 fault_top_depth = fid.depth_top
 
-lmax = 900
+lmax = 810
 
 ######################
 earth_file_dir = 'He50km_Vis1.0E19/'

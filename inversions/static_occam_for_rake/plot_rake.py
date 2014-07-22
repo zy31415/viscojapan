@@ -1,16 +1,17 @@
 import h5py
 
-from viscojapan.plots import plot_L, plt
+from pylab import plt
 
 nreses =[]
-nroughs = []
+rakes = []
 
 for ano in range(30):
     with h5py.File('outs/ano_%02d.h5'%ano,'r') as fid:
         nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
-        nrough = fid['regularization/roughening/norm'][...]
-        nroughs.append(nrough)
+
+        m = fid['m'][...]
+        rakes.append(m[-1])
     
-plot_L(nreses, nroughs)
+plt.semilogx(nreses, rakes,'o')
 plt.show()

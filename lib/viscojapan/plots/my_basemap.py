@@ -22,6 +22,7 @@ class MyBasemap(Basemap):
                 self.region_box=(136.2,35.8,142.6,38.2)
             elif self.region_code=='H':
                 self.region_box=(131,33,137,36.5)
+            elif self.region_code=='E':
                 self.region_box=(140,41.8,146.2,45.8)
             elif self.region_code=='near':
                 self.region_box=(136,34,146,42)

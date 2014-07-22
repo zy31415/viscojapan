@@ -52,6 +52,7 @@ class Inversion(object):
 
     def invert(self):
         print('Inverting ...')
+        
         self.least_square = LeastSquare(
             G = self.G,
             d = self.d,
@@ -65,6 +66,7 @@ class Inversion(object):
     def predict(self):
         print('Predicting ...')
         self.least_square.predict()
+        self.d_pred = self.least_square.d_pred
 
     def run(self):
         self.invert()
@@ -78,7 +80,7 @@ class Inversion(object):
         with h5py.File(fn) as fid:
             fid['m'] = ls.m
             fid['Bm'] = ls.Bm
-            fid['d_pred'] = ls.d_pred
+            fid['d_pred'] = self.d_pred
             fid['residual_norm'] = ls.get_residual_norm()
             fid['residual_norm_weighted'] = ls.get_residual_norm_weighted()
 

@@ -26,8 +26,9 @@ def get_pos(sites):
     return lons,lats
 
 class MapPlotDisplacement(MapPlot):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,
+                 basemap=None):
+        super().__init__(basemap=basemap)
     
     def plot_disp(self,d,sites,
                   X=0.1,Y=0.1,U=1.,label='1m',
@@ -50,11 +51,11 @@ class MapPlotDisplacement(MapPlot):
         sites = disp_obj.get_info('sites')
         self.plot_disp(disp, sites)
 
-    def plot_G_file(self, f_G, epoch, mth):
+    def plot_G_file(self, f_G, epoch, mth, **kwargs):
         g = EpochalG(f_G)
         G = g[epoch]
         sites = g.get_info('sites')
-        self.plot_disp(G[:,mth],sites)
+        self.plot_disp(G[:,mth],sites, **kwargs)
         
         
         
