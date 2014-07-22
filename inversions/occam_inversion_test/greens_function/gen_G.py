@@ -5,8 +5,16 @@ from numpy import inf
 
 from viscojapan.pollitz import PollitzOutputsToEpochalData
 
+parser = argparse.ArgumentParser(
+    description="Gen G 000according to rake.")
+parser.add_argument('--rake', type=int, nargs=1,
+                   help='Rake angle in integer')
 
-mod_str = 'Rake80'
+args = parser.parse_args()
+
+rake =args.rake[0]
+
+mod_str = 'Rake%02d'%rake
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
 model0 = PollitzOutputsToEpochalData(
@@ -21,7 +29,7 @@ model0.extra_info ={
     'He':50,
     'visM':5.8E+18,
     'visK':inf,
-    'rake':80
+    'rake':rake
     }
 
 model0.extra_info_attrs ={
