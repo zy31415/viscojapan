@@ -11,9 +11,10 @@ def eye_padding(mat, n):
     pad = sparse.eye(n)
     return sparse.block_diag((mat, pad))
 
-def zeros_padding(mat, n):
-    pad = sparse.csr_matrix((n,n))
-    return sparse.block_diag((mat, pad))
+def col_zeros_padding(mat, n):
+    sh = mat.shape[0]
+    pad = sparse.csr_matrix((sh,n))
+    return sparse.hstack((mat, pad))
     
 
 class OccamDeconvolution(Inversion):
@@ -88,7 +89,7 @@ class OccamDeconvolution(Inversion):
     def set_data_L(self):
         print('Set data L ...')
         L = self.regularization()
-        self.L = zeros_padding(L, self.num_nlin_pars)
+        self.L = col_zeros_padding(L, self.num_nlin_pars)
         
         
     def set_data_G(self):
@@ -141,3 +142,4 @@ class OccamDeconvolution(Inversion):
         d = d.reshape([-1,1])
 
         self.d_pred = d
+        self.least_square.d_pred = self.d_pred
