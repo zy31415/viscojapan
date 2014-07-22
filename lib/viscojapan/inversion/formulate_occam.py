@@ -62,13 +62,14 @@ class Jacobian(object):
         self.epochs = []
         
     def __call__(self):
-        jac_nl = self.jacobian_vecs[0](self.epochs)
-        for J in self.jacobian_vecs[1:]:
-            jac_nl = hstack((jac_nl, J(self.epochs)))
-            
-        G_stacked = self.G.conv_stack(self.epochs)
-        
-        jacobian = hstack((G_stacked, jac_nl))
+        jacobian = []
+        jacobian.append(
+            self.G.conv_stack(self.epochs)
+            )
+        for J in self.jacobian_vecs:
+            jacobian.append(J(self.epochs))
+
+        jacobian = hstack(jacobian)
         
         return jacobian
 
