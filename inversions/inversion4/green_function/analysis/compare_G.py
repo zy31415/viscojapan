@@ -11,23 +11,23 @@ bm = MyBasemap(
     region_code = 'E',
     )
 
-G45km = EpochalG('../G_He45km.h5')
-G55km = EpochalG('../G_He55km.h5')
+G_rake95 = EpochalG('../G_He50km_Vis5.8E18_Rake95.h5')
+G_rake90 = EpochalG('../G_He50km_Vis5.8E18_Rake90.h5')
 
-d0_45km = G45km.get_epoch_value(0)[:,fno]
-d_45km = G45km.get_epoch_value(epoch)[:,fno]
+d0_rake95 = G_rake95.get_epoch_value(0)[:,fno]
+d_rake95 = G_rake95.get_epoch_value(epoch)[:,fno]
 
-d0_55km = G55km.get_epoch_value(0)[:,fno]
-d_55km = G55km.get_epoch_value(epoch)[:,fno]
+d0_rake90 = G_rake90.get_epoch_value(0)[:,fno]
+d_rake90 = G_rake90.get_epoch_value(epoch)[:,fno]
 
 mplt = MapPlotDisplacement(basemap = bm)
 
-mplt.plot_disp(d_45km - d0_45km, G45km.sites,
+mplt.plot_disp(d_rake90 - d0_rake90, G_rake95.sites,
                U = U, label = label,
                X=0.1, Y=0.8,
                color='black', scale=scale)
 
-mplt.plot_disp(d_55km - d0_55km, G55km.sites,
+mplt.plot_disp(d_rake95 - d0_rake95, G_rake90.sites,
                U = U, label = label,
                X=0.1, Y=0.7,
                color='red', scale=scale)

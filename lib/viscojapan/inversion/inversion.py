@@ -52,6 +52,7 @@ class Inversion(object):
 
     def invert(self):
         print('Inverting ...')
+        
         self.least_square = LeastSquare(
             G = self.G,
             d = self.d,

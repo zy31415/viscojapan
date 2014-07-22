@@ -1,4 +1,5 @@
 import h5py 
+from .stacking import conv_stack
 
 class DiffED(object):
     ''' This class computes the diffretial of two EpochData objects
@@ -36,4 +37,7 @@ wrt - with respect to, variable that the change WRT.
         dG = (G2 - G1)/(self.var2 - self.var1)
 
         return dG
+
+    def conv_stack(self, epochs):
+        return conv_stack(self, epochs)
         

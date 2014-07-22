@@ -8,7 +8,7 @@ from alphas import alphas
 from betas import betas
 
 
-files = sorted(glob.glob('../../outs/ano_??_bno_?.h5'))
+files = sorted(glob.glob('../../outs/ano_??_bno_??.h5'))
 
 nres = []
 nrough = []

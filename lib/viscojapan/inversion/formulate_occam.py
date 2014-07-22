@@ -3,9 +3,8 @@ from os.path import exists
 
 from numpy import dot, hstack
 
-from ..epochal_data.epochal_slip import slip_to_incr_slip, EpochalIncrSlip
+from ..epochal_data.epochal_slip import EpochalIncrSlip
 from ..epochal_data.diff_ed import DiffED
-from ..epochal_data.stacking import vstack_column_vec, conv_stack
 
 def _check_shape_for_matrix_product(A,B):
     sh1 = A.shape
@@ -22,15 +21,18 @@ by a slip0del parameter.
 The one-dimension equivalence is derivative of a curve at certain point.
 
 '''
-    def __init__(self, dG, f_slip0):
+    def __init__(self,
+                 dG,
+                 f_incr_slip0):
         '''
 Arguments:
     dG - DiffED object.
-    slip0 - slip on the fault as initial value.
+    slip0 - incremental slip on the fault as initial value.
 '''
         self.dG = dG
-        self.f_slip0 = f_slip0
-        assert exists(self.f_slip0)
+        self.f_incr_slip0 = f_incr_slip0
+        
+        assert exists(self.f_incr_slip0)
 
     def __call__(self, epochs):
         ''' This function returns Jacobian vector with respect to
@@ -38,14 +40,11 @@ nonlinear parameter wrt at epochs.
 Return:
     Jacobian vector    
 '''
-        dG_stacked = conv_stack(self.dG, epochs)
+        dG_stacked = self.dG.conv_stack(epochs)
 
-        fid, f_incr_slip = mkstemp(dir='/home/zy/tmp/')
-        slip_to_incr_slip(self.f_slip0,f_incr_slip)
+        incr_slip = EpochalIncrSlip(self.f_incr_slip0)
 
-        incr_slip = EpochalIncrSlip(f_incr_slip)
-
-        m_stacked = vstack_column_vec(incr_slip, epochs)
+        m_stacked = incr_slip.vstack()
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
         
@@ -67,7 +66,7 @@ class Jacobian(object):
         for J in self.jacobian_vecs[1:]:
             jac_nl = hstack((jac_nl, J(self.epochs)))
             
-        G_stacked = conv_stack(self.G, self.epochs)
+        G_stacked = self.G.conv_stack(self.epochs)
         
         jacobian = hstack((G_stacked, jac_nl))
         
@@ -87,7 +86,7 @@ class D_(object):
         self.d = None
 
     def __call__(self):
-        d_ = vstack_column_vec(self.d, self.epochs)
+        d_ = self.d.vstack(self.epochs)
         for J, val in zip(self.jacobian_vecs, self.nlin_par_values):
             d_ += (J(self.epochs)*val)
         return d_

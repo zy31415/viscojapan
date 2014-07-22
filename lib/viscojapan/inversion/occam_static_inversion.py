@@ -1,42 +1,37 @@
-import pickle
-from os.path import exists
-
-from numpy import log10, asarray, dot, loadtxt
-import h5py
+from numpy import asarray, dot
 
 from ..epochal_data.epochal_sites_data import EpochalG, EpochalDisplacement
 from ..epochal_data.diff_ed import DiffED
 from .formulate_occam import JacobianVec, Jacobian, D_
+from .inversion import Inversion
 
-from ..inv_res_writer import WriterOccamInversion
-from ..deconvolution_inversion import Deconvolution
-
-class OccamInversion():
+class OccamStaticInversion(Inversion):
     ''' Connet relative objects to work together to do inversion.
 '''
     def __init__(self,
-                 file_G1,
-                 file_G2,
+                 file_G0,
+                 files_Gs,
+                 nlin_par_initial_values,
+                 nlin_par_names,                 
                  file_d,
                  file_sd,
                  file_slip0,
-                 file_sites_filter,
-                 epochs,
-                 nlin_par_initial_values,
-                 nlin_par_names,
+                 filter_sites_file,                 
                  regularization,
                  basis,
                  ):
         
-        self.file_G1 = file_G1
-        self.file_G2 = file_G2
-        self.file_d = file_d
-        self.file_slip0 = file_slip0
-        self.file_sites_filter = file_sites_filter
-        self.epochs = epochs
-
+        self.file_G0 = file_G0
+        self.files_Gs = files_Gs
         self.nlin_par_initial_values = nlin_par_initial_values
         self.nlin_par_names = nlin_par_names
+        
+        self.file_d = file_d
+        self.file_sd = file_sd
+        
+        self.file_slip0 = file_slip0
+        self.filter_sites_file = filter_sites_file
+        self.epochs = epochs
 
         super().__init__(
             regularization,
@@ -57,25 +52,29 @@ class OccamInversion():
         self._init_jacobian_vecs()
 
     def _init_jacobian_vecs(self):
-        self.G1 = EpochalG(self.file_G1, self.sites_filter_file)
-        G2 = EpochalG(self.file_G2, self.sites_filter_file)
-        dG = DiffED(self.G1, G2, 'log10_visM')
+        self.G0 = EpochalG(self.file_G0, self.filter_sites_file)
 
-        jac_1 = JacobianVec(dG, self.file_slip0)
+        Gs = []
+        for file_G in self.files_Gs:
+            Gs.append(EpochalG(file_G, self.filter_sites_file))
 
-        jacobian_vecs = [jac_1]
+        dGs = []
+        for G, par_name in zip(Gs, self.nlin_par_names):
+            dGs.append(DiffED(self.G0, G, par_name))
 
+        jacobian_vecs = []
+        for dG in dGs:
+            jacobian_vecs.append(JacobianVec(dG, self.file_slip0))
         self.jacobian_vecs = jacobian_vecs
-        
-    def _get_jacobian(self):
+            
+    def _init_jacobian(self):
         jacobian = Jacobian()
-        jacobian.G = self.G1
+        jacobian.G = self.G0
         jacobian.jacobian_vecs = self.jacobian_vecs
         jacobian.epochs = self.epochs
-        jacobian_mat = jacobian()
-        return jacobian_mat
+        self.jacobian = jacobian
         
-    def _load_d_(self):
+    def _init_d_(self):
         d_ = D_()
         d_.jacobian_vecs = self.jacobian_vecs
         d_.nlin_par_values = self.nlin_par_initial_values
@@ -87,7 +86,7 @@ class OccamInversion():
         return d__vec
 
     def set_G(self):
-        self.G = self._get_jacobian()
+        self.G = self._init_jacobian()
 
     def set_d(self):
         self.d = self._load_d_()
