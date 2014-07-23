@@ -5,7 +5,7 @@ from viscojapan.plots import plot_L, plt
 nreses =[]
 nroughs = []
 
-for ano in range(30):
+for ano in range(20):
     with h5py.File('outs/ano_%02d.h5'%ano,'r') as fid:
         nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
