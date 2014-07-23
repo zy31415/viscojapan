@@ -24,7 +24,7 @@ inv = OccamDeconvolution(
                 '../../green_function/G_He55km_Vis5.8E18_Rake90.h5',
                 '../../green_function/G_He50km_Vis5.8E18_Rake95.h5'
                 ],
-    nlin_par_names = ['visM','He','rake'],
+    nlin_par_names = ['log10(visM)','He','rake'],
 
     file_d = '../cumu_post_with_seafloor.h5',
     file_sd = '../sites_sd/sites_sd.h5',

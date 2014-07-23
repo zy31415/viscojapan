@@ -1,7 +1,7 @@
 from glob import glob
 import argparse
 
-from numpy import inf
+from numpy import inf, log10
 
 from viscojapan.pollitz import PollitzOutputsToEpochalData
 
@@ -26,6 +26,7 @@ model0 = PollitzOutputsToEpochalData(
 model0.extra_info ={
     'He':50,
     'visM':5.8E+18,
+    'log10(visM)':log10(5.8E+18),
     'visK':inf,
     'rake':90
     }
@@ -55,6 +56,7 @@ model1 = PollitzOutputsToEpochalData(
 model1.extra_info ={
     'He':50,
     'visM':1.0E+19,
+    'log10(visM)':log10(1.0E+19),
     'visK':inf,
     'rake':90
     }
@@ -82,6 +84,7 @@ model2 = PollitzOutputsToEpochalData(
 model2.extra_info ={
     'He':55,
     'visM':5.8E+18,
+    'log10(visM)':log10(5.8E+18),
     'visK':inf,
     'rake':90.
     }
@@ -110,6 +113,7 @@ model3 = PollitzOutputsToEpochalData(
 model3.extra_info ={
     'He':50,
     'visM':5.8E+18,
+    'log10(visM)':log10(5.8E+18),
     'visK':inf,
     'rake':95.
     }
