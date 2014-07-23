@@ -1,13 +1,12 @@
-from numpy import asarray, dot
+from numpy import asarray, dot, zeros, vstack
 import scipy.sparse as sparse
-from numpy.testing import assert_array_almost_equal
-
+import h5py
 
 from ..epochal_data import \
-     EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
+     EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED, EpochalIncrSlip
 from .formulate_occam import JacobianVec, Jacobian, D_
 from .inversion import Inversion
-from ..utils import _assert_column_vector
+from ..utils import _assert_column_vector, delete_if_exists
 
 def eye_padding(mat, n):
     pad = sparse.eye(n)
@@ -19,7 +18,7 @@ def col_zeros_padding(mat, n):
     return sparse.hstack((mat, pad))
     
 
-class OccamDeconvolution(Inversion):
+class OccamDeconvolution2(Inversion):
     ''' Connet relative objects to work together to do inversion.
 '''
     def __init__(self,
@@ -109,14 +108,16 @@ class OccamDeconvolution(Inversion):
 
     def set_data_d(self):
         super().set_data_d()
-        d_ = D_()
-        d_.jacobian_vecs = self.jacobian_vecs
-        d_.nlin_par_values = self.nlin_par_initial_values
-        d_.epochs = self.epochs
+        g_obj = EpochalG(self.file_G0, self.filter_sites_file)
+        G  = g_obj.conv_stack(self.epochs)
 
-        obs = EpochalDisplacement(self.file_d, self.filter_sites_file)
-        d_.d = obs        
-        self.d = d_()
+        incr_slip_obj = EpochalIncrSlip(self.file_incr_slip0)
+        incr_slip = incr_slip_obj.vstack()
+
+        disp_obj = EpochalDisplacement(self.file_d, self.filter_sites_file)
+        disp = disp_obj.vstack(self.epochs)
+        
+        self.d = disp - dot(G, incr_slip)
 
     def set_data_sd(self):
         super().set_data_sd()
@@ -124,31 +125,32 @@ class OccamDeconvolution(Inversion):
         sig_stacked = sig.vstack(self.epochs)
         self.sd = sig_stacked
         _assert_column_vector(self.sd)
-        
-        
-    def predict(self):
+
+    def set_data_Bm0(self):
+        print("Set data Bm0.")
+        incr_slip_obj = EpochalIncrSlip(self.file_incr_slip0)
+        incr_slip = incr_slip_obj.vstack()
+        pad = zeros([self.num_nlin_pars,1])
+        Bm0 = vstack([incr_slip, pad])
+        self.Bm0 = Bm0
+        print(self.Bm0.shape)
+
+    def save(self, fn, overwrite = False):
+        print('Saving ...')
+        if overwrite:
+            delete_if_exists(fn)
         ls = self.least_square
-        Bm = ls.Bm
-        Jac = ls.G
-        num_nlin_pars = self.num_nlin_pars
+        with h5py.File(fn) as fid:
+            fid['m'] = ls.m
+            fid['Bm'] = ls.Bm
+            fid['d_pred'] = self.d_pred
+            fid['residual_norm'] = ls.get_residual_norm()
+            fid['residual_norm_weighted'] = ls.get_residual_norm_weighted()
 
-        npars0 = asarray(self.nlin_par_initial_values).reshape([-1,1])
-
-        G = Jac[:,:-num_nlin_pars]
-
-        GG = self.G0.conv_stack(self.epochs)
-        
-        Jac_ = Jac[:,-num_nlin_pars:]
-        
-        slip = Bm[:-num_nlin_pars]
-        npars = Bm[-num_nlin_pars:]
-
-        d = dot(G,slip)
-        delta_nlin_pars = npars - npars0
-        print('delta_par', delta_nlin_pars)
-        delta_d = dot(Jac_, delta_nlin_pars)
-
-        d = d + delta_d
-
-        self.d_pred = d
-        self.least_square.d_pred = self.d_pred
+            for par, name in zip(self.regularization.args,
+                                 self.regularization.arg_names):
+                fid['regularization/%s/coef'%name] = par
+                
+            for nsol, name in zip(self.regularization.components_solution_norms(ls.Bm),
+                                  self.regularization.arg_names):
+                fid['regularization/%s/norm'%name] = nsol
