@@ -17,7 +17,7 @@ model1 = ComputeGreensFunction(
     file_sites = 'sites_with_seafloor',
     earth_file = join(earth_file_dir, 'earth.model_He50km_Vis5.8E18'),
     earth_file_dir = earth_file_dir,
-    outputs_dir = 'outs_Rake90',
+    outputs_dir = 'outs_Rake80',
     subflts_files = subflts_files_rake80,
     controller_file = 'pool.config',
     )
