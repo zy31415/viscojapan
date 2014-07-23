@@ -35,6 +35,10 @@ class Inversion(object):
         print('Set data L ...')
         self.L = self.regularization()
 
+    def set_data_Bm0(self):
+        print("Set data Bm0 ...")
+        self.Bm0 = None
+
     def set_data_all(self):
         self.set_data_sd()
         self.set_data_W()
@@ -42,6 +46,7 @@ class Inversion(object):
         self.set_data_d()
         self.set_data_B()        
         self.set_data_L()
+        self.set_data_Bm0()
 
     def set_data_except_L(self):
         self.set_data_sd()
@@ -49,8 +54,9 @@ class Inversion(object):
         self.set_data_G()
         self.set_data_d()
         self.set_data_B()
+        self.set_data_Bm0()
 
-    def invert(self):
+    def invert(self, nonnegative=True):
         print('Inverting ...')
         
         self.least_square = LeastSquare(
@@ -59,9 +65,10 @@ class Inversion(object):
             L = self.L,
             W = self.W,
             B = self.B,
+            Bm0 = self.Bm0
             )
 
-        self.least_square.invert()
+        self.least_square.invert(nonnegative=nonnegative)
 
     def predict(self):
         print('Predicting ...')

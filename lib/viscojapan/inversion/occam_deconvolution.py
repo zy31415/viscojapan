@@ -1,5 +1,7 @@
 from numpy import asarray, dot
 import scipy.sparse as sparse
+from numpy.testing import assert_array_almost_equal
+
 
 from ..epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
@@ -23,7 +25,6 @@ class OccamDeconvolution(Inversion):
     def __init__(self,
                  file_G0,
                  files_Gs,
-                 nlin_par_initial_values,
                  nlin_par_names,                 
                  file_d,
                  file_sd,
@@ -36,7 +37,7 @@ class OccamDeconvolution(Inversion):
         
         self.file_G0 = file_G0
         self.files_Gs = files_Gs
-        self.nlin_par_initial_values = nlin_par_initial_values
+        
         self.nlin_par_names = nlin_par_names
         
         self.file_d = file_d
@@ -49,19 +50,23 @@ class OccamDeconvolution(Inversion):
         super().__init__(
             regularization,
             basis,)
-
+        
         self._init()
         self._init_jacobian_vecs()
+
+    def _load_nlin_initial_values(self):
+        self.nlin_par_initial_values = []
+        g = EpochalG(self.file_G0)
+        for name in self.nlin_par_names:
+            self.nlin_par_initial_values.append(float(g[name]))
         
     def iterate_nlin_par_name_val(self):
         for name, val in zip(self.nlin_par_names, self.nlin_par_initial_values):
             yield name, val        
 
     def _init(self):
-        assert len(self.nlin_par_initial_values) == len(self.nlin_par_names), \
-               'Non-linear parameters setting inconsistancy.'
+        self._load_nlin_initial_values()
         self.num_nlin_pars = len(self.nlin_par_initial_values)
-
         for name, val in self.iterate_nlin_par_name_val():
             setattr(self, name,val)
 
@@ -74,7 +79,9 @@ class OccamDeconvolution(Inversion):
 
         dGs = []
         for G, par_name in zip(Gs, self.nlin_par_names):
-            dGs.append(DiffED(self.G0, G, par_name))
+            dGs.append(
+                DiffED(ed1 = self.G0, ed2 = G,
+                       wrt = par_name))
 
         jacobian_vecs = []
         for dG in dGs:
@@ -124,22 +131,24 @@ class OccamDeconvolution(Inversion):
         Bm = ls.Bm
         Jac = ls.G
         num_nlin_pars = self.num_nlin_pars
-        assert num_nlin_pars > 0
-        npars0 = asarray(self.nlin_par_initial_values)
+
+        npars0 = asarray(self.nlin_par_initial_values).reshape([-1,1])
 
         G = Jac[:,:-num_nlin_pars]
+
+        GG = self.G0.conv_stack(self.epochs)
+        
         Jac_ = Jac[:,-num_nlin_pars:]
         
         slip = Bm[:-num_nlin_pars]
         npars = Bm[-num_nlin_pars:]
 
         d = dot(G,slip)
+        delta_nlin_pars = npars - npars0
+        print('delta_par', delta_nlin_pars)
+        delta_d = dot(Jac_, delta_nlin_pars)
 
-        delta_d = dot(Jac_, npars - npars0)
-
-        d = d+delta_d
-
-        d = d.reshape([-1,1])
+        d = d + delta_d
 
         self.d_pred = d
         self.least_square.d_pred = self.d_pred

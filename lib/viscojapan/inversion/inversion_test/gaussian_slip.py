@@ -1,12 +1,17 @@
 import sys
 
+from ...fault_model import FaultFileIO
+
 from numpy import arange, meshgrid, exp, log
 
 class GaussianSlip(object):
-    def __init__(self):
-        self.num_subflts_in_dip = 10
-        self.num_subflts_in_strike = 25
-
+    def __init__(self,
+                 num_subflts_in_dip,
+                 num_subflts_in_strike,
+                 ):
+        self.num_subflts_in_dip = num_subflts_in_dip
+        self.num_subflts_in_strike = num_subflts_in_strike
+        
         # spatial shape
         self.mu_dip = 4.
         self.mu_stk = 12.
@@ -40,3 +45,12 @@ class GaussianSlip(object):
 
     def max_slip(self, t):        
         return self.max_slip0 + self.log_mag*log(1.+t/self.tau)
+
+    @staticmethod
+    def create_from_fault_file(fault_file):
+        fio = FaultFileIO(fault_file)
+        return GaussianSlip(
+            num_subflts_in_dip = fio.num_subflt_along_dip,
+            num_subflts_in_strike = fio.num_subflt_along_strike
+            )
+        

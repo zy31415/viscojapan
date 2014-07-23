@@ -1,1 +1,0 @@
-from .inv_res_writer import WriterDeconvolution, WriterOccamInversion
