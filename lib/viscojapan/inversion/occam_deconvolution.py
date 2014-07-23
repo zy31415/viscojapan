@@ -145,7 +145,6 @@ class OccamDeconvolution(Inversion):
 
         d = dot(G,slip)
         delta_nlin_pars = npars - npars0
-        print('delta_par', delta_nlin_pars)
         delta_d = dot(Jac_, delta_nlin_pars)
 
         d = d + delta_d
