@@ -5,17 +5,13 @@ from viscojapan.inversion import OccamDeconvolution
 from viscojapan.inversion.regularization import Roughening, Composite
 from viscojapan.inversion.basis_function import BasisMatrix
 
-from epochs_log import epochs
+from epochs_log import epochs 
 from alphas import alphas
 
 fault_file = '../../fault_model/fault_He50km.h5'
 
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
-
-rough_single = Roughening.create_from_fault_file(fault_file)
-rough = vj.ExpandForAllEpochs(rough_single, len(epochs))
-temp_reg = vj.TemporalRegularization.create_from_fault_file(fault_file, epochs)
 
 inv = OccamDeconvolution(
     file_G0 = '../../green_function/G_He50km_Vis5.8E18_Rake90.h5',
@@ -36,17 +32,16 @@ inv = OccamDeconvolution(
     )
 inv.set_data_except_L()
 
-for nth, alpha in enumerate(alphas):
-    reg = Composite()
-    reg.add_component(component = rough,
-                      arg = alpha,
-                      arg_name = 'roughening')
-    reg.add_component(component = temp_reg,
-                      arg = .07,
-                      arg_name = 'temporal')
-    
-    inv.regularization = reg
-    inv.set_data_L()
-    inv.invert()
-    inv.predict()
-    inv.save('outs/ano_%02d.h5'%nth, overwrite=True)
+for bno, beta in enumerate(betas):
+    for ano, alpha in enumerate(alphas):
+        outfname = 'outs/ano_%02d_bno_%02d.h5'%(ano, bno)
+        if not exists(outfname):
+            inv.regularization = \
+                   reg = vj.create_roughening_temporal_regularization(
+                       fault_file, epochs, alpha, beta)
+            inv.set_data_L()
+            inv.run()
+            inv.save(outfname, overwrite=True)
+        else:
+            print("Skip %s !"%outfname)
+            
