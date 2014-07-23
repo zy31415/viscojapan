@@ -18,7 +18,7 @@ rough = vj.ExpandForAllEpochs(rough_single, len(epochs))
 temp_reg = vj.TemporalRegularization.create_from_fault_file(fault_file, epochs)
 
 inv = OccamDeconvolution(
-    file_G0 = '../../greens_function/G_He50km_Vis5.8E18_Rake90.h5',
+    file_G0 = '../../green_function/G_He50km_Vis5.8E18_Rake90.h5',
     
     files_Gs = ['../../green_function/G_He50km_Vis1.0E19_Rake90.h5',
                 '../../green_function/G_He55km_Vis5.8E18_Rake90.h5',
