@@ -1,9 +1,11 @@
 import h5py
 
-from viscojapan.epochal_data import EpochalData
+import viscojapan as vj
 
-with h5py.File('ano_04.h5','r') as fid:
-    m = fid['m'][...]
+from epochs_log import epochs
 
-slip = EpochalData('slip0.h5')
-slip[0] = m
+with h5py.File('ano_08_bno_07.h5','r') as fid:
+    Bm = fid['Bm'][...]
+
+vj.break_col_vec_into_epoch_file(Bm, epochs, 'incr_slip0.h5')
+
