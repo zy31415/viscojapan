@@ -6,6 +6,7 @@ from viscojapan.inversion.regularization import Roughening, Composite
 from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs_log import epochs
+from alphas import alphas
 
 fault_file = '../../fault_model/fault_He50km.h5'
 
@@ -27,7 +28,7 @@ inv = OccamDeconvolution(
 
     file_d = '../cumu_post_with_seafloor.h5',
     file_sd = '../sites_sd/sites_sd.h5',
-    file_incr_slip0 = 'slip0/slip0.h5',
+    file_incr_slip0 = 'slip0/incr_slip0.h5',
     filter_sites_file = 'sites_with_seafloor',
     epochs = epochs,
     regularization = rough,
@@ -35,13 +36,13 @@ inv = OccamDeconvolution(
     )
 inv.set_data_except_L()
 
-for nth, alpha in enumerate(logspace(-3, .1, 30)):
+for nth, alpha in enumerate(alphas):
     reg = Composite()
     reg.add_component(component = rough,
                       arg = alpha,
                       arg_name = 'roughening')
     reg.add_component(component = temp_reg,
-                      arg = 1.,
+                      arg = .07,
                       arg_name = 'temporal')
     
     inv.regularization = reg
