@@ -40,7 +40,6 @@ L - sparse, regularization matrix
             assert self.W.shape[1] == self.G.shape[0]
 
         self.num_pars = self.B.shape[1]
-        print(self.num_pars)
 
         if self.B is None:
             self.B = sparse.eye(num_pars)
