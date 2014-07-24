@@ -23,7 +23,7 @@ subflts_files_rake90 = \
 mod_str = 'He33km_Vis5.8E18'
 earth_file_dir = join('../earth_model/', mod_str)
 
-model1 = ComputeGreensFunction(
+model0 = ComputeGreensFunction(
     epochs = epochs,
     file_sites = 'sites_with_seafloor',
     earth_file = join(earth_file_dir, 'earth.model_' + mod_str),
@@ -61,7 +61,7 @@ model1 = ComputeGreensFunction(
 mod_str = 'He45km_Vis5.8E18'
 earth_file_dir = join('../earth_model/', mod_str)
 
-model1 = ComputeGreensFunction(
+model2 = ComputeGreensFunction(
     epochs = epochs,
     file_sites = 'sites_with_seafloor',
     earth_file = join(earth_file_dir, 'earth.model_' + mod_str),
@@ -80,7 +80,7 @@ model1 = ComputeGreensFunction(
 mod_str = 'He33km_Vis5.8E18'
 earth_file_dir = join('../earth_model/', mod_str)
 
-model1 = ComputeGreensFunction(
+model3 = ComputeGreensFunction(
     epochs = epochs,
     file_sites = 'sites_with_seafloor',
     earth_file = join(earth_file_dir, 'earth.model_' + mod_str),
