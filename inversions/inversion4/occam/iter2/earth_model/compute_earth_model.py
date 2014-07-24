@@ -55,7 +55,7 @@ cmd1_He33km_Vis1_0E19= stat0A(
 
 cmd2_He33km_Vis1_0E19 = ComputeEarthModelVISCO1D(
     earth_file = join(earth_file_dir, 'earth.model_He33km_Vis1.0E19'),
-    l_max = lmax,
+    l_max = 9,
     outputs_dir = earth_file_dir,
     if_skip_on_existing_output = True,
     stdout = FNULL,
