@@ -16,7 +16,7 @@ lmax = 1220
 ######################
 earth_file_dir = 'He33km_Vis5.8E18/'
 
-cmd1_He50km_Vis1E19 = stat0A(
+cmd1 = stat0A(
     earth_model_stat = join(earth_file_dir, 'earth.model_He33km_Vis5.8E18'),
     stat0_out = join(earth_file_dir, 'stat0.out'),
     l_min = 1,
@@ -28,7 +28,7 @@ cmd1_He50km_Vis1E19 = stat0A(
     stdout = FNULL
     )
 
-cmd2_He50km_Vis1E19 = ComputeEarthModelVISCO1D(
+cmd2 = ComputeEarthModelVISCO1D(
     earth_file = join(earth_file_dir, 'earth.model_He33km_Vis5.8E18'),
     l_max = lmax,
     outputs_dir = earth_file_dir,
@@ -36,3 +36,6 @@ cmd2_He50km_Vis1E19 = ComputeEarthModelVISCO1D(
     stdout = FNULL,
     stderr = FNULL,
     )
+
+cmd1()
+cmd2()
