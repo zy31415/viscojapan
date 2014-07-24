@@ -32,8 +32,8 @@ t and tcuts used here are all in mjd format.
 class ConfigFileReader(object):
     ''' This class provides functions to read model config file.
 '''
-    def __init__(self):
-        self.dir_config_files = '/home/zy/workspace/ts5/config'
+    def __init__(self, dir_config_files):
+        self.dir_config_files = dir_config_files
         self.file_jumps = join(self.dir_config_files, 'jumps')
         self.file_linsec = join(self.dir_config_files, 'linsec')
         self.file_postmodel = join(self.dir_config_files, 'postmodel')
