@@ -1,4 +1,5 @@
 from numpy import logspace
+from os.path import exists
 
 import viscojapan as vj
 from viscojapan.inversion import OccamDeconvolution
@@ -7,6 +8,7 @@ from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs_log import epochs 
 from alphas import alphas
+from betas import betas
 
 fault_file = '../../fault_model/fault_He50km.h5'
 
@@ -27,7 +29,7 @@ inv = OccamDeconvolution(
     file_incr_slip0 = 'slip0/incr_slip0.h5',
     filter_sites_file = 'sites_with_seafloor',
     epochs = epochs,
-    regularization = rough,
+    regularization = None,
     basis = basis,          
     )
 inv.set_data_except_L()
