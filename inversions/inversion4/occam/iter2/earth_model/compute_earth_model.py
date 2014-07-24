@@ -62,6 +62,54 @@ cmd2_He33km_Vis1_0E19 = ComputeEarthModelVISCO1D(
     stderr = FNULL,
     )
 
+######################
+earth_file_dir = 'He33km_Vis1.1E19/'
+
+cmd1_He33km_Vis1_1E19= stat0A(
+    earth_model_stat = join(earth_file_dir, 'earth.model_He33km_Vis1.1E19'),
+    stat0_out = join(earth_file_dir, 'stat0.out'),
+    l_min = 1,
+    l_max = 15000,
+    fault_bottom_depth = fault_bottom_depth,
+    fault_top_depth = fault_top_depth,
+    obs_dep = 0.,
+    if_skip_on_existing_output = True,
+    stdout = FNULL
+    )
+
+cmd2_He33km_Vis1_1E19 = ComputeEarthModelVISCO1D(
+    earth_file = join(earth_file_dir, 'earth.model_He33km_Vis1.1E19'),
+    l_max = lmax,
+    outputs_dir = earth_file_dir,
+    if_skip_on_existing_output = True,
+    stdout = FNULL,
+    stderr = FNULL,
+    )
+
+######################
+earth_file_dir = 'He33km_Vis1.2E19/'
+
+cmd1_He33km_Vis1_2E19= stat0A(
+    earth_model_stat = join(earth_file_dir, 'earth.model_He33km_Vis1.2E19'),
+    stat0_out = join(earth_file_dir, 'stat0.out'),
+    l_min = 1,
+    l_max = 15000,
+    fault_bottom_depth = fault_bottom_depth,
+    fault_top_depth = fault_top_depth,
+    obs_dep = 0.,
+    if_skip_on_existing_output = True,
+    stdout = FNULL
+    )
+
+cmd2_He33km_Vis1_2E19 = ComputeEarthModelVISCO1D(
+    earth_file = join(earth_file_dir, 'earth.model_He33km_Vis1.2E19'),
+    l_max = lmax,
+    outputs_dir = earth_file_dir,
+    if_skip_on_existing_output = True,
+    stdout = FNULL,
+    stderr = FNULL,
+    )
+
 ###################################
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute earth model.')
@@ -78,5 +126,11 @@ if __name__ == '__main__':
     elif model == 'He33km_Vis1.0E19':
         cmd1_He33km_Vis1_0E19()
         cmd2_He33km_Vis1_0E19.run()
+    elif model == 'He33km_Vis1.1E19':
+        cmd1_He33km_Vis1_1E19()
+        cmd2_He33km_Vis1_1E19.run()
+    elif model == 'He33km_Vis1.2E19':
+        cmd1_He33km_Vis1_2E19()
+        cmd2_He33km_Vis1_2E19.run()
     else:
         raise ValueError('Wrong options.')
