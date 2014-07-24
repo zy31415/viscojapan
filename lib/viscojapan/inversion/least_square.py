@@ -13,18 +13,20 @@ class LeastSquare(object):
                  L = None,
                  W = None,
                  B = None,
+                 Bm0 = None
                  ):
         self.G = G
         self.d = d
         self.L = L
         self.W = W
         self.B = B
+        self.Bm0 = Bm0
 
         self._check_input()
             
     def _check_input(self):
         ''' Assert the following operation is possible:
-||W G B m - W d|| - ||L B m||
+||W G B m - W d|| - ||L (B m + m0)||
 W - sparse, weighting matrix
 G - ndarray, green's function
 B - sparse, basis matrix
@@ -50,11 +52,17 @@ L - sparse, regularization matrix
         else:
             assert self.L.shape[1] == num_subflts
 
+        if self.Bm0 is None:
+            self.Bm0 = zeros([self.num_pars, 1])
+        else:
+            assert self.Bm0.shape == (self.num_pars, 1)
+
         # assert type:
         self.W = csr_matrix(self.W)
         self.B = csr_matrix(self.B)
         self.L = csr_matrix(self.L)
         assert isinstance(self.G, ndarray)
+        assert isinstance(self.Bm0, ndarray)
         
     def invert(self, nonnegative=True):
         ''' Solve the problem:
@@ -70,7 +78,7 @@ L - sparse, regularization matrix
         
         P = dot(WGB.T,WGB) + LB.T.dot(LB)
         
-        q = -dot(WGB.T,Wd)
+        q = - dot(WGB.T,Wd) - LB.T.dot(self.L).dot(self.Bm0)        
 
         # non-negative constraint
         if nonnegative:
@@ -109,6 +117,6 @@ return: ||W (G B m - d)||
         '''
 return: ||L B m||
 '''
-        tp = self.L.dot(self.Bm)
+        tp = self.L.dot(self.Bm + self.Bm0)
         return dot(tp.T, tp)[0,0]
     

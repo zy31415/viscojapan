@@ -1,5 +1,7 @@
 from numpy import asarray, dot
 import scipy.sparse as sparse
+from numpy.testing import assert_array_almost_equal
+
 
 from ..epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
@@ -129,17 +131,19 @@ class OccamDeconvolution(Inversion):
         Bm = ls.Bm
         Jac = ls.G
         num_nlin_pars = self.num_nlin_pars
-        assert num_nlin_pars > 0
+
         npars0 = asarray(self.nlin_par_initial_values).reshape([-1,1])
 
         G = Jac[:,:-num_nlin_pars]
+
+        GG = self.G0.conv_stack(self.epochs)
+        
         Jac_ = Jac[:,-num_nlin_pars:]
         
         slip = Bm[:-num_nlin_pars]
         npars = Bm[-num_nlin_pars:]
 
         d = dot(G,slip)
-
         delta_nlin_pars = npars - npars0
         delta_d = dot(Jac_, delta_nlin_pars)
 
