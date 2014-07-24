@@ -17,7 +17,7 @@ rake =args.rake[0]
 epochs = [0]
 
 subflts_files = \
-              sorted(glob.glob('+subflts_rake%02d/flt_????'%rake))
+              sorted(glob.glob('subflts_rake%02d/flt_????'%rake))
 
 earth_file_dir = '../earth_model/He50km_Vis5.8E18/'
 
