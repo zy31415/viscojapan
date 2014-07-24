@@ -46,7 +46,7 @@ Model One - Variation on viscosity:
 Model Two - Variation on elastic depth:
 (1) log10(visM) - 18.8
        visocosity - 5.839838E+18 Pa.s
-(2) elastic depth - 40km
+(2) elastic depth - 45km
 (3) rake - 83.
 
 Model Three - Variation on rake:
