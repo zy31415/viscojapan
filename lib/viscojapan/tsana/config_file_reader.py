@@ -39,6 +39,7 @@ class ConfigFileReader(object):
         self.file_postmodel = join(self.dir_config_files, 'postmodel')
         self.file_postsec = join(self.dir_config_files, 'postsec')
         self.file_sea = join(self.dir_config_files, 'sea')
+        self.file_outlier = join(self.dir_config_files, 'outlier')
 
     def get_jumps(self,site,tcuts=[(-inf,inf)]):
         with open(self.file_jumps) as fid:
@@ -56,7 +57,7 @@ class ConfigFileReader(object):
                 cause=None
 
             if if_in_tcuts(t,tcuts):
-                outs.append((t, cause))
+                outs.append(t)
         return outs
 
     def _get_sea_code(self,site):
@@ -142,6 +143,19 @@ class ConfigFileReader(object):
         assert len(out)==3, "Wrong entry"
         
         return int(out[1]),out[2]
+
+    def get_outlier_sd(self,site):
+        with open(self.file_outlier) as fid:
+            out = re.findall('^\s*%s.*'%site, fid.read())
+        if len(out)==0:
+            print("Not found in outlier file. Use default model.")
+            return 1e99
+        assert len(out)==1, 'More than one entry.'
+        entry = out[0]
+        entry = entry.split()
+        site = entry[0]
+        st = float(entry[1])
+        return st
 
 if __name__=='__main__':
     reader=ConfigFileReader()

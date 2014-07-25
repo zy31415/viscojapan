@@ -37,6 +37,7 @@ class Writer():
                   (obj.get_vel()*365.*1000.))
         fid.write('#     velocity sd (mm/yr): %.3f\n'%\
                   (obj.get_vel_sd()*365.*1000.))
+        print(obj.get_residual_rms())
         fid.write('#     std error (mm): %f\n'%(obj.get_res_std()*1000.))
 
         for t,jump in obj.get_jumps():

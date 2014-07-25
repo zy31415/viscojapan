@@ -5,18 +5,9 @@ from rpy2.robjects import FloatVector,BoolVector,globalenv,Formula
 from rpy2.robjects import r as _r
 from pylab import *
 
+from ..utils import cut_ts
+
 __all__=['PreRModel','_r']
-
-def cut_ts(t,tcuts):
-    ''' Return logical indexing of epochs indicated by tcuts.
-'''
-    ch = asarray(zeros_like(t),'bool')
-    for cut in tcuts:
-        t1=cut[0]
-        t2=cut[1]
-        ch = ch | ((t>t1) & (t<t2))
-    return ch
-
 
 class PreRModel():
     ''' This class do linear regression on preseismic time series using R.
@@ -154,6 +145,13 @@ Nan is there is no residula available.
         ''' Return standard error of residuls.
 '''
         return float(_r("summary(fit)$sigma")[0])
+
+    def get_residual_rms(self):
+        ch = _r("subset")
+        res = _r("fit$residuals")
+        
+        print(res)
+        
     
     def find_outliers(self,verbose=True):
         ''' Detect outliers based on last linear regrssion.
