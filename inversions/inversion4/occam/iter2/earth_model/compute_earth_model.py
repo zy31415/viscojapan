@@ -55,7 +55,7 @@ cmd1_He33km_Vis1_0E19= stat0A(
 
 cmd2_He33km_Vis1_0E19 = ComputeEarthModelVISCO1D(
     earth_file = join(earth_file_dir, 'earth.model_He33km_Vis1.0E19'),
-    l_max = 9,
+    l_max = 900,
     outputs_dir = earth_file_dir,
     if_skip_on_existing_output = True,
     stdout = FNULL,
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute earth model.')
     parser.add_argument('model', type=str, nargs=1,
                         help='Compute earth model.',
-                        choices = ['He33km_Vis5.8E18','He33km_Vis1.0E19'],
+                        choices = ['He33km_Vis5.8E18','He33km_Vis1.0E19','He33km_Vis1.1E19','He33km_Vis1.2E19'],
                         )
     args = parser.parse_args()
     model = args.model[0]
