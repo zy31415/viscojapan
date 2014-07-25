@@ -39,7 +39,7 @@ Model Zero - The original model:
 
 Model One - Variation on viscosity:
 (1) log10(visM) - 19
-	viscosity - 1.0E+19 Pa.s
+	viscosity - 1.1E+19 Pa.s
 (2) elastic depth - 33km
 (3) rake - 83.
 

@@ -39,7 +39,7 @@ model0 = ComputeGreensFunction(
 # (2) elastic depth - 33km
 # (3) rake - 83.
 
-mod_str = 'He33km_Vis1.0E19'
+mod_str = 'He33km_Vis1.1E19'
 earth_file_dir = join('../earth_model/', mod_str)
 
 model1 = ComputeGreensFunction(
