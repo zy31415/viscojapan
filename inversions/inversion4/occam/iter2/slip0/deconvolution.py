@@ -13,7 +13,7 @@ from epochs_log import epochs as epochs_log
 from alphas import alphas
 from betas import betas
 
-file_G = 'G_He33km_Vis5.8E18_Rake83.h5'
+file_G = '../green_function/G_He33km_Vis5.8E18_Rake83.h5'
 file_d = 'cumu_post_with_seafloor.h5'
 file_sd = 'sites_sd.h5'
 file_sites_filter = 'sites_with_seafloor'
