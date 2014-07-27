@@ -149,7 +149,7 @@ class ConfigFileReader(object):
             out = re.findall('^\s*%s.*'%site, fid.read())
         if len(out)==0:
             print("Not found in outlier file. Use default model.")
-            return 1e99
+            return 3.
         assert len(out)==1, 'More than one entry.'
         entry = out[0]
         entry = entry.split()

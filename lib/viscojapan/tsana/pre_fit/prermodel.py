@@ -123,9 +123,9 @@ Consider:
         ''' Return residual of the part of time series that is used in linear regression.
 Nan is there is no residula available.
 '''
-        tp=asarray(_r('resid(fit)'))
-        res=zeros_like(self.t)+nan
-        res[self.subset]=tp
+        tp = asarray(_r('resid(fit)'))
+        res = zeros_like(self.t)+nan
+        res[self.subset] = tp
         return res
 
     def predict(self,t,level=0.95,interval='none'):
@@ -146,11 +146,13 @@ Nan is there is no residula available.
 '''
         return float(_r("summary(fit)$sigma")[0])
 
-    def get_residual_rms(self):
-        ch = _r("subset")
-        res = _r("fit$residuals")
-        
-        print(res)
+    def get_res_time_series(self):
+        res = asarray(_r('resid(fit)'))
+        return res, self.t[self.subset]
+
+    def get_res_rms(self):
+        res, t = self.get_res_time_series()
+        return sqrt(mean(res**2))
         
     
     def find_outliers(self,verbose=True):
@@ -163,6 +165,13 @@ Logic index indicating outliers.
         cri=std*self.outlier_cri
         res=self.get_res()
         ch=abs(res)>cri
+        return ch
+
+    def find_outliers_by_rms(self,verbose=True):
+        rms = self.get_res_rms()
+        cri = rms * self.outlier_cri
+        res = self.get_res()
+        ch = (abs(res) > cri)
         return ch
 
     def mark_outliers(self):

@@ -45,7 +45,7 @@ model0.extra_info_attrs ={
 # 	viscosity - 1.1E+19 Pa.s
 # (2) elastic depth - 33km
 # (3) rake - 83.
-mod_str = 'He33km_Vis1.0E19_Rake83'
+mod_str = 'He33km_Vis1.1E19_Rake83'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
 model1 = PollitzOutputsToEpochalData(
@@ -58,8 +58,8 @@ model1 = PollitzOutputsToEpochalData(
 
 model1.extra_info ={
     'He':33,
-    'visM':1.0E+19,
-    'log10(visM)':log10(1.0E+19),
+    'visM':1.1E+19,
+    'log10(visM)':log10(1.1E+19),
     'visK':inf,
     'rake':83
     }
