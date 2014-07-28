@@ -25,7 +25,7 @@ class Writer():
         for j in obj.jumps:
             fid.write('#     jump: %.0f\n'%(j))
 
-        fid.write('#     outlier cri (times of std): %f\n'%obj.outlier_cri)
+        fid.write('#     outlier cri (times of rms): %f\n'%obj.outlier_cri)
         
         fid.write('#\n')
         

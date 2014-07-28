@@ -162,6 +162,8 @@ Return:
 Logic index indicating outliers.
 '''
         std=self.get_res_std()
+        if self.outlier_cri is None:
+            self.outlier_cri = inf
         cri=std*self.outlier_cri
         res=self.get_res()
         ch=abs(res)>cri
