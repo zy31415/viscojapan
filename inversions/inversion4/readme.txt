@@ -55,4 +55,31 @@ Model Three - Variation on rake:
 (2) elastic depth - 33km
 (3) rake - 90.
 
-July 19, 2014
+#########################################
+##  Based on the results of second iteration, the third interation is:
+
+Model Zero - The original model:
+(1) log10(visM) - 18.8
+       visocosity - 5.839838E+18 Pa.s
+(2) elastic depth - 40km
+(3) rake - 80.
+
+Model One - Variation on viscosity:
+(1) log10(visM) - 19
+	viscosity - 1.1E+19 Pa.s
+(2) elastic depth - 40km
+(3) rake - 80.
+
+Model Two - Variation on elastic depth:
+(1) log10(visM) - 18.8
+       visocosity - 5.839838E+18 Pa.s
+(2) elastic depth - 45km
+(3) rake - 80.
+
+Model Three - Variation on rake:
+(1) log10(visM) - 18.8
+       visocosity - 5.839838E+18 Pa.s
+(2) elastic depth - 40km
+(3) rake - 90.
+
+July 27, 2014
