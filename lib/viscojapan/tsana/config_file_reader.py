@@ -146,10 +146,10 @@ class ConfigFileReader(object):
 
     def get_outlier_sd(self,site):
         with open(self.file_outlier) as fid:
-            out = re.findall('^\s*%s.*'%site, fid.read())
+            out = re.findall('^\s*%s.*'%site, fid.read(), re.M)
         if len(out)==0:
             print("Not found in outlier file. Use default model.")
-            return 1e99
+            return None
         assert len(out)==1, 'More than one entry.'
         entry = out[0]
         entry = entry.split()

@@ -25,7 +25,7 @@ class Writer():
         for j in obj.jumps:
             fid.write('#     jump: %.0f\n'%(j))
 
-        fid.write('#     outlier cri (times of std): %f\n'%obj.outlier_cri)
+        fid.write('#     outlier cri (times of rms): %f\n'%obj.outlier_cri)
         
         fid.write('#\n')
         
@@ -37,8 +37,8 @@ class Writer():
                   (obj.get_vel()*365.*1000.))
         fid.write('#     velocity sd (mm/yr): %.3f\n'%\
                   (obj.get_vel_sd()*365.*1000.))
-        print(obj.get_residual_rms())
         fid.write('#     std error (mm): %f\n'%(obj.get_res_std()*1000.))
+        fid.write('#     rms (mm): %f\n'%(obj.get_res_rms()*1000.))
 
         for t,jump in obj.get_jumps():
             fid.write('#     jump %d (m): %f\n'%(t,jump))
