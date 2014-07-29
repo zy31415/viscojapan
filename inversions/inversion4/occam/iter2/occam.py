@@ -34,8 +34,6 @@ inv = OccamDeconvolution(
     )
 inv.set_data_except_L()
 
-betas = [betas[10]]
-
 for bno, beta in enumerate(betas):
     if bno != 10:
         continue
