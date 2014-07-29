@@ -1,4 +1,5 @@
 from numpy import logspace
+from os.path import exists, join
 
 import viscojapan as vj
 from viscojapan.inversion import OccamDeconvolution
@@ -7,6 +8,7 @@ from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs_log import epochs 
 from alphas import alphas
+from betas import betas
 
 fault_file = 'fault_model/fault_bott33km.h5'
 
