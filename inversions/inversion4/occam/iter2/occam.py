@@ -37,6 +37,8 @@ inv.set_data_except_L()
 betas = [betas[10]]
 
 for bno, beta in enumerate(betas):
+    if bno != 10:
+        continue
     for ano, alpha in enumerate(alphas):
         outfname = 'outs/ano_%02d_bno_%02d.h5'%(ano, bno)
         if not exists(outfname):
