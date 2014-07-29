@@ -47,55 +47,6 @@ def get_cumu_post(cfs, t):
     assert t>=0
     return get_co(cfs) + get_post(cfs, t)
 
-##class CFSReader(object):
-##    def __init__(self):
-##        self.dir_cfs_post = 'CFS_POST'
-##        self.dir_config = '../config'
-##        self.config_reader = ConfigFileReader(self.dir_config)
-##
-##    def get_co(self, site):
-##        ''' Get displacements of sites.
-##    '''
-##        site=site.decode()
-##        with open(join(self.dir_cfs_post,site+'-res.cfs'),'rb') as fid:
-##            cfs=pickle.load(fid)
-##            
-##        co0=cfs[0].get_subf('TOHOKU').jump
-##        co1=cfs[1].get_subf('TOHOKU').jump
-##        if len(cfs.cfs)==2:
-##            co2=nan
-##        else:
-##            co2=cfs[2].get_subf('TOHOKU').jump
-##        return asarray([co0,co1,co2],'float')
-##
-##    
-##
-##    def get_post(self, site,t):
-##        ''' Get displacements of sites at certain time epoch.
-##    '''
-##        post=[]
-##        site=site.decode()
-##        with open(join(self.dir_cfs_post,site+'-res.cfs'),'rb') as fid:
-##            cfs=pickle.load(fid)
-##        pm = self.config_reader.get_post_model(site)[1]
-##        tp=[nan]*3
-##        for cf in cfs:
-##            if pm=='EXP':
-##                f=cf.get_subf('EXP')
-##            elif pm=='2EXPs':
-##                f=lambda t: cf.get_subf('EXP1')(t)+\
-##                   cf.get_subf('EXP2')(t)
-##            else:
-##                raise ValueError('Post model not reconized.')
-##
-##            if cf.CMPT=='e':
-##                tp[0]=f(t+t_eq)[0]
-##            elif cf.CMPT=='n':
-##                tp[1]=f(t+t_eq)[0]
-##            elif cf.CMPT=='u':
-##                tp[2]=f(t+t_eq)[0]
-##            else:
-##                raise ValueError('CMPT not recongnized.')
-##        return asarray(tp,'float')
+
 
 

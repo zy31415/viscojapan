@@ -119,7 +119,6 @@ pm - postseismic mode
         cf_list.append(cf)
 
     cfs=JointMLReg(cf_list)
-    cfs.post_model = pm
 
     cfs.SITE=site
     cfs.max_step=1000
@@ -217,6 +216,12 @@ def save_cfs(cfs):
     with open(_dir_cfs_post+'%s.cfs'%site,'wb') as fid:
         pickle.dump(cfs,fid)
 
+def plot_post(cfs,ifshow=False,path=_dir_plotpost,picfmt='png',loc=2):
+    for cf in cfs:
+        plot_cf(cf, color='blue')
+        legend(loc=loc)
+        if ifshow:
+            show()
 
     
     
