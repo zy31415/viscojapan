@@ -1,6 +1,7 @@
 from numpy import asarray, dot
+from numpy.linalg import norm
 import scipy.sparse as sparse
-from numpy.testing import assert_array_almost_equal
+#from numpy.testing import assert_array_almost_equal
 
 
 from ..epochal_data import \
@@ -117,6 +118,7 @@ class OccamDeconvolution(Inversion):
         obs = EpochalDisplacement(self.file_d, self.filter_sites_file)
         d_.d = obs        
         self.d = d_()
+        self.disp_obs = d_.disp_obs
 
     def set_data_sd(self):
         super().set_data_sd()
@@ -136,18 +138,25 @@ class OccamDeconvolution(Inversion):
 
         G = Jac[:,:-num_nlin_pars]
 
-        GG = self.G0.conv_stack(self.epochs)
-        
         Jac_ = Jac[:,-num_nlin_pars:]
         
-        slip = Bm[:-num_nlin_pars]
-        npars = Bm[-num_nlin_pars:]
+        slip = Bm[:-num_nlin_pars,:]
+
+        npars = Bm[-num_nlin_pars:,:]
 
         d = dot(G,slip)
+
         delta_nlin_pars = npars - npars0
         delta_d = dot(Jac_, delta_nlin_pars)
 
         d = d + delta_d
 
         self.d_pred = d
-        self.least_square.d_pred = self.d_pred
+
+    def get_residual_norm(self):
+        return norm(self.d_pred - self.disp_obs)
+
+    def get_residual_norm_weighted(self):
+        res_w = self.W.dot(self.d_pred - self.disp_obs)
+        nres_w = norm(res_w)
+        return nres_w

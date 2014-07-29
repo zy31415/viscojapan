@@ -79,6 +79,12 @@ class Inversion(object):
         self.invert()
         self.predict()
 
+    def get_residual_norm(self):
+        return self.least_square.get_residual_norm()
+
+    def get_residual_norm_weighted(self):
+        return self.least_square.get_residual_norm_weighted()
+
     def save(self, fn, overwrite = False):
         print('Saving ...')
         if overwrite:
@@ -88,8 +94,8 @@ class Inversion(object):
             fid['m'] = ls.m
             fid['Bm'] = ls.Bm
             fid['d_pred'] = self.d_pred
-            fid['residual_norm'] = ls.get_residual_norm()
-            fid['residual_norm_weighted'] = ls.get_residual_norm_weighted()
+            fid['residual_norm'] = self.get_residual_norm()
+            fid['residual_norm_weighted'] = self.get_residual_norm_weighted()
 
             for par, name in zip(self.regularization.args,
                                  self.regularization.arg_names):

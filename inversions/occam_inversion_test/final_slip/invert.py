@@ -10,7 +10,7 @@ rough = vj.Roughening.create_from_fault_file(fault_file)
 basis = vj.BasisMatrix.create_from_fault_file(fault_file)
 
 inv = vj.StaticInversion(
-    file_G = '../greens_function/G_Rake90.h5',
+    file_G = '../greens_function/G_Rake80.h5',
     file_d = '../true_model/d_simu.h5',
     file_sd = '../sites_sd/sites_sd.h5',
     file_sites_filter = 'sites_with_seafloor',
