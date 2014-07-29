@@ -1,4 +1,5 @@
 from numpy import logspace
+from os.path import exists
 
 import viscojapan as vj
 from viscojapan.inversion import OccamDeconvolution
