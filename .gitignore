@@ -9,14 +9,6 @@ outs_tik2
 
 *.pdf
 
-IGS08/
-CFS_POST/
-POSTRES/
-offsets/
-post_fit
-pre_fit
-raw_ts
-
 slab1.0/
 
 *flt_????
@@ -30,3 +22,5 @@ fault_model1/workspace/
 
 # ~ is for temporary files and directories
 ~*
+
+tsana/

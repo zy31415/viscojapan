@@ -1,7 +1,6 @@
 import h5py
 from pylab import plt
 import matplotlib
-from numpy import arange
 
 import viscojapan as vj
 
@@ -12,7 +11,7 @@ rakes = []
 nroughs = []
 
 for ano in range(20):
-    with h5py.File('outs/ano_%02d_bno_00.h5'%ano,'r') as fid:
+    with h5py.File('outs/ano_%02d_bno_10.h5'%ano,'r') as fid:
         nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
 
@@ -24,8 +23,9 @@ for ano in range(20):
         nrough = fid['regularization/roughening/norm'][...]
         nroughs.append(nrough)
 
-xlim = [560.4, 561.2]
-xticks = arange(560.4,561,0.1)
+xlim = (14, 34)
+xticks = range(14,34)
+
 plt.subplot(411)    
 plt.semilogx(nreses, visMs,'o')
 plt.xlim(xlim)
@@ -44,7 +44,6 @@ plt.subplot(413)
 plt.semilogx(nreses, rakes,'o')
 plt.xlim(xlim)
 plt.gca().set_xticks(xticks)
-plt.gca().get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 plt.ylabel('rake')
 plt.grid('on')
 
@@ -57,5 +56,5 @@ plt.ylabel('roughening')
 plt.xlabel('Residual Norm')
 plt.grid('on')
 
-
+plt.savefig('plots/nlin_par_curve.png')
 plt.show()

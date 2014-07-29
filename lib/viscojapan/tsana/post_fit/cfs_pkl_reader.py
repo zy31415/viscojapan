@@ -6,17 +6,9 @@ from os.path import join
 import pickle
 from ..config_file_reader import ConfigFileReader
 
-_dir_cfs_post='CFS_POST'
+t_eq = 55631
 
-t_eq=55631
-
-def get_cos(site):
-    ''' Get displacements of sites.
-'''
-    site=site.decode()
-    with open(join(_dir_cfs_post,site+'-res.cfs'),'rb') as fid:
-        cfs=pickle.load(fid)
-        
+def get_co(cfs):
     co0=cfs[0].get_subf('TOHOKU').jump
     co1=cfs[1].get_subf('TOHOKU').jump
     if len(cfs.cfs)==2:
@@ -24,18 +16,14 @@ def get_cos(site):
     else:
         co2=cfs[2].get_subf('TOHOKU').jump
     return asarray([co0,co1,co2],'float')
+    
 
-config_reader = ConfigFileReader()
-
-def get_post(site,t):
-    ''' Get displacements of sites at certain time epoch.
-'''
-    post=[]
-    site=site.decode()
-    with open(join(_dir_cfs_post,site+'-res.cfs'),'rb') as fid:
-        cfs=pickle.load(fid)
-    pm = config_reader.get_post_model(site)[1]
-    tp=[nan]*3
+def get_post(cfs, t):
+    post = []
+    site = cfs.SITE
+    
+    pm = cfs.post_model
+    tp=[0]*3
     for cf in cfs:
         if pm=='EXP':
             f=cf.get_subf('EXP')
@@ -55,7 +43,10 @@ def get_post(site,t):
             raise ValueError('CMPT not recongnized.')
     return asarray(tp,'float')
 
-if __name__=='__main__':
-    #cos=get_cos()
-    post=get_post(1000)
+def get_cumu_post(cfs, t):
+    assert t>=0
+    return get_co(cfs) + get_post(cfs, t)
+
+
+
 

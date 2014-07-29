@@ -223,19 +223,5 @@ def plot_post(cfs,ifshow=False,path=_dir_plotpost,picfmt='png',loc=2):
         if ifshow:
             show()
 
-   
-if __name__=='__main__':
-##    site='J644'
-##    cc,pm=get_post_model(site)
-##    pm='EXP'
-##    cc=6
-##    cfs=fit_post(site,cc,pm)
-##    cfs.go()
-##    to_file(cfs,cc,pm)
-##    save_cfs(cfs)
-##    plot_post(cfs,True)
-
-    print(get_post_sec('J867'))
-
     
     
