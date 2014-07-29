@@ -5,7 +5,7 @@ from os import remove
 import time
 import subprocess
 
-tp=loadtxt('sites','4a')
+tp=loadtxt('sites/sites','4a')
 sites=[ii.decode() for ii in tp]
 
 _dir_postres='POSTRES'
@@ -33,8 +33,7 @@ def run(site):
         else:
             print('  ERROR: %s, %f min'%(site,(time.time()-t1)/60.))
 
-ncpus=5
-#ncpus=5
+ncpus = 5
 p=Pool(ncpus)
 
 p.map(run,sites)

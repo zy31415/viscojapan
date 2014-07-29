@@ -26,7 +26,7 @@ d_ep = vj.EpochalDisplacement('../cumu_post_with_seafloor.h5')
 scale = 20
 
 for ano, alpha in enumerate(alphas):    
-    file = 'outs/ano_%02d_bno_00.h5'%(ano)
+    file = 'outs/ano_%02d_bno_10.h5'%(ano)
 
     plot_dir = 'plots/ano_%02d/'%ano
     if not exists(plot_dir):
