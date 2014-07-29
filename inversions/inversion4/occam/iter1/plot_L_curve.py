@@ -7,7 +7,7 @@ nreses =[]
 nroughs = []
 
 for ano in range(20):
-    with h5py.File('outs/ano_%02d.h5'%ano,'r') as fid:
+    with h5py.File('outs/ano_%02d_bno_10.h5'%ano,'r') as fid:
         nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
         nrough = fid['regularization/roughening/norm'][...]
@@ -15,11 +15,11 @@ for ano in range(20):
     
 plot_L(nreses, nroughs)
 
-plt.xlim([305, 311])
-plt.gca().set_xticks(range(305,311))
+xlim = (7, 22)
+plt.xlim(xlim)
+plt.gca().set_xticks(range(xlim[0],xlim[1]))
 plt.gca().get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
-plt.ylabel('rake')
-plt.xlabel('Residual Norm')
 plt.grid('on')
 
+plt.savefig('plots/L-curve.png')
 plt.show()
