@@ -9,24 +9,7 @@ from numpy import inf
 
 from date_conversion import asmjd,asdtype
 
-def if_in_tcuts(t,tcuts):
-    """ If t is in time intervals defined by tcuts.
-If tcuts == None, return True.
-t and tcuts used here are all in mjd format.
-"""
-    if tcuts == None:
-        return True
-    t = asmjd(t)
-    for tcut in tcuts:
-        t1 = tcut[0]
-        if t1 < inf and t1>-inf:
-            t1 = asmjd(t1)
-        t2 = tcut[1]
-        if t2 < inf and t2 > -inf:
-            t2 = asmjd(t2)
-        if t>t1 and t<t2:
-            return True
-    return False
+from .utils import if_in_tcuts_boundary
 
 
 class ConfigFileReader(object):
@@ -56,7 +39,7 @@ class ConfigFileReader(object):
             else:
                 cause=None
 
-            if if_in_tcuts(t,tcuts):
+            if if_in_tcuts_boundary(t,tcuts):
                 outs.append(t)
         return outs
 

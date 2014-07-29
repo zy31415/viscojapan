@@ -14,10 +14,14 @@ def plot_func(func,t):
         plt.plot_date(t+_adj_dates,f(t),marker=None,ls='-',color=cs[n%len(cs)],label=f.tag)
         n+=1
                
-def plot_cf(cf):
+def plot_cf(cf, color):
     t = cf.data.t
     y0 = cf.data.y0
-    plot_date(t+_adj_dates,y0,'x',label=cf.SITE+cf.CMPT)
+    plot_date(t+_adj_dates,y0,'x',label=cf.SITE+cf.CMPT,
+              color='light'+color)
+    plot_date(cf.data._t+_adj_dates,
+              cf.data._y0,'x',label=cf.SITE+cf.CMPT,
+              color=color)
     t1 = min(t)
     t2 = max(t)
     ls=200

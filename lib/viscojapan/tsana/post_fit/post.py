@@ -6,20 +6,20 @@ from os.path import *
 
 from date_conversion import *
 
-from lib.config_file_reader import ConfigFileReader
-from lib.pre_fit.linres_reader import LinResReader
+from ..config_file_reader import ConfigFileReader
+from ..pre_fit.linres_reader import LinResReader
 from .tsmodel import *
 
 
 t_eq = 55631
 
-_path='/home/zy/workspace/ts5/'
+_path='../'
 
 _dir_postres=join(_path,'post_fit/POSTRES/')
 _dir_plotpost=join(_path,'post_fit/PLOTS_POST/')
 _dir_cfs_post=join(_path,'post_fit/CFS_POST/')
 
-config_reader = ConfigFileReader()
+config_reader = ConfigFileReader('../config/')
 
 def est_am(t,y):
     """ Estimate a initial value for exponentials.
@@ -58,7 +58,6 @@ pm - postseismic mode
 
     postsec = config_reader.get_postsec(site)
     jumps = config_reader.get_jumps(site, postsec)
-    print(jumps)
     
     for cmpt in cstr:
         yres=locals()[cmpt+'res']
@@ -75,7 +74,7 @@ pm - postseismic mode
         nth=1
         for jump in jumps:
             f_jump=SubFcEq()
-            f_jump.T0=jump[0]
+            f_jump.T0=jump
             f_jump.jump=.01
             f_jump.tag='JUMP_%d'%nth
             func.add_subf(f_jump)
@@ -219,7 +218,7 @@ def save_cfs(cfs):
 
 def plot_post(cfs,ifshow=False,path=_dir_plotpost,picfmt='png',loc=2):
     for cf in cfs:
-        plot_cf(cf)
+        plot_cf(cf, color='blue')
         legend(loc=loc)
         if ifshow:
             show()
