@@ -10,7 +10,7 @@ from epochs_log import epochs
 from alphas import alphas
 from betas import betas
 
-fault_file = '../../fault_model/fault_He50km.h5'
+fault_file = 'fault_model/fault_bott50km.h5'
 
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
