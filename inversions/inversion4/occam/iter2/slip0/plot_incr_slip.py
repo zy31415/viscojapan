@@ -10,7 +10,7 @@ from viscojapan.fault_model import FaultFileIO
 
 from epochs_log import epochs
 
-bno = 0
+bno = 10
 
 for ano in range(20):        
     file = glob.glob('outs/ano_%02d_bno_%02d.h5'%(ano,bno))[0]
