@@ -1,5 +1,6 @@
 import h5py
 from pylab import plt
+from numpy import log10, amin, amax
 import matplotlib
 
 import viscojapan as vj
@@ -11,7 +12,8 @@ rakes = []
 nroughs = []
 
 for ano in range(20):
-    with h5py.File('outs/ano_%02d_bno_10.h5'%ano,'r') as fid:
+    #with h5py.File('outs/ano_%02d_bno_10.h5'%ano,'r') as fid:
+    with h5py.File('outs/cno_%02d.h5'%ano,'r') as fid:
         nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
 
@@ -23,8 +25,11 @@ for ano in range(20):
         nrough = fid['regularization/roughening/norm'][...]
         nroughs.append(nrough)
 
-xlim = (14, 34)
-xticks = range(14,34)
+x1 = amin(nreses)
+x2 = amax(nreses)
+dx = x2 - x1
+xlim = (x1-dx*0.02, x2+dx*0.2)
+xticks = range(int(x1), int(x2),5)
 
 plt.subplot(411)    
 plt.semilogx(nreses, visMs,'o')

@@ -11,7 +11,7 @@ subflts_files_rake80 = \
               sorted(glob.glob('../fault_model/subflts_bott40km_rake80/flt_????'))
 
 subflts_files_rake90 = \
-              sorted(glob.glob('../fault_model/subflts_bott44km_rake90/flt_????'))
+              sorted(glob.glob('../fault_model/subflts_bott40km_rake90/flt_????'))
 
 #############################
 ##Model Zero - The original model:
