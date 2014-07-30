@@ -18,7 +18,7 @@ inv = OccamDeconvolution(
     
     files_Gs = ['green_function/G_He40km_Vis1.1E19_Rake80.h5',
                 'green_function/G_He45km_Vis5.8E18_Rake80.h5',
-                'green_function/G_He40km_Vis1.1E19_Rake90.h5'
+                'green_function/G_He40km_Vis5.8E18_Rake90.h5'
                 ],
     nlin_par_names = ['log10(visM)','He','rake'],
 
