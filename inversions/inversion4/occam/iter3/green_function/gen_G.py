@@ -9,12 +9,12 @@ from epochs import epochs
 
 ################################
 ## Model Zero - The original model:
-# (1) log10(visM) - 18.8
-#        visocosity - 5.839838E+18 Pa.s
-# (2) elastic depth - 33km
-# (3) rake - 83.
+##(1) log10(visM) - 18.8
+##       visocosity - 5.839838E+18 Pa.s
+##(2) elastic depth - 40km
+##(3) rake - 80.
 
-mod_str = 'He33km_Vis5.8E18_Rake83'
+mod_str = 'He40km_Vis5.8E18_Rake80'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
 model0 = PollitzOutputsToEpochalData(
@@ -26,11 +26,11 @@ model0 = PollitzOutputsToEpochalData(
     )
 
 model0.extra_info ={
-    'He':33,
+    'He':40.,
     'visM':5.8E+18,
     'log10(visM)':log10(5.8E+18),
     'visK':inf,
-    'rake':83
+    'rake':80.
     }
 
 model0.extra_info_attrs ={
@@ -41,11 +41,11 @@ model0.extra_info_attrs ={
 
 
 ## Model One - Variation on viscosity:
-# (1) log10(visM) - 19
-# 	viscosity - 1.1E+19 Pa.s
-# (2) elastic depth - 33km
-# (3) rake - 83.
-mod_str = 'He33km_Vis1.1E19_Rake83'
+##(1) log10(visM) - 19
+##	viscosity - 1.1E+19 Pa.s
+##(2) elastic depth - 40km
+##(3) rake - 80.
+mod_str = 'He40km_Vis1.1E19_Rake80'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
 model1 = PollitzOutputsToEpochalData(
@@ -57,11 +57,11 @@ model1 = PollitzOutputsToEpochalData(
     )
 
 model1.extra_info ={
-    'He':33,
+    'He':40.,
     'visM':1.1E+19,
     'log10(visM)':log10(1.1E+19),
     'visK':inf,
-    'rake':83
+    'rake':80.
     }
 
 model1.extra_info_attrs ={
@@ -71,11 +71,11 @@ model1.extra_info_attrs ={
     }
 
 ## Model Two - Variation on elastic depth:
-# (1) log10(visM) - 18.8
-#        visocosity - 5.839838E+18 Pa.s
-# (2) elastic depth - 45km
-# (3) rake - 83.
-mod_str = 'He45km_Vis5.8E18_Rake83'
+##(1) log10(visM) - 18.8
+##       visocosity - 5.839838E+18 Pa.s
+##(2) elastic depth - 45km
+##(3) rake - 80.
+mod_str = 'He45km_Vis5.8E18_Rake80'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 model2 = PollitzOutputsToEpochalData(
     epochs = epochs,
@@ -86,11 +86,11 @@ model2 = PollitzOutputsToEpochalData(
     )
 
 model2.extra_info ={
-    'He':45,
+    'He':45.,
     'visM':5.8E+18,
     'log10(visM)':log10(5.8E+18),
     'visK':inf,
-    'rake':83.
+    'rake':80.
     }
 
 model2.extra_info_attrs ={
@@ -101,11 +101,11 @@ model2.extra_info_attrs ={
 
 
 ## Model Three - Variation on rake:
-# (1) log10(visM) - 18.8
-#        visocosity - 5.839838E+18 Pa.s
-# (2) elastic depth - 33km
-# (3) rake - 90.
-mod_str = 'He33km_Vis5.8E18_Rake90'
+##(1) log10(visM) - 18.8
+##       visocosity - 5.839838E+18 Pa.s
+##(2) elastic depth - 40km
+##(3) rake - 90.
+mod_str = 'He40km_Vis5.8E18_Rake90'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 model3 = PollitzOutputsToEpochalData(
     epochs = epochs,
@@ -116,7 +116,7 @@ model3 = PollitzOutputsToEpochalData(
     )
 
 model3.extra_info ={
-    'He':33,
+    'He':40,
     'visM':5.8E+18,
     'log10(visM)':log10(5.8E+18),
     'visK':inf,

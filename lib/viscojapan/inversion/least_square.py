@@ -103,6 +103,7 @@ return: d_pred = G B m
         '''
 return: ||G B m - d||
 '''
+        print(self.d)
         return norm(self.d_pred - self.d)
 
     def get_residual_norm_weighted(self):

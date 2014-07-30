@@ -7,7 +7,7 @@ from numpy import loadtxt
 
 class LinResReader(object):
     def __init__(self,site,cmpt):
-        self.dir_linres='/home/zy/workspace/ts5/pre_fit/linres/'
+        self.dir_linres = '../pre_fit/linres/'
         self.site=site
         self.cmpt=cmpt
 

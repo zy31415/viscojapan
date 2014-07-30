@@ -10,17 +10,17 @@ from epochs_log import epochs
 from alphas import alphas
 from betas import betas
 
-fault_file = '../../fault_model/fault_He50km.h5'
+fault_file = 'fault_model/fault_bott50km.h5'
 
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
 inv = OccamDeconvolution(
-    file_G0 = '../../green_function/G_He50km_Vis5.8E18_Rake90.h5',
+    file_G0 = 'green_function/G_He50km_Vis5.8E18_Rake90.h5',
     
-    files_Gs = ['../../green_function/G_He50km_Vis1.0E19_Rake90.h5',
-                '../../green_function/G_He55km_Vis5.8E18_Rake90.h5',
-                '../../green_function/G_He50km_Vis5.8E18_Rake95.h5'
+    files_Gs = ['green_function/G_He50km_Vis1.0E19_Rake90.h5',
+                'green_function/G_He55km_Vis5.8E18_Rake90.h5',
+                'green_function/G_He50km_Vis5.8E18_Rake95.h5'
                 ],
     nlin_par_names = ['log10(visM)','He','rake'],
 
@@ -35,6 +35,8 @@ inv = OccamDeconvolution(
 inv.set_data_except_L()
 
 for bno, beta in enumerate(betas):
+    if bno != 10:
+        continue
     for ano, alpha in enumerate(alphas):
         outfname = 'outs/ano_%02d_bno_%02d.h5'%(ano, bno)
         if not exists(outfname):

@@ -1,4 +1,5 @@
 from numpy import logspace
+from os.path import exists, join
 
 import viscojapan as vj
 from viscojapan.inversion import OccamDeconvolution
@@ -7,6 +8,8 @@ from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs_log import epochs 
 from alphas import alphas
+from betas import betas
+from gammas import gammas
 
 fault_file = 'fault_model/fault_bott33km.h5'
 
@@ -32,9 +35,9 @@ inv = OccamDeconvolution(
     )
 inv.set_data_except_L()
 
-betas = [betas[10]]
-
 for bno, beta in enumerate(betas):
+    if bno != 10:
+        continue
     for ano, alpha in enumerate(alphas):
         outfname = 'outs/ano_%02d_bno_%02d.h5'%(ano, bno)
         if not exists(outfname):

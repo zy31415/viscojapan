@@ -32,7 +32,7 @@ gen = GenerateEarthModelFile(
     raw_file = 'earth.modelBURG-SUM_40km',
     fault_bottom_depth = fault_bottom_depth,
     visK = inf,
-    visM = visM0,    
+    visM = visM1,    
     )
 gen.save(mod_str + '/earth.model_' + mod_str)
 
