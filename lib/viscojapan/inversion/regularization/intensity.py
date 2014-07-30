@@ -1,6 +1,7 @@
 from scipy.sparse import eye
 
 from .regularization import Regularization
+from viscojapan.fault_model import FaultFileIO
 
 class Intensity(Regularization):
     def __init__(self,
