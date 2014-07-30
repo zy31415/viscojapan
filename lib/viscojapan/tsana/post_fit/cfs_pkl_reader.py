@@ -1,7 +1,3 @@
-''' This module provide functions read pickled cfs file
-to get time series modelgprediction.
-'''
-from pylab import *
 from os.path import join
 import pickle
 from ..config_file_reader import ConfigFileReader
