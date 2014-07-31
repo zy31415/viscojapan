@@ -19,7 +19,7 @@ class Writer():
         obj=self.obj
         fid=self.fid
         fid.write('# Model parameters:\n')
-        fid.write('#     model: %s\n'%obj.fml_str)
+        fid.write('#     model: %s\n'%obj.fml_str)        
         for s in obj.linsecs:
             fid.write('#     linear sec: %.0f %.0f\n'%(s[0],s[1]))
         for j in obj.jumps:
@@ -42,16 +42,27 @@ class Writer():
 
         for t,jump in obj.get_jumps():
             fid.write('#     jump %d (m): %f\n'%(t,jump))
-            
+
+        self._write_header_results_seasonal_semiseasonal(fid)            
+        self._write_header_results_outliers(fid)
+
+    def _write_header_results_seasonal_semiseasonal(self, fid):
+        if self.obj.if_sea is not None:
+            fid.write('#     seasonal magnitude(mm): %f\n'%\
+                      (self.obj.get_magnitude_seasonal()*1000.))
+        if self.obj.if_semi is not None:
+            fid.write('#     semi-seasonal magnitude(mm): %f\n'%\
+                      (self.obj.get_magnitude_semiseasonal()*1000.))
+
+    def _write_header_results_outliers(self, fid):
         # outliers list
-        outliers=obj.t[obj.if_outlier]
+        outliers = self.obj.t[self.obj.if_outlier]
         fid.write('#     outliers (%d): '%(len(outliers)))
         for ol in outliers:
             fid.write('%d '%ol)
         fid.write('\n')
-
         fid.write('#\n')
-        
+            
     def write_header(self):
         obj=self.obj
         fid=self.fid

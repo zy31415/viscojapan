@@ -41,7 +41,7 @@ def run(par):
         else:
             print('  ERROR: %s, %f min'%(site,(time.time()-t1)/60.))
 
-tp=loadtxt('../raw_ts/sites','4a,2f')
+tp=loadtxt('sites','4a,2f')
 sites=[ii[0].decode() for ii in tp]
 
 pars=[]

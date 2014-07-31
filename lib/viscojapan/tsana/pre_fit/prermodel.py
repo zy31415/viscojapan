@@ -222,6 +222,15 @@ Logic index indicating outliers.
         for jump in self.jumps:
             yield (jump,_r("fit$coe[['hvsd(t, %d)']]"%jump)[0])
 
+    def get_magnitude_seasonal(self):
+        S = _r("fit$coe[['sin(Omega * t)']]")[0]
+        C = _r("fit$coe[['cos(Omega * t)']]")[0]
+        return sqrt(S**2 + C**2)
+
+    def get_magnitude_semiseasonal(self):
+        S = _r("fit$coe[['sin(2 * Omega * t)']]")[0]
+        C = _r("fit$coe[['cos(2 * Omega * t)']]")[0]
+        return sqrt(S**2 + C**2)
 
 if __name__=='__main__':
         

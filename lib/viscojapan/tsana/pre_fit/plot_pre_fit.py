@@ -5,45 +5,19 @@ from numpy import loadtxt, asarray, inf
 from pylab import plt
 
 from ..utils import cut_ts
+from .linres_reader import read_t, read_y, read_yres, read_ysd, \
+     read_linsec, read_outlier, read_jumps
 
 _adj_dates = 678577
 
-def read_linsec(fn):
-    with open(fn,'rt') as fid:
-        outs = re.findall('.*linear sec.*',fid.read())
-    res = []
-    for out in outs:            
-        linsec = out.split(':')[1].split()
-        assert len(linsec)==2
-        t1 = linsec[0]
-        t2 = linsec[1]
-        if t1 == '-inf':
-            t1 = -9999
-        if t2 == 'inf':
-            t2 = 9999999999
-        res.append((int(t1),int(t2)))
-    return res
-
-def read_outlier(fn):
-    with open(fn,'rt') as fid:
-        out = re.findall('.*outliers.*',fid.read())[0]
-
-    outlier = out.split(":")[1].split()
-    return [int(ii) for ii in outlier]
 
 def outlier_index(t,outliers):
     return [list(t).index(oi) for oi in outliers]
 
-def read_jumps(fn):
-    with open(fn,'rt') as fid:
-        out = re.findall('^#.*jump:.*',fid.read(),re.M)
-    return [int(ii.split(':')[1]) for ii in out]
-
 def plot_pre(fn):
-    tp = loadtxt(fn)
-    t = asarray(tp[:,0], int)
-    y = tp[:,1]
-    yres = tp[:,2]
+    t = read_t(fn)
+    y = read_y(fn)
+    yres = read_yres(fn)
 
     plt.plot_date(t+_adj_dates, y, 'x', color='lightblue')
     plt.plot_date(t+_adj_dates, yres, 'x', color='lightgreen')
