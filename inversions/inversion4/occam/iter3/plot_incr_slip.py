@@ -1,7 +1,8 @@
 from pylab import show, savefig, close
 import glob
-from os.path import join, exists
+from os.path import join, exists, basename
 from os import makedirs
+from multiprocessing import Pool
 
 import h5py
 from numpy import loadtxt
@@ -13,7 +14,8 @@ from viscojapan.fault_model import FaultFileIO
 from epochs_log import epochs
 from alphas import alphas
 
-fault_file = 'fault_model/fault_bott33km.h5'
+
+fault_file = 'fault_model/fault_bott40km.h5'
 
 fid = FaultFileIO(fault_file)
 num_subflts = fid.num_subflt_along_strike*fid.num_subflt_along_dip
@@ -25,14 +27,13 @@ d_ep = vj.EpochalDisplacement('../cumu_post_with_seafloor.h5')
 
 scale = 20
 
-for ano, alpha in enumerate(alphas):    
-    file = 'outs/ano_%02d_bno_00.h5'%(ano)
-
-    plot_dir = 'plots/ano_%02d/'%ano
+def task(f_res):
+    file = basename(f_res)
+    plot_dir = join('plots', file.split('.')[0])
     if not exists(plot_dir):
         makedirs(plot_dir)
-    
-    with h5py.File(file) as fid:
+        
+    with h5py.File(f_res) as fid:
         Bm = fid['Bm'][...]
         d_pred = fid['d_pred'][...]
 
@@ -54,3 +55,9 @@ for ano, alpha in enumerate(alphas):
         savefig(join(plot_dir, 'incr_slip_%04d.png'%epoch))
         # plt.show()
         plt.close()
+
+if __name__ == '__main__':
+    nproc = 5
+    pool = Pool(processes=nproc)
+    files = glob.glob('outs/ano_??_bno_10.h5')
+    pool.map(task, files)
