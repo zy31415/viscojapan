@@ -1,5 +1,8 @@
 from os.path import join
 import pickle
+
+from numpy import asarray, nan
+
 from ..config_file_reader import ConfigFileReader
 
 t_eq = 55631

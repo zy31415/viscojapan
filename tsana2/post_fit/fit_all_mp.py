@@ -5,6 +5,12 @@ from os import remove
 import time
 import subprocess
 
+import argparse
+parser = argparse.ArgumentParser(description='Do post fit for all stations.')
+parser.add_argument('-n',dest='ncpus', type=int, required=True,
+                   help='Number of cpus.')
+args = parser.parse_args()
+
 tp=loadtxt('sites/sites','4a')
 sites=[ii.decode() for ii in tp]
 
@@ -20,10 +26,10 @@ def run(site):
         print('Waring: file %s exists and skipped!'%fn)
     else:
         print('%s is running ...'%(site))
-        fn_err='screenouts/%s.err'%site
+        fn_err='stderr/%s'%site
         ferr=open(fn_err,'wt')
-        fout=open('screenouts/%s.out'%site,'wt')
-        rcode=subprocess.call(['./fit_post.py','%s'%site],stdout=fout,stderr=ferr)
+        fout=open('stdout/%s'%site,'wt')
+        rcode=subprocess.call(['./fit-post.py','%s'%site],stdout=fout,stderr=ferr)
         fout.close()
         ferr.close()
 
@@ -33,7 +39,8 @@ def run(site):
         else:
             print('  ERROR: %s, %f min'%(site,(time.time()-t1)/60.))
 
-ncpus = 5
+ncpus = args.ncpus
+print('# CPU: %d'%ncpus)
 p=Pool(ncpus)
 
 p.map(run,sites)

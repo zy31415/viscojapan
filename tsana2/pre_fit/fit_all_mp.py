@@ -49,9 +49,9 @@ for site in sites:
     for cmpt in 'enu':
         pars.append('%s.%s'%(site,cmpt))
 
-ncpus=args.ncpus
+ncpus = args.ncpus
 
-print(ncpus)
+print('# CPU: %d'%ncpus)
 
 p=Pool(ncpus)
 p.map(run,pars)

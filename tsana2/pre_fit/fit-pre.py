@@ -19,9 +19,7 @@ from tenv_file_reader import read_tenv_t, read_tenv_ts, read_tenv_tssd
 parser = argparse.ArgumentParser(description=__doc__)
 
 # time series input data, required:
-parser.add_argument('--site','-s', type=str, help='site',required=True)
-parser.add_argument('--cmpt','-c', type=str, help='component',required=True,
-                    choices=['e','n','u'])
+parser.add_argument('site_cmpt',type=str, nargs=2, help='site and cmpt')
 
 # Output control:
 parser.add_argument('--verbose','-v',action='store_true',
@@ -35,7 +33,9 @@ parser.add_argument('--plot','-p',help='Plot.',
 
 args = parser.parse_args()
 
-site=args.site
+site = args.site_cmpt[0]
+cmpt = args.site_cmpt[1]
+assert cmpt in ('e', 'n', 'u')
 # check time series file:
 ts_dir='../raw_ts/IGS08'
 f_ts=join(ts_dir,'%s.IGS08.tenv'%site)
@@ -58,7 +58,6 @@ mod.outlier_cri = reader.get_outlier_sd(site)
 print(mod.outlier_cri)
 
 # data:
-cmpt=args.cmpt
 mod.t=read_tenv_t(f_ts,'mjd')
 mod.y=read_tenv_ts(f_ts,cmpt)
 mod.ysd=read_tenv_tssd(f_ts,cmpt)

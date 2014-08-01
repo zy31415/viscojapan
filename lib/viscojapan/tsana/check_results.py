@@ -59,9 +59,9 @@ def save_to_file(sorted_value, fn, value_kind):
 ##            sd_dic[site] = {cmpt:read_misfit(file, misfit_kind)}
 ##    return sd_dic
 
-def read_misfit_from_pickled_cfs(dir_cfs):
+def read_misfit_from_pickled_cfs(files):
     rms_dic = {}
-    for file in glob.glob(join(dir_cfs, '????-res.cfs')):
+    for file in files:
         with open(file, 'rb') as fid:
             cfs = pickle.load(fid)
         site = cfs.SITE

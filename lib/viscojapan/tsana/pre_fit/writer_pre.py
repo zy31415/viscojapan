@@ -47,10 +47,10 @@ class Writer():
         self._write_header_results_outliers(fid)
 
     def _write_header_results_seasonal_semiseasonal(self, fid):
-        if self.obj.if_sea is not None:
+        if self.obj.if_sea:
             fid.write('#     seasonal magnitude(mm): %f\n'%\
                       (self.obj.get_magnitude_seasonal()*1000.))
-        if self.obj.if_semi is not None:
+        if self.obj.if_semi:
             fid.write('#     semi-seasonal magnitude(mm): %f\n'%\
                       (self.obj.get_magnitude_semiseasonal()*1000.))
 

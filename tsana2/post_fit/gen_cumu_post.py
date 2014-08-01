@@ -36,5 +36,5 @@ def init(func, sites, fep, lock):
 if __name__ == '__main__':
     lock = Lock()
     days = range(0,1200)
-    pool = Pool(processes = 20, initializer = init, initargs=(func, sites, fep, lock))
+    pool = Pool(processes = 5, initializer = init, initargs=(func, sites, fep, lock))
     pool.map(func, days)

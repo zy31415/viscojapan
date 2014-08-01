@@ -122,6 +122,7 @@ pm - postseismic mode
 
     cfs.SITE=site
     cfs.max_step=1000
+    cfs.post_model = pm
 
     return cfs
 
