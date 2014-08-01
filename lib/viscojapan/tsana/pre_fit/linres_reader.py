@@ -1,7 +1,7 @@
 from os.path import join
 import re
 
-from numpy import loadtxt, asarray
+from numpy import loadtxt, asarray, nan
 
 class LinResReader(object):
     def __init__(self,site,cmpt):
@@ -56,7 +56,7 @@ def read_sea(fn):
     with open(fn, 'rt') as fid:
         tp = re.findall('^#\s*seasonal magnitude.*', fid.read(), re.M)
         if len(tp) == 0:
-            return None
+            return nan
         if len(tp) == 1:
             return float(tp[0].split(':')[1])
 
@@ -64,7 +64,7 @@ def read_semi(fn):
     with open(fn, 'rt') as fid:
         tp = re.findall('^#\s*semi-seasonal magnitude.*', fid.read(), re.M)
         if len(tp) == 0:
-            return None
+            return nan
         if len(tp) == 1:
             return float(tp[0].split(':')[1])
 

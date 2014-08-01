@@ -3,7 +3,7 @@ from os.path import basename, join
 import glob
 import pickle
 
-from numpy import loadtxt
+from numpy import loadtxt, isnan
 
 def collect_value(files, reader):
     ''' The retured data structure:
@@ -14,15 +14,21 @@ val_dic[site][cmpt] = val
         tp = basename(file).split('.')
         site = tp[0]
         cmpt = tp[1]
+        val = reader(file)
         if site in val_dic:
-            val_dic[site][cmpt] = reader(file)
+            val_dic[site][cmpt] = val
         else:
-            val_dic[site] = {cmpt:reader(file)}
+            val_dic[site] = {cmpt:val}
     return val_dic
 
 
-def sorted_value(val_dic, cmpt):    
-    return sorted(val_dic.items(), key=lambda x: x[1][cmpt], reverse=True)
+def sorted_value(val_dic, cmpt):
+    def key(x):
+        out = x[1][cmpt]
+        if isnan(out):
+            out = 0.
+        return out
+    return sorted(val_dic.items(), key=key, reverse=True)
 
 def save_to_file(sorted_value, fn, value_kind):
     with open(fn,'wt') as fid:

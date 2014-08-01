@@ -8,6 +8,7 @@ files = sorted(glob.glob('linres/*'))
 
 for reader in read_sea, read_semi, read_rms, read_std:
     kind = reader.__name__.split('_')[1]
+    print("Collecting and sorting value %s ..."%kind)
     val_dic = collect_value(files, reader)
     for cmpt in 'e', 'n', 'u':
         val_sorted = sorted_value(val_dic, cmpt)
