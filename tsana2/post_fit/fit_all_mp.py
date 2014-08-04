@@ -14,7 +14,7 @@ args = parser.parse_args()
 tp=loadtxt('sites/sites','4a')
 sites=[ii.decode() for ii in tp]
 
-_dir_postres='POSTRES'
+_dir_postres='pots_res'
 
 from multiprocessing import Pool, cpu_count
 

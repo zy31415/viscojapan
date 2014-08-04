@@ -1,7 +1,3 @@
-__doc__ = """This package do the computing and modeling using original data."""
-
- 
-# import submodules:
 from .data import *
 from .errors import *
 from .funcs import *

@@ -1,7 +1,7 @@
 from os.path import join
 import pickle
 
-from numpy import asarray, nan
+from numpy import asarray, nan, hstack, savetxt
 
 from ..config_file_reader import ConfigFileReader
 
@@ -43,9 +43,12 @@ def get_post(cfs, t):
     return asarray(tp,'float')
 
 def get_cumu_post(cfs, t):
-    assert t>=0
     return get_co(cfs) + get_post(cfs, t)
 
-
+def save_cumu_post_disp(cfs, t, fn):
+    t = asarray(t)
+    cumu = get_cumu_post(cfs, t)
+    print(t.shape)
+    savetxt(fn, hstack((t.reshape([-1,1]),cumu.reshape([-1,3]))))
 
 

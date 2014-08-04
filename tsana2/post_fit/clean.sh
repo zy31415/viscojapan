@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-rm -rf POSTRES/* CFS_POST/* screenouts/*
+rm -r post_res/* cfs/* stderr/* stdout/* cumu_post_displacement/*

@@ -123,106 +123,11 @@ pm - postseismic mode
     cfs.SITE=site
     cfs.max_step=1000
     cfs.post_model = pm
+    cfs.component_code = cc
 
     return cfs
 
-def to_file(cfs):
-    site = cfs.SITE
-    cc,pm = config_reader.get_post_model(site)
-    cos=[]
-    ams=[]
-    taus=[]
-    rechisqs=[]
-    for cf in cfs:
-        cos.append(cf.get_p('jump','TOHOKU'))
-        ams.append(cf.get_p('am'))
-        taus.append(cf.get_p('tau'))
-        rechisqs.append(cf.re_chisq())
-    print(join(_dir_postres,'%s-post'%site))
-    fid=open(join(_dir_postres,'%s-post'%site),'wt')
 
-    if cc==6 and pm=='EXP':
-        fid.write('# CO(m) : %s\n'%(''.join([' %f'%co for co in cos])))
-        fid.write('#\n')
-        fid.write('# TAU EXP(day):%f\n'%(taus[0]))
-        fid.write('# AM EXP(m):%f %f\n'%(ams[0],ams[1]))
-        fid.write('#\n')
-        fid.write('# RE_CHISQ : %s\n'%(''.join([' %f'%ii for ii in rechisqs])))        
-        fid.write('#  std  dyr  mjd  eres(m)  nres(m)\n')
-
-        ys=asarray([cf.residual() for cf in cfs],'float').transpose()
-        Ts=cfs[0].data.t        
-        for y,t in zip(ys,Ts):
-            fid.write('%s %.4f %5d %13.6E %13.6E\n'%\
-                      (asstd(int(t)),asdyr(int(t)),t,y[0],y[1]))
-
-    if cc==6 and pm=='2EXPs':
-        fid.write('# CO(m) : %s\n'%(''.join([' %f'%co for co in cos])))
-        fid.write('#\n')
-        fid.write('# TAU EXP1(day):%f\n'%(taus[0][0]))
-        fid.write('# AM EXP1(m):%f %f\n'%(ams[0][0],ams[1][0]))
-        fid.write('#\n')
-        fid.write('# TAU EXP2(day):%f\n'%(taus[0][1]))
-        fid.write('# AM EXP2(m):%f %f\n'%(ams[0][1],ams[1][1]))
-        fid.write('#\n')
-        fid.write('# RE_CHISQ : %s\n'%(''.join([' %f'%ii for ii in rechisqs])))        
-        fid.write('#  std  dyr  mjd  eres(m)  nres(m)\n')
-
-        ys=asarray([cf.residual() for cf in cfs],'float').transpose()
-        Ts=cfs[0].data.t        
-        for y,t in zip(ys,Ts):
-            fid.write('%s %.4f %5d %13.6E %13.6E\n'%\
-                      (asstd(int(t)),asdyr(int(t)),t,y[0],y[1]))
-    
-    if cc==7 and pm=='EXP':
-        fid.write('# CO(m) : %s\n'%(''.join([' %f'%co for co in cos])))
-        fid.write('#\n')
-        fid.write('# TAU EXP(day):%f\n'%(taus[0]))
-        fid.write('# AM EXP(m):%f %f %f\n'%(ams[0],ams[1],ams[2]))
-        fid.write('#\n')
-        fid.write('# RE_CHISQ : %s\n'%(''.join([' %f'%ii for ii in rechisqs])))        
-        fid.write('#  std  dyr  mjd  eres(m)  nres(m)  ures(m)\n')
-
-        ys=asarray([cf.residual() for cf in cfs],'float').transpose()
-        Ts=cfs[0].data.t        
-        for y,t in zip(ys,Ts):
-            fid.write('%s %.4f %5d %13.6E %13.6E %13.6E\n'%\
-                      (asstd(int(t)),asdyr(int(t)),t,y[0],y[1],y[2]))
-    
-    if cc==7 and pm=='2EXPs':
-        fid.write('# CO(m) : %s\n'%(''.join([' %f'%co for co in cos])))
-        fid.write('#\n')
-        fid.write('# TAU EXP1(day):%f\n'%(taus[0][0]))
-        fid.write('# AM EXP1(m):%f %f %f\n'%(ams[0][0],ams[1][0],ams[2][0]))
-        fid.write('#\n')
-        fid.write('# TAU EXP2(day):%f\n'%(taus[0][1]))
-        fid.write('# AM EXP2(m):%f %f %f\n'%(ams[0][1],ams[1][1],ams[2][1]))
-        fid.write('#\n')
-        fid.write('# RE_CHISQ : %s\n'%(''.join([' %f'%ii for ii in rechisqs])))        
-        fid.write('#  std  dyr  mjd  eres(m)  nres(m)  ures(m)\n')
-
-        ys=asarray([cf.residual() for cf in cfs],'float').transpose()
-        Ts=cfs[0].data.t        
-        for y,t in zip(ys,Ts):
-            fid.write('%s %.4f %5d %13.6E %13.6E %13.6E\n'%\
-                      (asstd(int(t)),asdyr(int(t)),t,y[0],y[1],y[2]))
-    
-    fid.close()
-
-    return cfs   
-    
-
-def save_cfs(cfs):
-    site=cfs[0].SITE
-    with open(_dir_cfs_post+'%s.cfs'%site,'wb') as fid:
-        pickle.dump(cfs,fid)
-
-def plot_post(cfs,ifshow=False,path=_dir_plotpost,picfmt='png',loc=2):
-    for cf in cfs:
-        plot_cf(cf, color='blue')
-        legend(loc=loc)
-        if ifshow:
-            show()
-
+ 
     
     

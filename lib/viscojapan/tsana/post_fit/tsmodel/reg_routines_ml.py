@@ -2,6 +2,7 @@ doc = """
 """
 
 __all__ = ['MLUtils','IndepMLReg','JointMLReg']
+import pickle
 
 from numpy import inf,dot,transpose,zeros,sqrt,diag
 from scipy.linalg import inv, LinAlgError
@@ -266,7 +267,12 @@ class JointMLReg(JointRegMod, MLUtils):
             for subf in cf.func:
                 for pn in subf.cpns:
                     setattr(subf,pn+'_sd',self.uncer[n+m])
-                    m+=1          
+                    m+=1
+
+    def save(self, fn):
+        with open(fn,'wb') as fid:
+            pickle.dump(self,fid)
+        
 
             
             
