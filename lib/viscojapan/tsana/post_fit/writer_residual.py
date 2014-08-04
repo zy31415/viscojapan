@@ -8,7 +8,10 @@ class ResidualWriter(object):
         self.post_model = cfs.post_model
         self.component_code = cfs.component_code
 
-    def _write_header_num_cycles(self,fid):
+    def _write_header_general_info(self,fid):
+        fid.write('# number of epochs used : %d\n'%(self.cfs[0].ndata()))
+        fid.write('# component code : %d\n'%self.cfs.component_code)
+        fid.write('# post model : %s\n'%self.cfs.post_model)
         fid.write('# cycles (succ/all): %d/%d\n'%\
                   (self.cfs.ncyc_suc, self.cfs.ncyc_all))
 
@@ -36,8 +39,12 @@ class ResidualWriter(object):
             raise ValueError('Post model not recognized.')
 
     def _write_header_misfit(self, fid):
+        fid.write('# CHISQ : %s\n'%\
+                  (''.join([' %f'%ii for ii in self.chisqs])))
         fid.write('# RE_CHISQ : %s\n'%\
-                  (''.join([' %f'%ii for ii in self.rechisqs])))        
+                  (''.join([' %f'%ii for ii in self.rechisqs])))
+        fid.write('# RMS (mm) : %s\n'%\
+                  (''.join([' %f'%ii for ii in self.rmses])))  
 
     def _write_header_array_header(self, fid):
         fid.write('# mjd  e_res(m)  n_res(m)  u_res(m)\n')
@@ -46,25 +53,32 @@ class ResidualWriter(object):
         ys = asarray([cf.residual() for cf in self.cfs],'float').transpose()
         Ts = self.cfs[0].data.t        
         for y,t in zip(ys,Ts):
-            fid.write('%5d %13.6E %13.6E %13.6E\n'%\
-                      (t, y[0], y[1], y[2]))
+            fid.write('%5d %s\n'%(t,''.join([' %13.6E'%ii for ii in y])))
+##            fid.write('%5d %13.6E %13.6E %13.6E\n'%\
+##                      (t, y[0], y[1], y[2]))
 
     def _write_header(self, fid):
         cos=[]
         ams=[]
         taus=[]
-        rechisqs=[]
+        chisqs = []
+        rechisqs = []
+        rmses = []
         for cf in self.cfs:
             cos.append(cf.get_p('jump','TOHOKU'))
             ams.append(cf.get_p('am'))
             taus.append(cf.get_p('tau'))
             rechisqs.append(cf.re_chisq())
+            chisqs.append(cf.chisq())
+            rmses.append(cf.rms())
         self.cos = cos
         self.ams = ams
         self.taus = taus
         self.rechisqs = rechisqs
+        self.chisqs = chisqs
+        self.rmses = rmses
 
-        self._write_header_num_cycles(fid)
+        self._write_header_general_info(fid)
         self._write_header_co(fid)
         self._write_header_post(fid)
         self._write_header_misfit(fid)

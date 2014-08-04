@@ -68,13 +68,6 @@ because sometime we want to use only part of the data to do regression.
         """ Return the number of data points.
 """
         res = len(self._t)
-        if res == len(self._y0) and res == len(self._y0_sd):
-            return res
-        else:
-            raise ValueError() 
-
-if __name__ == '__main__':
-    data = Data()
-    data.SITE = 'MEXI'
-    data.CMPT = 'e'
-    data.load()
+        assert (res == len(self._y0) and res == len(self._y0_sd))
+        return res
+        
