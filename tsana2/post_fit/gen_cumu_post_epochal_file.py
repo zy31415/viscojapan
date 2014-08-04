@@ -18,6 +18,5 @@ ep = vj.EpochalData('cumu_post_predicted.h5')
 ep['sites'] = sites
 for day in days:
     tp = data[:,(day,)]
-    print(tp.shape)
     ep[day] = tp
     

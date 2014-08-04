@@ -20,7 +20,6 @@ args = parser.parse_args()
 site=args.site[0]
 cfs=fit_post(site)
 cfs.go()
-cfs.save('cfs/%s.cfs'%site)
 ResidualWriter(cfs).save('post_res/%s.post'%site)
 
 save_cumu_post(cfs, days, 'cumu_post_displacement/%s.cumu'%site)

@@ -59,19 +59,19 @@ def save_to_file(sorted_value, fn, value_kind):
 ##            sd_dic[site] = {cmpt:read_misfit(file, misfit_kind)}
 ##    return sd_dic
 
-def read_misfit_from_pickled_cfs(files):
-    rms_dic = {}
-    for file in files:
-        with open(file, 'rb') as fid:
-            cfs = pickle.load(fid)
-        site = cfs.SITE
-        rms_dic[site] = {}
-        for cf in cfs:
-            cmpt = cf.CMPT
-            rms = cf.rms()*1000. # from m => mm
-            rms_dic[site][cmpt] = rms
-
-    for site, sds in rms_dic.items():
-        if 'u' not in sds:
-            rms_dic[site]['u']=-1
-    return rms_dic
+##def read_misfit_from_pickled_cfs(files):
+##    rms_dic = {}
+##    for file in files:
+##        with open(file, 'rb') as fid:
+##            cfs = pickle.load(fid)
+##        site = cfs.SITE
+##        rms_dic[site] = {}
+##        for cf in cfs:
+##            cmpt = cf.CMPT
+##            rms = cf.rms()*1000. # from m => mm
+##            rms_dic[site][cmpt] = rms
+##
+##    for site, sds in rms_dic.items():
+##        if 'u' not in sds:
+##            rms_dic[site]['u']=-1
+##    return rms_dic
