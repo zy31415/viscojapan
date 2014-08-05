@@ -93,7 +93,6 @@ class EpochalSitesFilteredData(EpochalSitesData):
         ch = []
         for site in self.filter_sites:
             ch.append(sites_original.index(site))
-        print(ch)
         ch = asarray(ch)
         ch1 = asarray([ch*3, ch*3+1, ch*3+2]).T.flatten()
         return ch1
