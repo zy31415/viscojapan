@@ -4,6 +4,7 @@ from pyproj import Geod
 from numpy import sin, cos, pi, asarray
 
 sites = ['KAMN', 'KAMS', 'MYGI', 'MYGW', 'FUKU']
+site_names = ['_KMN', '_KMS', '_MGI', '_MGW', '_FUK']
 lons1 = asarray([143. + 21./60. + 43.869/3600.,
         143. + 15./60. + 48.021/3600.,
         142. + 54./60. + 59.881/3600.,
@@ -64,14 +65,14 @@ eastings = dist*sin(asarray(az12)*pi/180.)
 northings = dist*cos(asarray(az12)*pi/180.)
 upings = asarray(heis2) - asarray(heis1)
 
-disp_dic = {site:((loni, lati),day,(e,n,u)) for site, loni, lati, day, e, n, u in \
-            zip(sites, lons1, lats1, days, eastings, northings, upings)}
+disp_dic = {site:(sn, (loni, lati),day,(e,n,u)) for site, sn, loni, lati, day, e, n, u in \
+            zip(sites, site_names, lons1, lats1, days, eastings, northings, upings)}
 
 with open('sites_seafloor','wt') as fid:
-    fid.write('# site  lon  lat  easting  northing  uping  day\n')
+    fid.write('# site  site_name lon  lat  easting  northing  uping  day\n')
     for key in sorted(disp_dic):
-        pos, day, disp = disp_dic[key]
-        fid.write('%s %f %f %f %f %f %d\n'%\
-                  (key, pos[0], pos[1], disp[0], disp[1], disp[2], day))
+        sn, pos, day, disp = disp_dic[key]
+        fid.write('%s %s %f %f %f %f %f %d\n'%\
+                  (key, sn, pos[0], pos[1], disp[0], disp[1], disp[2], day))
     
     
