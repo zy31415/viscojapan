@@ -1,8 +1,27 @@
-from os.path import join
+import shutil
+from os.path import join, exists
 
 import numpy as np
 
 import viscojapan as vj
+
+def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out):
+    assert not exists(file_sd_out)
+    assert exists(file_sd_original)
+    assert exists(file_seafloor_sd)
+    shutil.copyfile(file_sd_original, file_sd_out)
+    ep = vj.EpochalDisplacementSD(file_sd_out)
+    seafloor = np.loadtxt(file_seafloor_sd, '4a,i, 3f')
+
+    for ii in seafloor:
+        site = ii[0].decode()
+        day = ii[1]
+        sd = ii[2]
+        print(site, day, sd)
+
+        ep.set_value_at_site(site, 'e', day, sd[0])
+        ep.set_value_at_site(site, 'n', day, sd[1])
+        ep.set_value_at_site(site, 'u', day, sd[2])
 
 class GenSD(object):
     def __init__(self,
@@ -49,3 +68,4 @@ class GenSD(object):
         ep['min sd'] = np.amin(self.data)
         ep['mean sd'] = np.mean(self.data)
         ep['median sd'] = np.median(self.data)
+
