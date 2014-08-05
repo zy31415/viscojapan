@@ -111,12 +111,16 @@ class EpochalData(object):
             return self.get_epoch_value(name)
         elif isinstance(name, str):
             return self.get_info(name)
+        else:
+            raise ValueError('Not recognized type.')
 
     def __setitem__(self, name, val):
         if isinstance(name, int):
             return self.set_epoch_value(name, val)
         elif isinstance(name, str):
             return self.set_info(name, val)
+        else:
+            raise ValueError('Not recognized type.')
     
 
 

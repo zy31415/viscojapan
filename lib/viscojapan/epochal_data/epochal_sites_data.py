@@ -1,7 +1,7 @@
 from os.path import exists
 
 import h5py
-from numpy import loadtxt, asarray, zeros
+from numpy import loadtxt, asarray, zeros, zeros_like
 
 from .epochal_data import EpochalData
 from .stacking import conv_stack, vstack_column_vec
@@ -41,7 +41,8 @@ class EpochalSitesData(EpochalData):
     def get_epoch_value_at_site(self, site, cmpt, epoch):
         idx = self.get_site_cmpt_idx(site, cmpt)
         res = self.get_epoch_value(epoch)
-        return res[idx]
+        out = res[idx]
+        return out
 
     def set_value_at_site(self, site, cmpt, epoch, value):
         idx = self.get_site_cmpt_idx(site, cmpt)
@@ -117,9 +118,10 @@ class EpochalDisplacement(EpochalSitesFilteredData):
 
     def get_time_series(self, site, cmpt):
         epochs = self.get_epochs()
-        ys = zeros(len(epochs))
+        ys = zeros_like(epochs,float)
         for nth, epoch in enumerate(epochs):
-            ys[nth] = self.get_epoch_value_at_site(site, cmpt, epoch)
+            tp = self.get_epoch_value_at_site(site, cmpt, epoch)
+            ys[nth] = tp
         return ys
 
     def vstack(self, epochs):
