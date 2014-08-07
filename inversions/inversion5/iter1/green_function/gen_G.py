@@ -12,9 +12,9 @@ from epochs import epochs
 ##(1) log10(visM) - 18.8
 ##       visocosity - 5.839838E+18 Pa.s
 ##(2) elastic depth - 40km
-##(3) rake - 80.
+##(3) rake - 80.6
 
-mod_str = 'He40km_Vis5.8E18_Rake80'
+mod_str = 'He40km_Vis5.8E18_Rake81'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
 model0 = PollitzOutputsToEpochalData(
@@ -22,15 +22,15 @@ model0 = PollitzOutputsToEpochalData(
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
     pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'sites_with_seafloor',
+    sites_file = 'stations.in',
     )
 
 model0.extra_info ={
     'He':40.,
-    'visM':5.8E+18,
-    'log10(visM)':log10(5.8E+18),
+    'visM':5.839838E+18,
+    'log10(visM)':log10(5.839838E+18),
     'visK':inf,
-    'rake':80.
+    'rake':80.6
     }
 
 model0.extra_info_attrs ={
@@ -44,8 +44,8 @@ model0.extra_info_attrs ={
 ##(1) log10(visM) - 19
 ##	viscosity - 1.1E+19 Pa.s
 ##(2) elastic depth - 40km
-##(3) rake - 83.
-mod_str = 'He40km_Vis1.1E19_Rake83'
+##(3) rake - 80.6
+mod_str = 'He40km_Vis1.1E19_Rake81'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 
 model1 = PollitzOutputsToEpochalData(
@@ -53,7 +53,7 @@ model1 = PollitzOutputsToEpochalData(
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
     pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'sites_with_seafloor',
+    sites_file = 'stations.in',
     )
 
 model1.extra_info ={
@@ -61,7 +61,7 @@ model1.extra_info ={
     'visM':1.1E+19,
     'log10(visM)':log10(1.1E+19),
     'visK':inf,
-    'rake':83.
+    'rake':80.6
     }
 
 model1.extra_info_attrs ={
@@ -74,23 +74,23 @@ model1.extra_info_attrs ={
 ##(1) log10(visM) - 18.8
 ##       visocosity - 5.839838E+18 Pa.s
 ##(2) elastic depth - 45km
-##(3) rake - 80.
-mod_str = 'He45km_Vis5.8E18_Rake80'
+##(3) rake - 80.6
+mod_str = 'He45km_Vis5.8E18_Rake81'
 num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
 model2 = PollitzOutputsToEpochalData(
     epochs = epochs,
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
     pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'sites_with_seafloor',
+    sites_file = 'stations.in',
     )
 
 model2.extra_info ={
     'He':45.,
-    'visM':5.8E+18,
-    'log10(visM)':log10(5.8E+18),
+    'visM':5.839838E+18,
+    'log10(visM)':log10(5.839838E+18),
     'visK':inf,
-    'rake':80.
+    'rake':80.6
     }
 
 model2.extra_info_attrs ={
@@ -112,15 +112,15 @@ model3 = PollitzOutputsToEpochalData(
     G_file = 'G_' + mod_str + '.h5',
     num_subflts = num_subflts,
     pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'sites_with_seafloor',
+    sites_file = 'stations.in',
     )
 
 model3.extra_info ={
-    'He':40,
-    'visM':5.8E+18,
-    'log10(visM)':log10(5.8E+18),
-    'visK':inf,
-    'rake':90.
+    'He' : 40,
+    'visM' : 5.839838E+18,
+    'log10(visM)' : log10(5.839838E+18),
+    'visK' : inf,
+    'rake' : 90.
     }
 
 model3.extra_info_attrs ={
