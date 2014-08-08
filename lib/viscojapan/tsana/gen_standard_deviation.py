@@ -5,7 +5,7 @@ import numpy as np
 
 import viscojapan as vj
 
-def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out):
+def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out, sd = None):
     assert not exists(file_sd_out)
     assert exists(file_sd_original)
     assert exists(file_seafloor_sd)
@@ -16,7 +16,9 @@ def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out):
     for ii in seafloor:
         site = ii[0].decode()
         day = ii[1]
-        sd = ii[2]
+        if sd is None:
+            sd = ii[2]
+        assert len(sd) == 3
         print(site, day, sd)
 
         ep.set_value_at_site(site, 'e', day, sd[0])

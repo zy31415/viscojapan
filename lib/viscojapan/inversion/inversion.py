@@ -56,6 +56,13 @@ class Inversion(object):
         self.set_data_B()
         self.set_data_Bm0()
 
+    def set_data_except(self, excepts):
+        items = ['sd','W','G','d','B','L','Bm0']
+        for item in excepts:
+            itmes.remove(item)
+        for item in items:
+            getattr(self, 'set_data_%s'%item)()
+        
     def invert(self, nonnegative=True):
         print('Inverting ...')
         
