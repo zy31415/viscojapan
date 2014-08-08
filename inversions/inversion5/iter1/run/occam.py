@@ -42,7 +42,7 @@ for bno, beta in enumerate(betas):
     for ano, alpha in enumerate(alphas):
         if (ano < 9) or (ano > 13):
             continue
-        for nsd in range(20):                
+        for nsd in range(10):                
             outfname = 'outs/ano_%02d_bno_%02d_nsd_%02d.h5'%(ano, bno, nsd)
             if not exists(outfname):
                 inv.regularization = \
