@@ -28,8 +28,8 @@ inv = OccamDeconvolution(
 
     file_d = '../../cumu_post_with_seafloor.h5',
     file_sd = None,
-    file_incr_slip0 = 'slip0/incr_slip0.h5',
-    filter_sites_file = 'sites_with_seafloor',
+    file_incr_slip0 = '../slip0/incr_slip0.h5',
+    filter_sites_file = '../sites_with_seafloor',
     epochs = epochs,
     regularization = None,
     basis = basis,          
@@ -42,7 +42,7 @@ for bno, beta in enumerate(betas):
     for ano, alpha in enumerate(alphas):
         if (ano < 9) or (ano > 13):
             continue
-        for nsd in range(20):                
+        for nsd in range(10):                
             outfname = 'outs/ano_%02d_bno_%02d_nsd_%02d.h5'%(ano, bno, nsd)
             if not exists(outfname):
                 inv.regularization = \
