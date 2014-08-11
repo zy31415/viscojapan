@@ -37,12 +37,12 @@ inv = OccamDeconvolution(
 inv.set_data_except(excepts=['L', 'sd','W'])
 
 for bno, beta in enumerate(betas):
-    if bno != 10:
-        continue
     for ano, alpha in enumerate(alphas):
-        if (ano < 9) or (ano > 13):
-            continue
-        for nsd in range(10):                
+        #if (ano < 9) or (ano > 13):
+        #    continue
+        for nsd in range(10):
+            if nsd != 0:
+                continue
             outfname = 'outs/ano_%02d_bno_%02d_nsd_%02d.h5'%(ano, bno, nsd)
             if not exists(outfname):
                 inv.regularization = \
