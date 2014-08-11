@@ -41,7 +41,6 @@ def task(f_res):
         d_pred = fid['d_pred'][...]
 
     for nth, epoch in enumerate(epochs):    
-        print(epoch)
         mplt = MapPlotFault(fault_file)
         mplt.plot_slip(Bm[nth*num_subflts:
                           (nth+1)*num_subflts])
