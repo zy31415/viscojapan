@@ -34,7 +34,7 @@ inv = OccamDeconvolution(
     regularization = None,
     basis = basis,          
     )
-inv.set_data_except(excepts=['L', 'sd'])
+inv.set_data_except(excepts=['L', 'sd','W'])
 
 for bno, beta in enumerate(betas):
     if bno != 10:
@@ -52,6 +52,7 @@ for bno, beta in enumerate(betas):
 
                 inv.file_sd = '../../sd_seafloor/sd_files/sd_with_seafloor_%02d.h5'%nsd
                 inv.set_data_sd()
+                inv.set_data_W()
                 
                 inv.run()
                 inv.save(outfname, overwrite=True)

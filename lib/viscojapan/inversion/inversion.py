@@ -59,7 +59,7 @@ class Inversion(object):
     def set_data_except(self, excepts):
         items = ['sd','W','G','d','B','L','Bm0']
         for item in excepts:
-            itmes.remove(item)
+            items.remove(item)
         for item in items:
             getattr(self, 'set_data_%s'%item)()
         
