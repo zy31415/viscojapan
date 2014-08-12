@@ -12,6 +12,7 @@ sys.path.append('../')
 from epochs_log import epochs 
 from alphas import alphas
 from betas import betas
+from gammas import gammas
 
 fault_file = '../fault_model/fault_bott40km.h5'
 

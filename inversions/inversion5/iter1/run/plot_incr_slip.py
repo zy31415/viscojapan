@@ -59,7 +59,7 @@ def task(f_res):
         plt.close()
 
 if __name__ == '__main__':
-    nproc = 5
+    nproc = 22
     pool = Pool(processes=nproc)
     files = glob.glob('outs/ano_??_bno_??_nsd_00.h5')
     pool.map(task, files)
