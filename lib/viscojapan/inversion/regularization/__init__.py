@@ -5,4 +5,4 @@ from .utils import create_roughening_temporal_regularization,\
      create_temporal_damping_roughening_regularization, \
      create_temporal_edge_roughening
 from .intensity import Intensity
-from .punish_edge import PunishEdge
+from .boundary import AllBoundaryReg

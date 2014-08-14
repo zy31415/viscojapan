@@ -2,7 +2,7 @@ from .regularization import Composite
 from .roughening import Roughening, ExpandForAllEpochs
 from .temporal_regularization import TemporalRegularization
 from .intensity import Intensity
-from .punish_edge import PunishEdge
+from .boundary import AllBoundaryReg
 
 def create_roughening_temporal_regularization(
     fault_file, epochs, rough, temp):
@@ -43,7 +43,7 @@ def create_temporal_edge_roughening(
     
     reg_temp = TemporalRegularization.create_from_fault_file(fault_file, epochs)
 
-    tp = PunishEdge.create_from_fault_file(fault_file)
+    tp = AllBoundaryReg.create_from_fault_file(fault_file)
     reg_edging = ExpandForAllEpochs(tp, num_epochs)
 
     tp = Roughening.create_from_fault_file(fault_file)
