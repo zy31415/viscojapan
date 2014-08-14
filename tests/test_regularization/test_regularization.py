@@ -9,7 +9,7 @@ from viscojapan.inversion.regularization.roughening import \
 from viscojapan.inversion.regularization import \
      Composite,TemporalRegularization, \
      create_roughening_temporal_regularization, \
-     ExpandForAllEpochs
+     ExpandForAllEpochs, PunishEdge
 
      
 from viscojapan.test_utils import MyTestCase
@@ -32,10 +32,11 @@ class Test_Regularization(MyTestCase):
         
     def test_row_roughening(self):
         reg = RowRoughening(
-            ncols_slip = 3,
-            nrows_slip = 5
+            ncols_slip = 5,
+            nrows_slip = 3
             )
         reg_mat = reg()
+        #print(reg_mat.todense())
         self.plot_mat(reg_mat, 'row_roughening_mat.png')
 
     def test_col_roughening(self):
@@ -44,6 +45,7 @@ class Test_Regularization(MyTestCase):
             nrows_slip = 3
             )
         reg_mat = reg()
+        #print(reg_mat.todense())
         self.plot_mat(reg_mat, 'col_roughening_mat.png')
 
     def test_RowColRoughening(self):
@@ -96,6 +98,14 @@ class Test_Regularization(MyTestCase):
             fault_file, epochs, rough, temp)
         reg_mat = reg()
         self.plot_mat(reg_mat, 'roughening_temporal.png')
+
+    def test_PunishEdge(self):
+        reg = PunishEdge(
+            ncols_slip = 5,
+            nrows_slip = 4,
+            )
+        reg_mat = reg()
+        self.plot_mat(reg_mat, 'punish_edge.png')
     
         
 if __name__ == '__main__':

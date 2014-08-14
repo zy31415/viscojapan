@@ -35,7 +35,7 @@ label - L-curve label
     if alphas is not None:
         assert len(nres)==len(alphas)
     # plot L-curve
-    loglog(nres,nsol,'o-',label=label,color=color)
+    loglog(nres,nsol,'o',label=label,color=color)
 
     if alphas is not None:
         if lanos is None:

@@ -13,12 +13,12 @@ Hes = []
 rakes = []
 nroughs = []
 
-files = glob.glob('outs/ano_??_bno_??_nsd_00.h5')
+files = glob.glob('outs/bno_??_cno_??.h5')
 
 for file in files:
     with h5py.File(file,'r') as fid:
     #with h5py.File('outs/cno_%02d.h5'%ano,'r') as fid:
-        nres = fid['residual_norm_weighted'][...]
+        nres = fid['residual_norm'][...]
         nreses.append(nres)
 
         m = fid['m'][...]
@@ -68,5 +68,5 @@ plt.ylabel('roughening')
 plt.xlabel('Residual Norm')
 plt.grid('on')
 
-plt.savefig('plots/nlin_par_curve.png')
+plt.savefig('plots/nlin_par_curve_rms.png')
 plt.show()
