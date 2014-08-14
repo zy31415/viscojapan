@@ -2,7 +2,7 @@ from .regularization import Composite
 from .roughening import Roughening, ExpandForAllEpochs
 from .temporal_regularization import TemporalRegularization
 from .intensity import Intensity
-from .boundary import AllBoundaryReg
+from .boundary import BoundaryRegDeadNorthAndSouth
 
 def create_roughening_temporal_regularization(
     fault_file, epochs, rough, temp):
