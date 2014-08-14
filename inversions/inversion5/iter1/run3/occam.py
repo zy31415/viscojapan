@@ -8,6 +8,7 @@ from viscojapan.inversion.regularization import \
      create_temporal_edge_roughening
 from viscojapan.inversion.basis_function import BasisMatrix
 
+from epochs_log import epochs
 from reg_edges import reg_edges
 from reg_roughes import reg_roughes
 
