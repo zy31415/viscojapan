@@ -47,8 +47,8 @@ inv = OccamDeconvolution(
 inv.set_data_except(excepts=['L',])
 
 reg_temp = 0.1
-for reg_rough, nrough in enumerate(reg_roughes):
-    for reg_edge, nedge in enumerate(reg_edges):
+for nrough, reg_rough in enumerate(reg_roughes):
+    for nedge, reg_edge in enumerate(reg_edges):
         outfname = 'outs/seasd_%02d_nrough_%02d_nedge_%02d.h5'%(nseasd, nrough, nedge)
         if exists(outfname):
             print("Skip %s !"%outfname)
