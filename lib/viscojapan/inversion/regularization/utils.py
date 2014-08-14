@@ -39,14 +39,15 @@ def create_temporal_damping_roughening_regularization(
 
 def create_temporal_edge_roughening(
     fault_file, epochs, temp, edging, rough):
-
+    num_epochs = len(epochs)
+    
     reg_temp = TemporalRegularization.create_from_fault_file(fault_file, epochs)
 
     tp = PunishEdge.create_from_fault_file(fault_file)
-    reg_edging = ExpandForAllEpochs(tp, len(num_epochs))
+    reg_edging = ExpandForAllEpochs(tp, num_epochs)
 
     tp = Roughening.create_from_fault_file(fault_file)
-    reg_rough = ExpandForAllEpochs(reg = tp, num_epochs = len(epochs))
+    reg_rough = ExpandForAllEpochs(reg = tp, num_epochs = num_epochs)
 
     reg = Composite().\
           add_component(reg_temp, arg=temp, arg_name='temporal'). \

@@ -15,6 +15,12 @@ from reg_roughes import reg_roughes
 
 fault_file = '../fault_model/fault_bott40km.h5'
 
+# nseasd  sd
+# 0     0.0001
+# 1     0.00564444444444
+# 2     0.0111888888889
+nseasd = 1
+
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
@@ -28,7 +34,7 @@ inv = OccamDeconvolution(
     nlin_par_names = ['log10(visM)','He','rake'],
 
     file_d = '../../cumu_post_with_seafloor.h5',
-    file_sd = '../../sd_seafloor/sd_files/sd_with_seafloor_00.h5',
+    file_sd = '../../sd_seafloor/sd_files/sd_with_seafloor_%02d.h5'%nseasd,
     file_incr_slip0 = '../slip0/incr_slip0.h5',
     filter_sites_file = '../sites_with_seafloor',
     epochs = epochs,
@@ -41,7 +47,7 @@ inv.set_data_except(excepts=['L',])
 reg_temp = 0.1
 for reg_rough, nrough in enumerate(reg_roughes):
     for reg_edge, nedge in enumerate(reg_edges):
-        outfname = 'outs/nrough_%02d_nedge_%02d.h5'%(nrough, nedge)
+        outfname = 'outs/seasd_%02d_nrough_%02d_nedge_%02d.h5'%(nseasd, nrough, nedge)
         if not exists(outfname):
             inv.regularization = \
                    reg = vj.create_temporal_edge_roughening(
