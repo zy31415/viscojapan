@@ -11,12 +11,11 @@ this_script_dir = get_this_script_dir(__file__)
 
 class MapPlotSlab(MapPlot):
     def __init__(self, basemap=None, **kwargs):
-        super().__init__()
+        super().__init__(basemap = basemap)
         self.file_kur_top = join(this_script_dir,
                                  'share/slab1.0/kur_top.in')
         self.file_dep_contour = join(this_script_dir,
                                      'share/slab1.0/kur_contours.in')
-        self.basemap = basemap        
         kw_init(self, kwargs)
         
     def plot_top(self):        

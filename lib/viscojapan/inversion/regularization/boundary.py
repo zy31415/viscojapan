@@ -115,6 +115,30 @@ class DeadBoundary(Composite):
             )
         return reg
 
+class BoundaryRegDeadNorthAndSouth(Composite):
+    def __init__(self,
+                 ncols_slip,
+                 nrows_slip,
+                 arg_for_dead_boundary = 1e5
+                 ):
+        north = NorthBoundary(ncols_slip, nrows_slip)
+        south = SouthBoundary(ncols_slip, nrows_slip)
+        top = FaultTopBoundary(ncols_slip, nrows_slip)
+
+        components = (north, south, top)
+        args = [arg_for_dead_boundary, arg_for_dead_boundary, 1.]
+        arg_names = ['north','south','top']
+        super().__init__(components, args = args, arg_names = arg_names)
+
+    @classmethod
+    def create_from_fault_file(cls, fault_file):
+        fid = FaultFileIO(fault_file)        
+        reg = cls(
+            ncols_slip = fid.num_subflt_along_strike,
+            nrows_slip = fid.num_subflt_along_dip,
+            )
+        return reg
+
 class AllBoundaryReg(Composite):
     def __init__(self,
                  ncols_slip,

@@ -3,14 +3,14 @@ import numpy as np
 
 from viscojapan.inversion.basis_function import BasisMatrix
 from viscojapan.inversion.regularization import Roughening, Composite, \
-     PunishEdge
+     AllBoundaryReg
 from viscojapan.inversion.static_inversion import StaticInversion
 
 
 fault_file = 'fault_bott40km.h5'
 
 rough = Roughening.create_from_fault_file(fault_file)
-edge = PunishEdge.create_from_fault_file(fault_file)
+edge = AllBoundaryReg.create_from_fault_file(fault_file)
 
 basis = BasisMatrix.create_from_fault_file(fault_file)
 

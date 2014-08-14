@@ -43,7 +43,7 @@ def create_temporal_edge_roughening(
     
     reg_temp = TemporalRegularization.create_from_fault_file(fault_file, epochs)
 
-    tp = AllBoundaryReg.create_from_fault_file(fault_file)
+    tp = BoundaryRegDeadNorthAndSouth.create_from_fault_file(fault_file)
     reg_edging = ExpandForAllEpochs(tp, num_epochs)
 
     tp = Roughening.create_from_fault_file(fault_file)

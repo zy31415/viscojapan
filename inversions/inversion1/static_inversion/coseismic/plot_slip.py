@@ -1,5 +1,5 @@
 import glob
-from os.path import basename
+from os.path import basename, exists
 
 import h5py
 
