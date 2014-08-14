@@ -12,6 +12,8 @@ from epochs_log import epochs
 from reg_edges import reg_edges
 from reg_roughes import reg_roughes
 
+print(reg_edges)
+print(reg_roughes)
 
 fault_file = '../fault_model/fault_bott40km.h5'
 
@@ -48,13 +50,16 @@ reg_temp = 0.1
 for reg_rough, nrough in enumerate(reg_roughes):
     for reg_edge, nedge in enumerate(reg_edges):
         outfname = 'outs/seasd_%02d_nrough_%02d_nedge_%02d.h5'%(nseasd, nrough, nedge)
-        if not exists(outfname):
-            inv.regularization = \
-                   reg = vj.create_temporal_edge_roughening(
-                       fault_file, epochs, reg_temp, reg_edge, reg_rough)
-            inv.set_data_L()            
-            inv.run()
-            inv.save(outfname, overwrite=True)
-        else:
+        if exists(outfname):
             print("Skip %s !"%outfname)
+            continue
+        print(outfname)
+        inv.regularization = \
+               reg = vj.create_temporal_edge_roughening(
+                   fault_file, epochs, reg_temp, reg_edge, reg_rough)
+        inv.set_data_L()            
+        inv.run()
+        inv.save(outfname, overwrite=True)
+
+            
                 
