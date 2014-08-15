@@ -18,14 +18,14 @@ def free_cpu_test(config_file):
     res = loadtxt(config_file)
     return float(res)    
 
-def free_cpu(interval=0.1):
-    cpu_percent = ps.cpu_percent(interval=interval)
-    ncpu = ps.cpu_count()
-    return ncpu * (1. - cpu_percent/100.)
+##def free_cpu(interval=0.1):
+##    cpu_percent = ps.cpu_percent(interval=interval)
+##    ncpu = ps.cpu_count()
+##    return ncpu * (1. - cpu_percent/100.)
 
 def print_free_cpu():
     print('Free CPU #:')
-    print('    %.2f'%free_cpu())
+    print('    %.2f'%free_cpu_test())
 
 def find_process_by_pid(processes, pid):
     for p in processes:
@@ -111,8 +111,8 @@ class DPool(object):
                 self._kill_a_process()
 
     def _dynamic_pool_adjust_process(self):
-        self._add_procs(free_cpu() - self.controller.threshold_load)
-        self._kill_procs(self.controller.threshold_kill - free_cpu())
+        self._add_procs(free_cpu_test() - self.controller.threshold_load)
+        self._kill_procs(self.controller.threshold_kill - free_cpu_test())
 
     def _static_pool_adjust_process(self):
         self._add_procs(self.controller.num_processes -
