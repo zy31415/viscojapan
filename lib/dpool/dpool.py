@@ -25,8 +25,8 @@ def free_cpu(interval=0.1):
     cpu_percent = ps.cpu_percent(interval=interval)
     ncpu = ps.cpu_count()
     free_cpu = ncpu * (1. - cpu_percent/100.)
-    res = loadtxt('/home/zy/workspace/viscojapan/inversions/inversion5/iter2/green_function/free_cpu')
-    free_cpu -= res
+##    res = loadtxt('/home/zy/workspace/viscojapan/inversions/inversion5/iter2/green_function/free_cpu')
+##    free_cpu -= res
     return free_cpu
     
 
