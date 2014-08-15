@@ -21,7 +21,7 @@ def mean(arr):
 ##    ncpu = ps.cpu_count()
 ##    return ncpu * (1. - cpu_percent/100.)
 
-def free_cpu():
+def free_cpu(interval=0.1):
     cpu_percent = ps.cpu_percent(interval=interval)
     ncpu = ps.cpu_count()
     free_cpu = ncpu * (1. - cpu_percent/100.)
