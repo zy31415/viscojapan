@@ -16,16 +16,13 @@ from .feeder import Feeder
 def mean(arr):
     return sum(arr)/len(arr)
 
-def free_cpu(interval=0.1):
+def free_cpu(interval=0.1, ntimes=20):
     cpu_percents = []
-    for n in range(10):
+    for n in range(ntimes):
         cpu_percents.append(ps.cpu_percent(interval=interval))
     cpu_percent = mean(cpu_percents)
-    print(cpu_percent)
     ncpu = ps.cpu_count()
     free_cpu = ncpu * (1. - cpu_percent/100.)
-##    res = loadtxt('/home/zy/workspace/viscojapan/inversions/inversion5/iter2/green_function/free_cpu')
-##    free_cpu -= res
     return free_cpu
     
 
