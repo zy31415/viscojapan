@@ -3,7 +3,7 @@ from subprocess import call
 import os
 import datetime
 import time
-from numpy import loadtxt
+from numpy import loadtxt, mean
 
 import psutil as ps
 
@@ -16,13 +16,12 @@ from .feeder import Feeder
 def mean(arr):
     return sum(arr)/len(arr)
 
-##def free_cpu(interval=0.1):
-##    cpu_percent = ps.cpu_percent(interval=interval)
-##    ncpu = ps.cpu_count()
-##    return ncpu * (1. - cpu_percent/100.)
-
 def free_cpu(interval=0.1):
-    cpu_percent = ps.cpu_percent(interval=interval)
+    start =  time.clock()
+    cpu_percents = []
+    while time.clock()-start < 2:
+        cpu_percents.append(ps.cpu_percent(interval=interval))
+    cpu_percent = mean(cpu_percents)
     ncpu = ps.cpu_count()
     free_cpu = ncpu * (1. - cpu_percent/100.)
 ##    res = loadtxt('/home/zy/workspace/viscojapan/inversions/inversion5/iter2/green_function/free_cpu')
