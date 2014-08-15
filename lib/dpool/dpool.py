@@ -17,9 +17,8 @@ def mean(arr):
     return sum(arr)/len(arr)
 
 def free_cpu(interval=0.1):
-    start =  time.clock()
     cpu_percents = []
-    while time.clock()-start < 2:
+    for n in range(10):
         cpu_percents.append(ps.cpu_percent(interval=interval))
     cpu_percent = mean(cpu_percents)
     print(cpu_percent)
