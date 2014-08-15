@@ -21,8 +21,9 @@ def mean(arr):
 ##    ncpu = ps.cpu_count()
 ##    return ncpu * (1. - cpu_percent/100.)
 
-def free_cpu(interval=0.1):
+def free_cpu(interval=1):
     cpu_percent = ps.cpu_percent(interval=interval)
+    print(cpu_percent)
     ncpu = ps.cpu_count()
     free_cpu = ncpu * (1. - cpu_percent/100.)
 ##    res = loadtxt('/home/zy/workspace/viscojapan/inversions/inversion5/iter2/green_function/free_cpu')
