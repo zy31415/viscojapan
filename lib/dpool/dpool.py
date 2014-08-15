@@ -2,6 +2,7 @@ import subprocess, signal
 from subprocess import call
 import os
 import datetime
+import time
 
 import psutil as ps
 
@@ -14,14 +15,15 @@ from .feeder import Feeder
 def mean(arr):
     return sum(arr)/len(arr)
 
-def free_cpu_test(config_file):
-    res = loadtxt(config_file)
-    return float(res)    
+##def free_cpu(interval=0.1):
+##    cpu_percent = ps.cpu_percent(interval=interval)
+##    ncpu = ps.cpu_count()
+##    return ncpu * (1. - cpu_percent/100.)
 
-def free_cpu(interval=0.1):
-    cpu_percent = ps.cpu_percent(interval=interval)
-    ncpu = ps.cpu_count()
-    return ncpu * (1. - cpu_percent/100.)
+def free_cpu():
+    time.sleep(0.1)
+    res = loadtxt('/home/zy/workspace/viscojapan/inversions/inversion5/iter2/green_function/free_cpu')
+    return float(res)    
 
 def print_free_cpu():
     print('Free CPU #:')
