@@ -46,7 +46,8 @@ def run(par):
     outf = 'outs/nsd_%02d_rough_%02d_top_%02d.h5'%(nsd, nrough, nedg)
     print(outf)
     stdout = sys.stdout
-    sys.stdout = os.devnull
+    fid = open(os.devnull,'w')
+    sys.stdout = fid
 
     reg = Composite().\
           add_component(component = reg_north,
@@ -73,6 +74,7 @@ def run(par):
     inv.save(outf, overwrite=True)
 
     sys.stdout = stdout
+    fid.close()
 
 if __name__=='__main__':
     pars = []
