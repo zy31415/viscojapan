@@ -1,3 +1,3 @@
 import glob
 
-glob.glob('../outs/')
+glob.glob('../outs/nsd_00')
