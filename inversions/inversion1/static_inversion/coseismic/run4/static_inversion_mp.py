@@ -2,6 +2,8 @@ from numpy import logspace
 import numpy as np
 from multiprocessing import Pool
 import argparse
+import sys
+import os
 
 from viscojapan.inversion.basis_function import BasisMatrix
 from viscojapan.inversion.regularization import Roughening, Composite, \
@@ -40,7 +42,11 @@ edge_pars = np.logspace(-3,1,10)
 def run(par):
     nsd = par[0]
     nrough = par[1]
-    nedg = par[2]    
+    nedg = par[2]
+    outf = 'outs/nsd_%02d_rough_%02d_top_%02d.h5'%(nsd, nrough, nedg)
+    print(outf)
+    stdout = sys.stdout
+    sys.stdout = os.devnull
 
     reg = Composite().\
           add_component(component = reg_north,
@@ -63,7 +69,10 @@ def run(par):
     inv.set_data_W()
     inv.invert()
     inv.predict()
-    inv.save('outs/nsd_%02d_rough_%02d_top_%02d.h5'%(nsd, nrough, nedg), overwrite=True)
+    
+    inv.save(outf, overwrite=True)
+
+    sys.stdout = stdout
 
 if __name__=='__main__':
     pars = []
