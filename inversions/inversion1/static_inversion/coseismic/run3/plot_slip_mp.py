@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 ncpus = args.ncpus[0]
 
-files = glob.glob('outs/rough_??_top_??.h5')
+files = glob.glob('outs/nsd_??_rough_??_top_??.h5')
 
 sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
 
