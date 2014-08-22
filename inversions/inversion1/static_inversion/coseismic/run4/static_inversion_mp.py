@@ -1,12 +1,18 @@
 from numpy import logspace
 import numpy as np
 from multiprocessing import Pool
+import argparse
 
 from viscojapan.inversion.basis_function import BasisMatrix
 from viscojapan.inversion.regularization import Roughening, Composite, \
      NorthBoundary, SouthBoundary, FaultTopBoundary
 from viscojapan.inversion.static_inversion import StaticInversion
 
+parser = argparse.ArgumentParser(description='Plot slip.')
+parser.add_argument('ncpus', type=int, nargs=1, help='# CPUs')
+args = parser.parse_args()
+
+ncpus = args.ncpus[0]
 
 fault_file = '../fault_bott40km.h5'
 
@@ -65,6 +71,5 @@ if __name__=='__main__':
         for nroughi in range(len(roughs)):
             for nedgi in range(len(edge_pars)):
                 pars.append([nsdi, nroughi, nedgi])
-    ncpus = 5
     pool = Pool(ncpus)
     pool.map(run, pars)
