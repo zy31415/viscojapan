@@ -9,10 +9,7 @@ outs_tik2
 
 *.pdf
 
-slab1.0/
-
 *flt_????
-fault_model1/workspace/
 
 .idea/
 
@@ -23,4 +20,3 @@ fault_model1/workspace/
 # ~ is for temporary files and directories
 ~*
 
-tsana/
