@@ -1,5 +1,6 @@
 from numpy import logspace
 import numpy as np
+from multiprocessing import Pool
 
 from viscojapan.inversion.basis_function import BasisMatrix
 from viscojapan.inversion.regularization import Roughening, Composite, \
@@ -56,7 +57,7 @@ def run(par):
     inv.set_data_W()
     inv.invert()
     inv.predict()
-    inv.save('outs/nsd_%02d_rough_%02d_top_%02d.h5'%(nsd, nth,nedg), overwrite=True)
+    inv.save('outs/nsd_%02d_rough_%02d_top_%02d.h5'%(nsd, nrough, nedg), overwrite=True)
 
 if __name__=='__main__':
     pars = []
