@@ -45,6 +45,18 @@ class MapPlotDisplacement(MapPlot):
         qk = quiverkey(Qu,X,Y,U,label,
                             labelpos='N')
 
+    def plot_sites(self, sites,
+                   marker='s', color='white', ms=5):
+        lons,lats=get_pos(sites)
+        self.basemap.plot(lons,lats, linestyle='None', 
+                          marker=marker, color=color, ms=ms, latlon=True)
+
+    def plot_sites_seafloor(self, sites_file=None, sites_seafloor=None):
+        if sites_file is not None:
+            sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
+        self.plot_sites(sites_seafloor,
+                   marker='s', color='white', ms=5)
+        
     def plot_disp_file(self, f_disp, epoch):
         disp_obj = EpochalDisplacement(f_disp)
         disp = disp_obj(epoch)
@@ -56,6 +68,7 @@ class MapPlotDisplacement(MapPlot):
         G = g[epoch]
         sites = g.get_info('sites')
         self.plot_disp(G[:,mth],sites, **kwargs)
+        
         
         
         

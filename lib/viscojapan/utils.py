@@ -3,9 +3,12 @@ from os.path import exists, isdir, dirname, realpath
 from os import makedirs
 import time
 import shutil
+import re
 
 from numpy import hstack, asarray, frompyfunc
 from numpy.random import normal
+
+__all__ = ['delete_if_exists', 'read_sites_seafloor']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -20,6 +23,14 @@ def create_dir_if_not_exists(path):
 
 def get_this_script_dir(__file__):
     return dirname(realpath(__file__))
+
+def read_sites_seafloor(sites_file):
+    ''' Seafloor sites name start with an understore "_"
+'''
+    with open(sites_file, 'rt') as fid:
+        sites_seafloor = re.findall('^_.{3}', fid.read(),re.M)
+    res = [si.encode() for si in sites_seafloor]
+    return res
 
 # assertions
 

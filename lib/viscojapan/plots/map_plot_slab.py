@@ -22,7 +22,7 @@ class MapPlotSlab(MapPlot):
         tp = loadtxt(self.file_kur_top)
         lon = tp[:,0]
         lat = tp[:,1]
-        self.basemap.plot(lon,lat,latlon=True)
+        self.basemap.plot(lon,lat,latlon=True, color='black')
 
     def plot_dep_contour(self, dep, ms=2, **kwargs):
         tp = loadtxt(self.file_dep_contour, comments='>')

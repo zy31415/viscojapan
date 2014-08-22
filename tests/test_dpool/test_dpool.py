@@ -13,7 +13,7 @@ class Test_DPool(MyTestCase):
 
     def test(self):
         tasks = []
-        for n in range(50):
+        for n in range(5000):
             tasks.append(Task(target = sleep,
                               args = (randrange(20),)))
         dp = DPool(
