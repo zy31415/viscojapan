@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(description='Plot slip.')
 parser.add_argument('ncpus', type=int, nargs=1, help='# CPUs')
 args = parser.parse_args()
 
-ncpus = args.ncpus
+ncpus = args.ncpus[0]
 
 files = glob.glob('outs/rough_??_top_??.h5')
 
