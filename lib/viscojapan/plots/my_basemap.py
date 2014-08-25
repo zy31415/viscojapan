@@ -18,6 +18,8 @@ class MyBasemap(Basemap):
         if self.region_box is None:
             if self.region_code=='I':
                 self.region_box=(128,30,132.5,34.5)
+            elif self.region_code=='C':
+                self.region_box=(138.8,38.,144,40)
             elif self.region_code=='A':
                 self.region_box=(136.2,35.8,142.6,38.2)
             elif self.region_code=='H':
@@ -28,6 +30,8 @@ class MyBasemap(Basemap):
                 self.region_box=(136,34,146,42)
             elif self.region_code=='all':
                 self.region_box=(136,34,146,42)
+            elif self.region_code=='seafloor':
+                self.region_box=(140,36,145,41)
             else:
                 raise ValueError('Invalid Region code.')
         

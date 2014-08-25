@@ -2,6 +2,8 @@ from os.path import join
 from numpy import loadtxt
 from pylab import quiverkey
 
+import viscojapan as vj
+
 from .map_plot import MapPlot
 
 from ..utils import get_this_script_dir
@@ -52,8 +54,9 @@ class MapPlotDisplacement(MapPlot):
                           marker=marker, color=color, ms=ms, latlon=True)
 
     def plot_sites_seafloor(self, sites_file=None, sites_seafloor=None):
-        if sites_file is not None:
-            sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
+        if sites_file is None:
+            sites_seafloor = vj.read_sites_seafloor(
+                join(this_file_path, 'share/sites_with_seafloor'))
         self.plot_sites(sites_seafloor,
                    marker='s', color='white', ms=5)
         

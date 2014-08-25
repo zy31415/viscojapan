@@ -1,23 +1,37 @@
 import h5py
 from numpy import log10, asarray
+import numpy as np
 
 from viscojapan.epochal_data import EpochalIncrSlip
+import viscojapan as vj
 
-_fault_file='/home/zy/workspace/visinv2/flt_250/fault.h5'
+from .read_earth_model_file import ReadEarthModelFile
 
 class ComputeMoment(object):
-    def __init__(self):
-        self.fault_model_file = _fault_file
+    def __init__(self, fault_file, earth_file):
+        self.fault_model_file = fault_file
+        self.earth_model_file = earth_file
+
+    def _get_shear(self):
+        reader = vj.FaultFileIO(self.fault_model_file)
+        ddeps = reader.ddeps[1:, 1:]
+        reader = ReadEarthModelFile(self.earth_model_file)
+        return reader.get_shear_modulus(ddeps)
+        
         
     def moment(self, slip):
         ''' Compute moment.
 '''
-        with h5py.File(self.fault_model_file) as fid:
-            fl=float(fid['subflt_len'][...])
-            fw=float(fid['subflt_wid'][...])
-            shr=fid['meshes/shear'][...]
+        reader = vj.FaultFileIO(self.fault_model_file)
+        
+        fl = reader.subflt_sz_dip
+        fw = reader.subflt_sz_strike
+
+        print(fl,fw)
+        
+        shr = self._get_shear()
         mos = shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
-        mo = sum(mos)
+        mo = np.sum(mos)
         mw = 2./3.*log10(mo)-6. 
         return mo, mw
 
