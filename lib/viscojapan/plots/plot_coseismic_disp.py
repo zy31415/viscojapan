@@ -1,5 +1,7 @@
 import viscojapan as vj
 
+__all__=['PlotCoseismicDisp']
+
 class PlotCoseismicDisp(object):
     def __init__(self,
                  d_obs,
@@ -11,6 +13,7 @@ class PlotCoseismicDisp(object):
         self.d_obs = d_obs
         self.d_pred = d_pred
         self.sites = sites
+        self.sites_subset = None
         self.fault_file =  fault_file
         self.fault_slip = fault_slip
 
@@ -28,11 +31,12 @@ class PlotCoseismicDisp(object):
     def _set_basemap(self, region_code):
         self.basemap = vj.MyBasemap(region_code=region_code)
 
-    def _plot_d(self, scale, X, Y, U, label_len):
+    def _plot_d(self, scale, X, Y, U, label_len, sites_subset=None):
         mplt = vj.MapPlotDisplacement(self.basemap)
-        mplt.plot_disp(self.d_obs, self.sites, scale=scale,
-                       X=X, Y=Y, U=U, label='obs. '+label_len)
-        mplt.plot_disp(self.d_pred, self.sites, scale=scale, color='red',
+        mplt.plot_disp(self.d_obs, self.sites, sites_subset=sites_subset,
+                       scale=scale, X=X, Y=Y, U=U, label='obs. '+label_len)
+        mplt.plot_disp(self.d_pred, self.sites, sites_subset=sites_subset,
+                       scale=scale, color='red',
                        X=X, Y=Y+0.08, U=U, label='pred. '+label_len)
 
     def _mark_seafloor_sites(self):
@@ -98,7 +102,7 @@ class PlotCoseismicDisp(object):
         self._mark_seafloor_sites()
         self._plot_d(scale = scale,
                      X = X, Y = Y, U = U, label_len=label_len
-                     )
+                     )        
 
     def plot_at_near(self):
         self._set_basemap('near')
@@ -128,7 +132,7 @@ class PlotCoseismicDisp(object):
                      X = X, Y = Y, U = U, label_len=label_len
                      )
 
-    def plot_at_all(self):
+    def plot_at_all(self):        
         self._set_basemap('all')
         scale = 80
         X = 0.10
@@ -141,5 +145,51 @@ class PlotCoseismicDisp(object):
         self._plot_d(scale = scale,
                      X = X, Y = Y, U = U, label_len=label_len
                      )
+
+    def plot_at_ryukyu(self):
+        self._set_basemap('ryukyu')
+        scale = .1
+        X = 0.5
+        Y = 0.7
+        U = .005
+        label_len = '%dmm'%int(U*1000)
+        self._plot_trench_top()
+        self._plot_d(scale = scale,
+                     X = X, Y = Y, U = U, label_len=label_len
+                     )
+
+    def plot_at_oceanward(self):
+        self._set_basemap('oceanward')
+        sites_subset = vj.get_sites_in_box(self.basemap.region_box)
+        scale = .05
+        X = 0.85
+        Y = 0.1
+        U = .005
+        label_len = '%dmm'%int(U*1000)
+        self._plot_trench_top()
+        self._plot_d(scale = scale,
+                     X = X, Y = Y, U = U, label_len=label_len,
+                     sites_subset = sites_subset
+                     )
+
+    def plot_at(self, region_code):
+        getattr(self, 'plot_at_'+region_code)()
+
+    def plot_far_field(self, sites_far_field):
+        self.sites_subset = sites_far_field
+        self._set_basemap('all')
+        scale = .2
+        X = 0.15
+        Y = 0.7
+        U = .01
+        label_len = '%dmm'%int(U*1000)
+        self._plot_fault()
+        self._plot_trench_top()
+        self._mark_seafloor_sites()
+        self._plot_d(scale = scale,
+                     X = X, Y = Y, U = U, label_len=label_len,
+                     sites_subset = sites_far_field
+                     )
+        
     
 

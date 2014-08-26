@@ -1,5 +1,7 @@
 from os.path import join
+
 from numpy import loadtxt
+import numpy as np
 from pylab import quiverkey
 
 import viscojapan as vj
@@ -11,52 +13,58 @@ from ..epochal_data import EpochalDisplacement, EpochalG
 
 this_file_path = get_this_script_dir(__file__)
 
-def get_pos_dic():
-    ''' Return a dictionary of position of all stations.
-'''
-    tp=loadtxt(join(this_file_path, 'share/sites_with_seafloor'),'4a, 2f')
-    return {ii[0]:ii[1] for ii in tp}
+__all__ = ['MapPlotDisplacement']
 
-def get_pos(sites):
-    lons=[]
-    lats=[]
-    pos=get_pos_dic()
-    for site in sites:
-        tp=pos[site]
-        lons.append(tp[0])
-        lats.append(tp[1])
-    return lons,lats
+def ch_sub_set(set0, subset):
+    set1 = list(set0)
+    ch = np.asarray([False]*len(set0))
+    if subset is not None:            
+        for si in subset:
+            if si in set0:
+                idx = set1.index(si)
+                ch[idx]=True
+    return ch
+    
 
 class MapPlotDisplacement(MapPlot):
     def __init__(self,
                  basemap=None):
         super().__init__(basemap=basemap)
     
-    def plot_disp(self,d,sites,
+    def plot_disp(self,d,sites, sites_subset=None,
                   X=0.1,Y=0.1,U=1.,label='1m',
                   color='black',scale=None):
         ''' Plot displacment
 '''
             
-        lons,lats=get_pos(sites)
+        lons,lats=vj.get_pos(sites)
         es=d[0::3]
         ns=d[1::3]
         us=d[2::3]
+
+        if sites_subset is not None:
+            ch = ch_sub_set(sites, sites_subset)
+            lons = lons[ch]
+            lats = lats[ch]
+            es = es[ch]
+            ns = ns[ch]
+        
         Qu = self.basemap.quiver(lons,lats,es,ns,
-                    color=color,scale=scale,edgecolor=color,latlon=True)
+                color=color,scale=scale,edgecolor=color,latlon=True)
+            
         qk = quiverkey(Qu,X,Y,U,label,
                             labelpos='N')
 
+
     def plot_sites(self, sites,
                    marker='s', color='white', ms=5):
-        lons,lats=get_pos(sites)
+        lons,lats=vj.get_pos(sites)
         self.basemap.plot(lons,lats, linestyle='None', 
                           marker=marker, color=color, ms=ms, latlon=True)
 
     def plot_sites_seafloor(self, sites_file=None, sites_seafloor=None):
         if sites_file is None:
-            sites_seafloor = vj.read_sites_seafloor(
-                join(this_file_path, 'share/sites_with_seafloor'))
+            sites_seafloor = vj.get_sites_seafloor()
         self.plot_sites(sites_seafloor,
                    marker='s', color='white', ms=5)
         
