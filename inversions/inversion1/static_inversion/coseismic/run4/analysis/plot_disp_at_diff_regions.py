@@ -29,6 +29,7 @@ for region_code in vj.region_ranges.keys():
     print(region_code)
     pltd.plot_at(region_code)
     plt.savefig('plots_disp/' + region_code +'.png')
+    plt.savefig('plots_disp/' + region_code +'.pdf')
     plt.close()
 
 sites_file_far_field = 'sites_far_field'
@@ -36,4 +37,5 @@ sites_far_field = np.loadtxt(sites_file_far_field, '4a')
 
 pltd.plot_far_field(sites_far_field)
 plt.savefig('plots_disp/far_field.png')
+plt.savefig('plots_disp/far_field.pdf')
 plt.close()

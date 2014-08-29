@@ -38,6 +38,7 @@ plt.grid('on')
 
 plt.xlabel('SD of seafloor obs.(cm)')
 plt.savefig('how_sd_seafloor_affect_Mw.png')
+plt.savefig('how_sd_seafloor_affect_Mw.pdf')
 plt.show()
 plt.close()
 
@@ -48,6 +49,7 @@ plt.grid('on')
 
 plt.xlabel('SD of seafloor obs.(cm)')
 plt.savefig('how_sd_seafloor_affect_Mo.png')
+plt.savefig('how_sd_seafloor_affect_Mo.pdf')
 plt.show()
 plt.close()
 

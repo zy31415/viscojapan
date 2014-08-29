@@ -2,9 +2,7 @@ import shutil
 import glob
 from os.path import join, basename
 
-nsd=9
-
-files = glob.glob('../plots/nsd_%02d_*'%nsd)
+files = glob.glob('../plots/nsd_??_rough_10_top_02.h5.pdf')
 
 for file in files:
-    shutil.copyfile(file,join('nsd_%02d/'%nsd,basename(file)))
+    shutil.copyfile(file,join('plots_slip/',basename(file)))

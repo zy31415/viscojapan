@@ -65,6 +65,7 @@ plt.grid('on')
 
 plt.xlabel('SD of seafloor obs.(cm)')
 plt.savefig('how_sd_seafloor_affect_goodness_fit.png')
+plt.savefig('how_sd_seafloor_affect_goodness_fit.pdf')
 plt.show()
 
 

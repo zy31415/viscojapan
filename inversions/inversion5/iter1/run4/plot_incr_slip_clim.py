@@ -28,12 +28,12 @@ num_obs = len(sites)*3
 d_ep = vj.EpochalDisplacement('../../cumu_post_with_seafloor.h5')
 
 
-f_res = 'outs/bno_04_cno_06.h5'
+f_res = 'outs/seasd_01_nrough_10_nedge_05.h5'
 
 file = basename(f_res)
-plot_dir = join('plots', file.split('.')[0])
+plot_dir = join('plots_clim', file.split('.')[0])
 
-with h5py.File(f_res) as fid:
+with h5py.File(f_res,'r') as fid:
     Bm = fid['Bm'][...]
     d_pred = fid['d_pred'][...]
 
@@ -43,7 +43,7 @@ for nth, epoch in enumerate(epochs):
     scale = 10
     mplt = MapPlotFault(fault_file,bm)
     mplt.plot_slip(Bm[nth*num_subflts:
-                      (nth+1)*num_subflts])
+                      (nth+1)*num_subflts],clim=[0,amax(Bm[:-3])])
 
     mplt = vj.MapPlotDisplacement(bm)
     mplt.plot_disp(d_pred[nth*num_obs:

@@ -10,19 +10,13 @@ from viscojapan.plots import MapPlotFault, plt, MapPlotSlab
 import viscojapan as vj
 
 
-parser = argparse.ArgumentParser(description='Plot slip.')
-parser.add_argument('ncpus', type=int, nargs=1, help='# CPUs')
-args = parser.parse_args()
+files = glob.glob('outs/nsd_??_rough_10_top_02.h5')
 
-ncpus = args.ncpus
-
-files = glob.glob('outs/rough_??_top_??.h5')
-
-sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
+sites_seafloor = vj.get_sites_seafloor()
 
 def plot_file(file):
     name = basename(file)
-    fname = 'plots/%s.png'%name
+    fname = 'plots/%s.pdf'%name
     if exists(fname):
         print('Skip %s!'%fname)
         return
@@ -43,8 +37,7 @@ def plot_file(file):
 
     plt.close()
 
-if __name__=='__main__':
-    pool = Pool(ncpus)   
-    pool.map(plot_file, files)
+for file in files:
+    plot_file(file)
 
     
