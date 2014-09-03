@@ -5,6 +5,8 @@ import numpy as np
 
 import viscojapan as vj
 
+__all__=['copy_and_revise_sd_file','GenSD','GenUniformSD']
+
 def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out, sd = None):
     assert not exists(file_sd_out)
     assert exists(file_sd_original)
@@ -71,3 +73,41 @@ class GenSD(object):
         ep['mean sd'] = np.mean(self.data)
         ep['median sd'] = np.median(self.data)
 
+class GenUniformSD(object):
+    def __init__(self,
+                 sites,
+                 days,
+                 sd_seafloor,
+                 sd_inland,
+                 ):
+        self.sites = sites
+        self.ch_inland = vj.choose_inland_GPS(self.sites)
+        self.num_obs = len(self.sites)
+        
+        self.days = days
+        self.sd_seafloor = sd_seafloor
+        self.sd_inland = sd_inland
+
+        
+
+    def _gen_sd(self):
+        data = np.ones([self.num_obs,1]) * self.sd_inland
+        data[~self.ch_inland] = self.sd_seafloor
+        return data
+
+    def save(self, fn):
+        num_obs = 3*len(self.sites)
+        for day in self.days:
+            ep = vj.EpochalData(fn)
+            ep[int(day)] = self._gen_sd()
+        ep['sites'] = self.sites
+        ep['max inland sd'] = self.sd_inland
+        ep['min inland sd'] = self.sd_inland
+        ep['mean inland sd'] = self.sd_inland
+        ep['median inland sd'] = self.sd_inland
+        ep['seafloor sd'] = self.sd_seafloor
+        
+        
+        
+        
+    
