@@ -3,10 +3,7 @@ from pylab import plt
 import matplotlib.patches as mpatches
 
 from epochs_log import epochs
-
-def load_array(fn):
-    tp = np.loadtxt(fn, '4a,1a,19f')
-    return np.asarray([ii[2] for ii in tp])
+from utils import load_array
 
 percentage_elastic = load_array('disp_cmpts/percentage_elastic_each_section')
 percentage_Rco = load_array('disp_cmpts/percentage_Rco_each_section')
