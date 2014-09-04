@@ -79,27 +79,31 @@ class GenUniformSD(object):
                  days,
                  sd_seafloor,
                  sd_inland,
+                 sd_co,
                  ):
         self.sites = sites
         self.ch_inland = vj.choose_inland_GPS(self.sites)
-        self.num_obs = len(self.sites)
+        self.num_obs = 3*len(self.sites)
         
         self.days = days
         self.sd_seafloor = sd_seafloor
         self.sd_inland = sd_inland
-
-        
-
-    def _gen_sd(self):
-        data = np.ones([self.num_obs,1]) * self.sd_inland
-        data[~self.ch_inland] = self.sd_seafloor
-        return data
+        self.sd_co = sd_co
+    
+    def _gen_sd(self, epoch):
+        if epoch==0:
+            data = np.ones([self.num_obs,1],float) * self.sd_co
+        else:
+            data = np.ones([self.num_obs,1],float) * self.sd_inland
+        data = data.reshape([-1,3])
+        data[~self.ch_inland,:] = self.sd_seafloor
+        return data.reshape([-1,1])
 
     def save(self, fn):
         num_obs = 3*len(self.sites)
         for day in self.days:
             ep = vj.EpochalData(fn)
-            ep[int(day)] = self._gen_sd()
+            ep[int(day)] = self._gen_sd(day)
         ep['sites'] = self.sites
         ep['max inland sd'] = self.sd_inland
         ep['min inland sd'] = self.sd_inland

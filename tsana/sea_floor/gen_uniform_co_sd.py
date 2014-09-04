@@ -10,7 +10,8 @@ gen = vj.tsana.GenUniformSD(
     sites = sites,
     days = days,
     sd_seafloor = 1e99,
-    sd_inland = 1., 
+    sd_inland = 1.,
+    sd_co = 0.01,
     )
 
-gen.save('sd_uniform.h5')
+gen.save('sd_uniform_co.h5')

@@ -1,4 +1,5 @@
 import glob
+import numpy as np
 
 import h5py
 from pylab import plt
@@ -7,18 +8,29 @@ import matplotlib
 
 import viscojapan as vj
 
+
+files  = glob.glob('../outs/seasd_01_nrough_*.h5')
+
+model_ch = []
+for file in sorted(files):
+    with h5py.File(file, 'r') as fid:
+        Bm = fid['Bm'][...]
+        slip = Bm[:-3]
+        slip_max = np.max(slip)
+        if slip_max<50:
+            model_ch.append(file)
+
 nreses =[]
 visMs = []
 Hes = []
 rakes = []
 nroughs = []
+ 
 
-files = glob.glob('outs/*.h5')
-
-for file in files:
+for file in model_ch:
     with h5py.File(file,'r') as fid:
     #with h5py.File('outs/cno_%02d.h5'%ano,'r') as fid:
-        nres = fid['residual_norm'][...]
+        nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
 
         m = fid['m'][...]
@@ -68,5 +80,5 @@ plt.ylabel('roughening')
 plt.xlabel('Residual Norm')
 plt.grid('on')
 
-plt.savefig('plots/nlin_par_curve_rms.png')
+plt.savefig('plots/nlin_par_curve_weighted.png')
 plt.show()
