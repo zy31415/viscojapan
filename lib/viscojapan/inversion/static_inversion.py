@@ -9,12 +9,14 @@ class StaticInversion(Inversion):
                  file_sd,
                  file_sites_filter,
                  regularization,
-                 basis,                 
+                 basis,
+                 epoch = 0,
                  ):
         self.file_G = file_G
         self.file_d = file_d
         self.file_sd = file_sd
         self.file_sites_filter = file_sites_filter
+        self.epoch = epoch
         
         super().__init__(
             regularization = regularization,
@@ -22,7 +24,7 @@ class StaticInversion(Inversion):
 
     def set_data_sd(self):
         sig_ep = EpochalDisplacementSD(self.file_sd, self.file_sites_filter)
-        self.sd = sig_ep(0)
+        self.sd = sig_ep(self.epoch)
         _assert_column_vector(self.sd)
 
     def set_data_G(self):
@@ -31,6 +33,6 @@ class StaticInversion(Inversion):
 
     def set_data_d(self):
         d_ep = EpochalDisplacement(self.file_d, self.file_sites_filter)
-        self.d = d_ep(0)
+        self.d = d_ep(self.epoch)
         
 

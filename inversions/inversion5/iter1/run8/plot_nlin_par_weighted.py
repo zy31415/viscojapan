@@ -18,7 +18,7 @@ files = glob.glob('outs/*.h5')
 for file in files:
     with h5py.File(file,'r') as fid:
     #with h5py.File('outs/cno_%02d.h5'%ano,'r') as fid:
-        nres = fid['residual_norm'][...]
+        nres = fid['residual_norm_weighted'][...]
         nreses.append(nres)
 
         m = fid['m'][...]
@@ -68,5 +68,5 @@ plt.ylabel('roughening')
 plt.xlabel('Residual Norm')
 plt.grid('on')
 
-plt.savefig('plots/nlin_par_curve_rms.png')
+plt.savefig('plots/nlin_par_curve_weighted.png')
 plt.show()

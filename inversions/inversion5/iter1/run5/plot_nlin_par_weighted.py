@@ -13,7 +13,7 @@ Hes = []
 rakes = []
 nroughs = []
 
-files = glob.glob('outs/seasd_??_nrough_??_nedge_??.h5')
+files = glob.glob('outs/nrough_??.h5')
 
 for file in files:
     with h5py.File(file,'r') as fid:
