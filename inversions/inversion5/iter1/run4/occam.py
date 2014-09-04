@@ -37,7 +37,7 @@ inv = OccamDeconvolution(
     basis = basis,          
     )
 
-inv.set_data_except(excepts=['L',''])
+inv.set_data_except(excepts=['L','sd','W'])
 
 reg_temp = 0.1
 for nseasd in range(10): 

@@ -65,5 +65,5 @@ def task(f_res):
 if __name__ == '__main__':
     nproc = 5
     pool = Pool(processes=nproc)
-    files = glob.glob('outs/seasd_??_nrough_??_nedge_??.h5')
+    files = glob.glob('outs/*.h5')
     pool.map(task, files)
