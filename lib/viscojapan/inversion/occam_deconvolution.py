@@ -152,12 +152,23 @@ class OccamDeconvolution(Inversion):
         d = d + delta_d
 
         self.d_pred = d
-        self.least_square.d_pred = self.d_pred 
+        self.least_square.d_pred = self.d_pred
 
-    def get_residual_norm(self):
-        return norm(self.d_pred - self.disp_obs)
+    def save(self, fn, overwrite = False):
+        super().save(fn, overwrite)
+        sites = np.loadtxt(self.filter_sites_file,'4a,')
+        ch_inland = vj.choose_inland_GPS_for_cmpts(
+            sites,
+            num_epochs=len(self.epochs))
+        with h5py.File(fn) as fid:
+            fid['sites'] = sites
+            fid['residual_rms_inland'] = self.get_residual_rms(subset=ch_inland)
+            fid['residual_rms_seafloor'] = self.get_residual_rms(subset=~ch_inland)
 
-    def get_residual_norm_weighted(self):
-        res_w = self.W.dot(self.d_pred - self.disp_obs)
-        nres_w = norm(res_w)
-        return nres_w
+##    def get_residual_norm(self, subset=None):
+##        return norm(self.d_pred - self.disp_obs)
+##
+##    def get_residual_norm_weighted(self):
+##        res_w = self.W.dot(self.d_pred - self.disp_obs)
+##        nres_w = norm(res_w)
+##        return nres_w
