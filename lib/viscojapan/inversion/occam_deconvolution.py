@@ -1,5 +1,6 @@
 from numpy import asarray, dot
 from numpy.linalg import norm
+import numpy as np
 import scipy.sparse as sparse
 #from numpy.testing import assert_array_almost_equal
 
@@ -154,6 +155,28 @@ class OccamDeconvolution(Inversion):
         self.d_pred = d
         self.least_square.d_pred = self.d_pred
 
+    def _choose_inland_observation_at_epoch(self, epoch):
+        assert epoch in self.epochs
+        
+        sites = np.loadtxt(self.filter_sites_file,'4a,')
+        ch1 = vj.choose_inland_GPS_for_cmpts(sites)
+        ch2 = [False]*len(ch1)
+        
+        out = []        
+        for ei in epochs:
+            if ei == epoch:
+                out.append(ch1)
+            else:
+                out.append(ch2)
+        out = np.asarray(out).flatten()
+        return out
+            
+    def _compute_rms_inland_at_each_epoch(self):
+        rms = []
+        for epoch in self.epochs:
+            rms.append(self._choose_inland_observation_at_epoch(epoch))
+        return np.asarray(rms,float)
+
     def save(self, fn, overwrite = False):
         super().save(fn, overwrite)
         sites = np.loadtxt(self.filter_sites_file,'4a,')
@@ -162,13 +185,5 @@ class OccamDeconvolution(Inversion):
             num_epochs=len(self.epochs))
         with h5py.File(fn) as fid:
             fid['sites'] = sites
-            fid['residual_rms_inland'] = self.get_residual_rms(subset=ch_inland)
-            fid['residual_rms_seafloor'] = self.get_residual_rms(subset=~ch_inland)
-
-##    def get_residual_norm(self, subset=None):
-##        return norm(self.d_pred - self.disp_obs)
-##
-##    def get_residual_norm_weighted(self):
-##        res_w = self.W.dot(self.d_pred - self.disp_obs)
-##        nres_w = norm(res_w)
-##        return nres_w
+            fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
+            fid['misfit/rms_inland_at_epoch'] = self._compute_rms_inland_at_each_epoch()

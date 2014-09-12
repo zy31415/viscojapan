@@ -104,9 +104,9 @@ class Inversion(object):
             fid['m'] = ls.m
             fid['Bm'] = ls.Bm
             fid['d_pred'] = self.d_pred
-            fid['residual_norm'] = self.get_residual_norm()
-            fid['residual_rms'] = self.get_residual_rms()
-            fid['residual_norm_weighted'] = self.get_residual_norm_weighted()
+            fid['misfit/norm'] = self.get_residual_norm()
+            fid['misfit/rms'] = self.get_residual_rms()
+            fid['misfit/norm_weighted'] = self.get_residual_norm_weighted()
 
             for par, name in zip(self.regularization.args,
                                  self.regularization.arg_names):

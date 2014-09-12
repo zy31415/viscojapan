@@ -6,7 +6,7 @@ import viscojapan as vj
 
 from epochs import epochs
 
-f_res = '../outs/nrough_10.h5'
+f_res = '../outs/nrough_05.h5'
 
 sites = np.loadtxt('../../sites_with_seafloor','4a,')
 num_sites = len(sites)
