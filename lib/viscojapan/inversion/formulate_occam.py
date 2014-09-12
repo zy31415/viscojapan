@@ -40,7 +40,6 @@ nonlinear parameter wrt at epochs.
 Return:
     Jacobian vector    
 '''
-        print(epochs)
         dG_stacked = self.dG.conv_stack(epochs)
 
         incr_slip = EpochalIncrSlip(self.f_incr_slip0)

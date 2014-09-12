@@ -1,4 +1,6 @@
-from os.path import exists
+from os.path import exists, join
+import tempfile as tf
+import shutil
 
 from numpy import asarray
 
@@ -6,8 +8,11 @@ from .epochal_data import EpochalData
 from ..utils import overrides
 from .stacking import vstack_column_vec
 
-# function definition
+__all__ = ['slip_to_incr_slip', 'incr_slip_to_slip',
+           'interpolate_incr_slip_file',
+           'EpochalSlip','EpochalIncrSlip']
 
+# function definition
 def slip_to_incr_slip(f_slip, f_incr_slip):
     assert exists(f_slip)
     
@@ -44,6 +49,16 @@ def incr_slip_to_slip(f_incr_slip, f_slip):
 
     slip.copy_info_from(f_incr_slip)
 
+def interpolate_incr_slip_file(in_incr_slip, epochs, out_incr_slip):
+    temp_path = tf.mkdtemp(dir='/home/zy/tmp/')
+    tmp1_cum_slip = join(temp_path, 'cum1.h5')
+    incr_slip_to_slip(in_incr_slip, tmp1_cum_slip)
+
+    tmp2_cum_slip = join(temp_path, 'cum2.h5')
+    EpochalData(tmp1_cum_slip).respacing(epochs, tmp2_cum_slip)    
+    slip_to_incr_slip(tmp2_cum_slip, out_incr_slip)
+    shutil.rmtree(temp_path)    
+
 # classes definition
 
 class EpochalSlip(EpochalData):
@@ -71,4 +86,19 @@ class EpochalIncrSlip(EpochalSlip):
     def vstack(self):
         epochs = self.get_epochs()
         return vstack_column_vec(self, epochs)
+
+    def to_cum_slip_file(self, out_file):
+        incr_slip_to_slip(self.epoch_file, out_file)
+
+    def respacing(self, epochs, out_file, delete_temp=True):
+        temp_path = tf.mkdtemp(dir='/home/zy/tmp/')
+        tmp1_cum_slip = join(temp_path, 'cum1.h5')
+        self.to_cum_slip_file(tmp1_cum_slip)
+
+        tmp2_cum_slip = join(temp_path, 'cum2.h5')
+        EpochalData(tmp1_cum_slip).respacing(epochs, tmp2_cum_slip)    
+        slip_to_incr_slip(tmp2_cum_slip, out_file)
+
+        if delete_temp:
+            shutil.rmtree(temp_path)
 

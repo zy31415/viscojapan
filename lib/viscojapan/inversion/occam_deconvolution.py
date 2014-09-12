@@ -1,10 +1,12 @@
+import tempfile as tf
+
 from numpy import asarray, dot
 from numpy.linalg import norm
 import numpy as np
 import scipy.sparse as sparse
-#from numpy.testing import assert_array_almost_equal
+import h5py
 
-
+import viscojapan as vj
 from ..epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
 from .formulate_occam import JacobianVec, Jacobian, D_
@@ -30,11 +32,11 @@ class OccamDeconvolution(Inversion):
                  nlin_par_names,                 
                  file_d,
                  file_sd,
-                 file_incr_slip0,
                  filter_sites_file,
                  epochs,                 
                  regularization,
                  basis,
+                 file_incr_slip0,
                  ):
         
         self.file_G0 = file_G0
@@ -46,6 +48,7 @@ class OccamDeconvolution(Inversion):
         self.file_sd = file_sd
         
         self.file_incr_slip0 = file_incr_slip0
+        
         self.filter_sites_file = filter_sites_file
         self.epochs = epochs
 
@@ -85,6 +88,13 @@ class OccamDeconvolution(Inversion):
                 DiffED(ed1 = self.G0, ed2 = G,
                        wrt = par_name))
 
+        # repacing input initial incr slip.
+        file_incr_slip0 = '~incr_slip0_respacing.h5'
+        vj.delete_if_exists(file_incr_slip0)
+        vj.EpochalIncrSlip(self.file_incr_slip0).respacing(
+            self.epochs, file_incr_slip0)
+        self.file_incr_slip0 = file_incr_slip0
+        
         jacobian_vecs = []
         for dG in dGs:
             jacobian_vecs.append(JacobianVec(dG, self.file_incr_slip0))
@@ -163,7 +173,7 @@ class OccamDeconvolution(Inversion):
         ch2 = [False]*len(ch1)
         
         out = []        
-        for ei in epochs:
+        for ei in self.epochs:
             if ei == epoch:
                 out.append(ch1)
             else:
@@ -174,7 +184,8 @@ class OccamDeconvolution(Inversion):
     def _compute_rms_inland_at_each_epoch(self):
         rms = []
         for epoch in self.epochs:
-            rms.append(self._choose_inland_observation_at_epoch(epoch))
+            ch = self._choose_inland_observation_at_epoch(epoch)
+            rms.append(self.get_residual_rms(subset = ch))
         return np.asarray(rms,float)
 
     def save(self, fn, overwrite = False):

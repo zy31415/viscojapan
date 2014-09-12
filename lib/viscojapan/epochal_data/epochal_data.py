@@ -98,13 +98,21 @@ class EpochalData(object):
 
     def copy_info_from(self, epoch_file):
         with h5py.File(epoch_file,'r') as from_file:
-            with  h5py.File(self.epoch_file,'a') as to_file:
-                from_file.copy('info/',to_file)
+            if 'info' in from_file:
+                with  h5py.File(self.epoch_file,'a') as to_file:
+                    from_file.copy('info/',to_file)
 
     def copy_info_to(self, epoch_file):
         with h5py.File(self.epoch_file,'r') as from_file:
-            with  h5py.File(epoch_file,'a') as to_file:
-                from_file.copy('info/',to_file)
+            if 'info' in from_file:
+                with  h5py.File(epoch_file,'a') as to_file:
+                    from_file.copy('info/',to_file)
+
+    def respacing(self, epochs, out_file):
+        ep = EpochalData(out_file)
+        for epoch in epochs:
+            ep[epoch] = self[epoch]
+        self.copy_info_to(out_file)
 
     def __getitem__(self, name):
         if isinstance(name, int):

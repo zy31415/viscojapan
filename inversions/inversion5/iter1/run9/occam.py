@@ -12,9 +12,6 @@ from epochs import epochs
 from reg_edges import reg_edges
 from reg_roughes import reg_roughes
 
-print(reg_edges)
-print(reg_roughes)
-
 fault_file = '../fault_model/fault_bott40km.h5'
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
