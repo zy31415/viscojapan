@@ -36,7 +36,7 @@ misfit_inland = d_pred[:,ch,:]-d[:,ch,:]
 
 rmses = []
 for mi in misfit_inland:
-    rms = np.linalg.norm(mi.flatten())
+    rms = np.sqrt(np.mean(mi.flatten()**2))
     rmses.append(rms)
 ##
 rms_total = np.linalg.norm(misfit_inland.flatten())

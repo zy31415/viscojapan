@@ -6,7 +6,7 @@ import numpy as np
 
 import viscojapan as vj
 
-files = glob.glob('../outs/nsd_??_rough_10_top_02*')
+files = glob.glob('../outs/nsd_??_rough_09_top_02*')
 
 file_sites_filter = '../../sites_with_seafloor'
 

@@ -89,6 +89,9 @@ class Inversion(object):
     def get_residual_norm(self):
         return self.least_square.get_residual_norm()
 
+    def get_residual_rms(self, subset=None):
+        return self.least_square.get_residual_rms(subset)
+
     def get_residual_norm_weighted(self):
         return self.least_square.get_residual_norm_weighted()
 
@@ -102,6 +105,7 @@ class Inversion(object):
             fid['Bm'] = ls.Bm
             fid['d_pred'] = self.d_pred
             fid['residual_norm'] = self.get_residual_norm()
+            fid['residual_rms'] = self.get_residual_rms()
             fid['residual_norm_weighted'] = self.get_residual_norm_weighted()
 
             for par, name in zip(self.regularization.args,

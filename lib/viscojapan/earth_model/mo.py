@@ -26,13 +26,11 @@ class ComputeMoment(object):
         
         fl = reader.subflt_sz_dip
         fw = reader.subflt_sz_strike
-
-        print(fl,fw)
         
         shr = self._get_shear()
         mos = shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
         mo = np.sum(mos)
-        mw = 2./3.*log10(mo)-6. 
+        mw = 2./3.*log10(mo) - 6. 
         return mo, mw
 
 def get_mos_mws_from_epochal_file(epochal_file):
