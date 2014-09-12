@@ -188,6 +188,32 @@ class OccamDeconvolution(Inversion):
             rms.append(self.get_residual_rms(subset = ch))
         return np.asarray(rms,float)
 
+    def get_residual_rms(self, subset=None):
+        diff = (self.d_pred - self.disp_obs)
+        if subset is not None:
+            assert len(subset)==len(diff), 'subset length is smaller than diff'
+            diff = diff[subset]
+        return np.sqrt(np.mean(diff**2))
+
+    def get_residual_norm(self, subset=None):
+        '''
+return: ||G B m - d||
+'''
+        diff = (self.d_pred - self.disp_obs)
+        if subset is not None:
+            assert len(subset)==len(diff), 'subset length is smaller than diff'
+            diff = diff[subset]
+        return np.linalg.norm(diff)
+
+    def get_residual_norm_weighted(self):
+        '''
+return: ||W (G B m - d)||
+'''
+        diff = (self.d_pred - self.disp_obs)
+        res_w = self.W.dot(diff)
+        nres_w = norm(res_w)
+        return nres_w
+
     def save(self, fn, overwrite = False):
         super().save(fn, overwrite)
         sites = np.loadtxt(self.filter_sites_file,'4a,')
