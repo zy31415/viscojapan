@@ -1,5 +1,6 @@
 from numpy import zeros, dot, identity, asarray, ones, ndarray
 from numpy.linalg import norm
+import numpy as np
 import scipy.sparse as sparse
 from scipy.sparse.csr import csr_matrix
 from cvxopt import matrix, solvers
@@ -99,12 +100,22 @@ return: d_pred = G B m
         d_pred = dot(self.G, self.Bm)
         self.d_pred = d_pred
 
-    def get_residual_norm(self):
+    def get_residual_norm(self, subset=None):
         '''
 return: ||G B m - d||
 '''
-        print(self.d)
-        return norm(self.d_pred - self.d)
+        diff = self.d_pred - self.d
+        if subset is not None:
+            assert len(subset)==len(diff), 'subset length is smaller than diff'
+            diff = diff[subset]
+        return np.linalg.norm(diff)
+
+    def get_residual_rms(self, subset=None):
+        diff = self.d_pred - self.d
+        if subset is not None:
+            assert len(subset)==len(diff), 'subset length is smaller than diff'
+            diff = diff[subset]
+        return np.sqrt(np.mean(diff**2))
 
     def get_residual_norm_weighted(self):
         '''
