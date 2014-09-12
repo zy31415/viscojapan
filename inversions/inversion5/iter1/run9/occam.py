@@ -29,7 +29,7 @@ inv = OccamDeconvolution(
     nlin_par_names = ['log10(visM)','He','rake'],
 
     file_d = '../../cumu_post_with_seafloor.h5',
-    file_sd = 'sd/sd_uniform_co.h5', 
+    file_sd = 'sd/sd_ozawa_seafloor.h5', 
     file_incr_slip0 = '../slip0/incr_slip0.h5',
     filter_sites_file = '../sites_with_seafloor',
     epochs = epochs,

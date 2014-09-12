@@ -101,6 +101,9 @@ def choose_inland_GPS(sites):
             ch.append(True)
     return np.asarray(ch,bool)
 
-def choose_inland_GPS_for_cmpts(sites):
+def choose_inland_GPS_for_cmpts(sites, num_epochs = 1):
     ch = choose_inland_GPS(sites)
-    return np.asarray([[ch]*3]).T.flatten()
+    out = np.asarray([[ch]*3]).T.flatten()
+    out = np.asarray([out]*num_epochs).flatten()
+    return out
+
