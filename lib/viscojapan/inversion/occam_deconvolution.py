@@ -152,6 +152,7 @@ class OccamDeconvolution(Inversion):
         d = d + delta_d
 
         self.d_pred = d
+        self.least_square.d_pred = self.d_pred 
 
     def get_residual_norm(self):
         return norm(self.d_pred - self.disp_obs)
