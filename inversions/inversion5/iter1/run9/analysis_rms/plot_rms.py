@@ -1,3 +1,5 @@
+import pickle
+
 import h5py
 import numpy as np
 from pylab import plt
@@ -6,7 +8,7 @@ import viscojapan as vj
 
 from epochs import epochs
 
-f_res = '../outs/nrough_05.h5'
+f_res = '../outs/nrough_10.h5'
 
 sites = np.loadtxt('../../sites_with_seafloor','4a,')
 num_sites = len(sites)
@@ -21,27 +23,23 @@ ep = vj.EpochalDisplacement('../../../cumu_post_with_seafloor.h5','../../sites_w
 d = ep.vstack(epochs)
 d = d.reshape([num_epochs, num_sites,3])
 
-def choose_inland_GPS(sites):
-    ch = []
-    for site in sites:
-        if site.decode()[0]=='_':
-            ch.append(False)
-        else:
-            ch.append(True)
-    return np.asarray(ch,bool)
-##
-ch = choose_inland_GPS(sites)
+
+ch = vj.choose_inland_GPS(sites)
 
 misfit_inland = d_pred[:,ch,:]-d[:,ch,:]
 
 rmses = []
 for mi in misfit_inland:
+    print(mi.shape)
     rms = np.sqrt(np.mean(mi.flatten()**2))
     rmses.append(rms)
-##
 rms_total = np.linalg.norm(misfit_inland.flatten())
 
 #plt.semilogx(epochs, rmses,'o-')
+
+with open('rms_deconv.pkl','wb') as fid:
+    pickle.dump((epochs, rmses), fid)
+
 plt.plot(epochs, rmses,'o-')
 #plt.axhline(rms_total)
 plt.grid('on')

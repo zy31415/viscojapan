@@ -47,7 +47,7 @@ if not exists(f_ts):
 mod=PreRModel()
 
 # model:
-reader = ConfigFileReader('/home/zy/workspace/viscojapan/tsana2/config/')
+reader = ConfigFileReader('/home/zy/workspace/viscojapan/tsana/config/')
 mod.if_sea = reader.if_sea(site)
 mod.if_semi = reader.if_semi(site)
 
@@ -73,7 +73,7 @@ w.write()
 
 if args.plot:        
     plot_pre(fn)
-    plt.legend()
+    plt.legend(loc=0)
     plt.show()
     plt.close()
     

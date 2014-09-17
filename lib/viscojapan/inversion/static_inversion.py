@@ -45,7 +45,7 @@ class StaticInversion(Inversion):
         ch_inland = vj.choose_inland_GPS_for_cmpts(sites)
         with h5py.File(fn) as fid:
             fid['sites'] = sites
-            fid['residual_rms_inland'] = self.get_residual_rms(subset=ch_inland)
+            fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
             
             
         
