@@ -14,57 +14,27 @@ subflts_files_rake81 = \
 # compute Green's function for coseismic slip only
 epochs = [0.]
 
-earth_file_dir = '../earth_model/He50km_Vis1.0E19/'
+earth_file_dir = '../earth_model/pollitz_He63km/'
 
-model1 = ComputeGreensFunction(
+model0 = ComputeGreensFunction(
     epochs = epochs,
     file_sites = 'sites_with_seafloor',
-    earth_file = join(earth_file_dir, 'earth.model_He50km_Vis1.0E19'),
+    earth_file = join(earth_file_dir, 'earth.model_pollitz_He63km'),
     earth_file_dir = earth_file_dir,
-    outputs_dir = 'outs_He50km_Vis1.0E19_Rake90',
+    outputs_dir = 'outs_He63km_Rake90',
     subflts_files = subflts_files_rake90,
     controller_file = 'pool.config',
     )
 
-## Model Two - Variation on elastic depth:
-# (1) viscosity - 5.839838E+18 Pa.s
-# (2) elastic depth - 55km
-# (3) rake - 90.
-
-## Model Three - Variation on rake:
-# (1) viscosity - 5.839838E+18 Pa.s
-# (2) elastic depth - 50km
-# (3) rake - 95.
-
-earth_file_dir = '../earth_model/He50km_Vis5.8E18/'
-
-model3 = ComputeGreensFunction(
+model1 = ComputeGreensFunction(
     epochs = epochs,
     file_sites = 'sites_with_seafloor',
-    earth_file = join(earth_file_dir, 'earth.model_He50km_Vis5.8E18'),
+    earth_file = join(earth_file_dir, 'earth.model_pollitz_He63km'),
     earth_file_dir = earth_file_dir,
-    outputs_dir = 'outs_He50km_Vis5.8E18_Rake95',
-    subflts_files = subflts_files_rake95,
+    outputs_dir = 'outs_He63km_Rake81',
+    subflts_files = subflts_files_rake81,
     controller_file = 'pool.config',
     )
 
-###################################
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Compute G matrix.')
-    parser.add_argument('model', type=str, nargs=1,
-                        help='Compute G matrix for indicated model.',
-                        choices = ['model0','model1','model2','model3'],
-                        )
-    args = parser.parse_args()
-    model = args.model[0]
-
-    if model == 'model0':
-        model0()
-    elif model == 'model1':
-        model1()
-    elif model == 'model2':
-        model2()
-    elif model == 'model3':
-        model3()
-    else:
-        raise ValueError('Wrong options.')
+model0()
+model1()
