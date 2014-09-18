@@ -12,13 +12,13 @@ subflts_files_rake81 = \
               sorted(glob.glob('../fault_model/subflts_rake81/flt_????'))
 
 # compute Green's function for coseismic slip only
-epochs = [0.]
+epochs = [0]
 
 earth_file_dir = '../earth_model/pollitz_He63km/'
 
 model0 = ComputeGreensFunction(
     epochs = epochs,
-    file_sites = 'sites_with_seafloor',
+    file_sites = 'stations.in',
     earth_file = join(earth_file_dir, 'earth.model_pollitz_He63km'),
     earth_file_dir = earth_file_dir,
     outputs_dir = 'outs_He63km_Rake90',
@@ -28,7 +28,7 @@ model0 = ComputeGreensFunction(
 
 model1 = ComputeGreensFunction(
     epochs = epochs,
-    file_sites = 'sites_with_seafloor',
+    file_sites = 'stations.in',
     earth_file = join(earth_file_dir, 'earth.model_pollitz_He63km'),
     earth_file_dir = earth_file_dir,
     outputs_dir = 'outs_He63km_Rake81',
