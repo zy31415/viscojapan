@@ -4,12 +4,17 @@ import re
 
 from ..utils import get_this_script_dir
 
+__all__ = ['raw_file_He33km', 'raw_file_He45km','raw_file_He50km',
+           'raw_file_He55km','raw_file_pollitz_He63km',
+           'GenerateEarthModelFile']
+
 this_script_dir = get_this_script_dir(__file__)
 
 raw_file_He33km = join(this_script_dir, 'share/earth.modelBURG-SUM_33km')
 raw_file_He45km = join(this_script_dir, 'share/earth.modelBURG-SUM_45km')
 raw_file_He50km = join(this_script_dir, 'share/earth.modelBURG-SUM_50km')
 raw_file_He55km = join(this_script_dir, 'share/earth.modelBURG-SUM_55km')
+raw_file_pollitz_He63km = join(this_script_dir, 'share/earth.modelBURG-SUM_pollitz_63km')
 
 class GenerateEarthModelFile(object):
     def __init__(self,
