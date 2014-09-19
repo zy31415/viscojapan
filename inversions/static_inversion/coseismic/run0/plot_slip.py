@@ -10,9 +10,12 @@ from viscojapan.plots import MapPlotFault, plt, MapPlotSlab
 import viscojapan as vj
 
 
-files = glob.glob('outs/epoch_0000_rough_??.h5')
+files = sorted(glob.glob('outs/ndamp_??_rough_??.h5'))
 
 sites_seafloor = vj.get_sites_seafloor()
+
+fault_file = '../../fault_model/fault_bott50km.h5'
+earth_file = '../../earth_model/earth.modelBURG-SUM'
 
 def plot_file(file):
     name = basename(file)
@@ -28,13 +31,18 @@ def plot_file(file):
     mplt = MapPlotSlab()
     mplt.plot_top()
     
-    mplt = MapPlotFault('../fault_bott40km.h5')
+    mplt = MapPlotFault(fault_file)
     mplt.plot_slip(slip)
 
     mplt = vj.MapPlotDisplacement()
     mplt.plot_sites_seafloor(sites_seafloor = sites_seafloor)
+
+    mo, mw = vj.ComputeMoment(fault_file, earth_file).moment(slip)
+    plt.title('Mo=%g, Mw=%.2f'%(mo, mw))
     #plt.show()
     plt.savefig(fname)
+
+    
 
     plt.close()
 
