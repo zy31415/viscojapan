@@ -1,41 +1,49 @@
 from numpy import logspace
 import numpy as np
+from multiprocessing import Pool
+import argparse
+import sys
+import os
 
-import viscojapan as vj
 from viscojapan.inversion.basis_function import BasisMatrix
 from viscojapan.inversion.regularization import Roughening, Composite, \
      NorthBoundary, SouthBoundary, FaultTopBoundary
 from viscojapan.inversion.static_inversion import StaticInversion
 
+parser = argparse.ArgumentParser(description='Plot slip.')
+parser.add_argument('ncpus', type=int, nargs=1, help='# CPUs')
+args = parser.parse_args()
 
-fault_file = '../../fault_model/fault_bott50km_point_source.h5'
+ncpus = args.ncpus[0]
+
+fault_file = '../fault_bott40km.h5'
 
 rough = Roughening.create_from_fault_file(fault_file)
-damping = vj.Intensity.create_from_fault_file(fault_file)
 reg_north = NorthBoundary.create_from_fault_file(fault_file)
 reg_south = SouthBoundary.create_from_fault_file(fault_file)
 reg_top = FaultTopBoundary.create_from_fault_file(fault_file)
 
 basis = BasisMatrix.create_from_fault_file(fault_file)
 
-
-inv = StaticInversion(
-    file_G = '../../greens_function/G_He63km_Rake81.h5',
-    file_d = '../cumu_post_with_seafloor.h5',
-    file_sd = '../sd/sd_ozawa.h5',
-    file_sites_filter = '../sites_with_seafloor',
-    regularization = None,
-    basis = basis,
-)
-inv.set_data_except(excepts=['L'])
-
-edge_pars = np.logspace(-3,1,10)
-
-damps = logspace(-3, 1, 30)
 roughs = logspace(-3, 1, 30)
-for ndamp in range(len(damps)):
+def run(epoch):
+    print(epoch)
+    stdout = sys.stdout
+    fid = open(os.devnull,'w')
+    sys.stdout = fid
+    
+    inv = StaticInversion(
+        file_G = '../G_He40km_Vis1.1E19_Rake81.h5',
+        file_d = '../cumu_post_with_seafloor.h5',
+        file_sd = '../sd/sd_ozawa.h5',
+        file_sites_filter = '../sites_with_seafloor',
+        regularization = None,
+        basis = basis,
+        epoch = epoch,
+    )
+    inv.set_data_except(excepts=['L'])
     for nrough in range(len(roughs)):
-        outf = 'outs/ndamp_%02d_rough_%02d.h5'%(ndamp, nrough)
+        outf = 'outs/epoch_%04d_rough_%02d.h5'%(epoch,nrough)
         print(outf)
         
         reg = Composite().\
@@ -48,11 +56,8 @@ for ndamp in range(len(damps)):
               add_component(component = rough,
                             arg = roughs[nrough],
                             arg_name = 'roughening').\
-              add_component(component = damping,
-                            arg = damps[ndamp],
-                            arg_name = 'damping').\
               add_component(component = reg_top,
-                            arg = 0.01,
+                            arg = 0.02,
                             arg_name = 'top')
         
         inv.regularization = reg
@@ -61,3 +66,11 @@ for ndamp in range(len(damps)):
         inv.predict()
         
         inv.save(outf, overwrite=True)
+
+    sys.stdout = stdout
+    fid.close()
+
+if __name__=='__main__':
+    from epochs import epochs
+    pool = Pool(ncpus)
+    pool.map(run, epochs)

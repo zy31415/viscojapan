@@ -10,16 +10,18 @@ from viscojapan.plots import MapPlotFault, plt, MapPlotSlab
 import viscojapan as vj
 
 
-files = sorted(glob.glob('outs/ndamp_00_rough_??.h5'))
+parser = argparse.ArgumentParser(description='Plot slip.')
+parser.add_argument('ncpus', type=int, nargs=1, help='# CPUs')
+args = parser.parse_args()
 
-sites_seafloor = vj.get_sites_seafloor()
+ncpus = args.ncpus[0]
 
-fault_file = '../../fault_model/fault_bott50km.h5'
-earth_file = '../../earth_model/earth.modelBURG-SUM'
+files = glob.glob('outs/nsd_??_rough_??_top_??.h5')
+
+sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
 
 def plot_file(file):
     name = basename(file)
-    #fname = 'plots/%s.pdf'%name
     fname = 'plots/%s.png'%name
     if exists(fname):
         print('Skip %s!'%fname)
@@ -28,27 +30,21 @@ def plot_file(file):
     with h5py.File(file,'r') as fid:
         slip = nres = fid['Bm'][...]
 
-    slip = slip.reshape([12,36])[1:,1:].flatten()
-
     mplt = MapPlotSlab()
     mplt.plot_top()
     
-    mplt = MapPlotFault(fault_file)
+    mplt = MapPlotFault('../fault_bott40km.h5')
     mplt.plot_slip(slip)
 
     mplt = vj.MapPlotDisplacement()
     mplt.plot_sites_seafloor(sites_seafloor = sites_seafloor)
-
-    mo, mw = vj.ComputeMoment(fault_file, earth_file).moment(slip)
-    plt.title('Mo=%g, Mw=%.2f'%(mo, mw))
     #plt.show()
     plt.savefig(fname)
 
-    
-
     plt.close()
 
-for file in files:
-    plot_file(file)
+if __name__=='__main__':
+    pool = Pool(ncpus)   
+    pool.map(plot_file, files)
 
     
