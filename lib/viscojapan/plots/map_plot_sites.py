@@ -1,5 +1,7 @@
 from os.path import join
 
+#from scipy.interpolate import griddata
+from matplotlib.mlab import griddata
 from numpy import loadtxt
 import numpy as np
 from pylab import quiverkey
@@ -79,6 +81,16 @@ class MapPlotDisplacement(MapPlot):
         G = g[epoch]
         sites = g.get_info('sites')
         self.plot_disp(G[:,mth],sites, **kwargs)
+
+    def plot_scalor(self, z, sites, zorder=-2, **kwargs):
+        lons,lats=vj.get_pos(sites)
+        npts = 100
+        xi = np.linspace(lons.min(), lons.max(), npts)
+        yi = np.linspace(lats.min(), lats.max(), npts)
+
+        zi = griddata(lons, lats, z, xi[None,:], yi[:,None])        
+        im = self.basemap.pcolor(xi, yi, zi, latlon=True, zorder=zorder, **kwargs)
+        return im
         
         
         

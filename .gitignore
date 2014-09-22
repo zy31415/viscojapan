@@ -20,3 +20,4 @@ outs_tik2
 # ~ is for temporary files and directories
 ~*
 
+*cpython-32mu.so

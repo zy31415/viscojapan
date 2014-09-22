@@ -4,7 +4,35 @@ import scipy.sparse as sparse
 from viscojapan.fault_model import FaultFileIO
 from .cubic_b_splines import CubicBSplines
 
+__all__ = ['BasisMatrix','BasisMatrixBSpline']
+
 class BasisMatrix(object):
+    def __init__(self,
+                 num_subflts,
+                 num_epochs = 1
+                 ):
+
+        self.num_subflts = num_subflts
+        self.num_epochs = num_epochs
+
+    def gen_basis_matrix_sparse(self):
+        return sparse.eye(self.num_subflts*self.num_epochs)
+
+    @staticmethod
+    def create_from_fault_file(fault_file, num_epochs = 1):
+        fid = FaultFileIO(fault_file)                
+
+        spline_obj = BasisMatrix(
+            num_subflts = fid.num_subflt_along_strike * fid.num_subflt_along_dip,
+            num_epochs = num_epochs
+            )
+        return spline_obj
+
+    def __call__(self):
+        return self.gen_basis_matrix_sparse()
+        
+
+class BasisMatrixBSpline(BasisMatrix):
     def __init__(self,
                  dx_spline,
                  xf,
@@ -78,8 +106,6 @@ class BasisMatrix(object):
 
     def __call__(self):
         return self.gen_basis_matrix_sparse()
-        
-
     
             
 

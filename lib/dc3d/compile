@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+f2py3.2 -c dc3d.pyf DC3D.f
