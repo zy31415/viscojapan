@@ -13,6 +13,8 @@ from .formulate_occam import JacobianVec, Jacobian, D_
 from .inversion import Inversion
 from ..utils import _assert_column_vector
 
+__all__ = ['OccamDeconvolution']
+
 def eye_padding(mat, n):
     pad = sparse.eye(n)
     return sparse.block_diag((mat, pad))
@@ -51,6 +53,7 @@ class OccamDeconvolution(Inversion):
         
         self.filter_sites_file = filter_sites_file
         self.epochs = epochs
+        self.num_epochs = len(self.epochs)
 
         super().__init__(
             regularization,
@@ -165,16 +168,14 @@ class OccamDeconvolution(Inversion):
         self.d_pred = d
         self.least_square.d_pred = self.d_pred
 
-    def _choose_inland_observation_at_epoch(self, epoch):
-        assert epoch in self.epochs
-        
+    def _choose_inland_observation_at_epoch(self, nth_epoch):
         sites = np.loadtxt(self.filter_sites_file,'4a,')
         ch1 = vj.choose_inland_GPS_for_cmpts(sites)
         ch2 = [False]*len(ch1)
         
         out = []        
-        for ei in self.epochs:
-            if ei == epoch:
+        for nth in range(self.num_epochs):
+            if nth == nth_epoch:
                 out.append(ch1)
             else:
                 out.append(ch2)
@@ -183,8 +184,8 @@ class OccamDeconvolution(Inversion):
             
     def _compute_rms_inland_at_each_epoch(self):
         rms = []
-        for epoch in self.epochs:
-            ch = self._choose_inland_observation_at_epoch(epoch)
+        for nth in range(self.num_epochs):
+            ch = self._choose_inland_observation_at_epoch(nth)
             rms.append(self.get_residual_rms(subset = ch))
         return np.asarray(rms,float)
 
@@ -219,7 +220,7 @@ return: ||W (G B m - d)||
         sites = np.loadtxt(self.filter_sites_file,'4a,')
         ch_inland = vj.choose_inland_GPS_for_cmpts(
             sites,
-            num_epochs=len(self.epochs))
+            num_epochs= self.num_epochs)
         with h5py.File(fn) as fid:
             fid['sites'] = sites
             fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)

@@ -8,6 +8,8 @@ from viscojapan.inversion.basis_function import BasisMatrix
 from epochs import epochs
 from reg_roughes import reg_roughes
 
+epochs = epochs[:4]
+
 fault_file = 'fault_model/fault_bott50km.h5'
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs)-1)
@@ -24,7 +26,7 @@ inv = vj.OccamDeconvolutionSeparateCoPost(
     file_d = '../cumu_post_with_seafloor.h5',
     file_sd = '../sites_sd/sites_sd.h5',
     file_incr_slip0 = 'slip0/incr_slip0.h5',
-    filter_sites_file = 'sites',
+    filter_sites_file = 'sites_test',
     epochs = epochs,
     regularization = None,
     basis = basis,          
