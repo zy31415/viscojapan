@@ -18,17 +18,18 @@ def slip_to_incr_slip(f_slip, f_incr_slip):
     
     slip = EpochalSlip(f_slip)
     epochs = slip.get_epochs()
-    assert 0 in epochs, 'No zero epoch.'
 
     incr_slip = EpochalIncrSlip(f_incr_slip)
 
+    nth = 0
     for epoch, val in slip.iter_epoch_values():
-        if epoch == 0:
+        if nth == 0:
             incr_slip.set_epoch_value(epoch, val)
             val0 = val
         else:
             incr_slip.set_epoch_value(epoch, val-val0)
             val0 = val
+        nth += 1
     incr_slip.copy_info_from(f_slip)
 
 def incr_slip_to_slip(f_incr_slip, f_slip):
