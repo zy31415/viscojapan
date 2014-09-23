@@ -158,7 +158,7 @@ class OccamDeconvolution(Inversion):
 
         npars = Bm[-num_nlin_pars:,:]
 
-        d = dot(G,slip)
+        d = dot(G,slip) + self.coseismic_disp[self.num_obs:,:]
 
         delta_nlin_pars = npars - npars0
         delta_d = dot(Jac_, delta_nlin_pars)

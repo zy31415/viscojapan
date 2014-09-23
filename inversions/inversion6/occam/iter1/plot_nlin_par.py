@@ -11,8 +11,8 @@ rakes = []
 nroughs = []
 
 for ano in range(20):
-    with h5py.File('outs/ano_%02d_bno_10.h5'%ano,'r') as fid:
-        nres = fid['residual_norm_weighted'][...]
+    with h5py.File('outs/nrough_%02d.h5'%ano,'r') as fid:
+        nres = fid['misfit/norm_weighted'][...]
         nreses.append(nres)
 
         m = fid['m'][...]
@@ -24,6 +24,7 @@ for ano in range(20):
         nroughs.append(nrough)
 
 xlim = (7, 22)
+xlim = None
 xticks = range(7,22)
 
 plt.subplot(411)    

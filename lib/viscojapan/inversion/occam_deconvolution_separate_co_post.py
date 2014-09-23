@@ -32,28 +32,35 @@ class OccamDeconvolutionSeparateCoPost(OccamDeconvolution):
 
         ep = vj.EpochalDisplacement(file_sd, filter_sites_file)
         self.num_obs = len(ep[0].flatten())
+
+        self._compute_disp_caused_by_coseismic_slip()
         
     def set_data_G(self):
         super().set_data_G()
         self.G = self.G[self.num_obs:, self.num_subflts:]
 
+    def _compute_disp_caused_by_coseismic_slip(self):
+        self.co_slip = vj.EpochalIncrSlip(self.file_incr_slip0)[0]
+        coseismic_disp = []        
+        ep = vj.EpochalG(self.file_G0, self.filter_sites_file)        
+        for nth, epoch in enumerate(self.epochs):
+            G = ep[epoch]
+            d_co = np.dot(G, self.co_slip)
+            coseismic_disp.append(d_co)
+        self.coseismic_disp = np.vstack(coseismic_disp)
+
     def set_data_d(self):
         super().set_data_d()
+        self.d -= self.coseismic_disp 
         self.d = self.d[self.num_obs:,:]
-
-        # subtracting coseismic effect:
-        ep = vj.EpochalG(self.file_G0, self.filter_sites_file)
-        co_slip = vj.EpochalIncrSlip(self.file_incr_slip0)[0]
-        
-        for nth, epoch in enumerate(self.epochs[1:]):
-            G = ep[epoch]
-            d_co = np.dot(G,co_slip)
-            self.d[self.num_obs*nth : self.num_obs*(nth+1),:] -= d_co
-        assert self.num_obs*(nth+1) == self.num_obs*self.num_epochs
-            
         self.disp_obs = self.disp_obs[self.num_obs:,:]
 
     def set_data_sd(self):
         super().set_data_sd()
         self.sd = self.sd[self.num_obs:,:]
+
+    def predict(self):
+        super().predict()
+        self.d_pred += self.coseismic_disp[self.num_obs:,:]
+        self.least_square.d_pred = self.d_pred
         
