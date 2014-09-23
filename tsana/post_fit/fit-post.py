@@ -2,7 +2,7 @@
 import argparse
 
 from viscojapan.tsana.post_fit.post import fit_post
-from viscojapan.tsana import plot_post, save_cumu_post_disp
+from viscojapan.tsana import plot_post
 from viscojapan.tsana.post_fit.cumu_post import save_cumu_post
 from viscojapan.tsana.post_fit.writer_residual import ResidualWriter
 

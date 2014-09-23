@@ -215,13 +215,32 @@ return: ||W (G B m - d)||
         nres_w = norm(res_w)
         return nres_w
 
+    def _save_non_linear_par_correction(self, fid):
+        ls = self.least_square
+        Bm = ls.Bm
+        Jac = ls.G
+        num_nlin_pars = self.num_nlin_pars
+        npars0 = asarray(self.nlin_par_initial_values)
+
+        Jac_ = Jac[:,-num_nlin_pars:]
+        npars = Bm[-num_nlin_pars:,:]
+        
+        delta_nlin_pars = npars.flatten() - npars0
+        fid['nlin_correction'] = delta_nlin_pars*Jac_
+        
+
     def save(self, fn, overwrite = False):
         super().save(fn, overwrite)
         sites = np.loadtxt(self.filter_sites_file,'4a,')
         ch_inland = vj.choose_inland_GPS_for_cmpts(
-            sites,
-            num_epochs= self.num_epochs)
+            sites, num_epochs= self.num_epochs)
         with h5py.File(fn) as fid:
+            num_nlin_par = len(self.nlin_par_names)
+            for nth, pn in enumerate(self.nlin_par_names):
+                fid['nlin_pars/'+pn] = self.least_square.Bm[nth - num_nlin_par]
             fid['sites'] = sites
             fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
             fid['misfit/rms_inland_at_epoch'] = self._compute_rms_inland_at_each_epoch()
+            self._save_non_linear_par_correction(fid)
+
+            
