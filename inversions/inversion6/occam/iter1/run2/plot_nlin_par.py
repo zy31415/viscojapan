@@ -27,9 +27,8 @@ for file in files:
         nrough = fid['regularization/roughening/norm'][...]
         nroughs.append(nrough)
 
-xlim = (7, 22)
-xlim = None
-xticks = range(7,22)
+xlim = (4,7)
+xticks = range(4,7)
 
 plt.subplot(411)    
 plt.semilogx(nreses, visMs,'o')
@@ -58,7 +57,7 @@ plt.xlim(xlim)
 plt.gca().set_xticks(xticks)
 plt.gca().get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 plt.ylabel('roughening')
-plt.xlabel('Residual Norm')
+plt.xlabel('Weighted Residual Norm')
 plt.grid('on')
 
 plt.savefig('plots/nlin_par_curve.png')
