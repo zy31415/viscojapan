@@ -3,7 +3,6 @@ from os.path import join
 import argparse
 
 from viscojapan.pollitz.pollitz_wrapper import stat0A
-from viscojapan.pollitz import ComputeEarthModelVISCO1D
 from viscojapan.fault_model import FaultFileIO
 import viscojapan as vj
 
@@ -34,7 +33,7 @@ cmd1[mod_str]= stat0A(
     stdout = FNULL
     )
 
-cmd2[mod_str] = ComputeEarthModelVISCO1D(
+cmd2[mod_str] = vj.pollitz.ComputeEarthModelVISCO1DNonGravity(
     earth_file = join(mod_str, 'earth.model_'+mod_str),
     l_max = lmax,
     outputs_dir = mod_str,
@@ -58,7 +57,7 @@ cmd1[mod_str]= stat0A(
     stdout = FNULL
     )
 
-cmd2[mod_str] = ComputeEarthModelVISCO1D(
+cmd2[mod_str] = vj.pollitz.ComputeEarthModelVISCO1DNonGravity(
     earth_file = join(mod_str, 'earth.model_'+mod_str),
     l_max = lmax,
     outputs_dir = mod_str,
@@ -106,7 +105,7 @@ cmd1[mod_str]= stat0A(
     stdout = FNULL
     )
 
-cmd2[mod_str] = ComputeEarthModelVISCO1D(
+cmd2[mod_str] = vj.pollitz.ComputeEarthModelVISCO1DNonGravity(
     earth_file = join(mod_str, 'earth.model_'+mod_str),
     l_max = 730,
     outputs_dir = mod_str,
