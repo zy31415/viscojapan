@@ -33,7 +33,6 @@ wrt - with respect to, variable that the change WRT.
     def get_epoch_value(self, day):
         G1 = self.ed1.get_epoch_value(day)
         G2 = self.ed2.get_epoch_value(day)
-
         dG = (G2 - G1)/(self.var2 - self.var1)
 
         return dG

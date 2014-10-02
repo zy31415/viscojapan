@@ -4,7 +4,7 @@ from viscojapan.plots import plt, MapPlotDisplacement, MapPlotFault, MyBasemap
 from viscojapan.epochal_data import EpochalG
 
 fno = 30
-scale = .0005
+scale = .0009
 epoch = 1200
 U = 1e-6
 label='%.1G'%U
@@ -30,17 +30,17 @@ d_55km = G55km.get_epoch_value(epoch)[:,fno]
 
 mplt = MapPlotDisplacement(basemap = bm)
 
-mplt.plot_disp(d_45km - d0_45km, sites,
+mplt.plot_disp(d0_45km, sites,
                U = U, label = label+'-45km',
                X=0.1, Y=0.9,
                color='black', scale=scale)
 
-mplt.plot_disp(d_50km - d0_50km, sites,
+mplt.plot_disp(d0_50km, sites,
                U = U, label = label+'-50km',
                X=0.1, Y=0.8,
                color='blue', scale=scale)
 
-mplt.plot_disp(d_55km - d0_55km, sites,
+mplt.plot_disp(d0_55km, sites,
                U = U, label = label+'-55km',
                X=0.1, Y=0.7,
                color='red', scale=scale)
