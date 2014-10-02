@@ -83,7 +83,7 @@ cmd1[mod_str]= stat0A(
 
 cmd2[mod_str] = ComputeEarthModelVISCO1D(
     earth_file = join(mod_str, 'earth.model_'+mod_str),
-    l_max = lmax,
+    l_max = 200,
     outputs_dir = mod_str,
     if_skip_on_existing_output = True,
     stdout = FNULL,
