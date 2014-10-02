@@ -87,7 +87,7 @@ model3 = ComputeGreensFunction(
     controller_file = 'pool.config',
     )
 
-## Model Three - Variation on rake:
+## Model Four - Variation on rake:
 ## (1) viscosity - 2.7542287e+19 (10^19.44) Pa.s
 ## (2) elastic depth - 55km
 ## (3) rake - 90.
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute G matrix.')
     parser.add_argument('model', type=str, nargs=1,
                         help='Compute G matrix for indicated model.',
-                        choices = ['model0','model1','model2','model3'],
+                        choices = ['model0','model1','model2','model3','model4'],
                         )
     args = parser.parse_args()
     model = args.model[0]
@@ -123,5 +123,7 @@ if __name__ == '__main__':
         model2()
     elif model == 'model3':
         model3()
+    elif model == 'model4':
+        model4()
     else:
         raise ValueError('Wrong options.')
