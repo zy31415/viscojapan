@@ -90,6 +90,29 @@ cmd2[mod_str] = ComputeEarthModelVISCO1D(
     stderr = FNULL,
     )
 
+######################
+mod_str = 'He55km_Vis2.8E19'
+
+cmd1[mod_str]= stat0A(
+    earth_model_stat = join(mod_str, 'earth.model_'+mod_str),
+    stat0_out = join(mod_str, 'stat0.out'),
+    l_min = 1,
+    l_max = 15000,
+    fault_bottom_depth = fault_bottom_depth,
+    fault_top_depth = fault_top_depth,
+    obs_dep = 0.,
+    if_skip_on_existing_output = True,
+    stdout = FNULL
+    )
+
+cmd2[mod_str] = ComputeEarthModelVISCO1D(
+    earth_file = join(mod_str, 'earth.model_'+mod_str),
+    l_max = 730,
+    outputs_dir = mod_str,
+    if_skip_on_existing_output = True,
+    stdout = FNULL,
+    stderr = FNULL,
+    )
 
 ###################################
 if __name__ == '__main__':

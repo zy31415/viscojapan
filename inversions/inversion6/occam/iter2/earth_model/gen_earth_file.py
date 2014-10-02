@@ -4,7 +4,7 @@ from os import makedirs
 from numpy import inf
 
 from viscojapan.earth_model import GenerateEarthModelFile, \
-     raw_file_He45km, raw_file_He50km
+     raw_file_He45km, raw_file_He50km, raw_file_He55km
 from viscojapan.fault_model import FaultFileIO
 
 fid = FaultFileIO('../fault_model/fault_bott50km.h5')
@@ -43,6 +43,17 @@ if not exists(mod_str):
     makedirs(mod_str)
 gen = GenerateEarthModelFile(
     raw_file = raw_file_He45km,
+    fault_bottom_depth = fault_bottom_depth,
+    visK = inf,
+    visM = visM0,    
+    )
+gen.save(mod_str + '/earth.model_' + mod_str)
+
+mod_str = 'He55km_Vis2.8E19'
+if not exists(mod_str):
+    makedirs(mod_str)
+gen = GenerateEarthModelFile(
+    raw_file = raw_file_He55km,
     fault_bottom_depth = fault_bottom_depth,
     visK = inf,
     visM = visM0,    
