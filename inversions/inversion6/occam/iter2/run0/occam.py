@@ -22,7 +22,7 @@ inv = vj.OccamDeconvolutionSeparateCoPost2(
     nlin_par_names = ['log10(visM)','He','rake'],
 
     file_d = '../obs/post_obs.h5',
-    file_sd = '../sd_seafloor/sd_files/sd_with_seafloor_05.h5',
+    file_sd = '../sd/sd_with_seafloor_05.h5',
     file_incr_slip0 = '../slip0/incr_slip0.h5',
     file_co_slip = '../slip0/incr_slip0.h5',
     filter_sites_file = 'sites_without_seafloor',
