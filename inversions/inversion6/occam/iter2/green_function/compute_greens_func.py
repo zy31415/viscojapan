@@ -37,9 +37,9 @@ add_task_nongravity('He50km_Vis2.8E19', 85)
 ###################################
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute G matrix.')
-    parser.add_argument('model', type=str, nargs=1,
+    parser.add_argument('model', type=str, nargs='+',
                         help='Compute G matrix for indicated model.',
                         )
     args = parser.parse_args()
-    model = args.model[0]
-    cmd[model]()
+    for m in args.model:
+        cmd[m]()
