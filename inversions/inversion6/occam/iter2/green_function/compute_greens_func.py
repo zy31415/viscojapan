@@ -42,4 +42,7 @@ if __name__ == '__main__':
                         )
     args = parser.parse_args()
     for m in args.model:
+        assert m in cmd
+        
+    for m in args.model:
         cmd[m]()
