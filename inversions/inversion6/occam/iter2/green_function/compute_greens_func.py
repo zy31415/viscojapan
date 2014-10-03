@@ -30,7 +30,7 @@ def add_task_nongravity(mod_str, rake):
         )
 
 add_task_nongravity('He50km_Vis2.8E19', 90)
-add_task_nongravity('He50km_Vis3.5E19', 90)
+add_task_nongravity('He50km_Vis4.0E19', 90)
 add_task_nongravity('He45km_Vis2.8E19', 90)
 add_task_nongravity('He50km_Vis2.8E19', 85)
 
