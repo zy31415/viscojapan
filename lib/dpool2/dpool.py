@@ -39,15 +39,17 @@ class DPool(object):
         self.controller = Controller(controller_file)
         self.dp_state = DPoolState(self.controller)
         self._finished_tasks = []
+        self.processes = []
     
     def _add_a_process(self):
         p = DPoolProcess(dp_state=self.dp_state)
         p.start()
         print('    PID %d is started.'%p.pid)
+        self.processes.append(p)
 
     def _add_procs(self, n):
         n = int(n)
-        n_left = self.dp_state.num_inline_tasks()
+        n_left = self.dp_state.num_waiting_tasks()
         n = min(n, n_left)        
         if n > 0:
             print('    %d processes will be added.'%n)
@@ -149,9 +151,10 @@ class DPool(object):
     def run(self):
         feeder = Feeder(self.tasks, self.dp_state)
         feeder.start()
+        print('Loading tasks ...')
+        time.sleep(5)
         
-        #while self.num_finished_tasks < self.num_total_tasks:
-        while True:
+        while self.dp_state.num_waiting_tasks() > 0:
             self.cls()
             self.controller.update_and_sleep()
             if self.controller.if_fix == 0:
@@ -159,9 +162,9 @@ class DPool(object):
             elif self.controller.if_fix == 1:
                 self._static_pool_adjust_process()
 
+        for p in self.processes:
+            p.join()
         feeder.join()
-        self._join_all_procs()
-
         print('Done.')
         
 

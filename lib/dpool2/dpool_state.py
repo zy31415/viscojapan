@@ -29,10 +29,7 @@ class DPoolState(object):
     def num_waiting_tasks(self):
         n2 = self.q_waiting.qsize()        
         return n2
-
-    def num_inline_tasks(self):
-        return self.q_waiting.qsize()
-
+    
     def get_all_finished_tasks(self):
         tasks = []
         while True:
