@@ -20,7 +20,7 @@ subflts_files_rake90 = \
 # (3) rake - 90.
 
 mod_str = 'He50km_Vis2.8E19'
-earth_file_dir = join('../earth_model/', mod_str)
+earth_file_dir = join('../earth_model_nongravity/', mod_str)
 
 model0 = ComputeGreensFunction(
     epochs = epochs,
@@ -57,7 +57,7 @@ model1 = ComputeGreensFunction(
 ## (3) rake - 90.
 
 mod_str = 'He45km_Vis2.8E19'
-earth_file_dir = join('../earth_model/', mod_str)
+earth_file_dir = join('../earth_model_nongravity/', mod_str)
 
 model2 = ComputeGreensFunction(
     epochs = epochs,
