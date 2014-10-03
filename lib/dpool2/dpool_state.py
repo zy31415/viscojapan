@@ -1,4 +1,4 @@
-from multiprocessing import Queue, Lock, Manager
+from multiprocessing import Queue, Lock, Manager, Value
 from queue import Empty
 
 import numpy as np
@@ -11,9 +11,9 @@ class DPoolState(object):
 
         self.SIZE_q_waiting = 200
         self.q_waiting = Queue(self.SIZE_q_waiting)
-        self.q_running = Queue()
         self.q_finished = Queue()
         self.controller = controller
+        self.num_processes = Value('i',0)
         
     def get_task(self):
         free_cpu_num = free_cpu()
@@ -21,9 +21,6 @@ class DPoolState(object):
         if free_cpu_num > self.controller.threshold_kill:
             task = self.q_waiting.get()
         return task
-
-    def add_running_task(self, pid, task):
-        self.q_running.put((pid, task))
 
     # about q_finished
     def add_finished_task(self, task):
@@ -35,15 +32,6 @@ class DPoolState(object):
 
     def num_inline_tasks(self):
         return self.q_waiting.qsize()
-
-    def get_all_running_tasks(self):
-        pid_task = []
-        while True:
-            try:
-                pid_task.append(self.q_running.get(block=False))
-            except Empty:
-                break
-        return pid_task
 
     def get_all_finished_tasks(self):
         tasks = []
