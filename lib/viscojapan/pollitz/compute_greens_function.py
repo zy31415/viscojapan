@@ -3,7 +3,7 @@ import os
 
 from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
 from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
-from dpool import Task, DPool
+from dpool2 import Task, DPool
 
 class ComputeGreensFunction(object):
     def __init__(self,
