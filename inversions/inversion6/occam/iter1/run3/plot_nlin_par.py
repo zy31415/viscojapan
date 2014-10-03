@@ -3,6 +3,7 @@ import glob
 import h5py
 from pylab import plt
 import matplotlib
+import numpy as np
 
 import viscojapan as vj
 
@@ -38,7 +39,7 @@ plt.grid('on')
 plt.ylabel('log10(visM/(Pa.s))')
 
 plt.subplot(412)    
-plt.semilogx(nreses, Hes,'o')
+plt.semilogx(nreses, 10**(np.asarray(Hes)),'o')
 plt.xlim(xlim)
 plt.gca().set_xticks(xticks)
 plt.grid('on')
