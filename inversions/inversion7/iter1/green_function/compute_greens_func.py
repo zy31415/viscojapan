@@ -15,7 +15,6 @@ subflts_files_rake90 = \
 
 cmd = {}
 
-
 def add_task_nongravity(mod_str, rake, subflts_files):
     earth_file_dir = join('../earth_model_nongravity/', mod_str)
     cmd[mod_str + '_Rake%2d'%rake] = ComputeGreensFunction(
