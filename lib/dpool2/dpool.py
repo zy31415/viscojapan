@@ -161,10 +161,11 @@ class DPool(object):
                 self._dynamic_pool_adjust_process()
             elif self.controller.if_fix == 1:
                 self._static_pool_adjust_process()
-
+        feeder.join()
+        
         for p in self.processes:
             p.join()
-        feeder.join()
+##
         print('Done.')
         
 

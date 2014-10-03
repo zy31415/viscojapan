@@ -18,8 +18,12 @@ class DPoolState(object):
     def get_task(self):
         free_cpu_num = free_cpu()
         task = None
-        if free_cpu_num > self.controller.threshold_kill:
-            task = self.q_waiting.get()
+        try:
+            if free_cpu_num > self.controller.threshold_kill:
+                if self.num_waiting_tasks() > 0:
+                    task = self.q_waiting.get(timeout=self.controller.sleep_interval)
+        except Empty:
+            pass
         return task
 
     # about q_finished
