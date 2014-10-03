@@ -42,4 +42,4 @@ if __name__ == '__main__':
                         )
     args = parser.parse_args()
     model = args.model[0]
-    cmd[model]
+    cmd[model]()
