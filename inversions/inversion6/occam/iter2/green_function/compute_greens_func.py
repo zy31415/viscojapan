@@ -39,7 +39,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute G matrix.')
     parser.add_argument('model', type=str, nargs=1,
                         help='Compute G matrix for indicated model.',
-                        choices = ['model0','model1','model2','model3','model4'],
                         )
     args = parser.parse_args()
     model = args.model[0]
