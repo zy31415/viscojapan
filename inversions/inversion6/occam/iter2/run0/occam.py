@@ -15,7 +15,7 @@ basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
 inv = vj.OccamDeconvolutionSeparateCoPost2(
     file_G0 = '../green_function/G_He50km_Vis2.8E19_Rake90.h5',
     
-    files_Gs = ['../green_function/G_He50km_Vis3.5E19_Rake90.h5',
+    files_Gs = ['../green_function/G_He50km_Vis4.0E19_Rake90.h5',
                 '../green_function/G_He45km_Vis2.8E19_Rake90.h5',
                 '../green_function/G_He50km_Vis2.8E19_Rake85.h5'
                 ],
