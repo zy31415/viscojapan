@@ -9,8 +9,7 @@ from .utils import free_cpu
 class DPoolState(object):
     def __init__(self, controller):
 
-        self.SIZE_q_waiting = 200
-        self.q_waiting = Queue(self.SIZE_q_waiting)
+        self.q_waiting = Queue()
         self.q_finished = Queue()
         self.controller = controller
         self.num_processes = Value('i',0)

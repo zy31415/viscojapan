@@ -144,7 +144,9 @@ class DPool(object):
             
     def run(self):
         print('Loading tasks ...')
-        for task in self.tasks:
+       
+        for nth, task in enumerate(self.tasks):
+            print(nth, task)
             self.dp_state.q_waiting.put(task)            
                 
         while self.dp_state.num_waiting_tasks() > 0:
