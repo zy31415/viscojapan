@@ -21,3 +21,4 @@ outs_tik2
 ~*
 
 *cpython-32mu.so
+__pycache__
