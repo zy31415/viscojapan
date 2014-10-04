@@ -11,7 +11,6 @@ from .controller import Controller
 from .dpool_state import DPoolState
 from .dpool_process import DPoolProcess
 from .task import Task
-from .feeder import Feeder
 from .utils import free_cpu
 
 def print_free_cpu():
@@ -88,7 +87,6 @@ class DPool(object):
     def print_exe_summary(self):
         print("Execution summary:")
         print('    # total tasks : %d'%self.num_total_tasks)
-        print('    # unhandled tasks : %d'%self.num_unhandled_tasks)
         print("    # processes: %d"%self.num_processes)
         print('    average exe time: %.2f sec'%\
               self._compute_average_exe_time())
@@ -137,10 +135,6 @@ class DPool(object):
         return len(self.finished_tasks)
 
     @property
-    def num_unhandled_tasks(self):
-        return len(self.tasks)
-
-    @property
     def num_unfinished_tasks(self):
         return self.num_total_tasks - self.num_finished_tasks
 
@@ -149,11 +143,10 @@ class DPool(object):
         return self.dp_state.num_processes.value
             
     def run(self):
-        feeder = Feeder(self.tasks, self.dp_state)
-        feeder.start()
         print('Loading tasks ...')
-        time.sleep(5)
-        
+        for task in self.tasks:
+            self.dp_state.q_waiting.put(task)            
+                
         while self.dp_state.num_waiting_tasks() > 0:
             self.cls()
             self.controller.update_and_sleep()
@@ -161,11 +154,10 @@ class DPool(object):
                 self._dynamic_pool_adjust_process()
             elif self.controller.if_fix == 1:
                 self._static_pool_adjust_process()
-        feeder.join()
         
         for p in self.processes:
             p.join()
-##
+
         print('Done.')
         
 

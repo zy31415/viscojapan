@@ -1,4 +1,7 @@
-from pylab import plt
+try:
+    from pylab import plt
+except:
+    pass
 from .my_basemap import *
 from .map_plot import MapPlot
 from .map_plot_slab import MapPlotSlab
