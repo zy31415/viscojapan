@@ -11,7 +11,6 @@ from .controller import Controller
 from .dpool_state import DPoolState
 from .dpool_process import DPoolProcess
 from .task import Task
-from .feeder import Feeder
 from .utils import free_cpu
 
 def print_free_cpu():
