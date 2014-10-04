@@ -43,6 +43,7 @@ def add_model(model_str, l_max):
 add_model('He50km_VisK5.0E17_VisM1.0E19', lmax)
 add_model('He50km_VisK6.0E17_VisM1.0E19', lmax)
 add_model('He50km_VisK5.0E17_VisM2.0E19', lmax)
+add_model('He55km_VisK5.0E17_VisM1.0E19', lmax)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute earth model.')
