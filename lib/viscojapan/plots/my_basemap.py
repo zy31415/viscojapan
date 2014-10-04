@@ -1,5 +1,8 @@
 from numpy import arange
-from mpl_toolkits.basemap import Basemap
+try:
+    from mpl_toolkits.basemap import Basemap
+except:
+    pass
 from ..utils import kw_init
 
 __all__=['region_ranges','MyBasemap']
