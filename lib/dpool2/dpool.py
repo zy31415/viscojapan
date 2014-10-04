@@ -87,7 +87,6 @@ class DPool(object):
     def print_exe_summary(self):
         print("Execution summary:")
         print('    # total tasks : %d'%self.num_total_tasks)
-        print('    # unhandled tasks : %d'%self.num_unhandled_tasks)
         print("    # processes: %d"%self.num_processes)
         print('    average exe time: %.2f sec'%\
               self._compute_average_exe_time())
@@ -134,10 +133,6 @@ class DPool(object):
     @property
     def num_finished_tasks(self):
         return len(self.finished_tasks)
-
-    @property
-    def num_unhandled_tasks(self):
-        return len(self.tasks)
 
     @property
     def num_unfinished_tasks(self):
