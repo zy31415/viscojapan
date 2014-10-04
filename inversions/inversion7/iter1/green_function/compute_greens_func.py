@@ -31,6 +31,7 @@ def add_task_nongravity(mod_str, rake):
 add_task_nongravity('He50km_VisK5.0E17_VisM1.0E19', 90)
 add_task_nongravity('He50km_VisK6.0E17_VisM1.0E19', 90)
 add_task_nongravity('He50km_VisK5.0E17_VisM2.0E19', 90)
+add_task_nongravity('He55km_VisK5.0E17_VisM1.0E19', 90)
 add_task_nongravity('He50km_VisK5.0E17_VisM1.0E19', 85)
 
 if __name__ == '__main__':
