@@ -149,11 +149,10 @@ class DPool(object):
         return self.dp_state.num_processes.value
             
     def run(self):
-        feeder = Feeder(self.tasks, self.dp_state)
-        feeder.start()
         print('Loading tasks ...')
-        time.sleep(5)
-        
+        for task in self.tasks:
+            self.dp_state.q_waiting.put(task)            
+                
         while self.dp_state.num_waiting_tasks() > 0:
             self.cls()
             self.controller.update_and_sleep()
@@ -161,11 +160,10 @@ class DPool(object):
                 self._dynamic_pool_adjust_process()
             elif self.controller.if_fix == 1:
                 self._static_pool_adjust_process()
-        feeder.join()
         
         for p in self.processes:
             p.join()
-##
+
         print('Done.')
         
 
