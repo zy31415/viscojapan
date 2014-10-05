@@ -12,7 +12,7 @@ num_subfaults = len(co_slip)
 with h5py.File('afterslip_nrough_09.h5','r') as fid:
     slip = fid['Bm'][...][:-3]
 
-ep = vj.EpochalData('slip0.h5')
+ep = vj.EpochalData('incr_slip0.h5')
 ep[0] = co_slip
 
 for nth, epoch in enumerate(epochs[1:]):
