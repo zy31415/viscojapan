@@ -37,7 +37,7 @@ def add_task(mod_str, visK, visM, He, rake):
 
 
 add_task('He50km_Vis2.8E19_Rake90', inf, 2.754229E+19, 50, 90.)
-add_task('He50km_Vis3.5E19_Rake90', inf, 3.5E+19, 50, 90.)
+add_task('He50km_Vis4.0E19_Rake90', inf, 4.0E+19, 50, 90.)
 add_task('He45km_Vis2.8E19_Rake90', inf, 2.754229E+19, 45, 90.)
 add_task('He50km_Vis2.8E19_Rake85', inf, 2.754229E+19, 50, 85.)
 

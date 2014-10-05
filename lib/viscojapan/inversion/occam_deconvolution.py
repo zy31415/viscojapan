@@ -237,8 +237,9 @@ return: ||W (G B m - d)||
         with h5py.File(fn) as fid:
             num_nlin_par = len(self.nlin_par_names)
             for nth, pn in enumerate(self.nlin_par_names):
-                fid['nlin_pars/'+pn] = self.least_square.Bm[nth - num_nlin_par]
+                fid['nlin_pars/'+pn] = self.least_square.Bm[nth - num_nlin_par,0]
             fid['sites'] = sites
+            fid['epochs'] = self.epochs
             fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
             fid['misfit/rms_inland_at_epoch'] = self._compute_rms_inland_at_each_epoch()
             self._save_non_linear_par_correction(fid)

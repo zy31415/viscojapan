@@ -17,15 +17,12 @@ files = glob.glob('outs/*.h5')
 
 for file in files:
     with h5py.File(file,'r') as fid:
-    #with h5py.File('outs/cno_%02d.h5'%ano,'r') as fid:
         nres = fid['misfit/norm_weighted'][...]
         nreses.append(nres)
 
-        m = fid['m'][...]
-        visMs.append(m[-3])
-        Hes.append(m[-2])
-        print(Hes)
-        rakes.append(m[-1])
+        Hes.append(fid['nlin_pars/log10(He)'][...])
+        visMs.append(fid['nlin_pars/log10(visM)'][...])
+        rakes.append(fid['nlin_pars/rake'][...])
 
         nrough = fid['regularization/roughening/norm'][...]
         nroughs.append(nrough)
