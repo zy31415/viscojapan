@@ -88,6 +88,13 @@ class MapPlotDisplacement(MapPlot):
         sites = g.get_info('sites')
         self.plot_disp(G[:,mth],sites, **kwargs)
 
+    def plot_G_file_vis(self, f_G, epoch, mth, **kwargs):
+        g = EpochalG(f_G)
+        G0 = g[0]
+        G = g[epoch] - G0
+        sites = g.get_info('sites')
+        self.plot_disp(G[:,mth],sites, **kwargs)
+
     def plot_scalor(self, z, sites, zorder=-2, **kwargs):
         lons,lats=vj.get_pos(sites)
         npts = 100
