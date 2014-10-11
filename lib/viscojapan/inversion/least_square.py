@@ -27,7 +27,7 @@ class LeastSquare(object):
             
     def _check_input(self):
         ''' Assert the following operation is possible:
-||W G B m - W d|| - ||L (B m + m0)||
+||W G B m - W d|| - ||L (B m + B m0)||
 W - sparse, weighting matrix
 G - ndarray, green's function
 B - sparse, basis matrix
@@ -125,10 +125,10 @@ return: ||W (G B m - d)||
         nres_w = norm(res_w)
         return nres_w
 
-    def get_solution_norm(self):
-        '''
-return: ||L B m||
-'''
-        tp = self.L.dot(self.Bm + self.Bm0)
-        return dot(tp.T, tp)[0,0]
+##    def get_solution_norm(self):
+##        '''
+##return: ||L B m||
+##'''
+##        tp = self.L.dot(self.Bm + self.Bm0)
+##        return dot(tp.T, tp)[0,0]
     
