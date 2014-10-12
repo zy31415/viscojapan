@@ -10,3 +10,4 @@ from .utils import *
 from .sites import *
 import viscojapan.tsana
 import viscojapan.pollitz
+from .test_utils import MyTestCase

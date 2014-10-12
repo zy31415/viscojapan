@@ -3,7 +3,7 @@ from os.path import exists
 from numpy import asarray
 import h5py
 
-from ..utils import _assert_positive_integer
+from ..utils import assert_positive_integer
 
 class FaultFileIO(object):
     def __init__(self, fault_file):
@@ -29,7 +29,7 @@ class FaultFileIO(object):
 
     @num_subflt_along_strike.setter
     def num_subflt_along_strike(self, val):
-        _assert_positive_integer(val)
+        assert_positive_integer(val)
         with self.append() as fid:
             fid['num_subflt_along_strike'] = val
 
@@ -41,7 +41,7 @@ class FaultFileIO(object):
 
     @num_subflt_along_dip.setter
     def num_subflt_along_dip(self, val):
-        _assert_positive_integer(val)
+        assert_positive_integer(val)
         with self.append() as fid:
             fid['num_subflt_along_strike'] = val
 

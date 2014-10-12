@@ -4,7 +4,7 @@ import h5py
 import viscojapan as vj
 from viscojapan.epochal_data import EpochalG, EpochalDisplacement, EpochalDisplacementSD
 from .inversion import Inversion
-from ..utils import _assert_column_vector
+from ..utils import assert_col_vec_and_get_nrow
 
 class StaticInversion(Inversion):
     def __init__(self,
@@ -29,7 +29,7 @@ class StaticInversion(Inversion):
     def set_data_sd(self):
         sig_ep = EpochalDisplacementSD(self.file_sd, self.file_sites_filter)
         self.sd = sig_ep(self.epoch)
-        _assert_column_vector(self.sd)
+        assert_col_vec_and_get_nrow(self.sd)
 
     def set_data_G(self):
         G_ep = EpochalG(self.file_G, self.file_sites_filter)

@@ -11,7 +11,7 @@ from ..epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
 from .formulate_occam import JacobianVec, Jacobian, D_
 from .inversion import Inversion
-from ..utils import _assert_column_vector
+from ..utils import assert_col_vec_and_get_nrow
 
 __all__ = ['OccamDeconvolution']
 
@@ -139,7 +139,7 @@ class OccamDeconvolution(Inversion):
         sig = EpochalDisplacementSD(self.file_sd, self.filter_sites_file)
         sig_stacked = sig.vstack(self.epochs)
         self.sd = sig_stacked
-        _assert_column_vector(self.sd)
+        assert_col_vec_and_get_nrow(self.sd)
         
         
     def predict(self):

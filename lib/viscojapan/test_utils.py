@@ -4,6 +4,8 @@ from os import makedirs
 
 from .utils import overrides, get_this_script_dir
 
+__all__ = ['MyTestCase']
+
 class MyTestCase(unittest.TestCase):
     @overrides(unittest.TestCase)
     def setUp(self):

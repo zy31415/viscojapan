@@ -4,7 +4,8 @@ from scipy.sparse import bmat
 from numpy import vstack, zeros
 
 from .epochal_data import EpochalData
-from ..utils import _assert_integer, _assert_nonnegative_integer, _assert_column_vector
+from ..utils import assert_integer, assert_nonnegative_integer, \
+     assert_col_vec_and_get_nrow
 
 def conv_stack(epoch_data, epochs):
     ''' Stack epoch_data according to time indicated by epochs to
@@ -47,26 +48,26 @@ See test routine.
 
 def vstack_column_vec(epoch_data, epochs):
     res = epoch_data.get_epoch_value(epochs[0])
-    _assert_column_vector(res)
+    assert_col_vec_and_get_nrow(res)
     for epoch in epochs[1:]:
         res = vstack((res,epoch_data.get_epoch_value(epoch)))
     return res
 
 def _assert_a_is_integer_multiple_of_b(a,b):
-    _assert_integer(a)
-    _assert_integer(b)
+    assert_integer(a)
+    assert_integer(b)
     assert a%b ==0 , 'a is not integer multiple of b.'
     return a//b
 
 def _check_input_for_breaking_a_vec(vec, epochs, epoch_file,
                                   rows_per_epoch=None):
     # check input:
-    num_rows = _assert_column_vector(vec)
+    num_rows = assert_col_vec_and_get_nrow(vec)
     num_epochs = len(epochs)
 
     _rows_per_epoch = _assert_a_is_integer_multiple_of_b(num_rows, num_epochs)
     if rows_per_epoch is not None:
-        _assert_nonnegative_integer(rows_per_epoch)
+        assert_nonnegative_integer(rows_per_epoch)
         assert _rows_per_epoch == rows_per_epoch, \
                'num_epochs and rows_per_epoch are inconsistant'
     else:

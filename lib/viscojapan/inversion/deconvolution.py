@@ -1,6 +1,6 @@
 from ..epochal_data import EpochalG, EpochalDisplacement, EpochalDisplacementSD
 from .inversion import Inversion
-from ..utils import _assert_column_vector, timeit
+from ..utils import assert_col_vec_and_get_nrow, timeit
 
 class Deconvolution(Inversion):
     def __init__(self,
@@ -27,7 +27,7 @@ class Deconvolution(Inversion):
         sig = EpochalDisplacementSD(self.file_sd, self.file_sites_filter)
         sig_stacked = sig.vstack(self.epochs)
         self.sd = sig_stacked
-        _assert_column_vector(self.sd)
+        assert_col_vec_and_get_nrow(self.sd)
 
 
     def set_data_G(self):
@@ -40,7 +40,7 @@ class Deconvolution(Inversion):
         super().set_data_d()
         d_ep = EpochalDisplacement(self.file_d, self.file_sites_filter)
         self.d = d_ep.vstack(self.epochs)
-        _assert_column_vector(self.d)
+        assert_col_vec_and_get_nrow(self.d)
 
     @timeit
     def invert(self):

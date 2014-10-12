@@ -5,7 +5,7 @@ import scipy.sparse as sparse
 from scipy.sparse.csr import csr_matrix
 from cvxopt import matrix, solvers
 
-from ..utils import _assert_column_vector
+from ..utils import assert_col_vec_and_get_nrow
 
 class LeastSquare(object):
     def __init__(self,
@@ -33,7 +33,7 @@ G - ndarray, green's function
 B - sparse, basis matrix
 L - sparse, regularization matrix
 '''
-        self.num_obs = _assert_column_vector(self.d)
+        self.num_obs = assert_col_vec_and_get_nrow(self.d)
 
         if self.W is None:
             self.W = sparse.eye(num_obs)
