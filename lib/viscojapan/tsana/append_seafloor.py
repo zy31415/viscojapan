@@ -1,7 +1,7 @@
 import numpy as np
 
 import viscojapan as vj
-from viscojapan.utils import _assert_assending_order
+from viscojapan.utils import assert_assending_order
 
 class SeafloorPatch(object):
     def __init__(self, file_sites_seafloor):
@@ -11,7 +11,7 @@ class SeafloorPatch(object):
     def _parse_sites_seafloor(self):
         tp = np.loadtxt(self.file_sites_seafloor,'4a, 4a, 2f, 3f, d')
         self.sites_seafloor = [ii[1] for ii in tp]
-        _assert_assending_order(self.sites_seafloor)
+        assert_assending_order(self.sites_seafloor)
         
         self.disp_seafloor = np.vstack([ii[3] for ii in tp]).reshape([-1,1])
         self.sites_seafloor_pos = {ii[1]:ii[2] for ii in tp}
@@ -45,7 +45,7 @@ class SeafloorPatch(object):
         sites = [ii[0] for ii in tp]
         sites_pos = {ii[0]:ii[1] for ii in tp}
         sites_with_seafloor = sites + self.sites_seafloor
-        _assert_assending_order(sites_with_seafloor)
+        assert_assending_order(sites_with_seafloor)
         pos_dic = dict(list(sites_pos.items()) + \
                        list(self.sites_seafloor_pos.items()))
 

@@ -1,12 +1,12 @@
 from scipy.sparse import coo_matrix
 
 from viscojapan.fault_model import FaultFileIO
-from ...utils import _assert_nonnegative_integer, _assert_assending_order
+from ...utils import assert_nonnegative_integer, assert_assending_order
 
 from .regularization import Leaf
 
 def time_derivative_matrix(epochs):
-    _assert_assending_order(epochs)
+    assert_assending_order(epochs)
     num_epochs = len(epochs)
     assert num_epochs >= 3, \
            'In order to compute time derivative, # of epochs must be equal or greater than 3.'

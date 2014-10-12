@@ -3,7 +3,7 @@ import warnings
 from numpy import zeros
 
 from viscojapan.fault_model import FaultFileIO
-from ...utils import _assert_nonnegative_integer
+from ...utils import assert_nonnegative_integer
 
 def gen_checkerboard_slip(num_subflts_dip, num_subflts_strike,
                            dip_patch_size=1,  strike_patch_size=1):
@@ -12,10 +12,10 @@ def gen_checkerboard_slip(num_subflts_dip, num_subflts_strike,
     dN = strike_patch_size
     dM = dip_patch_size
 
-    _assert_nonnegative_integer(N)
-    _assert_nonnegative_integer(M)
-    _assert_nonnegative_integer(dN)
-    _assert_nonnegative_integer(dM)
+    assert_nonnegative_integer(N)
+    assert_nonnegative_integer(M)
+    assert_nonnegative_integer(dN)
+    assert_nonnegative_integer(dM)
 
     res = zeros((M, N),'float')
     for mth in range(0, M, dM):

@@ -90,7 +90,7 @@ def my_vectorize(fn, arr):
     return asarray(res, float)
 
 def _find_section(ARR, val):
-    _assert_assending_order(ARR)
+    assert_assending_order(ARR)
 
     err = 1e-6
     
