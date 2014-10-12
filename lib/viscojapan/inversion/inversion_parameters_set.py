@@ -12,7 +12,7 @@ showing in the following formula:
 W, G, B, m, d, L, Bm0
 (m is the output)
 '''
-    def __init__(self,
+    def __init__(self,*,
                  G,
                  d,
                  W = None,
@@ -95,4 +95,14 @@ This means Green's function for bases might not be accurate.
         # second term
         assert self.ncol_L == self.nrow_B
         assert self.nrow_B == self.nrow_Bm0
+
+    def gen_inputs_for_cvxopt_qp(self):
+        WG = self.W.dot(self.G)
+        WGB = sps.csr_matrix.dot(WG, self.B)        
+        Wd = self.W.dot(self.d)
+        LB = self.L.dot(self.B)        
+        P = np.dot(WGB.T,WGB) + LB.T.dot(LB)        
+        q = - np.dot(WGB.T,Wd) - LB.T.dot(self.L).dot(self.Bm0)
+
+        return P, q
         

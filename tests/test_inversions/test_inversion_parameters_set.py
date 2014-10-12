@@ -25,6 +25,16 @@ class TestInversionParametersSet(vj.MyTestCase):
         B = sps.csr_matrix((5,10))
         Bm0 = sps.csr_matrix((5,1))
         InversionParametersSet(G=G, d=d, W=W, B=B, L=L, Bm0=Bm0)
+
+    def test_gen_inputs_for_cvxopt_qp(self):
+        G = np.ones((10,50))
+        d = np.ones((10,1))
+        ps = InversionParametersSet(G=G, d=d)
+        P, q = ps.gen_inputs_for_cvxopt_qp()
+        print(P)
+        print(q)
+        
+    
         
 if __name__=='__main__':
     unittest.main()

@@ -5,11 +5,14 @@ import time
 import shutil
 import re
 
+import numpy as np
 from numpy import hstack, asarray, frompyfunc
 from numpy.random import normal
 
 __all__ = ['delete_if_exists',
-           'assert_integer','assert_nonnegative_integer','assert_col_vec_and_get_nrow']
+           'assert_integer','assert_nonnegative_integer',
+           'assert_col_vec_and_get_nrow',
+           'assert_square_array_and_get_nrow']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -55,7 +58,11 @@ def assert_col_vec_and_get_nrow(res):
     assert sh[1] == 1, "Column number should 1."
     return sh[0]
 
-
+def assert_square_array_and_get_nrow(arr):
+    assert isinstance(arr, np.ndarray)
+    assert len(arr.shape) == 2
+    assert arr.shape[0] == arr.shape[1]
+    return arr.shape[0]
 
 # decorator:
 class overrides:

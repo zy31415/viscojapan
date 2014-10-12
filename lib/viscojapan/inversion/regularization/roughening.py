@@ -145,11 +145,11 @@ class Roughening(Composite):
                 args = args,
                 arg_names = arg_names)
 
-    @staticmethod
-    def create_from_fault_file(fault_file):
+    @classmethod
+    def create_from_fault_file(cls, fault_file):
         fid = FaultFileIO(fault_file)
         
-        L2 = Roughening(
+        L2 = cls(
             ncols_slip = fid.num_subflt_along_strike,
             nrows_slip = fid.num_subflt_along_dip,
             norm_length_strike = 1.,
