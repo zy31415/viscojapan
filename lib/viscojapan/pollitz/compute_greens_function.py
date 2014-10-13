@@ -1,11 +1,10 @@
 from os.path import join, basename, exists
 import os
+import subprocess
 
 from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
 from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
 from dpool2 import Task, DPool
-
-_dev_null = open('/dev/null', 'w')
 
 class ComputeGreensFunction(object):
     def __init__(self,
@@ -16,7 +15,8 @@ class ComputeGreensFunction(object):
                  outputs_dir,
                  subflts_files,
                  controller_file,
-                 stdout = _dev_null,
+                 stdout = subprocess.DEVNULL,
+                 stderr = subprocess.STDOUT,
                  ):
         self.epochs = epochs
         self.file_sites = file_sites
@@ -26,10 +26,10 @@ class ComputeGreensFunction(object):
         self.controller_file = controller_file
         self.outputs_dir = outputs_dir
         self.stdout = stdout
-        
+        self.stderr = stderr
+
         self.tasks = []
         self.output_files = []
-        
 
     def _gen_out_file(self, file_flt, epoch):
         outf = join(self.outputs_dir,
@@ -44,7 +44,8 @@ class ComputeGreensFunction(object):
             file_sites = self.file_sites,
             file_out = self._gen_out_file(file_flt, 0),
             if_skip_on_existing_output = True,
-            stdout = self.stdout
+            stdout = self.stdout,
+            stderr = self.stderr,
             )
         cmd()
 
@@ -65,7 +66,7 @@ class ComputeGreensFunction(object):
 
             if_skip_on_existing_output = True,
             stdout = self.stdout,
-            stderr = None,
+            stderr = self.stderr,
             )
         cmd()
         
