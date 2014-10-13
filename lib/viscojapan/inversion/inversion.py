@@ -1,8 +1,9 @@
 import h5py
-from numpy import median 
+import numpy as np
 import scipy.sparse as sparse
 
-from .least_square import LeastSquare
+from .inversion_parameters_set import InversionParametersSet
+from .cvxopt_qp_wrapper import CvxoptQpWrapper
 from ..utils import delete_if_exists
 
 class Inversion(object):
@@ -18,7 +19,7 @@ class Inversion(object):
         
     def set_data_W(self):
         print('Set data W ...')
-        _sd = self.sd / median(self.sd)
+        _sd = self.sd / np.median(self.sd)
         self.W = sparse.diags(1./_sd.flatten(), offsets=0)        
 
     def set_data_G(self):
@@ -65,44 +66,63 @@ class Inversion(object):
         
     def invert(self, nonnegative=True):
         print('Inverting ...')
-        
-        self.least_square = LeastSquare(
+
+        self.inv_par_set = InversionParametersSet(
             G = self.G,
             d = self.d,
-            L = self.L,
             W = self.W,
             B = self.B,
-            Bm0 = self.Bm0
-            )
+            L = self.L,
+            Bm0 = self.Bm0)
 
-        self.least_square.invert(nonnegative=nonnegative)
+        self.cvxopt_qp = CvxoptQpWrapper.\
+                         create_from_inversion_parameters_set(self.inv_par_set)        
+        self.cvxopt_qp.invert(nonnegative=nonnegative)
+        
+        self.m = np.asarray(self.cvxopt_qp.solution['x'],float).reshape((-1,1))
+        self.Bm = self.B.dot(self.m)
 
     def predict(self):
-        print('Predicting ...')
-        self.least_square.predict()
-        self.d_pred = self.least_square.d_pred
+        print('Predicting ...')        
+        self.d_pred = np.dot(self.G, self.Bm)        
 
     def run(self):
         self.invert()
         self.predict()
 
-    def get_residual_norm(self):
-        return self.least_square.get_residual_norm()
+    def get_residual_norm(self, subset=None):
+        '''
+return: ||G B m - d||
+'''
+        diff = self.d_pred - self.d
+        if subset is not None:
+            assert len(subset)==len(diff), 'subset length is smaller than diff'
+            diff = diff[subset]
+        return np.linalg.norm(diff)
 
     def get_residual_rms(self, subset=None):
-        return self.least_square.get_residual_rms(subset)
+        diff = self.d_pred - self.d
+        if subset is not None:
+            assert len(subset)==len(diff), 'subset length is smaller than diff'
+            diff = diff[subset]
+        return np.sqrt(np.mean(diff**2))
 
     def get_residual_norm_weighted(self):
-        return self.least_square.get_residual_norm_weighted()
+        '''
+return: ||W (G B m - d)||
+'''
+        res_w = self.W.dot(self.d_pred - self.d)
+        nres_w = np.linalg.norm(res_w)
+        return nres_w
 
     def save(self, fn, overwrite = False):
         print('Saving ...')
         if overwrite:
             delete_if_exists(fn)
-        ls = self.least_square
+
         with h5py.File(fn) as fid:
-            fid['m'] = ls.m
-            fid['Bm'] = ls.Bm
+            fid['m'] = self.m
+            fid['Bm'] = self.Bm
             fid['d_pred'] = self.d_pred
             fid['misfit/norm'] = self.get_residual_norm()
             fid['misfit/rms'] = self.get_residual_rms()
@@ -112,7 +132,7 @@ class Inversion(object):
                                  self.regularization.arg_names):
                 fid['regularization/%s/coef'%name] = par
                 
-            for nsol, name in zip(self.regularization.components_solution_norms(ls.Bm),
+            for nsol, name in zip(self.regularization.components_solution_norms(self.Bm),
                                   self.regularization.arg_names):
                 fid['regularization/%s/norm'%name] = nsol
 
