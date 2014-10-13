@@ -1,5 +1,6 @@
 from os.path import exists,join,basename, dirname
 from os import makedirs
+import os
 from subprocess import Popen, check_output
 from tempfile import mkdtemp
 from shutil import copyfile, rmtree
@@ -30,8 +31,8 @@ class PollitzWrapper(object):
         self.output_files = output_files
 
         self.if_skip_on_existing_output = if_skip_on_existing_output
-        
-        self.stdout = stdout
+
+        self.stdout = stdout        
         self.stderr = stderr     
 
         # Change cwd for the command. See Popen page.
