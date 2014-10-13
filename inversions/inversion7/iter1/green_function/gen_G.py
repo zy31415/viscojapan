@@ -9,36 +9,40 @@ from epochs import epochs
 
 cmd = {}
 
-def add_task(mod_str, visK, visM, He, rake):        
+def add_task(mod_str, visK, visM, He, rake, model_num):        
     num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
-    model0 = PollitzOutputsToEpochalData(
+    model = PollitzOutputsToEpochalData(
         epochs = sorted(epochs),
-        G_file = 'G_' + mod_str + '.h5',
+        G_file = 'G%d_'%model_num + mod_str + '.h5',
         num_subflts = num_subflts,
         pollitz_outputs_dir = 'outs_' + mod_str,
         sites_file = 'stations.in',
-        )
-
-    model0.extra_info ={
+        extra_info ={
         'He':He,
         'visM':visM,
         'log10(visM)':log10(visM),
         'visK':visK,
         'log10(visK)':log10(visK),
         'rake':rake
-        }
-
-    model0.extra_info_attrs ={
+        },
+        extra_info_attrs ={
         'He':{'unit':'km'},
         'visM':{'unit':'Pa.s'},
         'visK':{'unit':'Pa.s'},
-        }
-    cmd[mod_str] = model0
+        },       
+        )    
+    cmd[model_num] = model
 
 add_task('He50km_VisK5.0E17_VisM1.0E19_Rake90',
-         5E17, 1E19, 50, 90.)
+         5E17, 1E19, 50, 90., 0)
+add_task('He50km_VisK6.0E17_VisM1.0E19_Rake90',
+         6E17, 1E19, 50, 90., 1)
 add_task('He50km_VisK5.0E17_VisM2.0E19_Rake90',
-         5E17, 2E19, 50, 90.)
+         5E17, 2E19, 50, 90., 2)
+add_task('He50km_VisK5.0E17_VisM1.0E19_Rake90',
+         5E17, 1E19, 55, 90., 3)
+add_task('He50km_VisK5.0E17_VisM1.0E19_Rake90',
+         5E17, 1E19, 50, 80., 4)
 
 ###################################
 if __name__ == '__main__':

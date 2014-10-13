@@ -3,7 +3,7 @@ from pylab import plt
 
 from .map_plot import MapPlot
 from ..fault_model import FaultFileIO
-from ..utils import _assert_file_exists
+from ..utils import assert_file_exists
 from ..epochal_data import EpochalSlip, EpochalIncrSlip
 
 class MapPlotFault(MapPlot):
@@ -14,7 +14,7 @@ class MapPlotFault(MapPlot):
         self._init_fault_file()
 
     def _init_fault_file(self):
-        _assert_file_exists(self.fault_file)
+        assert_file_exists(self.fault_file)
         self.fault_file_obj =  FaultFileIO(self.fault_file)
 
     def _reshape_as_fault(self, arr):        

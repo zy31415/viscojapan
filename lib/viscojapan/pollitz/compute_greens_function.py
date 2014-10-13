@@ -14,6 +14,7 @@ class ComputeGreensFunction(object):
                  outputs_dir,
                  subflts_files,
                  controller_file,
+                 stdout = open('/dev/null', 'w')
                  ):
         self.epochs = epochs
         self.file_sites = file_sites
@@ -22,9 +23,11 @@ class ComputeGreensFunction(object):
         self.subflts_files = subflts_files
         self.controller_file = controller_file
         self.outputs_dir = outputs_dir
-
+        self.stdout = stdout
+        
         self.tasks = []
         self.output_files = []
+        
 
     def _gen_out_file(self, file_flt, epoch):
         outf = join(self.outputs_dir,
@@ -39,7 +42,7 @@ class ComputeGreensFunction(object):
             file_sites = self.file_sites,
             file_out = self._gen_out_file(file_flt, 0),
             if_skip_on_existing_output = True,
-            stdout = open('/dev/null', 'w')
+            stdout = self.stdout
             )
         cmd()
 
@@ -59,8 +62,7 @@ class ComputeGreensFunction(object):
             days_after = epoch,
 
             if_skip_on_existing_output = True,
-            stdout = open('/dev/null', 'w'),
-            #stdout = None,
+            stdout = self.stdout,
             stderr = None,
             )
         cmd()
