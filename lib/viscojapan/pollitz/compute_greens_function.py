@@ -5,6 +5,8 @@ from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
 from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
 from dpool2 import Task, DPool
 
+_dev_null = open('/dev/null', 'w')
+
 class ComputeGreensFunction(object):
     def __init__(self,
                  epochs,
@@ -14,7 +16,7 @@ class ComputeGreensFunction(object):
                  outputs_dir,
                  subflts_files,
                  controller_file,
-                 stdout = open('/dev/null', 'w')
+                 stdout = _dev_null,
                  ):
         self.epochs = epochs
         self.file_sites = file_sites
