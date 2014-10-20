@@ -143,9 +143,8 @@ class OccamDeconvolution(Inversion):
         
         
     def predict(self):
-        ls = self.least_square
-        Bm = ls.Bm
-        Jac = ls.G
+        Bm = self.Bm
+        Jac = self.G
         num_nlin_pars = self.num_nlin_pars
 
         npars0 = asarray(self.nlin_par_initial_values).reshape([-1,1])
@@ -166,7 +165,6 @@ class OccamDeconvolution(Inversion):
         d = d + delta_d
 
         self.d_pred = d
-        self.least_square.d_pred = self.d_pred
 
     def _choose_inland_observation_at_epoch(self, nth_epoch):
         sites = np.loadtxt(self.filter_sites_file,'4a,')
@@ -216,9 +214,8 @@ return: ||W (G B m - d)||
         return nres_w
 
     def _save_non_linear_par_correction(self, fid):
-        ls = self.least_square
-        Bm = ls.Bm
-        Jac = ls.G
+        Bm = self.Bm
+        Jac = self.G
         num_nlin_pars = self.num_nlin_pars
         npars0 = asarray(self.nlin_par_initial_values)
 
@@ -237,7 +234,7 @@ return: ||W (G B m - d)||
         with h5py.File(fn) as fid:
             num_nlin_par = len(self.nlin_par_names)
             for nth, pn in enumerate(self.nlin_par_names):
-                fid['nlin_pars/'+pn] = self.least_square.Bm[nth - num_nlin_par,0]
+                fid['nlin_pars/'+pn] = self.Bm[nth - num_nlin_par,0]
             fid['sites'] = sites
             fid['epochs'] = self.epochs
             fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
