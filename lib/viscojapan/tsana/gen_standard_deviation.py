@@ -5,19 +5,34 @@ import numpy as np
 
 import viscojapan as vj
 
-__all__=['copy_and_revise_sd_file','GenSD','GenUniformSD','GenOzawaSD']
+__all__=['copy_and_revise_sd_file','GenSD',
+         'GenUniformOnshoreSDWithInfiniteSeafloorSD']
+
+__doc__ = ''' This script contains functions and classes used to
+generate SD file for the inversion.
+A final SD file is generated in two steps:
+Step 1: Generate a SD file assumimg seafloor SD is infinite.
+Step 2: Modify seafloor SD value in the generated SD file in step 1
+        according to file_seafloor_sd.
+'''
 
 def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out, sd = None):
     assert not exists(file_sd_out)
     assert exists(file_sd_original)
     assert exists(file_seafloor_sd)
+
     shutil.copyfile(file_sd_original, file_sd_out)
     ep = vj.EpochalDisplacementSD(file_sd_out)
     seafloor = np.loadtxt(file_seafloor_sd, '4a,i, 3f')
 
+    epochs = ep.get_epochs()
+    
     for ii in seafloor:
         site = ii[0].decode()
         day = ii[1]
+
+        assert day in epochs, "Original sd file doesn't have data on day %d !"%day        
+        
         if sd is None:
             sd = ii[2]
         assert len(sd) == 3
@@ -26,6 +41,7 @@ def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out, sd 
         ep.set_value_at_site(site, 'e', day, sd[0])
         ep.set_value_at_site(site, 'n', day, sd[1])
         ep.set_value_at_site(site, 'u', day, sd[2])
+        ep['seafloor sd/%s_day_%04d'%(site, day)] = sd
 
 class GenSD(object):
     def __init__(self,
@@ -73,103 +89,63 @@ class GenSD(object):
         ep['mean sd'] = np.mean(self.data)
         ep['median sd'] = np.median(self.data)
 
-class GenUniformSD(object):
+        
+class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
     def __init__(self,
                  sites,
                  days,
-                 sd_seafloor,
-                 sd_inland,
-                 sd_co,
+                 sd_co_hor,
+                 sd_co_ver,
+                 sd_post_hor,
+                 sd_post_ver,                 
+                 sd_seafloor = 1e99
                  ):
         self.sites = sites
         self.ch_inland = vj.choose_inland_GPS(self.sites)
-        self.num_obs = 3*len(self.sites)
+        self.num_sites = len(self.sites)
+        self.num_obs = 3 * self.num_sites
         
         self.days = days
-        self.sd_seafloor = sd_seafloor
-        self.sd_inland = sd_inland
-        self.sd_co = sd_co
-    
-    def _gen_sd(self, epoch):
-        if epoch==0:
-            data = np.ones([self.num_obs,1],float) * self.sd_co
-        else:
-            data = np.ones([self.num_obs,1],float) * self.sd_inland
-        data = data.reshape([-1,3])
-        data[~self.ch_inland,:] = self.sd_seafloor
-        return data.reshape([-1,1])
 
-    def save(self, fn):
-        num_obs = 3*len(self.sites)
-        for day in self.days:
-            ep = vj.EpochalData(fn)
-            ep[int(day)] = self._gen_sd(day)
-        ep['sites'] = self.sites
-        ep['max inland sd'] = self.sd_inland
-        ep['min inland sd'] = self.sd_inland
-        ep['mean inland sd'] = self.sd_inland
-        ep['median inland sd'] = self.sd_inland
-        ep['seafloor sd'] = self.sd_seafloor
+        self.sd_co_hor = sd_co_hor
+        self.sd_co_ver = sd_co_ver
         
-class GenOzawaSD(object):
-    def __init__(self,
-                 sites,
-                 days,
-                 sd_seafloor
-                 ):
-        self.sites = sites
-        self.ch_inland = vj.choose_inland_GPS(self.sites)
-        self.num_obs = 3*len(self.sites)
-        self.ch_inland = vj.choose_inland_GPS_for_cmpts(self.sites)
+        self.sd_post_hor = sd_post_hor
+        self.sd_post_ver = sd_post_ver
         
-        self.days = days
         self.sd_seafloor = sd_seafloor
         
-    def _gen_sd(self):
-        data = np.ones([self.num_obs,1],float)
-        data[2::3] = 5.
-        data[~self.ch_inland] = self.sd_seafloor
-        return data.reshape([-1,1])
+
+    def _gen_sd_array(self, sd_east, sd_north, sd_up):
+        arr1 = np.ones(self.num_sites) * sd_east
+        arr2 = np.ones(self.num_sites) * sd_north
+        arr3 = np.ones(self.num_sites) * sd_up
+        arr = np.vstack((arr1, arr2, arr3)).T
+        arr[~self.ch_inland,:] = self.sd_seafloor
+        return arr.reshape([-1,1])
+        
+
+    def _gen_sd_for_coseismic_disp(self):
+        return self._gen_sd_array(self.sd_co_hor,
+                                  self.sd_co_hor,
+                                  self.sd_co_ver)
+
+    def _gen_sd_for_postseismic_disp(self):
+        return self._gen_sd_array(self.sd_post_hor,
+                                  self.sd_post_hor,
+                                  self.sd_post_ver)
 
     def save(self, fn):
-        num_obs = 3*len(self.sites)
         for day in self.days:
             ep = vj.EpochalData(fn)
-            ep[int(day)] = self._gen_sd()
+            day = int(day)
+            if day == 0:
+                ep[day] = self._gen_sd_for_coseismic_disp()
+            else:
+                ep[day] = self._gen_sd_for_postseismic_disp()
         ep['sites'] = self.sites
-        ep['max sd'] = 5.
-        ep['min sd'] = 1.
-        ep['mean sd'] = np.mean(self._gen_sd())
-        ep['median sd'] = np.median(self._gen_sd())
-        
-        
-class GenUniformSD(object):
-    def __init__(self,
-                 sites,
-                 days,
-                 sd_seafloor
-                 ):
-        self.sites = sites
-        self.ch_inland = vj.choose_inland_GPS(self.sites)
-        self.num_obs = 3*len(self.sites)
-        self.ch_inland = vj.choose_inland_GPS_for_cmpts(self.sites)
-        
-        self.days = days
-        self.sd_seafloor = sd_seafloor
-        
-    def _gen_sd(self):
-        data = np.ones([self.num_obs,1],float)
-        data[2::3] = 5.
-        data[~self.ch_inland] = self.sd_seafloor
-        return data.reshape([-1,1])
-
-    def save(self, fn):
-        num_obs = 3*len(self.sites)
-        for day in self.days:
-            ep = vj.EpochalData(fn)
-            ep[int(day)] = self._gen_sd()
-        ep['sites'] = self.sites
-        ep['max sd'] = 5.
-        ep['min sd'] = 1.
-        ep['mean sd'] = np.mean(self._gen_sd())
-        ep['median sd'] = np.median(self._gen_sd())
+        ep['sd_co_hor'] = self.sd_co_hor
+        ep['sd_co_ver'] = self.sd_co_ver
+        ep['sd_post_hor'] = self.sd_post_hor
+        ep['sd_post_ver'] = self.sd_post_ver
+        ep['sd_seafloor'] = self.sd_seafloor

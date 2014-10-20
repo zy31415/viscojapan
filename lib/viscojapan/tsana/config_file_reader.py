@@ -5,11 +5,29 @@ import re
 import warnings
 from os.path import join
 
+import numpy as np
 from numpy import inf
 
 from date_conversion import asmjd,asdtype
 
 from .utils import if_in_tcuts_boundary
+
+__all__ = ['get_sites_according_to_postmodel']
+
+def get_sites_according_to_postmodel(config_file_postmodel, cmpt_code, post_model) -> list:
+    tp = np.loadtxt(config_file_postmodel, '4a, i, 5a')
+    sites = []
+    for ii in tp:
+        site = ii[0]
+        cmpt_code_ = int(ii[1])
+        post_model_ = ii[2].decode()
+        assert isinstance(cmpt_code_, int), \
+               'cmpt_code %d is wrong.'%cmpt_code_
+        assert post_model_ in ('EXP','2EXPs'), 'post_model code %s is wrong.'%post_model_
+        
+        if (cmpt_code_ == cmpt_code) and (post_model_ == post_model):
+            sites.append(site)
+    return sites
 
 
 class ConfigFileReader(object):
@@ -139,6 +157,8 @@ class ConfigFileReader(object):
         site = entry[0]
         st = float(entry[1])
         return st
+
+
 
 if __name__=='__main__':
     reader=ConfigFileReader()

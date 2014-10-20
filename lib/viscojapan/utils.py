@@ -52,13 +52,13 @@ def assert_assending_order(l):
     assert all(l[i] <= l[i+1] for i in range(len(l)-1)) is True, \
            'The arr is not assending.'
 
-def assert_col_vec_and_get_nrow(res):
+def assert_col_vec_and_get_nrow(res) -> int:
     sh = res.shape
     assert len(sh) ==2, "Wrong dimension. Must be column vector."
     assert sh[1] == 1, "Column number should 1."
     return sh[0]
 
-def assert_square_array_and_get_nrow(arr):
+def assert_square_array_and_get_nrow(arr) -> int:
     assert isinstance(arr, np.ndarray)
     assert len(arr.shape) == 2
     assert arr.shape[0] == arr.shape[1]

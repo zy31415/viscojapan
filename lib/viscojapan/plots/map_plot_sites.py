@@ -36,7 +36,7 @@ class MapPlotDisplacement(MapPlot):
     
     def plot_disp(self,d,sites, sites_subset=None,
                   X=0.1,Y=0.1,U=1.,label='1m',
-                  color='black',scale=None):
+                  color='black',scale=None, font_size=10):
         ''' Plot displacment
 '''
             
@@ -56,7 +56,8 @@ class MapPlotDisplacement(MapPlot):
                 color=color,scale=scale,edgecolor=color,latlon=True)
             
         qk = quiverkey(Qu,X,Y,U,label,
-                            labelpos='N')
+                       labelpos='N',
+                       fontproperties={'size':font_size})
 
 
     def plot_sites(self, sites,

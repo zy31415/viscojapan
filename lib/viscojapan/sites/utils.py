@@ -6,8 +6,9 @@ import numpy as np
 import pyproj as pj
 
 from ..utils import get_this_script_dir
+from ..epicenter import TOHOKU_EPICENTER
 
-__all__ = ['epi_lon0', 'epi_lat0', 'get_pos_dic', 'get_pos','sites_file',
+__all__ = ['get_pos_dic', 'get_pos','sites_file',
            'get_epi_dist','sorted_by_epi_dist','get_sites_seafloor',
            'get_maxmin_lonlat','get_sites_in_box','get_all_sites',
            'remove_sites_from','choose_inland_GPS','choose_inland_GPS_for_cmpts']
@@ -15,8 +16,8 @@ __all__ = ['epi_lon0', 'epi_lat0', 'get_pos_dic', 'get_pos','sites_file',
 
 this_file_path = get_this_script_dir(__file__)
 
-epi_lon0 =142.3716
-epi_lat0 = 38.2977
+epi_lon0 = TOHOKU_EPICENTER[0]
+epi_lat0 = TOHOKU_EPICENTER[1]
 
 sites_file = join(this_file_path, 'share/sites_with_seafloor')
 

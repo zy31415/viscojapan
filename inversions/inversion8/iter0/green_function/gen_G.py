@@ -7,146 +7,54 @@ from viscojapan.pollitz import PollitzOutputsToEpochalData
 
 from epochs import epochs
 
-################################
-## Model Zero - The original model:
-##(1) log10(visM) - 18.8
-##       visocosity - 5.839838E+18 Pa.s
-##(2) elastic depth - 40km
-##(3) rake - 80.6
+cmd = {}
 
-mod_str = 'He40km_Vis5.8E18_Rake81'
-num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
+def add_task(mod_str, visK, visM, He, rake, model_num):        
+    num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
+    model = PollitzOutputsToEpochalData(
+        epochs = sorted(epochs),
+        G_file = 'G%d_'%model_num + mod_str + '.h5',
+        num_subflts = num_subflts,
+        pollitz_outputs_dir = 'outs_' + mod_str,
+        sites_file = 'stations.in',
+        extra_info ={
+        'He':He,
+        'log10(He)':log10(He),
+        'visM':visM,
+        'log10(visM)':log10(visM),
+        'visK':visK,
+        'log10(visK)':log10(visK),
+        'rake':rake
+        },
+        extra_info_attrs ={
+        'He':{'unit':'km'},
+        'visM':{'unit':'Pa.s'},
+        'visK':{'unit':'Pa.s'},
+        },       
+        )    
+    cmd[model_num] = model
 
-model0 = PollitzOutputsToEpochalData(
-    epochs = epochs,
-    G_file = 'G_' + mod_str + '.h5',
-    num_subflts = num_subflts,
-    pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'stations.in',
-    )
-
-model0.extra_info ={
-    'He':40.,
-    'visM':5.839838E+18,
-    'log10(visM)':log10(5.839838E+18),
-    'visK':inf,
-    'rake':80.6
-    }
-
-model0.extra_info_attrs ={
-    'He':{'unit':'km'},
-    'visM':{'unit':'Pa.s'},
-    'visK':{'unit':'Pa.s'},
-    }
-
-
+add_task('He40km_Vis5.8E18_Rake81', inf, 5.8E18, 40, 80.6, 0)
 ## Model One - Variation on viscosity:
-##(1) log10(visM) - 19
-##	viscosity - 1.1E+19 Pa.s
-##(2) elastic depth - 40km
-##(3) rake - 80.6
-mod_str = 'He40km_Vis1.1E19_Rake81'
-num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
-
-model1 = PollitzOutputsToEpochalData(
-    epochs = epochs,
-    G_file = 'G_' + mod_str + '.h5',
-    num_subflts = num_subflts,
-    pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'stations.in',
-    )
-
-model1.extra_info ={
-    'He':40.,
-    'visM':1.1E+19,
-    'log10(visM)':log10(1.1E+19),
-    'visK':inf,
-    'rake':80.6
-    }
-
-model1.extra_info_attrs ={
-    'He':{'unit':'km'},
-    'visM':{'unit':'Pa.s'},
-    'visK':{'unit':'Pa.s'},
-    }
-
+add_task('He40km_Vis1.1E19_Rake81', inf, 1.1E19, 40, 80.6, 1)
 ## Model Two - Variation on elastic depth:
-##(1) log10(visM) - 18.8
-##       visocosity - 5.839838E+18 Pa.s
-##(2) elastic depth - 45km
-##(3) rake - 80.6
-mod_str = 'He45km_Vis5.8E18_Rake81'
-num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
-model2 = PollitzOutputsToEpochalData(
-    epochs = epochs,
-    G_file = 'G_' + mod_str + '.h5',
-    num_subflts = num_subflts,
-    pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'stations.in',
-    )
-
-model2.extra_info ={
-    'He':45.,
-    'visM':5.839838E+18,
-    'log10(visM)':log10(5.839838E+18),
-    'visK':inf,
-    'rake':80.6
-    }
-
-model2.extra_info_attrs ={
-    'He':{'unit':'km'},
-    'visM':{'unit':'Pa.s'},
-    'visK':{'unit':'Pa.s'},
-    }
-
-
+add_task('He45km_Vis5.8E18_Rake81', inf, 5.8E18, 45, 80.6, 2)
 ## Model Three - Variation on rake:
-##(1) log10(visM) - 18.8
-##       visocosity - 5.839838E+18 Pa.s
-##(2) elastic depth - 40km
-##(3) rake - 90.
-mod_str = 'He40km_Vis5.8E18_Rake90'
-num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
-model3 = PollitzOutputsToEpochalData(
-    epochs = epochs,
-    G_file = 'G_' + mod_str + '.h5',
-    num_subflts = num_subflts,
-    pollitz_outputs_dir = 'outs_' + mod_str,
-    sites_file = 'stations.in',
-    )
-
-model3.extra_info ={
-    'He' : 40,
-    'visM' : 5.839838E+18,
-    'log10(visM)' : log10(5.839838E+18),
-    'visK' : inf,
-    'rake' : 90.
-    }
-
-model3.extra_info_attrs ={
-    'He':{'unit':'km'},
-    'visM':{'unit':'Pa.s'},
-    'visK':{'unit':'Pa.s'},
-    }
+add_task('He40km_Vis5.8E18_Rake90', inf, 5.8E18, 45, 90, 3)
 
 ###################################
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate G matrix.')
     parser.add_argument('model', type=str, nargs=1,
                         help='Generate G matrix for indicated model.',
-                        choices = ['model0','model1','model2','model3'],
                         )
     args = parser.parse_args()
     model = args.model[0]
 
-    if model == 'model0':
-        model0()
-    elif model == 'model1':
-        model1()
-    elif model == 'model2':
-        model2()
-    elif model == 'model3':
-        model3()
+    if model == 'all':
+        for s,c in cmd.items():
+            print(s)
+            c()
     else:
-        raise ValueError('Wrong options.')
+        cmd[model]()
 
