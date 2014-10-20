@@ -143,4 +143,33 @@ class GenOzawaSD(object):
         ep['median sd'] = np.median(self._gen_sd())
         
         
-    
+class GenUniformSD(object):
+    def __init__(self,
+                 sites,
+                 days,
+                 sd_seafloor
+                 ):
+        self.sites = sites
+        self.ch_inland = vj.choose_inland_GPS(self.sites)
+        self.num_obs = 3*len(self.sites)
+        self.ch_inland = vj.choose_inland_GPS_for_cmpts(self.sites)
+        
+        self.days = days
+        self.sd_seafloor = sd_seafloor
+        
+    def _gen_sd(self):
+        data = np.ones([self.num_obs,1],float)
+        data[2::3] = 5.
+        data[~self.ch_inland] = self.sd_seafloor
+        return data.reshape([-1,1])
+
+    def save(self, fn):
+        num_obs = 3*len(self.sites)
+        for day in self.days:
+            ep = vj.EpochalData(fn)
+            ep[int(day)] = self._gen_sd()
+        ep['sites'] = self.sites
+        ep['max sd'] = 5.
+        ep['min sd'] = 1.
+        ep['mean sd'] = np.mean(self._gen_sd())
+        ep['median sd'] = np.median(self._gen_sd())

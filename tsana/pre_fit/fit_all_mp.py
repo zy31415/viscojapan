@@ -27,9 +27,9 @@ def run(par):
         fn_err='stderr/%s'%par
         ferr=open(fn_err,'wt')
         fout=open('stdout/%s'%par,'wt')
-        rcode=subprocess.call(['./fit-lin-sh.py',
-                               '-s','%s'%site,
-                               '-c','%s'%cmpt,
+        rcode=subprocess.call(['./fit-pre.py',
+                               '%s'%site,
+                               '%s'%cmpt,
                                '-v'],
                               stdout=fout,stderr=ferr)
         ferr.close()
@@ -41,7 +41,7 @@ def run(par):
         else:
             print('  ERROR: %s, %f min'%(site,(time.time()-t1)/60.))
 
-tp=loadtxt('sites','4a,2f')
+tp=loadtxt('sites/sites','4a,2f')
 sites=[ii[0].decode() for ii in tp]
 
 pars=[]

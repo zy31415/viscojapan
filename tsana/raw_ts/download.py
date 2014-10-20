@@ -4,7 +4,7 @@
 from pylab import *
 from subprocess import *
 
-tp=loadtxt('sites','4a')
+tp=loadtxt('sites/sites','4a')
 sites=[ii[0] for ii in tp]
 
 link='wget -P IGS08/ http://geodesy.unr.edu/gps_timeseries/tenv/IGS08/{}.IGS08.tenv'
