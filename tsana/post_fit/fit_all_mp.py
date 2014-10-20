@@ -11,7 +11,7 @@ parser.add_argument('-n',dest='ncpus', type=int, required=True,
                    help='Number of cpus.')
 args = parser.parse_args()
 
-tp=loadtxt('sites/sites','4a')
+tp=loadtxt('sites/sites','4a', usecols=(0,))
 sites=[ii.decode() for ii in tp]
 
 _dir_postres='pots_res'

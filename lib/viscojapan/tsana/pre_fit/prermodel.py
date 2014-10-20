@@ -4,6 +4,7 @@
 from rpy2.robjects import FloatVector,BoolVector,globalenv,Formula
 from rpy2.robjects import r as _r
 from pylab import *
+import numpy as np
 
 from ..utils import cut_ts
 
@@ -166,7 +167,7 @@ Logic index indicating outliers.
             self.outlier_cri = inf
         cri=std*self.outlier_cri
         res=self.get_res()
-        ch=abs(res)>cri
+        ch = (np.abs(np.nan_to_num(res)) > cri)
         return ch
 
     def find_outliers_by_rms(self,verbose=True):

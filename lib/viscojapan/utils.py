@@ -5,10 +5,14 @@ import time
 import shutil
 import re
 
+import numpy as np
 from numpy import hstack, asarray, frompyfunc
 from numpy.random import normal
 
-__all__ = ['delete_if_exists']
+__all__ = ['delete_if_exists',
+           'assert_integer','assert_nonnegative_integer',
+           'assert_col_vec_and_get_nrow',
+           'assert_square_array_and_get_nrow']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -27,34 +31,38 @@ def get_this_script_dir(__file__):
 
 # assertions
 
-def _assert_integer(var):
+def assert_integer(var):
     assert isinstance(var, int), "%s is not an integer."%str(var)
     
-def _assert_nonnegative_integer(var):
-    _assert_integer(var)
+def assert_nonnegative_integer(var):
+    assert_integer(var)
     assert var >= 0, "%d is not non negative."%str(var)
 
-def _assert_positive_integer(var):
-    _assert_integer(var)
+def assert_positive_integer(var):
+    assert_integer(var)
     assert var > 0, "%d is not positive."%str(var)
 
-def _assert_file_not_exists(fn):
+def assert_file_not_exists(fn):
     assert not exists(fn), "File %s exist."%fn
 
-def _assert_file_exists(fn):
+def assert_file_exists(fn):
     assert exists(fn), "File %s doesn't exist."%fn
 
-def _assert_assending_order(l):
+def assert_assending_order(l):
     assert all(l[i] <= l[i+1] for i in range(len(l)-1)) is True, \
            'The arr is not assending.'
 
-def _assert_column_vector(res):
+def assert_col_vec_and_get_nrow(res) -> int:
     sh = res.shape
     assert len(sh) ==2, "Wrong dimension. Must be column vector."
     assert sh[1] == 1, "Column number should 1."
     return sh[0]
 
-
+def assert_square_array_and_get_nrow(arr) -> int:
+    assert isinstance(arr, np.ndarray)
+    assert len(arr.shape) == 2
+    assert arr.shape[0] == arr.shape[1]
+    return arr.shape[0]
 
 # decorator:
 class overrides:
@@ -89,7 +97,7 @@ def my_vectorize(fn, arr):
     return asarray(res, float)
 
 def _find_section(ARR, val):
-    _assert_assending_order(ARR)
+    assert_assending_order(ARR)
 
     err = 1e-6
     

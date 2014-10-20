@@ -1,9 +1,11 @@
 from numpy import ascontiguousarray, asarray
 from pylab import plt
 
+import viscojapan as vj
+
 from .map_plot import MapPlot
 from ..fault_model import FaultFileIO
-from ..utils import _assert_file_exists
+from ..utils import assert_file_exists
 from ..epochal_data import EpochalSlip, EpochalIncrSlip
 
 class MapPlotFault(MapPlot):
@@ -14,7 +16,7 @@ class MapPlotFault(MapPlot):
         self._init_fault_file()
 
     def _init_fault_file(self):
-        _assert_file_exists(self.fault_file)
+        assert_file_exists(self.fault_file)
         self.fault_file_obj =  FaultFileIO(self.fault_file)
 
     def _reshape_as_fault(self, arr):        
@@ -36,13 +38,6 @@ class MapPlotFault(MapPlot):
         cb = plt.colorbar()
         plt.clim(clim)
         cb.set_label('slip(m)')
-
-##        com_mo = ComputeMoment()
-##        com_mo.fault_file = self.fault_file
-##        
-##        mo, mw = com_mo.moment(m)
-##        
-##        title('Mo=%.3g,Mw=%.2f'%(mo,mw))
 
     def contour_on_fault(self, val, **kwargs):
         LLons = self.fault_file_obj.LLons[1:,1:]
@@ -92,6 +87,7 @@ class MapPlotFault(MapPlot):
             y0=(ypt1.flatten()[fno]+ypt2.flatten()[fno])/2.
             
             self.basemap.plot(x0,y0,marker='*',color='red',ms=ms)
+
 
     def plot_incr_slip_file(self, f_slip, epoch):
         slip_obj = EpochalIncrSlip(f_slip)

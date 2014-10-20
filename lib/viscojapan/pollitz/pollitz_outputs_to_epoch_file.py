@@ -24,7 +24,9 @@ green's function: These properties are highly recommended:
                  num_subflts,
                  pollitz_outputs_dir,
                  sites_file,
-                 G_file_overwrite = True
+                 G_file_overwrite = True,
+                 extra_info = None,
+                 extra_info_attrs = None,
                  ):
 
         # initialize the following variables!
@@ -37,8 +39,15 @@ green's function: These properties are highly recommended:
         self.G = EpochalData(G_file)
         self.G_file_overwrite = G_file_overwrite
 
-        self.extra_info = {}
-        self.extra_info_attrs = {}
+        if extra_info is None:
+            self.extra_info = {}
+        else:
+            self.extra_info = extra_info
+
+        if extra_info_attrs is None:
+            self.extra_info_attrs = {}
+        else:
+            self.extra_info_attrs = extra_info_attrs
 
         
     def _check_pollitz_outputs_existence(self):

@@ -11,7 +11,7 @@ from ..epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
 from .formulate_occam import JacobianVec, Jacobian, D_
 from .inversion import Inversion
-from ..utils import _assert_column_vector
+from ..utils import assert_col_vec_and_get_nrow
 
 __all__ = ['OccamDeconvolution']
 
@@ -139,13 +139,12 @@ class OccamDeconvolution(Inversion):
         sig = EpochalDisplacementSD(self.file_sd, self.filter_sites_file)
         sig_stacked = sig.vstack(self.epochs)
         self.sd = sig_stacked
-        _assert_column_vector(self.sd)
+        assert_col_vec_and_get_nrow(self.sd)
         
         
     def predict(self):
-        ls = self.least_square
-        Bm = ls.Bm
-        Jac = ls.G
+        Bm = self.Bm
+        Jac = self.G
         num_nlin_pars = self.num_nlin_pars
 
         npars0 = asarray(self.nlin_par_initial_values).reshape([-1,1])
@@ -166,7 +165,6 @@ class OccamDeconvolution(Inversion):
         d = d + delta_d
 
         self.d_pred = d
-        self.least_square.d_pred = self.d_pred
 
     def _choose_inland_observation_at_epoch(self, nth_epoch):
         sites = np.loadtxt(self.filter_sites_file,'4a,')
@@ -216,9 +214,8 @@ return: ||W (G B m - d)||
         return nres_w
 
     def _save_non_linear_par_correction(self, fid):
-        ls = self.least_square
-        Bm = ls.Bm
-        Jac = ls.G
+        Bm = self.Bm
+        Jac = self.G
         num_nlin_pars = self.num_nlin_pars
         npars0 = asarray(self.nlin_par_initial_values)
 
@@ -237,7 +234,7 @@ return: ||W (G B m - d)||
         with h5py.File(fn) as fid:
             num_nlin_par = len(self.nlin_par_names)
             for nth, pn in enumerate(self.nlin_par_names):
-                fid['nlin_pars/'+pn] = self.least_square.Bm[nth - num_nlin_par,0]
+                fid['nlin_pars/'+pn] = self.Bm[nth - num_nlin_par,0]
             fid['sites'] = sites
             fid['epochs'] = self.epochs
             fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)

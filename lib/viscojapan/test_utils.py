@@ -1,8 +1,11 @@
 import unittest
 from os.path import join, exists
 from os import makedirs
+import shutil
 
 from .utils import overrides, get_this_script_dir
+
+__all__ = ['MyTestCase']
 
 class MyTestCase(unittest.TestCase):
     @overrides(unittest.TestCase)
@@ -19,4 +22,8 @@ class MyTestCase(unittest.TestCase):
         if not exists(path):
             makedirs(path)
         return path
+
+    def clean_outs_dir(self):
+        if exists(self.outs_dir):
+            shutil.rmtree(self.outs_dir)
     

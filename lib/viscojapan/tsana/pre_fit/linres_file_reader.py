@@ -1,7 +1,13 @@
 from os.path import join
+import os
 import re
 
+import numpy as np
 from numpy import loadtxt, asarray, nan
+
+from ...sites import get_pos_dic
+
+__all__ = ['read_vel_sd','read_vel','gen_vel_and_vsd_file']
 
 class LinResReader(object):
     def __init__(self,site,cmpt):
@@ -96,3 +102,32 @@ def read_jumps(fn):
         out = re.findall('^#.*jump:.*',fid.read(),re.M)
     return [int(ii.split(':')[1]) for ii in out]
 
+def read_vel(file):
+    with open(file) as fid:
+        tp = re.findall('^#.*velocity\s\(mm/yr\):.*',fid.read(), re.M)
+    assert len(tp) == 1
+    return float(tp[0].split(':')[1])
+
+def read_vel_sd(file):
+    with open(file) as fid:
+        tp = re.findall('^#.*velocity\ssd\s\(mm/yr\):.*',fid.read(), re.M)
+    assert len(tp) == 1
+    return float(tp[0].split(':')[1])    
+
+def gen_vel_and_vsd_file(lres_dir, sites, output_file):
+    assert os.path.exists(lres_dir)
+    pos_dic = get_pos_dic()
+    with open(output_file, 'w') as fid:
+        fid.write('# site  lon  lat  e(mm/yr)  n   u   esd   nsd   usd\n')
+        
+        for site in sites:
+            lon = pos_dic[site.encode()][0]
+            lat = pos_dic[site.encode()][1]
+            fid.write('%s  %9f  %9f  '%(site, lon, lat))
+            for cmpt in 'e','n','u':
+                vel = read_vel(os.path.join(lres_dir,'%s.%s.lres'%(site,cmpt)))
+                fid.write('%11f '%(vel))
+            for cmpt in 'e','n','u':
+                velsd = read_vel_sd(os.path.join(lres_dir,'%s.%s.lres'%(site,cmpt)))
+                fid.write('%11f '%velsd)
+            fid.write('\n')

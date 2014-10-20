@@ -17,22 +17,19 @@ def add_task(mod_str, visK, visM, He, rake):
         num_subflts = num_subflts,
         pollitz_outputs_dir = 'outs_' + mod_str,
         sites_file = 'stations.in',
+        extra_info = {
+            'He':He,
+            'visM':visM,
+            'log10(visM)':log10(visM),
+            'visK':visK,
+            'log10(visK)':log10(visK),
+            'rake':range},
+        extra_info_attrs ={
+            'He':{'unit':'km'},
+            'visM':{'unit':'Pa.s'},
+            'visK':{'unit':'Pa.s'}},
         )
 
-    model0.extra_info ={
-        'He':He,
-        'visM':visM,
-        'log10(visM)':log10(visM),
-        'visK':visK,
-        'log10(visK)':log10(visK),
-        'rake':rake
-        }
-
-    model0.extra_info_attrs ={
-        'He':{'unit':'km'},
-        'visM':{'unit':'Pa.s'},
-        'visK':{'unit':'Pa.s'},
-        }
     cmd[mod_str] = model0
 
 

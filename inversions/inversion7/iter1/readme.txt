@@ -28,4 +28,4 @@ Model 4 (Variation on Rake):
 VisK - 5.0E17 Pa.s
 VisM - 1.0E19 Pa.s
 He - 50km
-Rake - 85
+Rake - 80
