@@ -10,8 +10,8 @@ gen = vj.tsana.GenUniformOnshoreSDWithInfiniteSeafloorSD(
     days = range(0,1300),
     sd_co_hor = 1,
     sd_co_ver = 5,
-    sd_post_hor = 1,
-    sd_post_ver = 5, 
+    sd_post_hor = 3,
+    sd_post_ver = 15, 
     )
 
 gen.save('sd_uniform.h5')

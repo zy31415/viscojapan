@@ -3,8 +3,8 @@ from os.path import exists
 
 from numpy import dot, hstack, copy
 
-from ..epochal_data.epochal_slip import EpochalIncrSlip
-from ..epochal_data.diff_ed import DiffED
+from ...epochal_data.epochal_slip import EpochalIncrSlip
+from ...epochal_data.diff_ed import DiffED
 
 def _check_shape_for_matrix_product(A,B):
     sh1 = A.shape

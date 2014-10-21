@@ -7,11 +7,11 @@ import scipy.sparse as sparse
 import h5py
 
 import viscojapan as vj
-from ..epochal_data import \
+from ...epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
 from .formulate_occam import JacobianVec, Jacobian, D_
-from .inversion import Inversion
-from ..utils import assert_col_vec_and_get_nrow
+from ..inversion import Inversion
+from ...utils import assert_col_vec_and_get_nrow
 
 __all__ = ['OccamDeconvolution']
 
