@@ -6,6 +6,7 @@ from .static_inversion import StaticInversion
 from .regularization import *
 from .basis_function import *
 from .occam_results_deformation_decomposition import *
+from .plot_predicted_vs_observation import *
 
 __author__ = 'zy'
 

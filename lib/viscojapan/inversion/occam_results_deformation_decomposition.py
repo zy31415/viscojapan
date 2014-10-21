@@ -1,9 +1,11 @@
+import re
+
 import numpy as np
 import h5py
 
 import viscojapan as vj
 
-__all__ = ['DeformationDecomposition']
+__all__ = ['DeformationDecomposition','read_predicted_time_series_from_results_file']
 
 class DeformationDecomposition(object):
     def __init__(self,
@@ -137,5 +139,9 @@ class DeformationDecomposition(object):
         delta_d = np.dot(dG, slip) * dnpar
         return delta_d
 
-
+def read_predicted_time_series_from_results_file(site, cmpt, file):
+    with open(file,'rt') as fid:
+        tp = re.findall('^%s %s.*'%(site,cmpt),fid.read(),re.M)[0].split()
+        y = np.asarray([ii for ii in tp[2:]], float)
+        return y  
     
