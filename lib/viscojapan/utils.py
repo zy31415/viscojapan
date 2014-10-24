@@ -12,7 +12,8 @@ from numpy.random import normal
 __all__ = ['delete_if_exists',
            'assert_integer','assert_nonnegative_integer',
            'assert_col_vec_and_get_nrow',
-           'assert_square_array_and_get_nrow']
+           'assert_square_array_and_get_nrow',
+           'get_this_script_dir']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):

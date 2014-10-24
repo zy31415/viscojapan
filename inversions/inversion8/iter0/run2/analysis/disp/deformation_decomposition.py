@@ -6,7 +6,7 @@ import viscojapan as vj
 from epochs import epochs
 
 dd = vj.DeformationDecomposition(
-    f_res = '../../outs/nrough_05.h5',
+    f_res = '../../outs/nrough_10.h5',
     file_G0 = '../../../green_function/G0_He40km_Vis5.8E18_Rake81.h5',
     
     files_Gs = ['../../../green_function/G1_He40km_Vis1.1E19_Rake81.h5',
