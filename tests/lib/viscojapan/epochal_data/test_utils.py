@@ -14,7 +14,7 @@ _dir_data = os.path.dirname(os.path.abspath(__file__))
 
 
 def read_sites_file():
-    sites = loadtxt(join(_dir_data,'sites'),'4a,')
+    sites = loadtxt(join(_dir_data,'share/','sites'),'4a,')
     return sites
 
 def set_epoch_value(fn):
