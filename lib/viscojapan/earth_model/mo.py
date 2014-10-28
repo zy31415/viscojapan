@@ -5,7 +5,7 @@ import numpy as np
 from viscojapan.epochal_data import EpochalIncrSlip
 import viscojapan as vj
 
-from .read_earth_model_file import ReadEarthModelFile
+from .read_earth_model_file import EarthModelFileReader
 
 class ComputeMoment(object):
     def __init__(self, fault_file, earth_file):
@@ -15,7 +15,7 @@ class ComputeMoment(object):
     def _get_shear(self):
         reader = vj.FaultFileIO(self.fault_model_file)
         ddeps = reader.ddeps[1:, 1:]
-        reader = ReadEarthModelFile(self.earth_model_file)
+        reader = EarthModelFileReader(self.earth_model_file)
         return reader.get_shear_modulus(ddeps)
         
         

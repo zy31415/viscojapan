@@ -2,7 +2,9 @@ from numpy import loadtxt, asarray
 
 from ..utils import _find_section, my_vectorize
 
-class ReadEarthModelFile(object):
+__all__ = ['EarthModelFileReader']
+
+class EarthModelFileReader(object):
     def __init__(self, earth_file):
         super().__init__()
         self.earth_file = earth_file

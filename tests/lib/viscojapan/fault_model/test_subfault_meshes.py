@@ -13,8 +13,6 @@ from viscojapan.fault_model import control_points1, control_points2
 from viscojapan.utils import get_this_script_dir, delete_if_exists
 from viscojapan.test_utils import MyTestCase
 
-this_test_path = get_this_script_dir(__file__)
-
 class TestSubFaultsMeshes(MyTestCase):
     def setUp(self):
         self.this_script = __file__

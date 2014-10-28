@@ -6,32 +6,22 @@ from numpy import arange, linspace
 from numpy.testing import assert_almost_equal
 from pylab import plt
 
-from viscojapan.fault_model.fault_framework import FaultFramework
-from viscojapan.utils import get_this_script_dir
+from viscojapan.fault_model.fault_framework import \
+     FaultFramework, plot_fault_framework
+from viscojapan.fault_model.control_points import control_points2
+from viscojapan.test_utils import MyTestCase
 
-this_test_path = get_this_script_dir(__file__)
-
-class TestFaultFramework(unittest.TestCase):
+class TestFaultFramework(MyTestCase):
     def setUp(self):
-        self.fm = FaultFramework()
+        self.this_script = __file__
+        MyTestCase.setUp(self)
+        
+        self.fm = FaultFramework(control_points2)
 
     def test_Y_PC_vs_DEP(self):
-        plt.plot(self.fm.Y_PC, self.fm.DEP, '-o')
-        plt.axis('equal')
-        plt.axhline(0, color='black')
-        plt.gca().set_yticks(self.fm.DEP)
-        plt.gca().set_xticks(self.fm.Y_PC)
-        plt.grid('on')
-        plt.title('Ground x versus depth')
-        plt.xlabel('Ground X (km)')
-        plt.ylabel('depth (km)')
-
-        for xi, yi, dip in zip(self.fm.Y_PC, self.fm.DEP, self.fm.DIP_D):
-            plt.text(xi, yi, 'dip = %.1f'%dip)
-
-        plt.gca().invert_yaxis()
-        
-        plt.savefig(join(this_test_path,'~dep_Y_PC.png'))
+        plot_fault_framework(self.fm)        
+        plt.savefig(join(self.outs_dir,'~dep_Y_PC.png'))
+        plt.savefig(join(self.outs_dir,'~dep_Y_PC.pdf'))
         plt.close()
 
     def test_dip(self):
@@ -42,7 +32,7 @@ class TestFaultFramework(unittest.TestCase):
         plt.gca().set_xticks(self.fm.Y_PC)
         plt.ylim([0, 30])
         plt.gca().invert_yaxis()
-        plt.savefig(join(this_test_path, '~y_fc_dips.png'))
+        plt.savefig(join(self.outs_dir, '~y_fc_dips.png'))
         plt.close()
 
     def test_dep(self):
@@ -59,7 +49,7 @@ class TestFaultFramework(unittest.TestCase):
         plt.ylabel('depth (km)')
         plt.axis('equal')
         plt.gca().invert_yaxis()
-        plt.savefig(join(this_test_path, '~Y_PC_vs_deps.png'))
+        plt.savefig(join(self.outs_dir, '~Y_PC_vs_deps.png'))
         plt.close()
 
     def test_yfc_to_ygc(self):

@@ -7,6 +7,7 @@ from numpy.testing import assert_almost_equal, assert_array_almost_equal
 from pylab import plt
 
 from viscojapan.fault_model.transform import FaultCoordinatesTransformation
+from viscojapan.fault_model.control_points import control_points2
 from viscojapan.utils import get_this_script_dir
 from viscojapan.plots.map_plot import MapPlot
 
@@ -14,7 +15,7 @@ this_test_path = get_this_script_dir(__file__)
 
 class TestFaultCoordinatesTransformation(unittest.TestCase):
     def setUp(self):
-        self.fm = FaultCoordinatesTransformation()
+        self.fm = FaultCoordinatesTransformation(control_points2)
 
         self.plt_map = MapPlot()
 

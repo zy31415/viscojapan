@@ -2,9 +2,28 @@ import warnings
 
 from numpy import asarray, pi, cos, sin, zeros_like
 from pyproj import Proj
+from pylab import plt
 
 from ..utils import my_vectorize, _find_section
 
+__all__=['plot_fault_framework','FaultFramework']
+
+def plot_fault_framework(fault_framework):
+    fm = fault_framework
+    plt.plot(fm.Y_PC, fm.DEP, '-o')
+    plt.axis('equal')
+    plt.axhline(0, color='black')
+    plt.gca().set_yticks(fm.DEP)
+    plt.gca().set_xticks(fm.Y_PC)
+    plt.grid('on')
+    plt.title('Ground x versus depth')
+    plt.xlabel('Ground X (km)')
+    plt.ylabel('depth (km)')
+
+    for xi, yi, dip in zip(fm.Y_PC, fm.DEP, fm.DIP_D):
+        plt.text(xi, yi, 'dip = %.1f'%dip)
+
+    plt.gca().invert_yaxis()
         
 class FaultFramework(object):
     ''' Three coordinates:
@@ -129,6 +148,10 @@ Explaination see research notes on July 01, 2014.
 
     def ypc_to_yfc(self, ypc):
         return my_vectorize(self._ypc_to_yfc_scalar, ypc)
+
+
+
+        
         
         
 

@@ -1,3 +1,5 @@
+__all__=['control_points1','control_points2']
+
 class ControlPoints(object):
     def __init__(self,
                  B0,

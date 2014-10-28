@@ -3,12 +3,14 @@ from os.path import join
 
 from viscojapan.fault_model.fault_file_io import FaultFileIO
 from viscojapan.utils import get_this_script_dir
+from viscojapan.test_utils import MyTestCase
 
-this_file_path = get_this_script_dir(__file__)
-
-class TestFaultFileIO(unittest.TestCase):
+class TestFaultFileIO(MyTestCase):
     def setUp(self):
-        self.fault_file = join(this_file_path, 'share/subfaults.h5')
+        self.this_script = __file__
+        MyTestCase.setUp(self)
+        
+        self.fault_file = join(self.share_dir, 'subfaults.h5')
 
     def test(self):
         fio = FaultFileIO(self.fault_file)
