@@ -5,7 +5,7 @@ import numpy as np
 from viscojapan.epochal_data import EpochalIncrSlip
 import viscojapan as vj
 
-from .read_earth_model_file import EarthModelFileReader
+from .earth_model_file_reader import EarthModelFileReader
 
 class ComputeMoment(object):
     def __init__(self, fault_file, earth_file):

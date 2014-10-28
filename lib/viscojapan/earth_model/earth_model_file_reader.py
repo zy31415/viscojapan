@@ -89,8 +89,18 @@ class EarthModelFileReader(object):
         bulk = float(broken_line[3])
         shear = float(broken_line[4])
         shear_long = float(broken_line[5])
-        visK = float(broken_line[6])
-        visM = float(broken_line[7])
+
+        bl6 = broken_line[6]
+        if bl6 == 'KKKKKKKKKKKK':
+            visK = np.nan
+        else:
+            visK = float(bl6)
+
+        bl7 = broken_line[7] 
+        if bl7 == 'MMMMMMMMMMMM':
+            visM = np.nan
+        else:
+            visM = float(bl7)
 
         return rad_top, rad_bot, dep_top, rad_top, \
                      dep_bot, density, bulk, shear, \
@@ -119,8 +129,16 @@ class EarthModelFileReader(object):
         return np.asarray(self._rad_bot)
 
     @property
+    def density(self):
+        return np.asarray(self._density, float)
+
+    @property
     def shear(self):
         return np.asarray(self._shear, float)
+
+    @property
+    def bulk(self):
+        return np.asarray(self._bulk, float)
 
     @property
     def shear_long(self):
