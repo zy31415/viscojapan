@@ -1,32 +1,42 @@
 from pylab import plt
 
+from .earth_model_file_reader import EarthModelFileReader
+
 __all__ = ['plot_earth_model_file_depth_change']
 
 def plot_earth_model_file_depth_change(
     earth_model_file,
-    output_fig_prefix,
-    output_fig_type,
+    ofig_prefix,
+    ofig_type,
     if_show = False):
+
+    em = EarthModelFileReader(earth_model_file)
     
     den = em.density
-    _plot(den,[300,0],[2.5, 3.6],
+    dep = em.dep_top
+    
+    _plot_base(dep, den,[300,0],[2.5, 3.6],
           r'density ($g/cm^3$)')
-    plt.savefig('earth_model_density.pdf')
+    plt.savefig('%s_density.%s'%(ofig_prefix, ofig_type))
+    if if_show:
+        plt.show()
     plt.close()
-    #plt.show()
 
     shear = em.shear/10**9
-    _plot(shear,[300,0],[15, 110],
+    _plot_base(dep, shear,[300,0],[15, 110],
           r'shear modulus ($GPa$)')
-    plt.savefig('earth_model_shear.pdf')
+    plt.savefig('%s_shear.%s'%(ofig_prefix, ofig_type))
+    if if_show:
+        plt.show()
     plt.close()
-    #plt.show()
-
+    
     bulk = em.bulk/10**9
-    _plot(bulk,[300,0],[40, 200],
+    _plot_base(dep, bulk,[300,0],[40, 200],
           r'bulk modulus ($GPa$)')
-    plt.savefig('earth_model_bulk.pdf')
-    plt.show()
+    plt.savefig('%s_bulk.%s'%(ofig_prefix, ofig_type))
+    if if_show:
+        plt.show()
+    plt.close()
 
 def _plot_base(dep, val, deplim_small, xlim_small, xlabel):
     plt.subplot(1,2,1)
