@@ -13,6 +13,8 @@ __all__ = ['delete_if_exists',
            'assert_integer','assert_nonnegative_integer',
            'assert_col_vec_and_get_nrow',
            'assert_square_array_and_get_nrow',
+           'assert_descending_order','assert_assending_order',
+           'assert_strictly_descending_order','assert_strictly_assending_order',
            'get_this_script_dir']
 
 def delete_if_exists(fn):
@@ -49,10 +51,22 @@ def assert_file_not_exists(fn):
 def assert_file_exists(fn):
     assert exists(fn), "File %s doesn't exist."%fn
 
+def assert_strictly_assending_order(l):
+    assert all(l[i] < l[i+1] for i in range(len(l)-1)) is True, \
+           'The arr is not strictly assending.'
+
 def assert_assending_order(l):
     assert all(l[i] <= l[i+1] for i in range(len(l)-1)) is True, \
-           'The arr is not assending.'
+           'The arr is not assend.'
 
+def assert_strictly_descending_order(l):
+    assert all(l[i] > l[i+1] for i in range(len(l)-1)) is True, \
+           'The arr is not strickly descending.'
+    
+def assert_descending_order(l):
+    assert all(l[i] >= l[i+1] for i in range(len(l)-1)) is True, \
+           'The arr is not descending.'
+    
 def assert_col_vec_and_get_nrow(res) -> int:
     sh = res.shape
     assert len(sh) ==2, "Wrong dimension. Must be column vector."

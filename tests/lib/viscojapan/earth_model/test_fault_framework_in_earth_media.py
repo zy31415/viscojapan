@@ -16,8 +16,12 @@ class TestEarthModel(unittest.TestCase):
 
     def test_get_shear_modulus(self):
         dep = arange(3, 50)
-        shear = self.em.get_shear_modulus(dep)
-        
+        # for ndarray
+        visM = self.em.get_visM_by_dep(dep)
+        print(self.em.visM)
+
+        # for scalar:
+        visM = self.em.get_visM_by_dep(dep[0])        
 
 if __name__=='__main__':
     unittest.main()
