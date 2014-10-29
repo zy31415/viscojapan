@@ -8,17 +8,17 @@ from viscojapan.pollitz.compute_greens_function \
 from epochs import epochs
 
 subflts_files_rake80 = \
-              sorted(glob.glob('../fault_model/subflts_rake85/flt_????'))
+              sorted(glob.glob('../fault_model/subflts_rake80/flt_????'))
 
 subflts_files_rake90 = \
               sorted(glob.glob('../fault_model/subflts_rake90/flt_????'))
 
 cmd = {}
 
-def add_task_nongravity(mod_str, rake):
+def add_task(mod_str, rake, model_num):
     earth_file_dir = join('../earth_model_nongravity/', mod_str)
     subflts_files = globals()['subflts_files_rake%02d'%rake]
-    cmd[mod_str + '_Rake%2d'%rake] = ComputeGreensFunction(
+    model = ComputeGreensFunction(
         epochs = epochs,
         file_sites = 'stations.in',
         earth_file = join(earth_file_dir, 'earth.model_' + mod_str),
@@ -27,12 +27,11 @@ def add_task_nongravity(mod_str, rake):
         subflts_files = subflts_files,
         controller_file = 'pool.config',
         )
+    cmd[model_num] = model
 
-add_task_nongravity('He50km_VisK5.0E17_VisM1.0E19', 90)
-add_task_nongravity('He50km_VisK6.0E17_VisM1.0E19', 90)
-add_task_nongravity('He50km_VisK5.0E17_VisM2.0E19', 90)
-add_task_nongravity('He55km_VisK5.0E17_VisM1.0E19', 90)
-add_task_nongravity('He50km_VisK5.0E17_VisM1.0E19', 85)
+add_task('He63km_VisM1.0E19', 90, 0)
+add_task('He63km_VisM1.0E19', 80, 1)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute G matrix.')
