@@ -5,8 +5,7 @@ import h5py
 
 from ..utils import assert_positive_integer
 
-__all__ = ['FaultFileWriter',
-           'FaultFileReader']
+__all__ = ['FaultFileWriter', 'FaultFileReader']
 
 class FaultFileWriter(object):
     def __init__(self, fault_file):
