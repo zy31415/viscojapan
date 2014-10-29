@@ -26,10 +26,10 @@ def read_flt_file_for_stdin(fname, section):
 def read_sites_file_for_stdin(fname):
     tp = loadtxt(fname,'4a, 2f')
     out = '%d\n'%(len(tp))
-    lon = ii[1][0]
-    lat = ii[1][1]
-    site = ii[0]
     for ii in tp:
+        lon = ii[1][0]
+        lat = ii[1][1]
+        site = ii[0]
         out += '%f %f %s\n'%(lat, lon, site)
     return out
     

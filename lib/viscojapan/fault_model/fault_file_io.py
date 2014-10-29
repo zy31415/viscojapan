@@ -68,31 +68,31 @@ class FaultFileReader(object):
 
     @property
     def flt_strike(self):
-        assert 'flt_strike' in fid
+        assert 'flt_strike' in self.fid
         res = self.fid['flt_strike'][...]
         return float(res)
 
     @property
     def depth_bottom(self):
-        assert 'depth_bottom' in fid
+        assert 'depth_bottom' in self.fid
         res = self.fid['depth_bottom'][...]
         return float(res)
 
     @property
     def depth_top(self):
-        assert 'depth_top' in fid
+        assert 'depth_top' in self.fid
         res = self.fid['depth_top'][...]
         return float(res)
 
     @property
     def x_f(self):
-        assert 'x_f' in fid
+        assert 'x_f' in self.fid
         res = self.fid['x_f'][...]
         return asarray(res,float)
 
     @property
     def y_f(self):
-        assert 'y_f' in fid
+        assert 'y_f' in self.fid
         res = self.fid['y_f'][...]
         return asarray(res,float)
 
