@@ -24,7 +24,7 @@ class SeafloorPatch(object):
 
         epochs = obs_obj.get_epochs()
         for epoch in epochs:
-            obs_patched = np.vstack([obs_obj(epoch), patch_array])
+            obs_patched = np.vstack([obs_obj[epoch], patch_array])
             obs_obj_with_seafloor[epoch] = obs_patched.reshape([-1,1])
         obs_obj_with_seafloor['sites'] = \
             list(obs_obj['sites']) + self.sites_seafloor
