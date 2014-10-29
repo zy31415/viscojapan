@@ -23,7 +23,7 @@ class Test_Pollitz_strainA(MyTestCase):
 
             file_out = self.out_file,
             file_flt = join(self.share_dir,'flt_0000'),
-            file_sites = join(self.share_dir,'stations.in'),
+            file_sites = join(self.share_dir,'sites'),
 
             days_after = 100,
 
