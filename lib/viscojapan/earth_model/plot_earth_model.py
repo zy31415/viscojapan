@@ -1,4 +1,7 @@
-from pylab import plt
+try:
+    from pylab import plt
+except Exception:
+    print('No pylab!')
 
 from .earth_model_file_reader import EarthModelFileReader
 

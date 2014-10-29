@@ -1,7 +1,11 @@
 import re
 
 import numpy as np
-from pylab import plt
+
+try:
+    from pylab import plt
+except Exception:
+    pass
 
 from .occam_results_deformation_decomposition import read_predicted_time_series_from_results_file
 

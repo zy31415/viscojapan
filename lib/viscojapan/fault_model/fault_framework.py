@@ -2,7 +2,10 @@ import warnings
 
 from numpy import asarray, pi, cos, sin, zeros_like
 from pyproj import Proj
-from pylab import plt
+try:
+    from pylab import plt
+except Exception:
+    pass
 
 from ..utils import my_vectorize, _find_section
 
