@@ -1,6 +1,8 @@
 from os.path import exists
 
 from numpy import asarray
+import numpy as np
+
 import h5py
 
 from ..utils import assert_positive_integer
@@ -37,12 +39,12 @@ class FaultFileReader(object):
     @property
     def LLons(self):
         res = self.fid['meshes/LLons'][...]
-        return res
+        return np.asarray(res)
 
     @property
     def LLats(self):
         res = self.fid['meshes/LLats'][...]
-        return res
+        return np.asarray(res)
 
     @property
     def ddeps(self):
