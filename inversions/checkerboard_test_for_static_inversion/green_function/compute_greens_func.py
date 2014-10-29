@@ -23,11 +23,11 @@ def add_task(mod_str, rake, model_num):
         file_sites = 'stations.in',
         earth_file = join(earth_file_dir, 'earth.model_' + mod_str),
         earth_file_dir = earth_file_dir,
-        outputs_dir = 'outs_'+mod_str+'_Rake%2d'%rake,
+        outputs_dir = 'outs%d_'%model_num + mod_str+'_Rake%2d'%rake,
         subflts_files = subflts_files,
         controller_file = 'pool.config',
         )
-    cmd[model_num] = model
+    cmd['%d'%model_num] = model
 
 add_task('He63km_VisM1.0E19', 90, 0)
 add_task('He63km_VisM1.0E19', 80, 1)
