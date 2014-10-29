@@ -2,7 +2,7 @@ from scipy.sparse import eye, bmat, block_diag, coo_matrix, vstack
 import scipy.sparse as sparse
 from numpy import sqrt
 
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 from .regularization import Leaf, Composite
 
 # define functions
@@ -147,7 +147,7 @@ class Roughening(Composite):
 
     @classmethod
     def create_from_fault_file(cls, fault_file):
-        fid = FaultFileIO(fault_file)
+        fid = FaultFileReader(fault_file)
         
         L2 = cls(
             ncols_slip = fid.num_subflt_along_strike,

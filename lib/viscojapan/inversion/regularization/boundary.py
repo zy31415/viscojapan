@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.sparse as sp
 
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 from .regularization import Leaf, Composite
 
 class _BoundaryRegularizationBase(Leaf):
@@ -26,7 +26,7 @@ class _BoundaryRegularizationBase(Leaf):
 
     @classmethod
     def create_from_fault_file(cls, fault_file):
-        fid = FaultFileIO(fault_file)        
+        fid = FaultFileReader(fault_file)        
         reg = cls(
             ncols_slip = fid.num_subflt_along_strike,
             nrows_slip = fid.num_subflt_along_dip,
@@ -108,7 +108,7 @@ class DeadBoundary(Composite):
 
     @classmethod
     def create_from_fault_file(cls, fault_file):
-        fid = FaultFileIO(fault_file)        
+        fid = FaultFileReader(fault_file)        
         reg = cls(
             ncols_slip = fid.num_subflt_along_strike,
             nrows_slip = fid.num_subflt_along_dip,
@@ -132,7 +132,7 @@ class BoundaryRegDeadNorthAndSouth(Composite):
 
     @classmethod
     def create_from_fault_file(cls, fault_file):
-        fid = FaultFileIO(fault_file)        
+        fid = FaultFileReader(fault_file)        
         reg = cls(
             ncols_slip = fid.num_subflt_along_strike,
             nrows_slip = fid.num_subflt_along_dip,
@@ -155,7 +155,7 @@ class AllBoundaryReg(Composite):
 
     @classmethod
     def create_from_fault_file(cls, fault_file):
-        fid = FaultFileIO(fault_file)        
+        fid = FaultFileReader(fault_file)        
         reg = cls(
             ncols_slip = fid.num_subflt_along_strike,
             nrows_slip = fid.num_subflt_along_dip,

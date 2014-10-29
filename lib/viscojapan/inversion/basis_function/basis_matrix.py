@@ -1,7 +1,7 @@
 from numpy import arange, asarray, dot, hstack
 import scipy.sparse as sparse
 
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 from .cubic_b_splines import CubicBSplines
 
 __all__ = ['BasisMatrix','BasisMatrixBSpline']
@@ -20,7 +20,7 @@ class BasisMatrix(object):
 
     @staticmethod
     def create_from_fault_file(fault_file, num_epochs = 1):
-        fid = FaultFileIO(fault_file)                
+        fid = FaultFileReader(fault_file)                
 
         spline_obj = BasisMatrix(
             num_subflts = fid.num_subflt_along_strike * fid.num_subflt_along_dip,
@@ -87,7 +87,7 @@ class BasisMatrixBSpline(BasisMatrix):
 
     @staticmethod
     def create_from_fault_file(fault_file, num_epochs = 1):
-        fid = FaultFileIO(fault_file)                
+        fid = FaultFileReader(fault_file)                
 
         dx = fid.subflt_sz_strike
         dy = fid.subflt_sz_dip

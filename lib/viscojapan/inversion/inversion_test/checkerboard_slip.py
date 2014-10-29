@@ -2,7 +2,7 @@ import warnings
 
 from numpy import zeros
 
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 from ...utils import assert_nonnegative_integer
 
 def gen_checkerboard_slip(num_subflts_dip, num_subflts_strike,
@@ -32,7 +32,7 @@ def gen_checkerboard_slip_from_fault_file(
     dip_patch_size=1,
     strike_patch_size=1
     ):    
-    fid = FaultFileIO(fault_file)
+    fid = FaultFileReader(fault_file)
     num_subflts_dip = fid.num_subflt_along_dip
     num_subflts_strike = fid.num_subflt_along_strike
     return gen_checkerboard_slip(num_subflts_dip, num_subflts_strike,

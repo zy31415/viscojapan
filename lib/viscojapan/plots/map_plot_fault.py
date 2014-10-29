@@ -4,7 +4,7 @@ from pylab import plt
 import viscojapan as vj
 
 from .map_plot import MapPlot
-from ..fault_model import FaultFileIO
+from ..fault_model import FaultFileReader
 from ..utils import assert_file_exists
 from ..epochal_data import EpochalSlip, EpochalIncrSlip
 
@@ -17,7 +17,7 @@ class MapPlotFault(MapPlot):
 
     def _init_fault_file(self):
         assert_file_exists(self.fault_file)
-        self.fault_file_obj =  FaultFileIO(self.fault_file)
+        self.fault_file_obj =  FaultFileReader(self.fault_file)
 
     def _reshape_as_fault(self, arr):        
         ny = self.fault_file_obj.num_subflt_along_dip

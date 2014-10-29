@@ -5,7 +5,7 @@ import numpy as np
 from numpy import size
 import h5py
 
-from ..fault_model.fault_file_io import FaultFileIO
+from ..fault_model.fault_file_io import FaultFileReader
 
 __all__=['gen_subflts_input',
          'gen_subflts_input_point_source']
@@ -16,7 +16,7 @@ def gen_subflts_input(fault_file, out_dir, rake=90.):
 
     rake = rake
 
-    fid = FaultFileIO(fault_file)
+    fid = FaultFileReader(fault_file)
     LLons=fid.LLons
     LLats=fid.LLats
     ddeps=fid.ddeps
@@ -54,7 +54,7 @@ def gen_subflts_input_point_source(fault_file, out_dir, rake=90.):
 
     rake = rake
 
-    fid = FaultFileIO(fault_file)
+    fid = FaultFileReader(fault_file)
     LLons=fid.LLons
     LLats=fid.LLats
     ddeps=fid.ddeps
@@ -96,7 +96,7 @@ def gen_subflts_input_point_source(fault_file, out_dir, rake=90.):
 ##
 ##    rake = rake
 ##
-##    fid = FaultFileIO(fault_file)
+##    fid = FaultFileReader(fault_file)
 ##    LLons = fid.LLons
 ##    LLats = fid.LLats
 ##    ddeps = fid.ddeps

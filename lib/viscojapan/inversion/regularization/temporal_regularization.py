@@ -1,6 +1,6 @@
 from scipy.sparse import coo_matrix
 
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 from ...utils import assert_nonnegative_integer, assert_assending_order
 
 from .regularization import Leaf
@@ -67,7 +67,7 @@ class TemporalRegularization(Leaf):
 
     @staticmethod
     def create_from_fault_file(fault_file, epochs):
-        fid = FaultFileIO(fault_file)
+        fid = FaultFileReader(fault_file)
         num_subflts = fid.num_subflt_along_strike * fid.num_subflt_along_dip
 
         L = TemporalRegularization(

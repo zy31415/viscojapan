@@ -10,18 +10,19 @@ __all__ = ['FaultFileWriter', 'FaultFileReader']
 class FaultFileReader(object):
     def __init__(self, fault_file):
         self.fault_file = fault_file
-        assert exists(self.fault_file), \
-               'File %s does not exist!'%self.fault_file
         self.fid = self.open()
 
     def open(self):
         ''' 'r' - Readonly, file must exist'''
+        assert exists(self.fault_file), \
+               'File %s does not exist!'%self.fault_file
         fid = h5py.File(self.fault_file, 'r')
         return fid
 
     def close(self):
-        if not f.closed:
+        if self.fid is not None:
             self.fid.close()
+        self.fid = None
 
     @property
     def num_subflt_along_strike(self):
@@ -105,24 +106,22 @@ class FaultFileReader(object):
 
 class FaultFileWriter(FaultFileReader):
     def __init__(self, fault_file):
-        self.fault_file = fault_file
+        super().__init__(fault_file)
 
     def open(self):
         ''' 'a' - Read/write if exists, create otherwise (default)'''
         fid = h5py.File(self.fault_file, 'a')
         return fid
 
-    @num_subflt_along_strike.setter
+    @FaultFileReader.num_subflt_along_strike.setter
     def num_subflt_along_strike(self, val):
         assert_positive_integer(val)
-        with self.append() as fid:
-            self.fid['num_subflt_along_strike'] = val
+        self.fid['num_subflt_along_strike'] = val
 
-    @num_subflt_along_dip.setter
+    @FaultFileReader.num_subflt_along_dip.setter
     def num_subflt_along_dip(self, val):
         assert_positive_integer(val)
-        with self.append() as fid:
-            self.fid['num_subflt_along_strike'] = val
+        self.fid['num_subflt_along_dip'] = val
 
 
     

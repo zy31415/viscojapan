@@ -6,7 +6,7 @@ from numpy.testing import assert_array_equal
 
 from viscojapan.pollitz.parse_fault_input import parse_fault_input
 from viscojapan.plots import MapPlot, plt, MapPlotSlab, MapPlotFault
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 from viscojapan.test_utils import MyTestCase
 
 class CheckSubfaultsInput(object):
@@ -15,7 +15,7 @@ class CheckSubfaultsInput(object):
         self.original_fault_file = None
 
     def _get_fault_shape(self):
-        fio = FaultFileIO(self.original_fault_file)
+        fio = FaultFileReader(self.original_fault_file)
         return (fio.num_subflt_along_dip, fio.num_subflt_along_strike)
     
     def iterate_files(self):
@@ -73,7 +73,7 @@ class CheckSubfaultsInput(object):
         
     def test_strike(self):
         strikes = self.read_pars('strikes')
-        fio = FaultFileIO(self.original_fault_file)
+        fio = FaultFileReader(self.original_fault_file)
         assert_array_equal(strikes,
                            ones_like(strikes)*fio.flt_strike)
         
@@ -86,6 +86,6 @@ class CheckSubfaultsInput(object):
     
     def test_flt_length(self):
         strikes = self.read_pars('strikes')
-        fio = FaultFileIO(self.original_fault_file)
+        fio = FaultFileReader(self.original_fault_file)
         assert_array_equal(strikes,
                            ones_like(strikes)*fio.flt_strike)

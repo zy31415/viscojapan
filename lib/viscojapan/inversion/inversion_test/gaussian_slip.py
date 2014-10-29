@@ -1,6 +1,6 @@
 import sys
 
-from ...fault_model import FaultFileIO
+from ...fault_model import FaultFileReader
 
 from numpy import arange, meshgrid, exp, log
 
@@ -48,7 +48,7 @@ class GaussianSlip(object):
 
     @staticmethod
     def create_from_fault_file(fault_file):
-        fio = FaultFileIO(fault_file)
+        fio = FaultFileReader(fault_file)
         return GaussianSlip(
             num_subflts_in_dip = fio.num_subflt_along_dip,
             num_subflts_in_strike = fio.num_subflt_along_strike
