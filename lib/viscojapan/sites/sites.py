@@ -171,6 +171,10 @@ class Sites(object):
         return [ii.name for ii in self]
 
     @property
+    def names_bytes(self):
+        return [ii.name.encode() for ii in self]
+
+    @property
     def names_seafloor(self):
         out = []
         for site in self:
@@ -184,7 +188,16 @@ class Sites(object):
         for site in self:
             if site.if_onshore:
                 out.append(site.name)
-        return out        
+        return out
+
+    @property
+    def ch_seafloor(self):
+        return np.asarray([site.if_seafloor for site in self])
+
+    @property
+    def ch_onshore(self):
+        return np.asarray([site.if_onshore for site in self])
+        
 
     def save2txt(self, fn, header=None):
         with open(fn, 'wt') as fid:
