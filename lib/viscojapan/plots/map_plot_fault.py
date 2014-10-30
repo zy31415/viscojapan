@@ -96,5 +96,5 @@ class MapPlotFault(MapPlot):
 
     def plot_slip_file(self, f_slip, epoch):
         slip_obj = EpochalSlip(f_slip)
-        slip = slip_obj(epoch)
+        slip = slip_obj[epoch]
         self.plot_slip(slip)

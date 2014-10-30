@@ -5,3 +5,4 @@ from .diff_ed import DiffED
 from .stacking import conv_stack, vstack_column_vec, \
      break_col_vec_into_epoch_file, \
      break_m_into_slip_file, break_m_into_incr_slip_file
+from .epochal_file_io import *

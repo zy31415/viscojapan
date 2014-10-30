@@ -96,7 +96,7 @@ def remove_sites_from(sites0, sites1):
 def choose_inland_GPS(sites):
     ch = []
     for site in sites:
-        if site.decode()[0]=='_':
+        if site[0]=='_':
             ch.append(False)
         else:
             ch.append(True)
