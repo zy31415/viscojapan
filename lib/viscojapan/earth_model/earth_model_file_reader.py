@@ -161,4 +161,13 @@ class EarthModelFileReader(object):
         dep = np.asarray(dep)
         return np.vectorize(self._get_visM_by_dep_scalar)(dep)
 
+    def _get_shear_by_dep_scalar(self, dep):
+        nth = _find_section(self.dep_top, dep)
+        return self.shear[nth]
+
+    def get_shear_by_dep(self, dep):
+        dep = np.asarray(dep)
+        return np.vectorize(self._get_shear_by_dep_scalar)(dep)
+        
+
     

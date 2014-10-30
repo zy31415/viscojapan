@@ -16,7 +16,7 @@ class ComputeMoment(object):
         reader = vj.FaultFileReader(self.fault_model_file)
         ddeps = reader.ddeps[1:, 1:]
         reader = EarthModelFileReader(self.earth_model_file)
-        return reader.get_shear_modulus(ddeps)
+        return reader.get_shear_by_dep(ddeps)
         
         
     def moment(self, slip):

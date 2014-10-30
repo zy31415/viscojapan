@@ -22,7 +22,7 @@ class Test_EarthModelFileReader(MyTestCase):
         dep = arange(3, 50)
         # for ndarray
         visM = self.em.get_visM_by_dep(dep)
-        #print(self.em.visM)
+        print(self.em.visM)
 
         # for scalar:
         visM = self.em.get_visM_by_dep(dep[0])

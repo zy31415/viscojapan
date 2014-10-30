@@ -14,4 +14,8 @@ for ano in range(30):
         rakes.append(rake)
     
 plt.semilogx(nreses, rakes,'o')
+plt.ylabel('rake')
+plt.xlabel('weighted residual norm')
+plt.xlim([0.7, 4])
+plt.savefig('plots/rake_residual.png')
 plt.show()
