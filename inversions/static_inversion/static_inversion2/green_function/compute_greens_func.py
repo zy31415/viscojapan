@@ -10,6 +10,9 @@ from epochs import epochs
 subflts_files_rake80 = \
               sorted(glob.glob('../fault_model/subflts_rake80/flt_????'))
 
+subflts_files_rake84 = \
+              sorted(glob.glob('../fault_model/subflts_rake84/flt_????'))
+
 subflts_files_rake90 = \
               sorted(glob.glob('../fault_model/subflts_rake90/flt_????'))
 
@@ -39,6 +42,7 @@ add_task('He63km_VisM1.0E19', 90, 0)
 add_task('He63km_VisM1.0E19', 80, 1)
 add_task('He63km_VisM1.0E19', 74, 2)
 add_task('He63km_VisM1.0E19', 70, 3)
+add_task('He63km_VisM1.0E19', 84, 4)
 
 
 if __name__ == '__main__':
