@@ -13,6 +13,12 @@ subflts_files_rake80 = \
 subflts_files_rake90 = \
               sorted(glob.glob('../fault_model/subflts_rake90/flt_????'))
 
+subflts_files_rake74 = \
+              sorted(glob.glob('../fault_model/subflts_rake74/flt_????'))
+
+subflts_files_rake70 = \
+              sorted(glob.glob('../fault_model/subflts_rake70/flt_????'))
+
 cmd = {}
 
 def add_task(mod_str, rake, model_num):

@@ -40,6 +40,10 @@ add_task('He63km_VisM1.0E19_Rake90',
          inf, 1E19, 63, 90., 0)
 add_task('He63km_VisM1.0E19_Rake80',
          inf, 1E19, 63, 80., 1)
+add_task('He63km_VisM1.0E19_Rake74',
+         inf, 1E19, 63, 74., 2)
+add_task('He63km_VisM1.0E19_Rake70',
+         inf, 1E19, 63, 70., 3)
 
 ###################################
 if __name__ == '__main__':
