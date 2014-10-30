@@ -51,8 +51,12 @@ class TestSites(MyTestCase):
         sites.save2kml(join(self.outs_dir, 'sites.kml'))
 
         # test all sites list:
-        s = Sites.create_obj_including_all()
+        s = Sites.init_including_all()
         s.save2kml(join(self.outs_dir, 'sites.kml'))
+        self.assertEqual(len(s), s.num_sites)
+
+        # init from txt file:
+        s = Sites.init_from_txt(join(self.share_dir, 'sites_with_seafloor'))
 
 
 

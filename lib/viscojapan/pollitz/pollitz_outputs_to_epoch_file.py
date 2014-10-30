@@ -74,7 +74,7 @@ green's function: These properties are highly recommended:
     def _read_a_day(self, day):        
         read_file = lambda fn : loadtxt(fn, usecols=(2,3,4)).flatten()
 
-        num_sites = self.get_num_sites()
+        num_sites = len(self.sites)
         G = zeros((num_sites*3, self.num_subflts))
         for fltno in range(0, self.num_subflts):
             fn = self._form_file_name(day, fltno)
@@ -94,17 +94,9 @@ green's function: These properties are highly recommended:
                 G0 = self.G.get_epoch_value(0)
                 self.G.set_epoch_value(day, G + G0)
 
-##    def get_sites(self):
-##        tp = loadtxt(self.sites_file,'4a, 2f')
-##        sites = [ii[0] for ii in tp]
-##        return sites
-##
-##    def get_num_sites(self):
-##        return len(self.get_sites())
-
-
     def _write_info_to_hdf5(self):
-        self.G.set_info('sites', self.get_sites())
+        sites = self.sites.names
+        self.G.set_info('sites', [ii.encode() for ii in sites])
         self.G.set_info('num_subflts', self.num_subflts)
 
     def _write_extra_info_to_hdf5(self):        

@@ -4,6 +4,7 @@ from os.path import join
 import numpy as np
 
 from viscojapan.pollitz import PollitzOutputsToEpochalData
+from viscojapan.sites import Sites
 from viscojapan.test_utils import MyTestCase
 
 class Test_PollitzOutputsToEpochalData(MyTestCase):
@@ -16,12 +17,13 @@ class Test_PollitzOutputsToEpochalData(MyTestCase):
         visM = 1E19
         visK = 5E17
         rake = 90
+        sites =  Sites.init_from_txt(join(self.share_dir, 'sites'))
         model = PollitzOutputsToEpochalData(                
             epochs = [0, 60],
             G_file = join(self.outs_dir, 'G.h5'),
             num_subflts = 10,
             pollitz_outputs_dir = join(self.share_dir, 'pollitz_outs'),
-            sites_file = join(self.share_dir,'sites'),
+            sites = sites,
             extra_info ={
             'He':50,
             'visM':visM,

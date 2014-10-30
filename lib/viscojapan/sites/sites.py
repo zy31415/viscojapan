@@ -90,6 +90,7 @@ class Site(object):
 '''
     _site_pos_dic = SitePosDictSingleton()    
     def __init__(self, name):
+        assert isinstance(name, str), 'name type is str.'
         self._name = name
         self._load_lonlat()
 
@@ -156,8 +157,14 @@ class Sites(object):
                 raise ValueError('site should be either string or Site type.')
 
     @classmethod
-    def create_obj_including_all(cls) -> object:
-        return Sites(SitePosDictSingleton().names)
+    def init_including_all(cls) -> object:
+        return cls(SitePosDictSingleton().names)
+
+    @classmethod
+    def init_from_txt(cls,fn):
+        sites = np.loadtxt(fn, '4a', usecols=(0,))
+        sites = [ii.decode() for ii in sites]
+        return cls(sites)
         
     @property
     def names(self):
@@ -177,7 +184,7 @@ class Sites(object):
         for site in self:
             if site.if_onshore:
                 out.append(site.name)
-        return out
+        return out        
 
     def save2txt(self, fn, header=None):
         with open(fn, 'wt') as fid:
@@ -199,6 +206,12 @@ class Sites(object):
             pnt.description = get_kml_html_description(site)
         kml.save(fn)
 
+    @property
+    def num_sites(self):
+        return len(self.names)
+
+    def __len__(self):
+        return self.num_sites
 
     def __iter__(self):
         for site in self._sites_list:
