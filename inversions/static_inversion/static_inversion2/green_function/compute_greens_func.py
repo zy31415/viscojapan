@@ -31,6 +31,8 @@ def add_task(mod_str, rake, model_num):
 
 add_task('He63km_VisM1.0E19', 90, 0)
 add_task('He63km_VisM1.0E19', 80, 1)
+add_task('He63km_VisM1.0E19', 74, 2)
+add_task('He63km_VisM1.0E19', 70, 3)
 
 
 if __name__ == '__main__':
