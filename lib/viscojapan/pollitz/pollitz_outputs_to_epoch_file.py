@@ -23,7 +23,7 @@ green's function: These properties are highly recommended:
                  G_file,
                  num_subflts,
                  pollitz_outputs_dir,
-                 sites_file,
+                 sites,
                  G_file_overwrite = True,
                  extra_info = None,
                  extra_info_attrs = None,
@@ -33,7 +33,7 @@ green's function: These properties are highly recommended:
         self.epochs = epochs
         self.num_subflts = num_subflts
         self.pollitz_outputs_dir = pollitz_outputs_dir      
-        self.sites_file = sites_file
+        self.sites = sites
 
         self.G_file = G_file
         self.G = EpochalData(G_file)
@@ -94,13 +94,13 @@ green's function: These properties are highly recommended:
                 G0 = self.G.get_epoch_value(0)
                 self.G.set_epoch_value(day, G + G0)
 
-    def get_sites(self):
-        tp = loadtxt(self.sites_file,'4a, 2f')
-        sites = [ii[0] for ii in tp]
-        return sites
-
-    def get_num_sites(self):
-        return len(self.get_sites())
+##    def get_sites(self):
+##        tp = loadtxt(self.sites_file,'4a, 2f')
+##        sites = [ii[0] for ii in tp]
+##        return sites
+##
+##    def get_num_sites(self):
+##        return len(self.get_sites())
 
 
     def _write_info_to_hdf5(self):

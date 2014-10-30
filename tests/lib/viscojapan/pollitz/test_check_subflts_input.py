@@ -9,7 +9,7 @@ class CheckCase(MyTestCase, CheckSubfaultsInput):
         self.this_script = __file__
         MyTestCase.setUp(self)
 
-        self.subflts_dir = join(self.outs_dir, 'subflts')
+        self.subflts_dir = join(self.share_dir, 'subflts')
         self.original_fault_file = join(self.share_dir, 'fault.h5')
 
 if __name__=='__main__':
