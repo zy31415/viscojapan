@@ -10,6 +10,9 @@ from epochs import epochs
 subflts_files_rake80 = \
               sorted(glob.glob('../fault_model/subflts_rake80/flt_????'))
 
+subflts_files_rake83 = \
+              sorted(glob.glob('../fault_model/subflts_rake83/flt_????'))
+
 subflts_files_rake84 = \
               sorted(glob.glob('../fault_model/subflts_rake84/flt_????'))
 
