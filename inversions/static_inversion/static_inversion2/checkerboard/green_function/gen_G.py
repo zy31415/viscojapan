@@ -10,13 +10,13 @@ from epochs import epochs
 cmd = {}
 
 def add_task(mod_str, visK, visM, He, rake, model_num):        
-    num_subflts = len(glob('outs_' +mod_str+ '/day_0000_flt_????.out'))
+    num_subflts = len(glob('outs%d_'%model_num +mod_str+ '/day_0000_flt_????.out'))
     model = PollitzOutputsToEpochalData(
         epochs = sorted(epochs),
         G_file = 'G%d_'%model_num + mod_str + '.h5',
         num_subflts = num_subflts,
-        pollitz_outputs_dir = 'outs_' + mod_str,
-        sites_file = 'stations.in',
+        pollitz_outputs_dir = 'outs%d_'%model_num + mod_str,
+        sites_file = 'sites',
         extra_info ={
         'He':He,
         'visM':visM,

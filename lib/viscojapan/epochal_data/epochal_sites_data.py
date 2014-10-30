@@ -70,7 +70,7 @@ class EpochalSitesFilteredData(EpochalSitesData):
         assert exists(filter_sites_file), \
                "File %s doesn't exist."%filter_sites_file
         self._filter_sites_file = filter_sites_file
-        self.filter_sites = loadtxt(self.filter_sites_file,'4a,')    
+        self.filter_sites = loadtxt(self.filter_sites_file,'4a,', usecols=(0,))    
 
     @property
     def filter_sites(self):
