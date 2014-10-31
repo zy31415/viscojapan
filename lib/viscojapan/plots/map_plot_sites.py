@@ -71,11 +71,11 @@ class MapPlotDisplacement(MapPlot):
                 plt.text(xi+10, yi+15, ti.decode(), fontsize=fs)
             
 
-    def plot_sites_seafloor(self, sites_file=None, sites_seafloor=None):
+    def plot_sites_seafloor(self, sites_file=None, sites_seafloor=None, text=True):
         if sites_file is None:
             sites_seafloor = vj.get_sites_seafloor()
         self.plot_sites(sites_seafloor,
-                   marker='s', color='white', ms=5)
+                   marker='s', color='white', ms=5, text=text)
         
     def plot_disp_file(self, f_disp, epoch):
         disp_obj = EpochalDisplacement(f_disp)
