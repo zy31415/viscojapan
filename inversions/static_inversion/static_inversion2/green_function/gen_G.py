@@ -44,6 +44,10 @@ add_task('He63km_VisM1.0E19_Rake74',
          inf, 1E19, 63, 74., 2)
 add_task('He63km_VisM1.0E19_Rake70',
          inf, 1E19, 63, 70., 3)
+add_task('He63km_VisM1.0E19_Rake84',
+         inf, 1E19, 63, 84., 4)
+add_task('He63km_VisM1.0E19_Rake83',
+         inf, 1E19, 63, 83., 5)
 
 ###################################
 if __name__ == '__main__':
@@ -59,5 +63,5 @@ if __name__ == '__main__':
             print(s)
             c()
     else:
-        cmd[model]()
+        cmd[int(model)]()
 

@@ -18,11 +18,11 @@ class BasisMatrix(object):
     def gen_basis_matrix_sparse(self):
         return sparse.eye(self.num_subflts*self.num_epochs)
 
-    @staticmethod
-    def create_from_fault_file(fault_file, num_epochs = 1):
+    @classmethod
+    def create_from_fault_file(cls, fault_file, num_epochs = 1):
         fid = FaultFileReader(fault_file)                
 
-        spline_obj = BasisMatrix(
+        spline_obj = cls(
             num_subflts = fid.num_subflt_along_strike * fid.num_subflt_along_dip,
             num_epochs = num_epochs
             )
@@ -85,8 +85,8 @@ class BasisMatrixBSpline(BasisMatrix):
     def gen_basis_matrix_sparse(self):
         return sparse.csr_matrix(self.gen_basis_matrix())
 
-    @staticmethod
-    def create_from_fault_file(fault_file, num_epochs = 1):
+    @classmethod
+    def create_from_fault_file(cls, fault_file, num_epochs = 1):
         fid = FaultFileReader(fault_file)                
 
         dx = fid.subflt_sz_strike
@@ -95,7 +95,7 @@ class BasisMatrixBSpline(BasisMatrix):
         x_f = fid.x_f
         y_f = fid.y_f
 
-        spline_obj = BasisMatrix(
+        spline_obj = cls(
             dx_spline = dx,
             xf = x_f,
             dy_spline = dy,
