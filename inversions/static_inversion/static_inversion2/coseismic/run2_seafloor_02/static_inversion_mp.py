@@ -41,7 +41,7 @@ def run(nregs):
     inv = StaticInversion(
         file_G = '../../green_function/G5_He63km_VisM1.0E19_Rake83.h5',
         file_d = '../../cumu_post_with_seafloor.h5',
-        file_sd = '../sd/sd_seafloor_01.h5',
+        file_sd = '../sd/sd_seafloor_02.h5',
         file_sites_filter = 'sites_with_seafloor',
         regularization = None,
         basis = basis_b_spline,

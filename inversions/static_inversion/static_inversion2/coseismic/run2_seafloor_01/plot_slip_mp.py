@@ -18,11 +18,13 @@ ncpus = args.ncpus[0]
 
 files = glob.glob('outs/nrough_??_ntop_??.h5')
 
-sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
+fault_file = '../../fault_model/fault_bott60km.h5'
+earth_file = '../../earth_model_nongravity/He63km_VisM1.0E19/earth.model_He63km_VisM1.0E19'
+#sites_seafloor = vj.read_sites_seafloor('../sites_with_seafloor')
 
 def plot_file(file):
     name = basename(file)
-    fname = 'plots/%s.png'%name
+    fname = 'plots/pdf/%s.pdf'%name.split('.')[0]
     if exists(fname):
         print('Skip %s!'%fname)
         return
@@ -33,11 +35,15 @@ def plot_file(file):
     mplt = MapPlotSlab()
     mplt.plot_top()
     
-    mplt = MapPlotFault('../fault_bott40km.h5')
+    mplt = MapPlotFault(fault_file)
     mplt.plot_slip(slip)
 
-    mplt = vj.MapPlotDisplacement()
-    mplt.plot_sites_seafloor(sites_seafloor = sites_seafloor)
+    mplt = vj.plots.MapPlotDisplacement()
+    mplt.plot_sites_seafloor(text=False)
+
+    mo, mw = vj.ComputeMoment(fault_file, earth_file).moment(slip)
+    plt.title('Mo=%g, Mw=%.2f'%(mo, mw))
+    
     #plt.show()
     plt.savefig(fname)
 
