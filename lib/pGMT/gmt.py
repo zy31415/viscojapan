@@ -1,4 +1,6 @@
 import subprocess
+import tempfile
+import shutil
 
 def _check_return_code(return_code, error_message):
     if return_code != 0:
@@ -13,7 +15,8 @@ def _form_gmt_escape_shell_command(command, args, kwargs):
 
 class GMT(object):
     def __init__(self):
-        self._tmp_stdout = subprocess.PIPE
+        self._tmp_stdout = tempfile.NamedTemporaryFile()
+        self._tmp_stderr = tempfile.NamedTemporaryFile(mode='w+t')
 
     def __getattr__(self, command):
         def f(*args, **kwargs):
@@ -26,13 +29,17 @@ class GMT(object):
         popen_args = _form_gmt_escape_shell_command(command, args, kwargs)
         p = subprocess.Popen(
             popen_args,
-            stdout = self._tmp_stdout
+            stdout = self._tmp_stdout,
+            stderr = self._tmp_stderr,
             )
         
         return_code = p.wait()
 
-        _check_return_code(return_code,
-                           'Command %s returned an error. While executing command:\n%s'%\
+        if return_code != 0:
+            self._tmp_stderr.seek(0,0)
+            print(self._tmp_stderr.read())
+            raise Exception(
+                'Command %s returned an error. While executing command:\n%s'%\
                            (command, popen_args))
 
     def __del__(self):
@@ -40,3 +47,15 @@ class GMT(object):
             self._tmp_stdout.close()
         except:
             pass
+
+    def save_stdout(self, filename):
+        self._tmp_stdout.seek(0,0)
+        with open(filename, 'wb') as fid:
+            shutil.copyfileobj(self._tmp_stdout, fid)
+
+    def save_stderr(self, filename):
+        self._tmp_stderr.seek(0,0)
+        with open(filename, 'wb') as fid:
+            shutil.copyfileobj(self._tmp_stdout, fid)
+        
+        
