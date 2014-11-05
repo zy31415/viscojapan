@@ -5,7 +5,8 @@ __all__ = ['Figure', 'Subfigure']
 class Figure(object):
     def __init__(self,
                  caption = None,
-                 label = None):
+                 label = None,
+                 if_continued = False):
         self._subfigures = []
         if caption is None:
             self.caption = ''
@@ -16,6 +17,8 @@ class Figure(object):
             self.label = ''
         else:
             self.label = label
+
+        self.if_continued = if_continued
 
     def append_subfigure(self, sub):
         self._subfigures.append(sub)
@@ -29,6 +32,8 @@ class Figure(object):
     def _print_prefix(self, file=sys.stdout):
         print('''\\begin{figure}[h]
     \\centering''', file=file)
+        if self.if_continued:
+            print('''    \\ContinuedFloat''', file=file)
 
     def _print_suffix(self, file=sys.stdout):
         print('''    \\caption{{{caption}}}

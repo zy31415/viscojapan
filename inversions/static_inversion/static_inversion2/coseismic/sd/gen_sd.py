@@ -44,3 +44,24 @@ vj.tsana.copy_and_revise_sd_file(
     'sd_seafloor_04.h5',
     (4.,4.,20.)
     )
+
+vj.tsana.copy_and_revise_sd_file(
+    'sd_seafloor_inf.h5',
+    'sites_seafloor',
+    'sd_seafloor_05.h5',
+    (5.,5.,25.)
+    )
+
+vj.tsana.copy_and_revise_sd_file(
+    'sd_seafloor_inf.h5',
+    'sites_seafloor',
+    'sd_seafloor_10.h5',
+    (10.,10.,50.)
+    )
+
+vj.tsana.copy_and_revise_sd_file(
+    'sd_seafloor_inf.h5',
+    'sites_seafloor',
+    'sd_seafloor_20.h5',
+    (20.,20.,100.)
+    )
