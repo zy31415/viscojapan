@@ -19,7 +19,6 @@ def add_task(mod_str, visK, visM, He, rake, model_num):
         sites_file = 'stations.in',
         extra_info ={
         'He':He,
-        'log10(He)':log10(He),
         'visM':visM,
         'log10(visM)':log10(visM),
         'visK':visK,
@@ -34,13 +33,16 @@ def add_task(mod_str, visK, visM, He, rake, model_num):
         )    
     cmd[model_num] = model
 
-add_task('He40km_Vis5.8E18_Rake81', inf, 5.8E18, 40, 80.6, 0)
-## Model One - Variation on viscosity:
-add_task('He40km_Vis1.1E19_Rake81', inf, 1.1E19, 40, 80.6, 1)
-## Model Two - Variation on elastic depth:
-add_task('He45km_Vis5.8E18_Rake81', inf, 5.8E18, 45, 80.6, 2)
-## Model Three - Variation on rake:
-add_task('He40km_Vis5.8E18_Rake90', inf, 5.8E18, 45, 90, 3)
+add_task('He50km_VisK5.0E17_VisM1.0E19_Rake90',
+         5E17, 1E19, 50, 90., 0)
+add_task('He50km_VisK6.0E17_VisM1.0E19_Rake90',
+         6E17, 1E19, 50, 90., 1)
+add_task('He50km_VisK5.0E17_VisM2.0E19_Rake90',
+         5E17, 2E19, 50, 90., 2)
+add_task('He50km_VisK5.0E17_VisM1.0E19_Rake90',
+         5E17, 1E19, 55, 90., 3)
+add_task('He50km_VisK5.0E17_VisM1.0E19_Rake90',
+         5E17, 1E19, 50, 80., 4)
 
 ###################################
 if __name__ == '__main__':
