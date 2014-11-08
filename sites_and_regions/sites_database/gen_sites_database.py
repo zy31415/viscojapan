@@ -26,9 +26,16 @@ def create_db(db_name):
     
         conn.commit()
 
-def load_sites_position_file(sites_position_file, db_file):
-    sites_pos = np.loadtxt(sites_position_file,'4a, f, f, 20a')
-    sites_pos = [(ii[0].decode(),float(ii[1]), float(ii[2]), ii[3].decode()) for ii in sites_pos]
+def load_sites_position_file(sites_position_file, db_file, if_ref=True):
+    if if_ref:
+        sites_pos = np.loadtxt(sites_position_file,'4a, f, f, 20a')
+        sites_pos = [(ii[0].decode(),float(ii[1]), float(ii[2]), ii[3].decode())
+                     for ii in sites_pos]
+    else:
+        sites_pos = np.loadtxt(sites_position_file,'4a, f, f')
+        sites_pos = [(ii[0].decode(),float(ii[1]), float(ii[2]), '')
+                     for ii in sites_pos]
+    
 
     sites_added = []
     sites_skipped = []
@@ -78,3 +85,5 @@ load_sites_networks_file('Zhao_2012/sites_networks', 'gps_sites.db')
 
 load_sites_position_file('Wang_2011/sites_pos', 'gps_sites.db')
 load_sites_networks_file('Wang_2011/sites_networks', 'gps_sites.db')
+
+load_sites_position_file('NGL/sites', 'gps_sites.db')
