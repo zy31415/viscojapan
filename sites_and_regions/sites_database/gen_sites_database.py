@@ -86,4 +86,4 @@ load_sites_networks_file('Zhao_2012/sites_networks', 'gps_sites.db')
 load_sites_position_file('Wang_2011/sites_pos', 'gps_sites.db')
 load_sites_networks_file('Wang_2011/sites_networks', 'gps_sites.db')
 
-load_sites_position_file('NGL/sites', 'gps_sites.db')
+load_sites_position_file('NGL/sites', 'gps_sites.db', False)
