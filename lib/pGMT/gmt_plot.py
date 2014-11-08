@@ -13,31 +13,45 @@ def _check_command_name(command):
     assert command in GMT_COMMANDS, \
            'Command name %s is not a valid GMT command.'%command
 
-def _check_command_finalized(command):
+def _check_command_no_K(command):
     if 'K' in command[2]:
+        if command[2]['K'] is not None:
+            warnings.warn(
+                'There is -K option in the command %s. Plot is not finilized.'%\
+                command[0])
+            
+def _check_command_has_K(command):
+    if 'K' in command[2]:
+        if command[2]['K'] is None:
+            warnings.warn(
+                'There is -K option in the command %s. Plot is not finilized.'%\
+                command[0])
+    if 'K' not in command[2]:
         warnings.warn(
             'There is -K option in the command %s. Plot is not finilized.'%\
             command[0])
-
-def _check_command_has_overlay(command):
+        
+def _check_command_has_O(command):
     if 'O' not in command[2]:
         warnings.warn(
             "Command %s don't have overlay option (-O)."%\
             command[0])
-
+    if 'O' in command[2]:
+        if command[2]['O'] is None:
+            warnings.warn(
+                "Command %s don't have overlay option (-O)."%\
+                command[0])
+            
 def _check_command_history_finalized(command_history):
-    _check_command_finalized(command_history[-1])
+    _check_command_no_K(command_history[-1])
 
 def _check_command_history_K_option(command_history):
     for cmd in command_history[:-1]:
-        if 'K' not in cmd[2]:
-            warnings.warn(
-                "Command %s don't have continue option (-K)."%\
-            cmd[0])
+        _check_command_has_K(cmd)
             
 def _check_command_history_overlay(command_history):
     for cmd in command_history[1:]:
-            _check_command_has_overlay(cmd)
+            _check_command_has_O(cmd)
 
 def _assert_file_name_extension(fn, ext):
     fn, ext_ = os.path.splitext(fn)
@@ -90,7 +104,6 @@ class GMTPlot(GMT):
     def save_shell_script(self, filename, output_file=None):
         if output_file is None:
             output_file = ''
-        self._check_commands_validity()
         with open(filename,'wt') as fid:
             fid.write('#!/bin/bash\n')
             for cmd in self._command_history:

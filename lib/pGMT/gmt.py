@@ -10,7 +10,8 @@ def _form_gmt_escape_shell_command(command, args, kwargs):
     out = ['gmt', command]
     out += args
     for k, v in kwargs.items():
-        out.append('-{k}{v}'.format(k=k,v=v))
+        if v is not None:
+            out.append('-{k}{v}'.format(k=k,v=v))
     return out
 
 class GMT(object):

@@ -3,12 +3,12 @@ from os.path import join
 import argparse
 
 from viscojapan.pollitz.pollitz_wrapper import stat0A
-from viscojapan.fault_model import FaultFileIO
+from viscojapan.fault_model import FaultFileReader
 import viscojapan as vj
 
 FNULL = open(os.devnull, 'w')
 
-fid = FaultFileIO('../fault_model/fault_bott60km.h5')
+fid = FaultFileReader('../fault_model/fault_bott60km.h5')
 fault_bottom_depth = fid.depth_bottom
 fault_top_depth = fid.depth_top
 
@@ -51,6 +51,10 @@ if __name__ == '__main__':
                         )
     args = parser.parse_args()
     model = args.model[0]
-
-    cmd1[model]()
-    cmd2[model].run()
+    if model =='all':
+        for c1, c2 in zip(cmd1, cmd2):
+            cmd1[c1]()
+            cmd2[c2].run()
+    else:
+        cmd1[model]()
+        cmd2[model].run()

@@ -6,4 +6,6 @@ GMT_COMMANDS =[
     'psscale',
     'pstext',
     'psmeca',
+    'psvelo',
+    'grdcontour',
     ]

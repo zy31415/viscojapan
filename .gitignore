@@ -6,8 +6,8 @@ outs
 outs_tik2
 
 *.png
-
 *.pdf
+*.ps
 
 *flt_????
 
@@ -24,3 +24,10 @@ outs_tik2
 __pycache__
 
 *.grd
+
+# ignore databasefile
+*.db 
+
+# gmt:
+gmt.conf
+gmt.history

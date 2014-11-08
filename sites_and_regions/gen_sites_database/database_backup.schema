@@ -1,0 +1,13 @@
+CREATE TABLE tb_sites (
+    id text primary key,
+    lon real,
+    lat real,
+    ref text
+    );
+CREATE TABLE tb_networks (
+    id text,
+    network text,
+    ref text,
+    primary key(id, network),
+    FOREIGN KEY(id) REFERENCES tb_sites(id)
+    );

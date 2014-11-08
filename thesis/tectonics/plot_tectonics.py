@@ -4,7 +4,8 @@ import tempfile
 cpt = '../../share/topo/ETOPO1.cpt'
 
 gmt = pGMT.GMT()
-gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9')
+gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
+           'LABEL_FONT_SIZE','9')
 
 gplt = pGMT.GMTPlot()
 

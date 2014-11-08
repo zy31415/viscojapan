@@ -15,7 +15,7 @@ __all__ = ['delete_if_exists',
            'assert_square_array_and_get_nrow',
            'assert_descending_order','assert_assending_order',
            'assert_strictly_descending_order','assert_strictly_assending_order',
-           'get_this_script_dir']
+           'get_this_script_dir','next_non_commenting_line']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
