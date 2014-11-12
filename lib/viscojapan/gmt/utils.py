@@ -8,7 +8,7 @@ from ..utils import get_this_script_dir
 __all__=['plot_Tohoku_focal_mechanism', 'plot_slab_top',
          'plot_slab_contours', 'plot_slab','plot_vector_legend',
          'plot_plate_boundary', 'plot_etopo1', 'topo_cpts',
-         'file_plate_boundary','file_kur_top']
+         'file_plate_boundary','file_kur_top','file_etopo1']
 
 this_script_dir = get_this_script_dir(__file__)
 file_kur_top = normpath(join(this_script_dir,
