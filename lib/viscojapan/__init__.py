@@ -13,3 +13,4 @@ from . import pollitz
 from . import tsana
 from . import plots
 from . import gmt
+from . import sites_db

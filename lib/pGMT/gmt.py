@@ -11,7 +11,12 @@ def _form_gmt_escape_shell_command(command, args, kwargs):
     out += args
     for k, v in kwargs.items():
         if v is not None:
-            out.append('-{k}{v}'.format(k=k,v=v))
+            if k == 'eq':
+                arg = '= {v}'.format(v=v)
+            else:
+                arg = '-{k}{v}'.format(k=k,v=v)
+            out.append(arg)            
+                
     return out
 
 class GMT(object):
@@ -29,9 +34,10 @@ class GMT(object):
                           **kwargs):
         popen_args = _form_gmt_escape_shell_command(command, args, kwargs)
         p = subprocess.Popen(
-            popen_args,
+            ' '.join(popen_args),
             stdout = self._tmp_stdout,
             stderr = self._tmp_stderr,
+            shell = True
             )
         
         return_code = p.wait()

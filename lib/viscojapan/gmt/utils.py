@@ -7,17 +7,25 @@ from ..utils import get_this_script_dir
 
 __all__=['plot_Tohoku_focal_mechanism', 'plot_slab_top',
          'plot_slab_contours', 'plot_slab','plot_vector_legend',
-         'plot_plate_boundary']
+         'plot_plate_boundary', 'plot_etopo1', 'topo_cpts',
+         'file_plate_boundary','file_kur_top']
 
 this_script_dir = get_this_script_dir(__file__)
 file_kur_top = normpath(join(this_script_dir,
-                             '../../../share/slab1.0/kur_top.in'))
+                             'share/kur_top.in'))
 file_kur_contours = normpath(join(this_script_dir,
-                                  '../../../share/slab1.0/kur_contours.in'))
+                              'share/kur_contours.in'))
 file_plate_boundary = normpath(join(this_script_dir,
-                                  '../../../share/plate_boundary_PB/PB2002_boundaries.gmt'))
+                              'share/PB2002_boundaries.gmt'))
+topo_cpts = {
+    'afrikakarte' : normpath(join(this_script_dir, 'share/afrikakarte.cpt')),
+    'wiki-france' : normpath(join(this_script_dir, 'share/wiki-france.cpt')),
+    'etopo1' : normpath(join(this_script_dir, 'share/ETOPO1.cpt')),
+    }
 
-def plot_Tohoku_focal_mechanism(gplt, K='', O=''):
+file_etopo1 = '/home/zy/workspace/viscojapan/share/topo/ETOPO1_Bed_g_gmt4.grd'
+
+def plot_Tohoku_focal_mechanism(gplt, scale=0.4, K='', O='',):
     text = tempfile.NamedTemporaryFile('w+t')
     text.write('''lon lat depth str dip slip st dip slip mant exp plon plat
     143.05, 37.52 20. 203 10 88 25 80 90  9.1 0 0 0
@@ -25,7 +33,7 @@ def plot_Tohoku_focal_mechanism(gplt, K='', O=''):
     text.seek(0,0)
     gplt.psmeca(text.name,
                 J='', R='',O=O,K=K,
-                S='c0.4',h='1')
+                S='c%f'%scale,h='1')
     text.close()
 
 def plot_slab_top(gplt):
@@ -78,4 +86,24 @@ def plot_plate_boundary(gplt, color='red'):
         file_plate_boundary,
         R = '', J = '', O = '', K='', W='thick,%s'%color,
         Sf='0.25/3p', G='%s'%color)
-    
+
+def plot_etopo1(gplt, A='-70/20', file_topo_cpt=topo_cpts['afrikakarte']):
+    gmt = pGMT.GMT()
+    gmt.grdcut(
+        file_etopo1,
+        G = '~topo.grd',
+        R = '')
+
+    gmt = pGMT.GMT()
+    gmt.grdgradient(
+        '~topo.grd',
+        G = '~topo_grad.grd',
+        A = A,
+        R = '')
+
+    gplt.grdimage(
+        '~topo.grd',
+        J = '', C = file_topo_cpt,
+        I = '~topo_grad.grd',
+        O = '',K = '')
+

@@ -7,7 +7,7 @@ from os.path import *
 from date_conversion import *
 
 from ..config_file_reader import ConfigFileReader
-from ..pre_fit.linres_reader import LinResReader
+from ..pre_fit.linres_file_reader import LinResReader
 from .tsmodel import *
 
 

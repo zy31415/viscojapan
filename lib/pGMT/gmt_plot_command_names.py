@@ -8,4 +8,5 @@ GMT_COMMANDS =[
     'psmeca',
     'psvelo',
     'grdcontour',
+    'pslegend',
     ]

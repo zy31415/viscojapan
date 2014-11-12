@@ -1,0 +1,10 @@
+# Wang M, et al. Chinese Sci Bull   August (2011) Vol.56 No.23 
+# Table 1  GPS observed coseismic displacements associated with the Tohoku-oki earthquake  
+# * represents the IGS station in Japan, whose coseismic displacements were derived from 18-h data after the main shock. 
+# Station  Station location  Coseismic displacement  
+# Longitude   Latitude   East (m)  North (m)  Correlation  
+KGNI  139.488  35.710  0.239 +/- 0.0030  0.058 +/- 0.0035  0.163  
+KSMV  140.658  35.955  0.716 +/- 0.0028  0.035 +/- 0.0032  0.186  
+MTKA  139.561  35.680  0.236 +/- 0.0025  0.057 +/- 0.0025  0.099  
+TSKB  140.087  36.106  0.547 +/- 0.0020  0.051 +/- 0.0020  0.103  
+USUD  138.362  36.133  0.219 +/- 0.0024  0.048 +/- 0.0024  0.102  

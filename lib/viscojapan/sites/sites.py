@@ -5,8 +5,7 @@ import pyproj as pj
 import simplekml as sk
 
 import viscojapan as vj
-
-this_file_path = vj.get_this_script_dir(__file__)
+from ..sites_db import get_pos_dic, get_networks_dic
 
 __all__ = ['Site', 'Sites']
 
@@ -56,10 +55,6 @@ def get_kml_html_description(site):
         raise NotImplementedError()
     return description
     
-def read_sites_position_file(sites_file):
-    tp = np.loadtxt(sites_file,'4a, 2f')
-    return {ii[0].decode():ii[1] for ii in tp}
-
 
 class SitePosDictSingleton(object):
     ''' Read from sites position file.
@@ -73,8 +68,8 @@ which is very slow, being minimum.
         return cls.instance
 
     def __init__(self):
-        self.sites_pos_file = join(this_file_path, 'share/sites_with_seafloor')
-        self._pos_dic = read_sites_position_file(self.sites_pos_file)
+        self._pos_dic = get_pos_dic()
+        self._networks_dic = get_networks_dic()
 
     def __getitem__(self, site):
         assert site in self._pos_dic
