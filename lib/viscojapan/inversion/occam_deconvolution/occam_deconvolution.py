@@ -233,6 +233,7 @@ return: ||W (G B m - d)||
             sites, num_epochs= self.num_epochs)
         with h5py.File(fn) as fid:
             num_nlin_par = len(self.nlin_par_names)
+            fid['num_nlin_pars'] = num_nlin_par
             for nth, pn in enumerate(self.nlin_par_names):
                 fid['nlin_pars/'+pn] = self.Bm[nth - num_nlin_par,0]
             fid['sites'] = sites

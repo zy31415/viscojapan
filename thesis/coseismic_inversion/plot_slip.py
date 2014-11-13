@@ -34,6 +34,10 @@ res_file = join(
 fault_file = join(
     base_dir,
     'fault_model/fault_bott60km.h5')
+earth_file = join(
+    base_dir,
+    'earth_model_nongravity/He63km_VisM1.0E19/earth.model_He63km_VisM1.0E19')
+                  
 
 _arr = vj.get_slip_results_for_gmt(res_file, fault_file)
 with tempfile.NamedTemporaryFile('w+t') as fid:
@@ -47,6 +51,12 @@ with tempfile.NamedTemporaryFile('w+t') as fid:
     plt_slip.plot_slip_contour()
     plt_slip.plot_scale()
 
+vj.ComputeMoment(fault_file, earth_file)
+
+with tempfile.NamedTemporaryFile('w+t') as fid:
+    fid.write('0 10 ')
+    
+    gplt.pstext(
 
 
 # plot coast

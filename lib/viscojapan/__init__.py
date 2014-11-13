@@ -4,6 +4,7 @@ from .fault_model import *
 from .earth_model import *
 from .utils import *
 from .sites import *
+from .moment import *
 
 from .test_utils import MyTestCase
 from .epicenter import TOHOKU_EPICENTER
