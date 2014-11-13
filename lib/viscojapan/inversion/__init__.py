@@ -5,6 +5,6 @@ from .static_inversion import StaticInversion
 from .regularization import *
 from .basis_function import *
 from .occam_deconvolution import *
-
+from .result_file import *
 __author__ = 'zy'
 

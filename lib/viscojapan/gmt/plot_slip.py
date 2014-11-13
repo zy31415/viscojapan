@@ -14,20 +14,28 @@ def make_basename_dir(fn):
         makedirs(bn)
 
 class SlipPlotter(object):
-    def __init__(self, gplt, slip_file_txt):
+    def __init__(self,
+                 gplt,
+                 slip_file_txt,
+                 topo_file = file_etopo1,
+                 workdir = '~tmp',
+                 I = '5k',
+                 low_cut_value = 1,
+                 A = '-70/20'
+                 ):
         self.gplt = gplt
         self.slip_file_txt = slip_file_txt
         
-        self.topo_file = file_etopo1
+        self.topo_file = topo_file
 
-        self._workdir = '~tmp'
+        self._workdir = workdir
         
         
         # I option, grid spacing
-        self.I = '5k'
-        self.low_cut_value = 1
+        self.I = I
+        self.low_cut_value = low_cut_value
         # light of intensity
-        self.A='-70/20'
+        self.A = A
 
     def plot_slip(self):
         self._init()
@@ -52,8 +60,8 @@ class SlipPlotter(object):
         self.slip_file_grd = join(self._workdir, 'slip.grd')
         self.slip_file_grd_cutted = join(self._workdir, 'slip_cutted.grd')
         
-        self._interpolate_slip_file(join(self._workdir, 'slip0.grd'))
-        self._low_cut_slip_grd(join(self._workdir, 'slip0.grd'),
+        self._interpolate_slip_file(self.slip_file_grd)
+        self._low_cut_slip_grd(self.slip_file_grd,
                                join(self._workdir, 'slip1.grd'))
         self._trench_cut_slip_grd(join(self._workdir, 'slip1.grd'),
                                join(self._workdir, 'slip2.grd'))
@@ -129,7 +137,8 @@ class SlipPlotter(object):
             _intensity_file_before_resample,
             G=self.intensity_file, I=self.I)
 
-    def plot_slip_contour(self):
+    def plot_slip_contour(self,
+                          W = 'thickest',):
         with tempfile.NamedTemporaryFile('w+t') as fid:
             fid.write('''
 5 A
@@ -143,7 +152,8 @@ class SlipPlotter(object):
                 self.slip_file_grd_cutted,
                 C=fid.name,
                 A='1+f9+um',
-                G='n1/.5c', J='', R='', O='',K='', W='thick'
+                G='n1/.5c', J='', R='', O='',K='',
+                W = W,
                 )
 
     def plot_scale(self):
@@ -157,6 +167,9 @@ B %s 0.1 0.2 -Baf::/:m:
                 F='+gazure1', C='0.04i/0.07i', L='1.2',
                 D='143.5/35.2/4/1.2/BL'
                 )
+        
+
+    
 
         
         

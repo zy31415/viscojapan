@@ -1,5 +1,8 @@
+from os.path import join
 from subprocess import check_call
 import tempfile
+
+import numpy as np
 
 import pGMT
 import viscojapan as vj
@@ -22,96 +25,36 @@ gplt.psbasemap(
 vj.gmt.plot_etopo1(gplt, A='-80/10',
                    file_topo_cpt=vj.gmt.topo_cpts['afrikakarte'])
 
-I = '5k'
-gmt = pGMT.GMT()
-gmt.nearneighbor(
-    'coseismic_slip.txt',
-    G='~coseismic_slip.grd', I=I, N='8', R='', S='100k'
-    )
-gmt.grdclip(
-    '~coseismic_slip.grd',
-    G='~coseismic_slip_low_cut.grd',
-    Sb='1/NaN')
 
-gmt = pGMT.GMT()
-##gmt.makecpt(
-##    C='temperature.cpt',
-##    T='0/70/0.1',M='')
-gmt.grd2cpt(
-    '~coseismic_slip.grd',
-    #C='temperature.cpt',
-    C='no_green',
-    Z=''
-    )
-gmt.save_stdout('~mag.cpt')
+# plot slip
+base_dir = '/home/zy/workspace/viscojapan/inversions/static_inversion/static_inversion2'
+res_file = join(
+    base_dir,
+    'coseismic/run1_seafloor_inf/outs/nrough_10_ntop_00.h5')
+fault_file = join(
+    base_dir,
+    'fault_model/fault_bott60km.h5')
 
-
-gmt.grdsample(
-    '~topo_grad.grd',
-    G='~topo_grad_resampled.grd', I=I)
-
-# cut out slip that is out of trench
-gmt.grdmask(
-    vj.gmt.file_kur_top,
-    G='~plate_boundary_mask_file.grd',A='',
-    N='1/1/NaN',
-    I=I,R=''
-    )
-
-gmt.grdmath(
-    '~coseismic_slip_low_cut.grd',
-    '~plate_boundary_mask_file.grd',
-    'OR',
-    '= ~mag.grd')
-
-gmt.grdlandmask(R='', Dh='', I=I,
-                N='1/NaN',G='~sea_mask.grd')
-check_call("gmt grdmath ~mag.grd ~sea_mask.grd OR = ~mag.grd",
-           shell=True)
-
-gplt.grdimage(
-    '~mag.grd', J='', R='',
-    C='~mag.cpt',O='',K='', G='', Q='',
-    I = '~topo_grad_resampled.grd',
-    )
-
+_arr = vj.get_slip_results_for_gmt(res_file, fault_file)
 with tempfile.NamedTemporaryFile('w+t') as fid:
-    fid.write('''
-5 A
-10 A 
-20 A 
-40 A
-60 A
-''')
+    np.savetxt(fid.name, _arr, "%f %f %f")
     fid.seek(0,0)
-    gplt.grdcontour(
-        '~mag.grd', C=fid.name, A='1+f9+um',
-        G='n1/.5c', J='', R='', O='',K='', W='thick'
-        )
+    plt_slip = vj.gmt.SlipPlotter(
+        gplt,
+        fid.name,
+        I = '1k')
+    plt_slip.plot_slip()
+    plt_slip.plot_slip_contour()
+    plt_slip.plot_scale()
+
+
 
 # plot coast
 gplt.pscoast(
     R = '', J = '',
-    D = 'l', N = 'a/faint,100,-.',
+    D = 'h', N = 'a/faint,150,-.',
     W = 'faint,50',A='1000',Lf='155/15/35/500+lkm+jt',
     O = '', K='')
-
-##gplt.psscale(
-##    D='0.3/12.5/4c/.2c',
-##    Baf='::/:m:', O='',K='',
-##    C='~mag.cpt')
-
-# legend
-with tempfile.NamedTemporaryFile('w+t') as text:
-    text.write('''#
-B ~mag.cpt 0.1 0.2 -Baf::/:m:
-''')
-    text.seek(0,0)
-    gplt.pslegend(
-        text.name, R='', J='', O='', K='',
-        F='+gazure1', C='0.04i/0.07i', L='1.2',
-        D='143.5/35.2/4/1.2/BL'
-        )
 
 # plot plate boundary
 vj.gmt.plot_plate_boundary(gplt)
