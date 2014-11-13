@@ -1,3 +1,5 @@
+import numpy as np
+
 from .fault_model import FaultFileReader
 from .earth_model import EarthModelFileReader
 from .inversion import ResultFileReader
@@ -10,7 +12,7 @@ class ComputeMoment(object):
         self.earth_model_file = earth_file
 
     def get_shear(self):
-        reader = vj.FaultFileReader(self.fault_model_file)
+        reader = FaultFileReader(self.fault_model_file)
         ddeps = reader.ddeps[1:, 1:]
         reader = EarthModelFileReader(self.earth_model_file)
         return reader.get_shear_by_dep(ddeps)
@@ -19,15 +21,15 @@ class ComputeMoment(object):
     def compute_moment(self, slip):
         ''' Compute moment.
 '''
-        reader = vj.FaultFileReader(self.fault_model_file)
+        reader = FaultFileReader(self.fault_model_file)
         
         fl = reader.subflt_sz_dip
         fw = reader.subflt_sz_strike
         
-        shr = self._get_shear()
+        shr = self.get_shear()
         mos = shr.flatten()*slip.flatten()*fl*1e3*fw*1e3
         mo = np.sum(mos)
-        mw = 2./3.*log10(mo) - 6. 
+        mw = 2./3.*np.log10(mo) - 6. 
         return mo, mw
 
     def compute_moment_on_inversion_result_file(self, result_file):

@@ -6,14 +6,14 @@ import pGMT
 
 from .utils import file_kur_top, file_etopo1
 
-__all__ = ['SlipPlotter']
+__all__ = ['GMTSlipPlotter']
 
 def make_basename_dir(fn):
     bn = dirname(fn)
     if not exists(bn):
         makedirs(bn)
 
-class SlipPlotter(object):
+class GMTSlipPlotter(object):
     def __init__(self,
                  gplt,
                  slip_file_txt,
@@ -138,15 +138,14 @@ class SlipPlotter(object):
             G=self.intensity_file, I=self.I)
 
     def plot_slip_contour(self,
+                          contours = [5, 10 , 20, 40, 60],
                           W = 'thickest',):
+        _txt = ''
+        for ii in contours:
+            _txt += '%f A\n'%ii
+            
         with tempfile.NamedTemporaryFile('w+t') as fid:
-            fid.write('''
-5 A
-10 A 
-20 A
-40 A
-60 A
-''')
+            fid.write(_txt)
             fid.seek(0,0)
             self.gplt.grdcontour(
                 self.slip_file_grd_cutted,

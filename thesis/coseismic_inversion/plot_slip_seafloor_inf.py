@@ -37,33 +37,23 @@ fault_file = join(
 earth_file = join(
     base_dir,
     'earth_model_nongravity/He63km_VisM1.0E19/earth.model_He63km_VisM1.0E19')
-                  
 
-_arr = vj.get_slip_results_for_gmt(res_file, fault_file)
-with tempfile.NamedTemporaryFile('w+t') as fid:
-    np.savetxt(fid.name, _arr, "%f %f %f")
-    fid.seek(0,0)
-    plt_slip = vj.gmt.SlipPlotter(
-        gplt,
-        fid.name,
-        I = '1k')
-    plt_slip.plot_slip()
-    plt_slip.plot_slip_contour()
-    plt_slip.plot_scale()
-
-vj.ComputeMoment(fault_file, earth_file)
-
-with tempfile.NamedTemporaryFile('w+t') as fid:
-    fid.write('0 10 ')
-    
-    gplt.pstext(
-
+plt_slip = vj.gmt.GMTInversionResultFileSlipPlotter(
+    gplt,
+    res_file,
+    fault_file,
+    earth_file,
+    I='1k')
+plt_slip.plot_slip()
+plt_slip.plot_slip_contour()
+plt_slip.plot_scale()
+plt_slip.plot_legend()
 
 # plot coast
 gplt.pscoast(
     R = '', J = '',
     D = 'h', N = 'a/faint,150,-.',
-    W = 'faint,50',A='1000',Lf='155/15/35/500+lkm+jt',
+    W = 'faint,50',A='1000',L='144.3/36/38/50+lkm+jt',
     O = '', K='')
 
 # plot plate boundary

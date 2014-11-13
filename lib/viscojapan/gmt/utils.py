@@ -4,11 +4,13 @@ import tempfile
 import pGMT
 
 from ..utils import get_this_script_dir
+from ..sites_db import get_pos_dic_of_a_network
 
 __all__=['plot_Tohoku_focal_mechanism', 'plot_slab_top',
          'plot_slab_contours', 'plot_slab','plot_vector_legend',
          'plot_plate_boundary', 'plot_etopo1', 'topo_cpts',
-         'file_plate_boundary','file_kur_top','file_etopo1']
+         'file_plate_boundary','file_kur_top','file_etopo1',
+         'plot_seafloor_stations']
 
 this_script_dir = get_this_script_dir(__file__)
 file_kur_top = normpath(join(this_script_dir,
@@ -107,3 +109,13 @@ def plot_etopo1(gplt, A='-70/20', file_topo_cpt=topo_cpts['afrikakarte']):
         I = '~topo_grad.grd',
         O = '',K = '')
 
+def plot_seafloor_stations(gplt, marker_size=0.5):
+    tp = get_pos_dic_of_a_network('SEAFLOOR')
+    with tempfile.NamedTemporaryFile('w+t') as fid:
+        for site, pos in tp.items():
+            fid.write('%f %f %s\n'%(pos[0], pos[1], site))
+        fid.seek(0,0)
+        gplt.psxy(
+            fid.name,
+            Ss = marker_size,
+            R = '', J = '', O='' ,K='' ,W='thick,red', G='white')
