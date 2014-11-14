@@ -5,6 +5,11 @@ import numpy as np
 
 import viscojapan as vj
 
+infile = '../pred_vertical'
+outfile = 'codisp_ver.pdf'
+cpt_scale = '-4/-0.15/0.01'
+if_log_color_scale = False
+contours = [-0.6, -0.1, 0, 0.01]
 
 gmt = pGMT.GMT()
 gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
@@ -23,9 +28,16 @@ gplt.psbasemap(
     U='20/0/25/Yang', P='', K=''
     )
 
-plt_ver = vj.gmt.GMTXYZ(gplt, 'pred_vertical')
+plt_ver = vj.gmt.GMTXYZ(
+    gplt,
+    infile,
+    cpt_scale = cpt_scale,
+    if_log_color_scale = if_log_color_scale,
+    )
+plt_ver.cpt_file = 'vertical_disp.cpt'
 plt_ver.plot_xyz()
-plt_ver.plot_scale()
+plt_ver.plot_scale(scale_interval='0.2')
+plt_ver.plot_contour(contours = contours, W='thick')
 
 vj.gmt.plot_plate_boundary(gplt,color='150')
 
@@ -35,24 +47,8 @@ gplt.pscoast(
     W = 'faint,100', L='f145/31/38/200+lkm+jt',
     O = '', K='')
 
-##text = gen_codisp_ver_file()
-##gmt = pGMT.GMT()
-##gmt.nearneighbor(
-##    text.name,
-##    G='~ver.grd', I='1k', N='8', R='', S='60k'
-##    )
-##text.close()
-##with tempfile.NamedTemporaryFile('w+t') as fid:
-##    fid.write('''
-##0 A
-##''')
-##    fid.seek(0,0)
-##    gplt.grdcontour(
-##        '~ver.grd', C=fid.name, A='1+f9+um',
-##        G='n1/.5c', J='', R='', O='',K=''
-##        )
-
 vj.gmt.plot_Tohoku_focal_mechanism(gplt,K=None)
 
-gplt.save('codisp_ver.pdf')
+gplt.save(outfile)
 gplt.save_shell_script('shell.sh', output_file=' > out.ps')
+

@@ -19,4 +19,8 @@ assert len(sites_pos) == d_pred.shape[0]
 
 _txt = np.array([(s[1],s[2],abs(d[2]),s[0]) for s, d in zip(sites_pos, d_pred)],
                 ('f,f,f,U4'))
+np.savetxt('pred_vertical_abs',_txt, '%f %f %f %s')
+
+_txt = np.array([(s[1],s[2],d[2],s[0]) for s, d in zip(sites_pos, d_pred)],
+                ('f,f,f,U4'))
 np.savetxt('pred_vertical',_txt, '%f %f %f %s')
