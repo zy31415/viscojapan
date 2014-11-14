@@ -1,6 +1,7 @@
 import subprocess
 import warnings
 import os
+import tempfile
 import shutil
 
 from .gmt import GMT
@@ -62,6 +63,10 @@ class GMTPlot(GMT):
 '''
     def __init__(self, config=None):
         super().__init__()
+        self._tmp_ps_file_id = tempfile.NamedTemporaryFile(
+            mode='w+b',
+            prefix='gmt_tmp_'
+            )
         self._command_history = []
 
     def __getattr__(self, command):
@@ -74,6 +79,7 @@ class GMTPlot(GMT):
                           **kwargs):
         _check_command_name(command)
         super()._gmtcommand(command, *args, **kwargs)
+        self._tmp_ps_file_id.write(self.stdout)
         self._command_history.append((command, args, kwargs))
 
     def _check_commands_validity(self):
@@ -88,12 +94,14 @@ class GMTPlot(GMT):
         elif ext == '.pdf':
             self.save_pdf(filename)
         else:
-            raise NotImplementedError()
+            raise NotImplementedError()        
 
     def save_ps(self, filename):
         self._check_commands_validity()
         _assert_file_name_extension(filename, '.ps')
-        self.save_stdout(filename)
+        
+        self._tmp_ps_file_id.seek(0,0)
+        shutil.copyfile(self._tmp_ps_file_id.name, filename)        
 
     def save_pdf(self, filename, **kwargs):
         _assert_file_name_extension(filename, '.pdf')
@@ -109,7 +117,12 @@ class GMTPlot(GMT):
             for cmd in self._command_history:
                 args = _form_gmt_escape_shell_command(cmd[0], cmd[1], cmd[2])
                 print(' '.join(args) + output_file, file=fid)
-                
+
+    def close_tmp_ps_file(self):
+        self._tmp_ps_file_id.close()
+
+    def __del__(self):
+        self.close_tmp_ps_file()
             
             
     

@@ -1,8 +1,19 @@
-from .gmt_guru import GMTGuru
+import subprocess
 
+def _form_gmt_escape_shell_command(command, args, kwargs):
+    out = ['gmt', command]
+    out += args
+    for k, v in kwargs.items():
+        if v is not None:
+            if k == 'eq':
+                arg = '= {v}'.format(v=v)
+            else:
+                arg = '-{k}{v}'.format(k=k,v=v)
+            out.append(arg)            
+                
+    return out
 
-
-class GMT(GMTGuru):
+class GMTGuru(object):
     def __init__(self):
         self.stderr = None
         self.stdout = None
@@ -30,7 +41,3 @@ class GMT(GMTGuru):
             raise Exception(
                 'Command %s returned an error. While executing command:\n%s'%\
                            (command, popen_args))
-
-
-        
-        

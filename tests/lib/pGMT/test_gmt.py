@@ -14,7 +14,7 @@ class Test_GMT(MyTestCase):
         gplt = pGMT.GMTPlot()
 
         gplt.psbasemap(
-            #R = '5/15/52/58',       # region
+            R = '5/15/52/58',       # region
             J = 'B10/55/55/60/10c', # projection
             B = '4g4',
             K = '')
