@@ -27,6 +27,15 @@ class ResultFileReader(FileIOBase):
         return m
 
     @property
+    def d_pred(self):
+        m = self.fid['d_pred'][...]
+        return m
+    @property
+    def sites(self):
+        m = self.fid['sites'][...]
+        return m 
+
+    @property
     def num_nlin_pars(self):
         return self.fid['num_nlin_pars'][...]
 

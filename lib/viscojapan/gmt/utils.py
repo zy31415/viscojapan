@@ -23,6 +23,7 @@ topo_cpts = {
     'afrikakarte' : normpath(join(this_script_dir, 'share/afrikakarte.cpt')),
     'wiki-france' : normpath(join(this_script_dir, 'share/wiki-france.cpt')),
     'etopo1' : normpath(join(this_script_dir, 'share/ETOPO1.cpt')),
+    'seminf-haxby' : normpath(join(this_script_dir, 'share/seminf-haxby.cpt')),
     }
 
 file_etopo1 = '/home/zy/workspace/viscojapan/share/topo/ETOPO1_Bed_g_gmt4.grd'

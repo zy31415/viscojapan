@@ -23,6 +23,7 @@ class GMT(object):
     def __init__(self):
         self._tmp_stdout = tempfile.NamedTemporaryFile()
         self._tmp_stderr = tempfile.NamedTemporaryFile(mode='w+t')
+        
 
     def __getattr__(self, command):
         def f(*args, **kwargs):
