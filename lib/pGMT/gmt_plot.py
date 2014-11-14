@@ -6,6 +6,7 @@ import shutil
 
 from .gmt_plot_command_names import GMT_COMMANDS
 from .gmt_guru import _form_gmt_escape_shell_command, GMTGuru
+from .utils import _assert_file_name_extension
 
 __all__ = ['GMTPlot']
 
@@ -53,10 +54,7 @@ def _check_command_history_overlay(command_history):
     for cmd in command_history[1:]:
             _check_command_has_O(cmd)
 
-def _assert_file_name_extension(fn, ext):
-    fn, ext_ = os.path.splitext(fn)
-    assert ext_ == ext, '%s == %'%(ext_, ext)
-    
+  
 class GMTPlot(GMTGuru):
     ''' Wrapper of GMT.
 '''
@@ -100,13 +98,7 @@ class GMTPlot(GMTGuru):
         _assert_file_name_extension(filename, '.ps')
         
         self._tmp_ps_file_id.seek(0,0)
-        shutil.copyfile(self._tmp_ps_file_id.name, filename)        
-
-    def save_pdf(self, filename, **kwargs):
-        _assert_file_name_extension(filename, '.pdf')
-        self.save_ps(filename[:-3]+'ps')
-        gmt = GMT()
-        gmt.ps2raster(filename[:-3]+'ps', T='f', **kwargs)
+        shutil.copyfile(self._tmp_ps_file_id.name, filename)
 
     def save_shell_script(self, filename, output_file=None):
         if output_file is None:
