@@ -4,9 +4,8 @@ import os
 import tempfile
 import shutil
 
-from .gmt import GMT
 from .gmt_plot_command_names import GMT_COMMANDS
-from .gmt import _form_gmt_escape_shell_command
+from .gmt_guru import _form_gmt_escape_shell_command, GMTGuru
 
 __all__ = ['GMTPlot']
 
@@ -58,7 +57,7 @@ def _assert_file_name_extension(fn, ext):
     fn, ext_ = os.path.splitext(fn)
     assert ext_ == ext, '%s == %'%(ext_, ext)
     
-class GMTPlot(GMT):
+class GMTPlot(GMTGuru):
     ''' Wrapper of GMT.
 '''
     def __init__(self, config=None):
