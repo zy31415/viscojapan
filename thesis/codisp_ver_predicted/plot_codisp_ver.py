@@ -23,8 +23,9 @@ gplt.psbasemap(
     U='20/0/25/Yang', P='', K=''
     )
 
-plt_ver = vj.gmt.GMTVerticalDisp(gplt, 'pred_vertical')
-plt_ver.plot()
+plt_ver = vj.gmt.GMTXYZ(gplt, 'pred_vertical')
+plt_ver.plot_xyz()
+plt_ver.plot_scale()
 
 vj.gmt.plot_plate_boundary(gplt,color='150')
 
@@ -51,12 +52,7 @@ gplt.pscoast(
 ##        G='n1/.5c', J='', R='', O='',K=''
 ##        )
 
-vj.gmt.plot_Tohoku_focal_mechanism(gplt,K='')
-
-gplt.psscale(
-    D='4/9c/4c/.2c',
-    Baf='::/:m:', O='', Q='',
-    C='~cpt')
+vj.gmt.plot_Tohoku_focal_mechanism(gplt,K=None)
 
 gplt.save('codisp_ver.pdf')
 gplt.save_shell_script('shell.sh', output_file=' > out.ps')

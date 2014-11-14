@@ -61,7 +61,7 @@ gplt = pGMT.GMTPlot()
 gplt.psbasemap(
     R = '128/148/30/46',       # region
     J = 'B138/38/30/46/16c', # projection
-    B = '4:.Observed Magnitude of Horizontal Coseismic Disp:',
+    B = '4',
     U='20/0/25/Yang', P='', K=''
     )
 
@@ -99,7 +99,7 @@ vj.gmt.plot_Tohoku_focal_mechanism(gplt,K='')
 gplt.psscale(
     D='4/9c/4c/.2c',
     Baf='::/:m:', O='',
-    C='~hor_mag.cpt',Q='')
+    C='cpt',Q='')
 
 gplt.save('codisp_hor_mag.pdf')
 gplt.save_shell_script('shell.sh', output_file=' > out.ps')
