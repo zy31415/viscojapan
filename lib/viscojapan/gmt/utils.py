@@ -58,23 +58,26 @@ def plot_slab(gplt, file_contours=file_kur_contours):
     plot_slab_top(gplt)
     plot_slab_contours(gplt, file_contours=file_contours)
 
-def plot_vector_legend(gplt,lon,lat, text_offset_lon=0, text_offset_lat=0.1):
+def plot_vector_legend(gplt,
+                       legend_len , scale,
+                       lon, lat,
+                       text_offset_lon=0, text_offset_lat=0.1):
     # add scale vector
     text = tempfile.NamedTemporaryFile(mode='w+t')
-    text.write('%f %f 2., 0.'%(lon, lat))
+    text.write('%f %f %f 0.'%(lon, lat, legend_len))
     text.seek(0,0)
     gplt.psvelo(
         text.name,
         J='', R='',O='',K='',
         A='0.07i/0.1i/0.1i+a45+g+e+jc',
-        Sr='0.75/1/0',G='black',
-        W='0.5, black',h='i',
+        Sr='%f/1/0'%scale,G='black',
+        W='0.5,black',h='i',
         )
     text.close()
 
     # add label
     text = tempfile.NamedTemporaryFile(mode='w+t')
-    text.write('%f %f 2m'%(lon+text_offset_lon, lat+text_offset_lat))
+    text.write('%f %f %.1fm'%(lon+text_offset_lon, lat+text_offset_lat,legend_len))
     text.seek(0,0)
     gplt.pstext(
         text.name,

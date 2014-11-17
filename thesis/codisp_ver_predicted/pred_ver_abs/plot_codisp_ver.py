@@ -19,9 +19,7 @@ def plot(infile, outfile,
                'COLOR_FOREGROUND','white'
                )
 
-    gplt = pGMT.GMTPlot()
-
-    gplt.psbasemap(
+    gmt.gplt.psbasemap(
         R = '128/148/30/46',       # region
         J = 'B138/38/30/46/16c', # projection
         B = '4',
@@ -29,7 +27,7 @@ def plot(infile, outfile,
         )
 
     plt_ver = vj.gmt.GMTXYZ(
-        gplt,
+        gmt,
         infile,
         cpt_scale = cpt_scale,
         if_log_color_scale = if_log_color_scale,
@@ -38,18 +36,18 @@ def plot(infile, outfile,
     plt_ver.plot_scale(scale_interval='1')
     plt_ver.plot_contour(contours = contours, W='thick')
 
-    vj.gmt.plot_plate_boundary(gplt,color='150')
+    vj.gmt.plot_plate_boundary(gmt.gplt,color='150')
 
-    gplt.pscoast(
+    gmt.gplt.pscoast(
         R = '', J = '',
         D = 'h', N = 'a/faint,50,--',
         W = 'faint,100', L='f145/31/38/200+lkm+jt',
         O = '', K='')
 
-    vj.gmt.plot_Tohoku_focal_mechanism(gplt,K=None)
+    vj.gmt.plot_Tohoku_focal_mechanism(gmt.gplt,K=None)
 
-    gplt.save(outfile)
-    gplt.save_shell_script('shell.sh', output_file=' > out.ps')
+    gmt.save(outfile)
+    gmt.gplt.save_shell_script('shell.sh', output_file=' > out.ps')
 
 plot('../pred_vertical_abs','codisp_ver_abs.pdf',
      cpt_scale = '-4/-0.15/0.01',

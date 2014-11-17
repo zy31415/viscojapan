@@ -10,14 +10,12 @@ class GMT(GMTGuru):
         self.gplt = GMTPlot()
 
     def save_stdout(self, filename):
-        self._tmp_stdout.seek(0,0)
         with open(filename, 'wb') as fid:
-            shutil.copyfileobj(self._tmp_stdout, fid)
+            fid.write(self.stdout)
 
     def save_stderr(self, filename):
-        self._tmp_stderr.seek(0,0)
         with open(filename, 'wb') as fid:
-            shutil.copyfileobj(self._tmp_stdout, fid)
+            fid.write(self.stderr)
 
     def save(self, filename):
         fn, ext = os.path.splitext(filename)

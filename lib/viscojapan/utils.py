@@ -15,7 +15,8 @@ __all__ = ['delete_if_exists',
            'assert_square_array_and_get_nrow',
            'assert_descending_order','assert_assending_order',
            'assert_strictly_descending_order','assert_strictly_assending_order',
-           'get_this_script_dir','next_non_commenting_line']
+           'get_this_script_dir','next_non_commenting_line',
+           'merge_disp_dic']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -143,3 +144,12 @@ def next_non_commenting_line(fid):
     for ln in fid:
         if not if_line_is_commenting(ln):
             yield ln
+
+def merge_disp_dic(dic1, dic2):
+    out = dic1.copy()
+    for key, val in dic2.items():
+        if key not in out:
+            out[key] = val
+        else:
+            out[key] = (out[key] + val)/2.
+    return out
