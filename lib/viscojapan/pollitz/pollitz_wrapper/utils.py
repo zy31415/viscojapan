@@ -41,6 +41,5 @@ def read_sites_file_for_stdin(fname):
         lat = ii[1][1]
         site = ii[0]
         out += '%f %f %s\n'%(lat, lon, site)
-        print(out)
     return out
     
