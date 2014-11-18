@@ -13,7 +13,7 @@ gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
            'FONT_ANNOT_PRIMARY','6',
            'MAP_FRAME_TYPE','plain')
 
-gplt = pGMT.GMTPlot()
+gplt = gmt.gplt
 
 gplt.psbasemap(
     R = '140/145/35/41.5',       # region
@@ -63,6 +63,6 @@ vj.gmt.plot_plate_boundary(gplt)
 # plot focal mechanism
 vj.gmt.plot_Tohoku_focal_mechanism(gplt,scale=0.4, K=None)
 
-gplt.save('inverted_coseismic_slip_seafloor_02.pdf')
+gmt.save('inverted_coseismic_slip_seafloor_02.pdf')
 
-gplt.save_shell_script('shell.sh', output_file=' > out.ps')
+gmt.save_shell_script('shell.sh', output_file=' > out.ps')

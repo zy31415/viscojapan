@@ -8,6 +8,7 @@ import re
 import numpy as np
 from numpy import hstack, asarray, frompyfunc
 from numpy.random import normal
+import pyproj
 
 __all__ = ['delete_if_exists',
            'assert_integer','assert_nonnegative_integer',
@@ -16,7 +17,7 @@ __all__ = ['delete_if_exists',
            'assert_descending_order','assert_assending_order',
            'assert_strictly_descending_order','assert_strictly_assending_order',
            'get_this_script_dir','next_non_commenting_line',
-           'merge_disp_dic']
+           'merge_disp_dic','make_grids']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -153,3 +154,31 @@ def merge_disp_dic(dic1, dic2):
         else:
             out[key] = (out[key] + val)/2.
     return out
+
+def make_grids(north, south, west, east, dx, dy):
+    assert north > south
+    assert west < east
+    g = pyproj.Geod(ellps='WGS84')
+
+    lats = [south]
+    
+    while lats[-1]<north:
+        lon, lat, _ = g.fwd(west, lats[-1],0,dy)
+        lats.append(lat)
+
+    grids = []
+    
+    for lat in lats:
+        lons = [west]
+        while lons[-1] < east:
+            lon, lat, _ = g.fwd(lons[-1], lat, 90, dx)
+            while lon < 0:
+                lon += 360.
+            lons.append(lon)
+            grids.append((lon, lat))
+
+    return grids
+            
+            
+
+    print(lats)
