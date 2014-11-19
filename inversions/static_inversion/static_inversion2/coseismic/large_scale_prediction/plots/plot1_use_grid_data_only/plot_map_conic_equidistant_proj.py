@@ -21,23 +21,42 @@ gplt.psbasemap(
     JD = '{lon0}/{lat0}/{lat1}/{lat2}/{wid}'\
     .format(lon0 = vj.TOHOKU_EPICENTER[0],
             lat0 = vj.TOHOKU_EPICENTER[1],
-            lat1 = 12,
-            lat2 = 8,
+            lat1 = south,
+            lat2 = north,
             wid = '9i',
             ), # projection
     B = '20', U='18/25/0',
     K = '')
 
 # topo
-#cpt = '../../share/topo/ETOPO1.cpt'
-#vj.gmt.plot_etopo1(gplt)
+cpt = '../../share/topo/ETOPO1.cpt'
+vj.gmt.plot_etopo1(gplt)
+
+
+pltxyz = vj.gmt.GMTXYZ(
+    gmt,
+    file_xyz = '../pred_disp_mag',
+    if_log_color_scale = True,
+    cpt_scale = '-3.1/0.6/0.001',
+    interp_inc = '20k',
+    interp_searching_radius = '800k',
+    )
+#pltxyz.maskout_water(A='1000k',D='h')
+#pltxyz.plot_xyz()
+pltxyz.plot_contour(
+    contours=[0.001, 0.003,0.005,0.01,0.1, 2],
+    W='thick,red',
+    label_line = 'L142.37/38.30/80/60,142.37/38.30/90/20,142.37/38.30/-160/40,158/38.30/180/5',
+    label_font_size = 8,
+    )
+#pltxyz.plot_scale(x=15, y=8)
 
 
 # plot coast
 gplt.pscoast(
     R = '', J = '',
     D = 'h', N = 'a/faint,100,-.',
-    W = 'faint,50',A='5000',Lf='155/15/35/500+lkm+jt',
+    W = 'faint,50',A='5000',Lf='190/15/35/1000+lkm+jt',
     K = '',
     O = '')
 
@@ -45,6 +64,6 @@ gplt.pscoast(
 vj.gmt.plot_plate_boundary(gplt, color='100')
 vj.gmt.plot_Tohoku_focal_mechanism(gplt,scale=0.2, K=None)
 
-gmt.save('pred_hor_decay.pdf')
+gmt.save('pred_hor_decay_even_spacing.pdf')
 
 gmt.save_shell_script('shell.sh', output_file=' > out.ps')

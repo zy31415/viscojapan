@@ -23,7 +23,8 @@ green's function: These properties are highly recommended:
                  G_file,
                  num_subflts,
                  pollitz_outputs_dir,
-                 sites,
+                 sites = None,
+                 sites_file = None,
                  G_file_overwrite = True,
                  extra_info = None,
                  extra_info_attrs = None,
@@ -33,7 +34,18 @@ green's function: These properties are highly recommended:
         self.epochs = epochs
         self.num_subflts = num_subflts
         self.pollitz_outputs_dir = pollitz_outputs_dir      
+
         self.sites = sites
+        self.sites_file = sites_file
+        
+        if self.sites is  not None and self.sites_file is not None:
+            raise ValueError('Sites are ambigous.')
+
+        if self.sites is None and self.sites_file is None:
+            raise ValueError('No sites are indicated.')
+
+        if self.sites_file is not None:
+            self.sites = loadtxt(self.sites_file, '4a', usecols=(0,))
 
         self.G_file = G_file
         self.G = EpochalData(G_file)
@@ -69,7 +81,6 @@ green's function: These properties are highly recommended:
         fn1 = 'day_%04d_flt_%04d.out'%(day,fltno)
         fn2 = join(self.pollitz_outputs_dir, fn1)
         return fn2
-
     
     def _read_a_day(self, day):        
         read_file = lambda fn : loadtxt(fn, usecols=(2,3,4)).flatten()
@@ -95,8 +106,8 @@ green's function: These properties are highly recommended:
                 self.G.set_epoch_value(day, G + G0)
 
     def _write_info_to_hdf5(self):
-        sites = self.sites.names
-        self.G.set_info('sites', [ii.encode() for ii in sites])
+        sites = self.sites
+        self.G.set_info('sites', [ii for ii in sites])
         self.G.set_info('num_subflts', self.num_subflts)
 
     def _write_extra_info_to_hdf5(self):        

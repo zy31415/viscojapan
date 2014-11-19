@@ -90,6 +90,7 @@ class GMTXYZ(object):
     def plot_contour(self,
                      contours = [5, 10 , 20, 40, 60],
                      W = 'thickest',
+                     label_line = None,
                      label_font_size = 9
                      ):
         _txt = ''
@@ -99,11 +100,15 @@ class GMTXYZ(object):
         with tempfile.NamedTemporaryFile('w+t') as fid:
             fid.write(_txt)
             fid.seek(0,0)
+            if label_line is None:
+                G = 'n1/.5c'
+            else:
+                G = label_line
             self.gmt.gplt.grdcontour(
                 self.xyz_grd,
                 C=fid.name,
                 A='1+f%f+um'%label_font_size,
-                G='n1/.5c', J='', R='', O='',K='',
+                G=G, J='', R='', O='',K='',
                 W = W,
                 )
         
