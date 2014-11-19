@@ -26,7 +26,7 @@ inv = OccamDeconvolution(
 
     file_d = '../obs/cumu_post_with_seafloor.h5',
     file_sd = 'sd/sd_uniform_seafloor_inf.h5', 
-    file_incr_slip0 = 'slip0/nrough_06.h5',
+    file_incr_slip0 = 'slip0/slip0.h5',
     filter_sites_file = 'sites_2EXPs',
     epochs = epochs,
     regularization = None,
