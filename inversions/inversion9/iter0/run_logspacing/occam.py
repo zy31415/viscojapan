@@ -44,7 +44,7 @@ for nrough, reg_rough in enumerate(reg_roughes):
         continue
     print(outfname)
     inv.regularization = \
-           reg = vj.create_temporal_edge_roughening(
+           reg = vj.inv.create_temporal_edge_roughening(
                fault_file, epochs, reg_temp, reg_edge, reg_rough)
     
     inv.set_data_L()

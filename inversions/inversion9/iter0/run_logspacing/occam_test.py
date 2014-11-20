@@ -8,7 +8,7 @@ from viscojapan.inversion.regularization import \
      create_temporal_edge_roughening
 from viscojapan.inversion.basis_function import BasisMatrix
 
-from epochs import epochs
+from epochs_log import epochs
 from reg_edges import reg_edges
 from reg_roughes import reg_roughes
 
@@ -47,7 +47,7 @@ for nrough, reg_rough in enumerate(reg_roughes):
         continue
     print(outfname)
     inv.regularization = \
-           reg = vj.create_temporal_edge_roughening(
+           reg = vj.inv.create_temporal_edge_roughening(
                fault_file, epochs, reg_temp, reg_edge, reg_rough)
     
     inv.set_data_L()
