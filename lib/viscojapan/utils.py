@@ -17,7 +17,7 @@ __all__ = ['delete_if_exists',
            'assert_descending_order','assert_assending_order',
            'assert_strictly_descending_order','assert_strictly_assending_order',
            'get_this_script_dir','next_non_commenting_line',
-           'merge_disp_dic','make_grids']
+           'merge_disp_dic','make_grids','as_string']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -179,6 +179,11 @@ def make_grids(north, south, west, east, dx, dy):
 
     return grids
             
-            
-
-    print(lats)
+def as_string(input):
+    if isinstance(input, str):
+        return input
+    if isinstance(input, bytes):
+        return input.decode()
+    return [as_string(ii) for ii in input]
+    
+        

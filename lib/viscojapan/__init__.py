@@ -1,5 +1,4 @@
 from .epochal_data import *
-from .inversion import *
 from .fault_model import *
 from .earth_model import *
 from .utils import *
@@ -15,3 +14,4 @@ from . import tsana
 from . import plots
 from . import gmt
 from . import sites_db
+from . import inversion as inv

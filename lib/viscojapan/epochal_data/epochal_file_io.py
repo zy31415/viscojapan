@@ -100,6 +100,8 @@ class EpochalFileReader(FileIOBase):
 
     def get_info(self, key, attr=None):
         if attr == None:
+            assert self.has_info(key), "No key %s in file %s."\
+                   %(key, self.file_name)
             out = self.fid['info/%s'%key][...]
         else:
             out = self.fid['info/%s'%key].attrs[attr][...]

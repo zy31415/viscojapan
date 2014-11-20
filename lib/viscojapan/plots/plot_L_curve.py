@@ -3,6 +3,8 @@ import glob
 import h5py
 from pylab import loglog, xlabel, ylabel, grid, text
 
+__all__=['plot_L_from_res_h5','plot_L']
+
 def plot_L_from_res_h5(pathname, x_key, y_key, **kwargs):
     flist = glob.glob(pathname)
     flist = sorted(flist)

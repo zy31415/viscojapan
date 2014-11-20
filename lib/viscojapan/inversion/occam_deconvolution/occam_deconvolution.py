@@ -1,4 +1,4 @@
-import tempfile as tf
+import tempfile 
 
 from numpy import asarray, dot
 from numpy.linalg import norm
@@ -9,6 +9,7 @@ import h5py
 import viscojapan as vj
 from ...epochal_data import \
      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
+from ...epochal_data import EpochalFileReader
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
 from ...utils import assert_col_vec_and_get_nrow
@@ -64,9 +65,10 @@ class OccamDeconvolution(Inversion):
 
     def _load_nlin_initial_values(self):
         self.nlin_par_initial_values = []
-        g = EpochalG(self.file_G0)
-        for name in self.nlin_par_names:
-            self.nlin_par_initial_values.append(float(g[name]))
+
+        with EpochalFileReader(self.file_G0) as reader:
+            for name in self.nlin_par_names:
+                self.nlin_par_initial_values.append(float(reader[name]))
         
     def iterate_nlin_par_name_val(self):
         for name, val in zip(self.nlin_par_names, self.nlin_par_initial_values):
@@ -80,6 +82,7 @@ class OccamDeconvolution(Inversion):
 
     def _init_jacobian_vecs(self):
         self.G0 = EpochalG(self.file_G0, self.filter_sites_file)
+        self.num_subflts = self.G0[0].shape[1]
 
         Gs = []
         for file_G in self.files_Gs:
@@ -236,10 +239,13 @@ return: ||W (G B m - d)||
             fid['num_nlin_pars'] = num_nlin_par
             for nth, pn in enumerate(self.nlin_par_names):
                 fid['nlin_pars/'+pn] = self.Bm[nth - num_nlin_par,0]
+            fid['num_sites'] = len(sites)
             fid['sites'] = sites
+            fid['num_epochs'] = self.num_epochs
             fid['epochs'] = self.epochs
             fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
             fid['misfit/rms_inland_at_epoch'] = self._compute_rms_inland_at_each_epoch()
             self._save_non_linear_par_correction(fid)
+            fid['num_subflts'] = self.num_subflts
 
             
