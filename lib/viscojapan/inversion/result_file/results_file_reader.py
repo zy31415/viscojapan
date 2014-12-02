@@ -98,6 +98,12 @@ class ResultFileReader(FileIOBase):
         num_subflts = self.num_subflts
         return self.incr_slip[num_subflts*nth:num_subflts*(nth+1)]
 
+    def get_total_slip_at_epoch(self, epoch):
+        epochs = self.epochs
+        assert epoch in epochs, 'Epoch %d is not in the epochs.'%epoch
+        idx = epochs.index(epoch)
+        return self.get_total_slip_at_nth_epoch(idx)
+
     def get_total_slip_at_nth_epoch(self, nth):
         nth = int(nth)
         assert nth>=0
@@ -124,7 +130,7 @@ class ResultFileReader(FileIOBase):
         assert nth < len(self.epochs)
         
         num_sites = self.num_sites
-        return self.d_pred[num_sites*nth:num_sites*(nth+1)]
+        return self.d_pred[num_sites*3*nth:num_sites*3*(nth+1)]
 
     def get_disp_at_epoch(self, epoch):
         epochs = self.epochs

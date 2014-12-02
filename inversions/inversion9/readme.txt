@@ -7,7 +7,7 @@ In this inversion:
 5. Use near field stations only.
 
 #########################################
-##  The first interation:
+##  The first interation, iter0:
 
 Model Zero - The original model:
 (1) viscosity - 6.3E+18 Pa.s
@@ -30,3 +30,7 @@ Model Three - Variation on rake:
 (3) rake - 90.
 
 Nov. 5, 2014
+
+
+#########################################
+##  linear inversion

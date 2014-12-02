@@ -8,13 +8,13 @@ import h5py
 from viscojapan.plots import MapPlotFault, MapPlotSlab, plt
 import viscojapan as vj
 
-from epochs import epochs
+from epochs_log import epochs
 
-outfile = '../outs/nrough_01.h5'
+outfile = '../../outs/nrough_05.h5'
 
-fault_file = '../../fault_model/fault_bott60km.h5'
+fault_file = '../../../fault_model/fault_bott60km.h5'
 
-reader = vj.ResultFileReader(outfile)
+reader = vj.inv.ResultFileReader(outfile)
 
 for epoch in epochs:
     slip = reader.get_incr_slip_at_epoch(epoch)

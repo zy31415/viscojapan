@@ -2,9 +2,9 @@ from pylab import plt
 
 import viscojapan as vj
 
-reader = vj.ResultFileReader('../outs/nrough_06.h5')
-fault_file = '../../fault_model/fault_bott60km.h5'
-earth_file = '../../earth_model_nongravity/He50km_VisM6.3E18/earth.model_He50km_VisM6.3E18'
+reader = vj.inv.ResultFileReader('../../outs/nrough_06.h5')
+fault_file = '../../../fault_model/fault_bott60km.h5'
+earth_file = '../../../earth_model_nongravity/He50km_VisM6.3E18/earth.model_He50km_VisM6.3E18'
 
 compute = vj.ComputeMoment(fault_file, earth_file)
 epochs = reader.epochs

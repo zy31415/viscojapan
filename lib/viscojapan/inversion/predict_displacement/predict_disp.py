@@ -1,13 +1,15 @@
 import numpy as np
 
-from ..epochal_data import EpochalSitesFileReader
-from .result_file import ResultFileReader
+from ...epochal_data import EpochalSitesFileReader
+from ..result_file import ResultFileReader
+
+__all__ = ['DispPred']
 
 class DispPred(object):
     def __init__(self,
-                 G_file,
-                 filter_sites_file,
+                 G_file,                 
                  result_file,
+                 filter_sites_file = None,
                  ):
         self.G_file = G_file
         self.filter_sites_file = filter_sites_file
@@ -18,9 +20,11 @@ class DispPred(object):
 
         self.result_file = result_file
         self.result_file_reader = ResultFileReader(self.result_file)
-        
 
-    def E_cumuslip(self, nth_epoch):
+        self.epochs = self.result_file_reader.epochs
+        self.num_epochs = len(self.epochs)
+
+    def E_cumu_slip(self, nth_epoch):
         cumuslip = self.result_file_reader.get_total_slip_at_nth_epoch(nth_epoch)
         G0 = self.G_reader[0]
 
@@ -54,8 +58,7 @@ class DispPred(object):
         return self.R_nth_epoch(0, epoch)  
 
     def R_aslip(self, epoch):
-        num_epochs = self.result_file_reader.num_epochs
-        print(num_epochs)
+        num_epochs = self.num_epochs
         disp = None
         for nth in range(num_epochs):
             if nth == 0:
@@ -66,6 +69,15 @@ class DispPred(object):
                 disp += self.R_nth_epoch(nth, epoch)
         return disp
 
-    
-        
-        
+    @property
+    def filter_sites(self):
+        return self.G_reader.filter_sites
+
+
+
+                
+                
+
+            
+                
+                

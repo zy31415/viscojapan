@@ -6,5 +6,7 @@ from .regularization import *
 from .basis_function import *
 from .occam_deconvolution import *
 from .result_file import *
+from .predict_displacement import *
+
 __author__ = 'zy'
 
