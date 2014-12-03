@@ -9,6 +9,7 @@ from viscojapan.inversion.basis_function import BasisMatrix
 from epochs import epochs
 from reg_roughes import reg_roughes
 
+num_epochs = len(epochs)
 fault_file = '../fault_model/fault_bott60km.h5'
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
