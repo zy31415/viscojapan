@@ -4,8 +4,6 @@ import sys
 
 import viscojapan as vj
 from viscojapan.inversion import OccamDeconvolution
-from viscojapan.inversion.regularization import \
-     create_temporal_edge_roughening
 from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs import epochs
@@ -47,7 +45,7 @@ for nco, reg_co in enumerate(regs_co):
             continue
         print(outfname)
         inv.regularization = \
-               reg = create_co_aslip_boundary_regularization(
+               reg = vj.inv.reg.create_co_aslip_boundary_regularization(
                    fault_file, num_epochs,
                    reg_co, reg_aslip, reg_boundary)
         
