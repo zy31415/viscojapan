@@ -6,7 +6,7 @@ from .sites import *
 from .moment import *
 
 from .test_utils import MyTestCase
-from .epicenter import TOHOKU_EPICENTER
+from .hypocenter import *
 
 # just import subpackage name
 from . import pollitz

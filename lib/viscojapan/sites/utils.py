@@ -6,7 +6,7 @@ import numpy as np
 import pyproj as pj
 
 from ..utils import get_this_script_dir
-from ..epicenter import TOHOKU_EPICENTER
+from ..hypocenter import TOHOKU_EPICENTER
 
 __all__ = ['get_pos_dic', 'get_pos','sites_file',
            'get_epi_dist','sorted_by_epi_dist','get_sites_seafloor',

@@ -1,6 +1,7 @@
 import tempfile
 from os.path import exists, join, dirname
 from os import makedirs
+import h5py
 
 import numpy as np
 
@@ -27,8 +28,10 @@ def get_slip_results_for_gmt(res_file, fault_file):
     lats_m = get_middle_point(lats)
     lons_m = get_middle_point(lons)
 
-    slip = ResultFileReader(res_file).slip
+    with h5py.File(res_file) as fid:
+        slip = fid['Bm'][...]
     slip = slip.reshape([-1, reader.num_subflt_along_strike])
+    
 
     _arr = np.array([lons_m.flatten(), lats_m.flatten(), slip.flatten()]).T
 
@@ -86,9 +89,11 @@ class GMTInversionResultFileSlipPlotter(GMTSlipPlotter):
             self.gplt.pstext(fid.name, K='', O='', N='', R='', J='')
 
     def compute_moment(self):
+        with h5py.File(self.result_file) as fid:
+            slip = fid['Bm'][...]
         com = ComputeMoment(self.fault_file, self.earth_file)
         mo, mw = \
-            com.compute_moment_on_inversion_result_file(self.result_file)
+            com.compute_moment(slip)
         return mo, mw
 
     def plot_legend(self):

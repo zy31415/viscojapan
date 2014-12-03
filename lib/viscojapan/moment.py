@@ -32,9 +32,9 @@ class ComputeMoment(object):
         mw = 2./3.*np.log10(mo) - 6. 
         return mo, mw
 
-    def compute_moment_on_inversion_result_file(self, result_file):
-        reader = ResultFileReader(result_file)
-        return self.compute_moment(reader.slip)
+##    def compute_moment_on_inversion_result_file(self, result_file):
+##        reader = ResultFileReader(result_file)
+##        return self.compute_moment(reader.slip)
         
 
 def get_mos_mws_from_epochal_file(epochal_file):
