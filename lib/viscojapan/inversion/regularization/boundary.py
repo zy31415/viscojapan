@@ -4,6 +4,8 @@ import scipy.sparse as sp
 from viscojapan.fault_model import FaultFileReader
 from .regularization import Leaf, Composite
 
+__all__ = ['BoundaryRegDeadNorthAndSouth']
+
 class _BoundaryRegularizationBase(Leaf):
     def __init__(self,
                  ncols_slip,

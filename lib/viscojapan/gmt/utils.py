@@ -6,9 +6,9 @@ import pGMT
 from ..utils import get_this_script_dir
 from ..sites_db import get_pos_dic_of_a_network
 from ..fault_model import FaultFileReader
-from .focal_mechanisms import focal_mechanism_CMT
 
-__all__=['plot_focal_mechanism_CMT', 'plot_slab_top',
+
+__all__=['plot_slab_top',
          'plot_slab_contours', 'plot_slab','plot_vector_legend',
          'plot_plate_boundary', 'plot_etopo1', 'topo_cpts',
          'file_plate_boundary','file_kur_top','file_etopo1',
@@ -30,14 +30,6 @@ topo_cpts = {
     }
 
 file_etopo1 = '/home/zy/workspace/viscojapan/share/topo/ETOPO1_Bed_g_gmt4.grd'
-
-def plot_focal_mechanism_CMT(gplt, scale=0.4, K='', O='',):
-    with tempfile.NamedTemporaryFile('w+t') as text:
-        text.write(focal_mechanism_CMT.psmeca_str)
-        text.seek(0,0)
-        gplt.psmeca(text.name,
-                    J='', R='',O=O,K=K,T='',
-                    S='m%f'%scale,h='0')
 
 def plot_slab_top(gplt):
     gplt.psxy(

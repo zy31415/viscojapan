@@ -59,7 +59,9 @@ gplt.pscoast(
 # plot plate boundary
 vj.gmt.plot_plate_boundary(gplt)
 # plot focal mechanism
-vj.gmt.plot_focal_mechanism_CMT(gplt,scale=0.4, K=None)
+#vj.gmt.plot_focal_mechanism_CMT(gplt,scale=0.4, fontsize=0)
+#vj.gmt.plot_focal_mechanism_USGS_wphase(gplt,scale=0.4, fontsize=8)
+vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.4, fontsize=0, K=None)
 
 gmt.save('inverted_coseismic_slip.pdf')
 

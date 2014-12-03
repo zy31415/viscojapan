@@ -5,6 +5,9 @@ from numpy import sqrt
 from viscojapan.fault_model import FaultFileReader
 from .regularization import Leaf, Composite
 
+__all__=['Roughening','ExpandForAllEpochs','RegularizationForOnlyFirstEpoch',
+         'RegularizationExceptFirstEpoch']
+
 # define functions
 def roughening_matrix(num_cols):
         ''' Return any size of roughening matrix.
@@ -169,8 +172,33 @@ class ExpandForAllEpochs(Leaf):
         regmat = self.reg()
         L = sparse.block_diag([regmat]*self.num_epochs)
         return L
+
+class RegularizationForOnlyFirstEpoch(Leaf):
+    def __init__(self,
+                 reg,
+                 num_epochs):
+        self.reg = reg
+        self.num_epochs = num_epochs
+
+    def generate_regularization_matrix(self):
+        regmat = self.reg()
+        shape = regmat.shape
+        shape = (shape[0]*(self.num_epochs-1), shape[1]*(self.num_epochs-1))
+        zero = sparse.csc_matrix(shape)
+        L = sparse.block_diag([regmat, zero])
+        return L        
         
-        
-                
-        
+class RegularizationExceptFirstEpoch(Leaf):
+    def __init__(self,
+                 reg,
+                 num_epochs):
+        self.reg = reg
+        self.num_epochs = num_epochs
+
+    def generate_regularization_matrix(self):
+        regmat = self.reg()
+        shape = regmat.shape
+        zero = sparse.csc_matrix(shape)
+        L = sparse.block_diag([zero]+[regmat]*(self.num_epochs-1))
+        return L  
 

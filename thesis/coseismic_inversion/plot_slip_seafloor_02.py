@@ -61,7 +61,7 @@ vj.gmt.plot_seafloor_stations(gplt, marker_size=0.4)
 # plot plate boundary
 vj.gmt.plot_plate_boundary(gplt)
 # plot focal mechanism
-vj.gmt.plot_Tohoku_focal_mechanism(gplt,scale=0.4, K=None)
+vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.4, fontsize=0, K=None)
 
 gmt.save('inverted_coseismic_slip_seafloor_02.pdf')
 
