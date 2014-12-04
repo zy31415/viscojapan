@@ -114,7 +114,7 @@ class GMTXYZ(object):
                 self.xyz_grd,
                 C=fid.name,
                 A='1+f%f+um'%label_font_size,
-                G=G, J='', R='', O='',K='',S='1',
+                G=G, J='', R='', O='',K='',S='4',
                 W = W,
                 )
         

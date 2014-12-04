@@ -38,7 +38,7 @@ pltxyz = vj.gmt.GMTXYZ(
     file_xyz = '../../pred_disp_mag',
     if_log_color_scale = True,
     cpt_scale = '-3.1/0.6/0.001',
-    interp_inc = '20k',
+    interp_inc = '40k',
     )
 #pltxyz.maskout_water(A='1000k',D='h')
 #pltxyz.plot_xyz()
