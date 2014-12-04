@@ -16,7 +16,6 @@ class GMTXYZ(object):
                  cpt_scale = '-4/0.6/0.01',
                  workdir = '~tmp',
                  interp_inc = '1k',
-                 interp_searching_radius = '60k'
                  ):
         self.gmt = gmt
         self.file_xyz = file_xyz
@@ -25,7 +24,6 @@ class GMTXYZ(object):
 
         self._workdir = workdir
         self.interp_inc = interp_inc
-        self.interp_searching_radius = interp_searching_radius
         
         self._init()
         
@@ -41,13 +39,20 @@ class GMTXYZ(object):
 
     def _interpolate_xyz_to_grd(self):
         self.xyz_grd = join(self._workdir, 'grd')
-        self.gmt.nearneighbor(
+##        self.gmt.nearneighbor(
+##            self.file_xyz,
+##            G = self.xyz_grd,
+##            I=self.interp_inc,
+##            N='8',
+##            R='',
+##            S=self.interp_searching_radius,
+##            )
+        self.xyz_grd = join(self._workdir, 'grd')
+        self.gmt.xyz2grd(
             self.file_xyz,
             G = self.xyz_grd,
-            I=self.interp_inc,
-            N='8',
-            R='',
-            S=self.interp_searching_radius,
+            I = self.interp_inc,
+            R = '',
             )
 
     def _prepare_cpt_file(self):
@@ -91,7 +96,8 @@ class GMTXYZ(object):
                      contours = [5, 10 , 20, 40, 60],
                      W = 'thickest',
                      label_line = None,
-                     label_font_size = 9
+                     label_font_size = 9,
+                     smooth_factor = 8
                      ):
         _txt = ''
         for ii in contours:
@@ -108,7 +114,7 @@ class GMTXYZ(object):
                 self.xyz_grd,
                 C=fid.name,
                 A='1+f%f+um'%label_font_size,
-                G=G, J='', R='', O='',K='',
+                G=G, J='', R='', O='',K='',S='1',
                 W = W,
                 )
         

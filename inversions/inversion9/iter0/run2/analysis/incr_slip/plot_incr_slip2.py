@@ -10,9 +10,9 @@ import viscojapan as vj
 
 from epochs import epochs
 
-outfile = '../../outs/nrough_05.h5'
+outfile = '../../outs/nco_06_naslip_13.h5'
 
-fault_file = '../../fault_model/fault_bott60km.h5'
+fault_file = '../../../fault_model/fault_bott60km.h5'
 
 reader = vj.inv.ResultFileReader(outfile)
 
@@ -30,7 +30,7 @@ for epoch in epochs:
     mplt.plot_top()
     
     savefig(join(plot_path, 'incr_slip_%04d.png'%epoch))
-    #plt.show()
+    plt.show()
     plt.close()
     
 

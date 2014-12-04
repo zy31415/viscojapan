@@ -35,11 +35,10 @@ vj.gmt.plot_etopo1(gplt)
 
 pltxyz = vj.gmt.GMTXYZ(
     gmt,
-    file_xyz = '../pred_disp_mag',
+    file_xyz = '../../pred_disp_mag',
     if_log_color_scale = True,
     cpt_scale = '-3.1/0.6/0.001',
     interp_inc = '20k',
-    interp_searching_radius = '800k',
     )
 #pltxyz.maskout_water(A='1000k',D='h')
 #pltxyz.plot_xyz()
@@ -48,6 +47,7 @@ pltxyz.plot_contour(
     W='thick,red',
     label_line = 'L142.37/38.30/80/60,142.37/38.30/90/20,142.37/38.30/-160/40,158/38.30/180/5',
     label_font_size = 8,
+    smooth_factor = 100
     )
 #pltxyz.plot_scale(x=15, y=8)
 
@@ -62,7 +62,7 @@ gplt.pscoast(
 
 # plot plate boundary
 vj.gmt.plot_plate_boundary(gplt, color='100')
-vj.gmt.plot_Tohoku_focal_mechanism(gplt,scale=0.2, K=None)
+vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.2, K=None, fontsize=0)
 
 gmt.save('pred_hor_decay_even_spacing.pdf')
 
