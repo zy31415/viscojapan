@@ -44,12 +44,18 @@ class GMTXYZ(object):
         self.xyz_grd = join(self._workdir, 'grd')
         self.gmt.nearneighbor(
             self.file_xyz,
-            G = self.xyz_grd,
+            G = 'tmp',
             I=self.interp_inc,
-            N='8',
+            N='10',
             R='',
             S=self.interp_searching_radius,
             )
+        self.gmt.grdfilter(
+            'tmp',
+            G = self.xyz_grd,
+            D='4',
+            F='c350')
+            
 
     def _prepare_cpt_file(self):
         self.cpt_file = join(self._workdir, 'cpt')
@@ -110,7 +116,7 @@ class GMTXYZ(object):
                 self.xyz_grd,
                 C=fid.name,
                 A='1+f%f+um'%label_font_size,
-                G=G, J='', R='', O='',K='',S='4',
+                G=G, J='', R='', O='',K='',S='%d'%smooth_factor,
                 W = W,
                 )
         

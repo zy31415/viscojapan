@@ -12,13 +12,9 @@ from .plot_slip_txt_file import GMTSlipPlotter
 from ..fault_model import FaultFileReader
 from ..inversion import ResultFileReader
 from ..moment import ComputeMoment
+from ..utils import get_middle_point
 
 __all__ = ['GMTInversionResultFileSlipPlotter']
-
-def get_middle_point(x):
-    x1 = (x[:-1,:] + x[1:,:])/2.
-    x2 = (x1[:,:-1] + x1[:,1:])/2.
-    return x2
 
 def get_slip_results_for_gmt(res_file, fault_file):        
     reader = FaultFileReader(fault_file)

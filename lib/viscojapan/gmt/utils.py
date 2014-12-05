@@ -31,24 +31,51 @@ topo_cpts = {
 
 file_etopo1 = '/home/zy/workspace/viscojapan/share/topo/ETOPO1_Bed_g_gmt4.grd'
 
-def plot_slab_top(gplt):
+def plot_slab_top(gplt,
+                  K='',
+                  color= '50',
+                  lw='thin'):
     gplt.psxy(
         file_kur_top,
-        J='', R='', O='', K='',
-        W='thin,50',
+        J='', R='', O='', K=K,
+        W='%s,%s'%(lw, color),
         )
     
-def plot_slab_contours(gplt, file_contours=file_kur_contours):
+def plot_slab_contours(gplt, file_contours=file_kur_contours,
+                       K='',
+                       color='50',
+                       lw='thin',
+                       label_line = '144/41.5/138/41.5',
+                       label_font_size = '9',
+                       label_color = 'black',
+                       if_contour_annotation = True,
+                       ):
+    if if_contour_annotation:
+        Sq = 'L%s:+Lh+ukm+f%s,%s'%(label_line, label_font_size,label_color)
+    else:
+        Sq = None
+        
     gplt.psxy(
         file_contours,
-        J='', R='', O='', K='',
-        Sq='L144/41.5/138/41.5:+Lh+ukm',
-        W='thin,50,--'
+        J='', R='', O='', K=K,
+        Sq = Sq,
+        W='%s,%s,--'%(lw, color)
         )
 
-def plot_slab(gplt, file_contours=file_kur_contours):
-    plot_slab_top(gplt)
-    plot_slab_contours(gplt, file_contours=file_contours)
+def plot_slab(gplt, file_contours=file_kur_contours,
+              K='', color='50', lw='thin',
+              label_line = '144/41.5/138/41.5',
+              label_font_size = '9',
+              label_color = 'balck',
+              if_contour_annotation = True
+              ):
+    plot_slab_top(gplt, K='', color=color, lw=lw)
+    plot_slab_contours(gplt, file_contours=file_contours,
+                       K=K, color=color, lw=lw,
+                       label_line=label_line,
+                       label_font_size = label_font_size,
+                       label_color = label_color,
+                       if_contour_annotation = if_contour_annotation)
 
 def plot_vector_legend(gplt,
                        legend_len , scale,
@@ -78,12 +105,19 @@ def plot_vector_legend(gplt,
         )
     text.close()
 
-def plot_plate_boundary(gplt, color='red'):
+def plot_plate_boundary(gplt,
+                        color='red',
+                        lw = 'thick',
+                        gap = '0.25',
+                        ms = '3p',
+                        K=''):
     # plot plate boundary
     gplt.psxy(
         file_plate_boundary,
-        R = '', J = '', O = '', K='', W='thick,%s'%color,
-        Sf='0.25/3p', G='%s'%color)
+        R = '', J = '', O = '', K=K,
+        W='%s,%s'%(lw, color),
+        Sf='%s/%s+r+b'%(gap, ms),
+        G='%s'%color)
 
 def plot_etopo1(gplt, A='-70/20', file_topo_cpt=topo_cpts['afrikakarte']):
     gmt = pGMT.GMT()
@@ -105,7 +139,8 @@ def plot_etopo1(gplt, A='-70/20', file_topo_cpt=topo_cpts['afrikakarte']):
         I = '~topo_grad.grd',
         O = '',K = '')
 
-def plot_stations(gplt, network, S, color, fill_color):
+def plot_stations(gplt, network, S, color, fill_color,
+                  lw='thick'):
     tp = get_pos_dic_of_a_network(network)
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, pos in tp.items():
@@ -114,14 +149,16 @@ def plot_stations(gplt, network, S, color, fill_color):
         gplt.psxy(
             fid.name,
             S = S,
-            R = '', J = '', O='' ,K='' ,W='thick,%s'%color,
+            R = '', J = '', O='' ,K='' ,W='%s,%s'%(lw,color),
             G=fill_color)
 
-def plot_seafloor_stations(gplt, marker_size=0.5, color='red'):
+def plot_seafloor_stations(gplt, marker_size=0.5, color='red',
+                           lw='thick'):
     plot_stations(gplt, 'SEAFLOOR',
                   S = 's%f'%marker_size,
                   color = color,
-                  fill_color = 'white'
+                  fill_color = 'white',
+                  lw=lw
                   )
     
 def plot_GEONET_Japan_stations(gplt, marker_size=0.05, color='red'):

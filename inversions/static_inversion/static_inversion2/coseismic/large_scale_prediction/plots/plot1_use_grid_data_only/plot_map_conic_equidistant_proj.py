@@ -39,6 +39,7 @@ pltxyz = vj.gmt.GMTXYZ(
     if_log_color_scale = True,
     cpt_scale = '-3.1/0.6/0.001',
     interp_inc = '40k',
+    interp_searching_radius = '10',
     )
 #pltxyz.maskout_water(A='1000k',D='h')
 #pltxyz.plot_xyz()
@@ -47,8 +48,10 @@ pltxyz.plot_contour(
     W='thick,red',
     label_line = 'L142.37/38.30/80/60,142.37/38.30/90/20,142.37/38.30/-160/40,158/38.30/180/5',
     label_font_size = 8,
-    smooth_factor = 100
+    smooth_factor = 100,
     )
+
+
 #pltxyz.plot_scale(x=15, y=8)
 
 

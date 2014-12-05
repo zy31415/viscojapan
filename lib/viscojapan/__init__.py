@@ -1,8 +1,6 @@
 from .epochal_data import *
 from .fault_model import *
 from .earth_model import *
-from .utils import *
-from .sites import *
 from .moment import *
 
 from .test_utils import MyTestCase
@@ -15,3 +13,5 @@ from . import plots
 from . import gmt
 from . import sites_db
 from . import inversion as inv
+from . import utils 
+from . import sites

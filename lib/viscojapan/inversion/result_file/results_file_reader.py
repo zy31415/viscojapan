@@ -74,7 +74,7 @@ class ResultFileReader(FileIOBase):
 
     @property
     def num_epochs(self):
-        return self.fid['num_epochs'][...]
+        return len(self.epochs)
 
     @property
     def num_subflts(self):

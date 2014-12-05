@@ -1,0 +1,18 @@
+# seminf-haxby.cpt
+# 
+# This palette intended for use on semi-infinite (bottomless)
+# data. The upper part is a subset of the haxby palette, but
+# with the upper fade to with truncated at full saturation red. 
+# The lower part is simply a fade from high saturation blue down
+# to white.
+#
+# J.J.Green 2004, contributed to the public domain 
+# $Id: seminf-haxby.cpt,v 1.1 2004/02/25 18:15:50 jjg Exp $
+#
+# COLOR_MODEL = RGB
+ 0.001  255 255 255   0.002  255 255 255
+ 0.002  208 216 251   0.003  208 216 251
+
+B 255 255 255
+F 238  79  77
+N   0   0   0
