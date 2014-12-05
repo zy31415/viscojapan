@@ -112,6 +112,9 @@ class GMTPlot(GMTGuru):
     def close_tmp_ps_file(self):
         self._tmp_ps_file_id.close()
 
+    def finish(self):
+        self.psxy(J='', R='', O='', K=None)
+
     def __del__(self):
         self.close_tmp_ps_file()
             

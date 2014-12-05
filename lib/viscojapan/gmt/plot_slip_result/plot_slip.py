@@ -5,7 +5,7 @@ import numpy as np
 from ..utils import plot_seafloor_stations, plot_slab
 from ..plot_focal_mechanism import plot_focal_mechanism_USGS_wphase
 
-class PlotSlip(object):
+class _PlotSlip(object):
     def __init__(self,
                  gmt,
                  lons,
@@ -18,8 +18,6 @@ class PlotSlip(object):
                  if_boundary_annotation = False,
                  if_map_scale = False,
                  if_slab_annotation = False,
-                 if_psscale = False,
-                 psscale_gridline_interval = '3',
                  O = None,
                  K = ''
                  ):
@@ -40,10 +38,7 @@ class PlotSlip(object):
         self.if_boundary_annotation = if_boundary_annotation 
         self.if_map_scale = if_map_scale
         self.if_slab_annotation = if_slab_annotation
-        self.if_psscale = if_psscale
-        self.psscale_gridline_interval = psscale_gridline_interval
         self.O = O
-        self.K = K
 
     def _form_slip_xyz_file_string(self):
         _txt = ''
@@ -53,7 +48,7 @@ class PlotSlip(object):
             _txt +='%f %f %f\n'%(lon, lat, s)
         return _txt
         
-    def plot(self):
+    def plot(self, K=''):
         gmt = self.gmt
         gplt = self.gplt
 
@@ -92,7 +87,7 @@ class PlotSlip(object):
         grd_file.close()
 
         if self.if_map_scale:
-            L = '144.4/35.6/38/50+lkm+jt'
+            L = '144.4/36.2/38/50+lkm+jt'
         else:
             L = None
             
@@ -102,25 +97,44 @@ class PlotSlip(object):
             W = 'faint,dimgray',A='1000',L=L,
             O = '', K='')
 
-        if self.if_psscale:                
-            gplt.psscale(
-            D = '.5/3.5/1.6/.1',
-            B = '%s::/:m:'%self.psscale_gridline_interval,
-            O = '', K='',
-            C = self.cpt_file)
-
         plot_seafloor_stations(gplt, marker_size=0.1,
                                       lw='faint',color='green')
 
         plot_focal_mechanism_USGS_wphase(gplt,scale=0.1, fontsize=0)
         plot_slab(gplt,
-                         color='dimgray', lw='faint',
-                         label_line = '144/41/138/41',
-                         label_font_size = '4',
-                         label_color = 'dimgray',
-                         K = self.K,
-                         if_contour_annotation = self.if_slab_annotation
-                         )
+                  color='dimgray', lw='faint',
+                  label_line = '144/41/138/41',
+                  label_font_size = '4',
+                  label_color = 'dimgray',
+                  K = K,
+                  if_contour_annotation = self.if_slab_annotation,
+                  )
+
+    def add_annotation(self, day, Mo, Mw,
+                       K='', font_size='3'):
+        with tempfile.NamedTemporaryFile('w+t') as fid:
+            fid.write('''#
+H {font_size} Times-Roman Day {day}
+H {font_size} Times-Roman Mo={Mo} (Mw={Mw})
+'''.format(
+    day = day,
+    Mo = Mo,
+    Mw = Mw,
+    font_size = font_size
+    ))
+            fid.seek(0,0)
+            
+            self.gplt.pslegend(
+                fid.name,
+                D='143.8/35.6/1/0.3/MC',
+                R='', J='', O='', K=K)
+
+    def add_psscale(self, gridline_interval='3', K=''):
+        self.gplt.psscale(
+            D = '.5/3.5/1.6/.1',
+            B = '%s::/:m:'%gridline_interval,
+            O = '', K=K,
+            C = self.cpt_file)
 
         
 
