@@ -57,25 +57,19 @@ class PlotSlipResult(object):
 
         self._plot_coseismic_slip()
 
-        # plot the first afterslip:
-        self._plot_afterslip_at_first_epoch()
+        # plot afterslip:
+        self._num_of_subplots_in_a_row = 1
+        for nth, si in enumerate(self.slip[1:,:,:],1):
+            offset_X, offset_Y = self._next_offset()
 
-        ## plot afterslip:
-        nth_in_a_row = 2
-        for nth, si in enumerate(self.slip[2:,:,:],2):
-            offset_X = self.subplot_width
-            offset_Y = 0
-            if nth_in_a_row > (self.num_plots_per_row-1):
-                offset_Y = -self.subplot_height
-                offset_X *= - (self.num_plots_per_row-1)
-                nth_in_a_row = 0
-
-            self._plot_afterslip_at_nth_epoch(
+            _plt = self._plot_afterslip_at_nth_epoch(
                 nth = nth,
                 offset_X = offset_X,
                 offset_Y = offset_Y
                 )
-            nth_in_a_row += 1
+            if nth ==1:
+                _plt.add_psscale(gridline_interval='3')                
+
 
         gplt.finish()
             
@@ -134,27 +128,6 @@ class PlotSlipResult(object):
             Mw = '%.2f'%Mw,
             K = '')
 
-    def _plot_afterslip_at_first_epoch(self):
-        slip = self.slip[1,:,:]
-        plt = _PlotSlip(
-            self.gmt,
-            self.lons,
-            self.lats,
-            slip = slip,
-            cpt_file = self.cpt_aslip.name,
-            offset_X = self.subplot_width,
-            size = '3c',
-            O = ''
-            )
-        plt.plot(K='')
-        plt.add_psscale(gridline_interval='3')
-        Mo, Mw = self.compute_Mo_Mw(slip)
-        plt.add_annotation(
-            day = '%d ~ %d'%(self.epochs[0], self.epochs[1]),
-            Mo = '%.4G'%Mo,
-            Mw = '%.2f'%Mw,
-            K = '')
-
     def _plot_afterslip_at_nth_epoch(self, nth, offset_X, offset_Y):
         slip = self.slip[nth,:,:]
         plt = _PlotSlip(
@@ -175,6 +148,19 @@ class PlotSlipResult(object):
             Mo = '%.4G'%Mo,
             Mw = '%.2f'%Mw,
             K = '')
+        return plt
+
+    def _next_offset(self):
+        offset_X = self.subplot_width
+        offset_Y = 0
+        if self._num_of_subplots_in_a_row > (self.num_plots_per_row - 1):
+            offset_Y = -self.subplot_height
+            offset_X *= - (self.num_plots_per_row-1)
+            self._num_of_subplots_in_a_row = 0
+
+        self._num_of_subplots_in_a_row += 1
+            
+        return offset_X, offset_Y
         
 
     def compute_Mo_Mw(self, slip):
