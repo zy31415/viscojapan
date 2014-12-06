@@ -11,7 +11,8 @@ file_kur_contours = join(this_script_dir,
 file_plate_boundary = join(this_script_dir,
                            'PB2002_boundaries.gmt')
 
-file_etopo1 = '/home/zy/workspace/viscojapan/topo/ETOPO1_Bed_g_gmt4.grd'
+file_etopo1 = join(this_script_dir,
+                   'ETOPO1_Bed_g_gmt4.grd')
 
 topo_cpts = {
     'afrikakarte' : join(this_script_dir, 'afrikakarte.cpt'),
