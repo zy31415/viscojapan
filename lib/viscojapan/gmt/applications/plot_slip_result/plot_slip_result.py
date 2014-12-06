@@ -3,10 +3,10 @@ import tempfile
 import numpy as np
 
 import pGMT
-from ...inversion import ResultFileReader
-from ...fault_model import FaultFileReader
-from ...moment import ComputeMoment
-from ...utils import get_middle_point
+from ....inversion import ResultFileReader
+from ....fault_model import FaultFileReader
+from ....moment import ComputeMoment
+from ....utils import get_middle_point
 
 from .plot_slip import _PlotSlip
 

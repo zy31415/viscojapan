@@ -1,35 +1,20 @@
-from os.path import normpath, join
 import tempfile
 
 import pGMT
 
-from ..utils import get_this_script_dir
-from ..sites_db import get_pos_dic_of_a_network
-from ..fault_model import FaultFileReader
+from ...utils import get_this_script_dir
+from ...sites_db import get_pos_dic_of_a_network
+from ...fault_model import FaultFileReader
 
+from ..share import file_kur_top, file_kur_contours,\
+     file_plate_boundary, file_etopo1, topo_cpts
 
 __all__=['plot_slab_top',
          'plot_slab_contours', 'plot_slab','plot_vector_legend',
-         'plot_plate_boundary', 'plot_etopo1', 'topo_cpts',
-         'file_plate_boundary','file_kur_top','file_etopo1',
+         'plot_plate_boundary', 'plot_etopo1', 
          'plot_seafloor_stations', 'plot_fault_model',
          'plot_GEONET_Japan_stations']
 
-this_script_dir = get_this_script_dir(__file__)
-file_kur_top = normpath(join(this_script_dir,
-                             'share/kur_top.in'))
-file_kur_contours = normpath(join(this_script_dir,
-                              'share/kur_contours.in'))
-file_plate_boundary = normpath(join(this_script_dir,
-                              'share/PB2002_boundaries.gmt'))
-topo_cpts = {
-    'afrikakarte' : normpath(join(this_script_dir, 'share/afrikakarte.cpt')),
-    'wiki-france' : normpath(join(this_script_dir, 'share/wiki-france.cpt')),
-    'etopo1' : normpath(join(this_script_dir, 'share/ETOPO1.cpt')),
-    'seminf-haxby' : normpath(join(this_script_dir, 'share/seminf-haxby.cpt')),
-    }
-
-file_etopo1 = '/home/zy/workspace/viscojapan/share/topo/ETOPO1_Bed_g_gmt4.grd'
 
 def plot_slab_top(gplt,
                   K='',

@@ -1,18 +1,21 @@
 from os.path import join
 import sqlite3
 
+import numpy as np
+
 from ..utils import get_this_script_dir
 
 this_script_dir = get_this_script_dir(__file__)
 
 file_database = join(this_script_dir, 'gps_sites.sqlite3')
 
-__all__ = ['get_pos_dic', 'get_networks_dic','get_pos_dic_of_a_network']
+__all__ = ['get_pos_dic', 'get_networks_dic','get_pos_dic_of_a_network',
+           'gen_network_sites_file']
 
 def get_pos_dic():
     with sqlite3.connect(file_database) as conn:
         c = conn.cursor()
-        tp = c.execute('select * from tb_sites;').fetchall()
+        tp = c.execute('select id,lon,lat from tb_sites;').fetchall()
 
     return {ii[0]:(ii[1], ii[2]) for ii in tp}
 
@@ -41,4 +44,20 @@ where network = ?
 ''', (network,)).fetchall()
 
     return {ii[0]:(ii[1], ii[2]) for ii in tp}
+
+def gen_network_sites_file(network, sites_file, header=None):
+    sites_dic = get_pos_dic_of_a_network(network)
+    _tp = []
+    for site in sorted(sites_dic):
+        lon, lat = sites_dic[site]
+        _tp.append((site, lon, lat))
+
+    _arr = np.array(_tp, 'U4, f, f')
+    if header is None:
+        header='''Sites list of network: "%s"
+
+id lon lat'''%network
+    np.savetxt(sites_file, _arr, fmt='%s %f %f', header=header)
+    
+    
     

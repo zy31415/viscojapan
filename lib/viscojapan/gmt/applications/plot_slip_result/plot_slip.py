@@ -2,8 +2,8 @@ import tempfile
 
 import numpy as np
 
-from ..utils import plot_seafloor_stations, plot_slab
-from ..plot_focal_mechanism import plot_focal_mechanism_USGS_wphase
+from ...gadgets.utils import plot_seafloor_stations, plot_slab
+from ...gadgets.plot_focal_mechanism import plot_focal_mechanism_USGS_wphase
 
 class _PlotSlip(object):
     def __init__(self,
