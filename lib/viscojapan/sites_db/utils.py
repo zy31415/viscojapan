@@ -1,5 +1,8 @@
 from os.path import join
-import sqlite3
+try:
+    import sqlite3
+except ImportError:
+    print("    Cannot import sqlite3.")
 
 import numpy as np
 
