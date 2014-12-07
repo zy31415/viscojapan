@@ -15,7 +15,10 @@ except ImportError:
     print("    No pylab! Cannot plot with matplotlib.")
 
 from . import gmt
-from . import sites_db
+try:
+    from . import sites_db
+except ImportError:
+    print("    Cannot import sqlite3.")
 from . import inversion as inv
 from . import utils 
 from . import sites
