@@ -8,7 +8,12 @@ from .hypocenter import *
 # just import subpackage name
 from . import pollitz
 from . import tsana
-from . import plots
+
+try:
+    from . import plots
+except ImportError:
+    print("    No pylab! Cannot plot with matplotlib.")
+
 from . import gmt
 from . import sites_db
 from . import inversion as inv
