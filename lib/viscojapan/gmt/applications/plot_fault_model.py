@@ -1,3 +1,5 @@
+import os
+
 import pGMT
 
 from ..gadgets import plot_etopo1, plot_slab,\
@@ -12,6 +14,8 @@ class FaultModelPlotter(object):
                  fault_file
                  ):
         self.fault_file = fault_file
+
+        self.trash_files = ['gmt.conf', 'gmt.history']
         
 
     def plot(self, output_file):
@@ -46,3 +50,11 @@ class FaultModelPlotter(object):
         plot_focal_mechanism_USGS_wphase(gplt,K=None)
 
         gmt.save(output_file)
+
+        self.trash_files.append('.'.join(output_file.split('.')[:-1]+['ps']))
+
+    def clean(self):        
+        for file in self.trash_files:
+            if os.path.exists(file):
+                os.remove(file)
+            

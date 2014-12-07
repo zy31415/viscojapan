@@ -106,23 +106,30 @@ def plot_plate_boundary(gplt,
 
 def plot_etopo1(gplt, A='-70/20', file_topo_cpt=topo_cpts['afrikakarte']):
     gmt = pGMT.GMT()
+
+    file_topo_cut = tempfile.NamedTemporaryFile()
     gmt.grdcut(
         file_etopo1,
-        G = '~topo.grd',
+        G = file_topo_cut.name,
         R = '')
 
     gmt = pGMT.GMT()
+    file_topo_grad = tempfile.NamedTemporaryFile()
     gmt.grdgradient(
-        '~topo.grd',
-        G = '~topo_grad.grd',
+        file_topo_cut.name,
+        G = file_topo_grad.name,
         A = A,
         R = '')
 
     gplt.grdimage(
-        '~topo.grd',
+        file_topo_cut.name,
         J = '', C = file_topo_cpt,
-        I = '~topo_grad.grd',
+        I = file_topo_grad.name,
         O = '',K = '')
+
+    # close temporary files:
+    file_topo_cut.close()
+    file_topo_grad.close()
 
 def plot_stations(gplt, network, S, color, fill_color,
                   lw='thick'):

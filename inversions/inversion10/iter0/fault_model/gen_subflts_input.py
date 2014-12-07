@@ -1,11 +1,13 @@
 from viscojapan.pollitz import gen_subflts_input
 
+dep = 120
+
 gen_subflts_input(
-    fault_file = 'fault_bott60km.h5',
-    out_dir = 'subflts_bott60km_rake83',
+    fault_file = 'fault_bott%dkm.h5'%dep,
+    out_dir = 'subflts_bott%dkm_rake83'%dep,
     rake = 83)
 
 gen_subflts_input(
-    fault_file = 'fault_bott60km.h5',
-    out_dir = 'subflts_bott60km_rake90',
+    fault_file = 'fault_bott%dkm.h5'%dep,
+    out_dir = 'subflts_bott%dkm_rake90'%dep,
     rake = 90.)
