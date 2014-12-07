@@ -83,7 +83,7 @@ which is very slow, being minimum.
 class Site(object):
     ''' Represent a site.
 '''
-    #_site_pos_dic = SitePosDictSingleton()    
+    _site_pos_dic = SitePosDictSingleton()    
     def __init__(self, name):
         assert isinstance(name, str), 'name type is str.'
         self._name = name
