@@ -25,7 +25,7 @@ def read_flt_file_for_stdin(fname, section):
 def assert_num_columns(fn, num_col):
     with open(fn,'rt') as fid:
         n = 1
-        for ln in fid:
+        for ln in next_non_commenting_line(fid):
             num_col_actual = len(ln.split())
             assert  num_col_actual == num_col, \
                    "Number of column at Line %d is %d, require %d."%\
