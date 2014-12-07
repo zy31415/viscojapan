@@ -32,7 +32,7 @@ def add_task_nongravity(mod_str, rake, mode_num):
 
 add_task_nongravity('He50km_VisM6.3E18', 83, 0)
 add_task_nongravity('He50km_VisM1.0E19', 83, 1)
-add_task_nongravity('He40km_VisM6.3E18', 83, 2)
+add_task_nongravity('He60km_VisM6.3E18', 83, 2)
 add_task_nongravity('He50km_VisM6.3E18', 90, 3)
 
 if __name__ == '__main__':
