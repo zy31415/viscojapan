@@ -5,7 +5,13 @@ import pyproj as pj
 import simplekml as sk
 
 import viscojapan as vj
-from ..sites_db import get_pos_dic, get_networks_dic
+
+try:
+    import sqlite3
+    from ..sites_db import get_pos_dic, get_networks_dic
+except ImportError:
+    print('    Use another get_pos_dic function.')
+    from .utils import get_pos_dic
 
 __all__ = ['Site', 'Sites']
 
