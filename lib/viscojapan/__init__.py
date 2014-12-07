@@ -21,5 +21,5 @@ except ImportError:
     print("    Cannot import sqlite3.")
 from . import inversion as inv
 from . import utils 
-from . import sites
+#from . import sites
 from . import earth_model as em
