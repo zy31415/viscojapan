@@ -65,7 +65,7 @@ class SlipAtOneEpochPlotter(Plotter):
         #vj.gmt.plot_focal_mechanism_USGS_wphase(gplt,scale=0.4, fontsize=8)
         vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.4, fontsize=0, K=None)
 
-        gmt.save('inverted_coseismic_slip.pdf')
+        gmt.save(output_file)
 
         
         

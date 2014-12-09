@@ -75,8 +75,14 @@ class GMTSlipPlotter(object):
         gmt = pGMT.GMT()
         gmt.nearneighbor(
             self.slip_file_txt,
-            G = '"%s"'%out_grd, I=self.I, N='8', R='', S='100k'
+            G = '"%s"'%out_grd, I=self.I, N='8', R='', S='40k'
             )
+
+        gmt.grdfilter(
+            out_grd,
+            G = out_grd,
+            D='4',
+            F='c25')
         
     def _low_cut_slip_grd(self, grd_in, grd_out):
         gmt = pGMT.GMT()
@@ -147,6 +153,9 @@ class GMTSlipPlotter(object):
         with tempfile.NamedTemporaryFile('w+t') as fid:
             fid.write(_txt)
             fid.seek(0,0)
+
+            gmt = pGMT.GMT()            
+            
             self.gplt.grdcontour(
                 self.slip_file_grd_cutted,
                 C=fid.name,
