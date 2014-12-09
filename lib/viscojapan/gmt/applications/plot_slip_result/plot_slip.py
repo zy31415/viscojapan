@@ -11,7 +11,7 @@ class _PlotSlip(object):
                  lons,
                  lats,
                  slip,
-                 cpt_file,
+                 cpt_max_slip,
                  offset_X = 0,
                  offset_Y = 0,
                  size = '4c',
@@ -28,7 +28,7 @@ class _PlotSlip(object):
         self.lats = lats
         self.slip = slip
 
-        self.cpt_file = cpt_file
+        self._make_cpt_file(cpt_max_slip)
         
         self.offset_X = offset_X
         self.offset_Y = offset_Y
@@ -81,7 +81,7 @@ class _PlotSlip(object):
 
             gplt.grdimage(
                 grd_file.name,
-                J='', R='', C=self.cpt_file,
+                J='', R='', C=self.cpt_file.name,
                 O='',K='', Q='',            
                 )
         grd_file.close()
@@ -110,6 +110,17 @@ class _PlotSlip(object):
                   if_contour_annotation = self.if_slab_annotation,
                   )
 
+    def _make_cpt_file(self, max_slip):
+        cpt = tempfile.NamedTemporaryFile('w+t')
+        incr = max_slip/30.
+        self.gmt.makecpt(
+            C='hot',
+            T='0/%f/%f'%(max_slip, incr),
+            I='')
+        self.gmt.save_stdout(cpt.name)
+        cpt.seek(0,0)
+        self.cpt_file = cpt
+
     def add_annotation(self, day, Mo, Mw,
                        K='', font_size='3'):
         with tempfile.NamedTemporaryFile('w+t') as fid:
@@ -134,7 +145,7 @@ H {font_size} Times-Roman Mo={Mo} (Mw={Mw})
             D = '.5/3.5/1.6/.1',
             B = '%s::/:m:'%gridline_interval,
             O = '', K=K,
-            C = self.cpt_file)
+            C = self.cpt_file.name)
 
         
 

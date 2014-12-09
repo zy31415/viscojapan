@@ -43,11 +43,7 @@ class PlotSlipResult(Plotter):
         self._get_info_from_fault_file_and_result_file()
 
         self.gmt = gmt = pGMT.GMT()
-        self.gplt = gplt = gmt.gplt
-
-        self.cpt_co = self._make_cpt(self.max_co_slip, 5)
-        self.cpt_aslip = self._make_cpt(self.max_aslip,1)
-        
+        self.gplt = gplt = gmt.gplt        
 
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','6',
                    'LABEL_FONT_SIZE','6',
@@ -71,7 +67,8 @@ class PlotSlipResult(Plotter):
                 offset_Y = offset_Y
                 )
             if nth ==1:
-                _plt.add_psscale(gridline_interval='3')                
+                _plt.add_psscale(
+                    gridline_interval = self.color_label_interval_aslip)                
 
 
         gplt.finish()
@@ -98,15 +95,6 @@ class PlotSlipResult(Plotter):
         self.co_slip = self.slip[0,:,:]
         self.max_co_slip = np.amax(self.co_slip)        
 
-    def _make_cpt(self, max_slip, incr):
-        cpt = tempfile.NamedTemporaryFile('w+t')
-        self.gmt.makecpt(
-            C='hot',
-            T='0/%f/%f'%(max_slip, incr),
-            I='')
-        self.gmt.save_stdout(cpt.name)
-        cpt.seek(0,0)
-        return cpt
 
     def _plot_coseismic_slip(self):
         _plt = _PlotSlip(
@@ -114,7 +102,7 @@ class PlotSlipResult(Plotter):
             self.lons,
             self.lats,
             self.co_slip,
-            cpt_file = self.cpt_co.name,
+            cpt_max_slip = self.max_co_slip,
             offset_Y = 22,
             offset_X = 1.5,
             size = '3c',
@@ -138,7 +126,7 @@ class PlotSlipResult(Plotter):
             self.lons,
             self.lats,
             slip = slip,
-            cpt_file = self.cpt_aslip.name,
+            cpt_max_slip = self.max_aslip,
             offset_X = offset_X,
             offset_Y = offset_Y,
             size = '3c',
@@ -170,8 +158,3 @@ class PlotSlipResult(Plotter):
         com = ComputeMoment(self.fault_file, self.earth_file)
         return com.compute_moment(slip)
     
-    def clean(self):
-        self.cpt_co.close()
-        self.cpt_aslip.close()
-        super().clean()
-
