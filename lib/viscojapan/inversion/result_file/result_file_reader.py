@@ -4,6 +4,7 @@ import h5py
 import numpy as np
 
 from ...file_io_base import FileIOBase
+from ...fault_model import FaultFileReader
 
 __all__ = ['ResultFileReader']
 
@@ -107,11 +108,19 @@ class ResultFileReader(FileIOBase):
         nth = int(nth)
         assert nth>=0
         assert nth < len(self.epochs)
-        
-        num_subflts = self.num_subflts
-        sslip = self.incr_slip[:num_subflts*(nth+1)].reshape([nth+1, num_subflts])
-        slip = sslip.sum(axis=0).reshape([-1,1])
-        return slip
+
+    def read_3d_slip(self, fault_file):
+        reader = FaultFileReader(fault_file)
+        nx = reader.num_subflt_along_strike
+        ny = reader.num_subflt_along_dip
+
+        lon = reader.LLons_mid
+        lat = reader.LLats_mid
+
+        slip = self.incr_slip
+        slip = slip.reshape([self.num_epochs, ny, nx])
+
+        return slip, lon, lat
 
     def get_after_slip_at_nth_epoch(self, nth):
         nth = int(nth)

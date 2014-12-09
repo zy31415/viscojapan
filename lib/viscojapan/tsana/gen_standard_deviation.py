@@ -101,7 +101,7 @@ class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
                  sd_seafloor = 1e99
                  ):
         self.sites = sites
-        self.ch_inland = self.sites.ch_onshore
+        self.ch_inland = vj.sites.choose_inland_GPS(self.sites)
         self.num_sites = len(self.sites)
         self.num_obs = 3 * self.num_sites
         
@@ -143,7 +143,7 @@ class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
                 ep[day] = self._gen_sd_for_coseismic_disp()
             else:
                 ep[day] = self._gen_sd_for_postseismic_disp()
-        ep['sites'] = self.sites.names_bytes
+        ep['sites'] = self.sites
         ep['sd_co_hor'] = self.sd_co_hor
         ep['sd_co_ver'] = self.sd_co_ver
         ep['sd_post_hor'] = self.sd_post_hor

@@ -63,3 +63,30 @@ class EpochalSitesFileReader(EpochalFileReader):
         ch = self._gen_filter()
         return out[ch,:]
 
+    def get_site_cmpt_idx(self, site, cmpt):
+        sites = self.filter_sites
+        idx1 = list(sites).index(site)
+        if cmpt == 'e':
+            idx2 = 3*idx1
+        elif cmpt == 'n':
+            idx2 = 3*idx1 + 1
+        elif cmpt == 'u':
+            idx2 = 3*idx1 + 2
+        else:
+            raise ValueError('No such component.')
+        return idx2
+
+    def get_epoch_value_at_site(self, site, cmpt, epoch):
+        idx = self.get_site_cmpt_idx(site, cmpt)
+        res = self.get_epoch_value(epoch)
+        out = res[idx]
+        return out
+
+    def get_time_series_at_site(self, site, cmpt):
+        epochs = self.get_epochs()
+        ys = []
+        for nth, epoch in enumerate(epochs):
+            tp = self.get_epoch_value_at_site(site, cmpt, epoch)
+            ys.append(tp)
+        return ys
+

@@ -19,7 +19,8 @@ class EpochalSitesData(EpochalData):
 
     @property
     def sites(self):
-        return self.get_info('sites')
+        sites = self.get_info('sites')
+        return [site.decode() for site in sites]
 
     @sites.setter
     def sites(self, sites):
@@ -70,7 +71,8 @@ class EpochalSitesFilteredData(EpochalSitesData):
         assert exists(filter_sites_file), \
                "File %s doesn't exist."%filter_sites_file
         self._filter_sites_file = filter_sites_file
-        self.filter_sites = loadtxt(self.filter_sites_file,'4a,', usecols=(0,))    
+        _sites = loadtxt(self.filter_sites_file,'4a,', usecols=(0,))
+        self.filter_sites = [site.decode() for site in _sites]
 
     @property
     def filter_sites(self):
@@ -89,7 +91,7 @@ class EpochalSitesFilteredData(EpochalSitesData):
                    "%s is not included in sites list of epochal data."%site
 
     def _gen_filter(self):
-        sites_original = list(self.get_info('sites'))
+        sites_original = self.sites
         ch = []
         for site in self.filter_sites:
             ch.append(sites_original.index(site))

@@ -40,7 +40,7 @@ class MapPlotDisplacement(MapPlot):
         ''' Plot displacment
 '''
             
-        lons,lats=vj.get_pos(sites)
+        lons,lats=vj.sites_db.get_pos(sites)
         es=d[0::3]
         ns=d[1::3]
         us=d[2::3]

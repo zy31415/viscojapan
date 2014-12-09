@@ -5,7 +5,8 @@ from .temporal_regularization import TemporalRegularization
 from .intensity import Intensity
 from .boundary import BoundaryRegDeadNorthAndSouth
 
-__all__ = ['create_co_aslip_boundary_regularization']
+__all__ = ['create_co_aslip_boundary_regularization',
+           'create_temporal_edge_roughening']
 
 def create_roughening_temporal_regularization(
     fault_file, epochs, rough, temp):

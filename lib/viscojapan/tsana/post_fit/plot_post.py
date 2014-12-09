@@ -1,3 +1,5 @@
+from os.path import join
+
 try:
     from pylab import plt
 except ImportError as err:
@@ -7,6 +9,8 @@ from numpy import linspace
 
 _adj_dates=678577 
 cs='bgrcmyk'
+
+__all__=['plot_post']
 
 def plot_func(func,t):
     n=0
@@ -30,9 +34,13 @@ def plot_cf(cf, color):
     plt.title(cf.SITE+'-'+cf.CMPT)
     plt.gcf().autofmt_xdate()
     
-def plot_post(cfs,ifshow=False,loc=2):
+def plot_post(cfs,ifshow=False,loc=2,
+              save_fig_path = None):
     for cf in cfs:
         plot_cf(cf, color='blue')
         plt.legend(loc=loc)
         if ifshow:
             plt.show()
+        if save_fig_path is not None:
+            plt.savefig(join(save_fig_path, '%s_%s.png'%(cf.SITE, cf.CMPT)))
+        plt.close()

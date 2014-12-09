@@ -5,7 +5,7 @@ import re
 import numpy as np
 from numpy import loadtxt, asarray, nan
 
-from ...sites import get_pos_dic
+from ...sites_db import get_pos_dic
 
 __all__ = ['read_vel_sd','read_vel','gen_vel_and_vsd_file']
 

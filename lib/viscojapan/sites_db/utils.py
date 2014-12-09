@@ -12,7 +12,7 @@ this_script_dir = get_this_script_dir(__file__)
 
 file_database = join(this_script_dir, 'gps_sites.sqlite3')
 
-__all__ = ['get_pos_dic', 'get_networks_dic','get_pos_dic_of_a_network',
+__all__ = ['get_pos_dic', 'get_pos', 'get_networks_dic','get_pos_dic_of_a_network',
            'gen_network_sites_file']
 
 def get_pos_dic():
@@ -21,6 +21,16 @@ def get_pos_dic():
         tp = c.execute('select id,lon,lat from tb_sites;').fetchall()
 
     return {ii[0]:(ii[1], ii[2]) for ii in tp}
+
+def get_pos(sites):
+    lons=[]
+    lats=[]
+    pos=get_pos_dic()
+    for site in sites:
+        tp=pos[site]
+        lons.append(tp[0])
+        lats.append(tp[1])
+    return np.asarray(lons, 'float'), np.asarray(lats, 'float')
 
 def get_networks_dic():
     with sqlite3.connect(file_database) as conn:

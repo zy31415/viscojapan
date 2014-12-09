@@ -5,7 +5,7 @@ import numpy as np
 
 import h5py
 
-from ..utils import assert_positive_integer
+from ..utils import assert_positive_integer, get_middle_point
 
 __all__ = ['FaultFileWriter', 'FaultFileReader']
 
@@ -42,9 +42,18 @@ class FaultFileReader(object):
         return np.asarray(res)
 
     @property
+    def LLons_mid(self):
+        return get_middle_point(self.LLons)
+
+    @property
     def LLats(self):
         res = self.fid['meshes/LLats'][...]
         return np.asarray(res)
+
+    @property
+    def LLats_mid(self):
+        return get_middle_point(self.LLats)
+        
 
     @property
     def ddeps(self):
