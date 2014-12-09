@@ -11,7 +11,7 @@ class StaticInversion(Inversion):
                  file_G,
                  file_d,
                  file_sd,
-                 file_sites_filter,
+                 filter_sites_file,
                  regularization,
                  basis,
                  epoch = 0,
@@ -19,29 +19,35 @@ class StaticInversion(Inversion):
         self.file_G = file_G
         self.file_d = file_d
         self.file_sd = file_sd
-        self.file_sites_filter = file_sites_filter
+        self.filter_sites_file = filter_sites_file
+
         self.epoch = epoch
+        self.epochs = [epoch]
+        self.nlin_par_names = 0
+        self.nlin_par_names = []
+
+        
         
         super().__init__(
             regularization = regularization,
             basis = basis,)
 
     def set_data_sd(self):
-        sig_ep = EpochalDisplacementSD(self.file_sd, self.file_sites_filter)
+        sig_ep = EpochalDisplacementSD(self.file_sd, self.filter_sites_file)
         self.sd = sig_ep[self.epoch]
         assert_col_vec_and_get_nrow(self.sd)
 
     def set_data_G(self):
-        G_ep = EpochalG(self.file_G, self.file_sites_filter)
+        G_ep = EpochalG(self.file_G, self.filter_sites_file)
         self.G = G_ep[0]
 
     def set_data_d(self):
-        d_ep = EpochalDisplacement(self.file_d, self.file_sites_filter)
+        d_ep = EpochalDisplacement(self.file_d, self.filter_sites_file)
         self.d = d_ep[self.epoch]
 
     def save(self, fn, overwrite = False):
         super().save(fn, overwrite)
-        sites = np.loadtxt(self.file_sites_filter,'4a')
+        sites = np.loadtxt(self.filter_sites_file,'4a')
         ch_inland = vj.choose_inland_GPS_for_cmpts(sites)
         with h5py.File(fn) as fid:
             fid['sites'] = sites
