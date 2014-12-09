@@ -7,18 +7,20 @@ from ..gadgets import plot_etopo1, plot_slab,\
      plot_GEONET_Japan_stations, \
      plot_focal_mechanism_USGS_wphase
 
+from .plotter import Plotter
+
 __all__ = ['FaultModelPlotter']
 
-class FaultModelPlotter(object):
+class FaultModelPlotter(Plotter):
     def __init__(self,
                  fault_file
                  ):
+        super().__init__()
         self.fault_file = fault_file
-
-        self.trash_files = ['gmt.conf', 'gmt.history']
         
 
     def plot(self, output_file):
+        super().plot(output_file)
         gmt = pGMT.GMT()
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
                    'LABEL_FONT_SIZE','9',
@@ -51,10 +53,4 @@ class FaultModelPlotter(object):
 
         gmt.save(output_file)
 
-        self.trash_files.append('.'.join(output_file.split('.')[:-1]+['ps']))
-
-    def clean(self):        
-        for file in self.trash_files:
-            if os.path.exists(file):
-                os.remove(file)
             

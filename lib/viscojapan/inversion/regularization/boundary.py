@@ -4,7 +4,9 @@ import scipy.sparse as sp
 from viscojapan.fault_model import FaultFileReader
 from .regularization import Leaf, Composite
 
-__all__ = ['BoundaryRegDeadNorthAndSouth']
+__all__ = ['BoundaryRegDeadNorthAndSouth','NorthBoundary',
+           'SouthBoundary', 'FaultBottomBoundary','FaultTopBoundary',
+           'DeadBoundary','AllBoundaryReg']
 
 class _BoundaryRegularizationBase(Leaf):
     def __init__(self,

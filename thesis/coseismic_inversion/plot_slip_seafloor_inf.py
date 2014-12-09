@@ -23,7 +23,7 @@ gplt.psbasemap(
     )
 
 vj.gmt.plot_etopo1(gplt, A='-80/10',
-                   file_topo_cpt=vj.gmt.topo_cpts['afrikakarte'])
+                   file_topo_cpt=vj.gmt.share.topo_cpts['afrikakarte'])
 
 
 # plot slip

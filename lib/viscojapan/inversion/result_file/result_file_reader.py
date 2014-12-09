@@ -3,7 +3,6 @@ from os.path import exists
 import h5py
 import numpy as np
 
-from ...fault_model import FaultFileReader
 from ...file_io_base import FileIOBase
 
 __all__ = ['ResultFileReader']

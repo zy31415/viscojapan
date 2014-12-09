@@ -12,7 +12,8 @@ from ...epochal_data import \
 from ...epochal_data import EpochalFileReader
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
-from ...utils import assert_col_vec_and_get_nrow
+from ...utils import assert_col_vec_and_get_nrow, delete_if_exists
+from ...sites import choose_inland_GPS_cmpts_for_all_epochs
 
 __all__ = ['OccamDeconvolution']
 
@@ -53,6 +54,8 @@ class OccamDeconvolution(Inversion):
         self.file_incr_slip0 = file_incr_slip0
         
         self.filter_sites_file = filter_sites_file
+        self.sites = np.loadtxt(self.filter_sites_file,'4a,', usecols=(0,))
+        
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
 
@@ -96,7 +99,7 @@ class OccamDeconvolution(Inversion):
 
         # repacing input initial incr slip.
         file_incr_slip0 = '~incr_slip0_respacing.h5'
-        vj.delete_if_exists(file_incr_slip0)
+        delete_if_exists(file_incr_slip0)
         vj.EpochalIncrSlip(self.file_incr_slip0).respacing(
             self.epochs, file_incr_slip0)
         self.file_incr_slip0 = file_incr_slip0
@@ -169,33 +172,31 @@ class OccamDeconvolution(Inversion):
 
         self.d_pred = d
 
-    def _choose_inland_observation_at_epoch(self, nth_epoch):
-        sites = np.loadtxt(self.filter_sites_file,'4a,')
-        ch1 = vj.choose_inland_GPS_for_cmpts(sites)
-        ch2 = [False]*len(ch1)
-        
-        out = []        
-        for nth in range(self.num_epochs):
-            if nth == nth_epoch:
-                out.append(ch1)
-            else:
-                out.append(ch2)
-        out = np.asarray(out).flatten()
-        return out
-            
     def _compute_rms_inland_at_each_epoch(self):
         rms = []
-        for nth in range(self.num_epochs):
-            ch = self._choose_inland_observation_at_epoch(nth)
+        for nth, epoch in enumerate(self.epochs):
+            ch = choose_inland_GPS_cmpts_at_nth_epochs(
+                nth_epochs = nth,
+                num_epochs = len(self.epochs)
+                )
             rms.append(self.get_residual_rms(subset = ch))
         return np.asarray(rms,float)
 
     def get_residual_rms(self, subset=None):
         diff = (self.d_pred - self.disp_obs)
-        if subset is not None:
-            assert len(subset)==len(diff), 'subset length is smaller than diff'
+        if subset is not None:            
+            assert len(subset)==len(diff), \
+                   'subset length (%d) is smaller than that of diff (%d)'\
+                   %(len(subset),len(diff))
             diff = diff[subset]
         return np.sqrt(np.mean(diff**2))
+
+    def get_residual_rms_at_inlands_sites(self):
+        ch_inland = choose_inland_GPS_cmpts_for_all_epochs(
+            self.sites,
+            num_epochs = len(self.epochs))
+        
+        return self.get_residual_rms(ch_inland)
 
     def get_residual_norm(self, subset=None):
         '''
@@ -215,37 +216,3 @@ return: ||W (G B m - d)||
         res_w = self.W.dot(diff)
         nres_w = norm(res_w)
         return nres_w
-
-    def _save_non_linear_par_correction(self, fid):
-        Bm = self.Bm
-        Jac = self.G
-        num_nlin_pars = self.num_nlin_pars
-        npars0 = asarray(self.nlin_par_initial_values)
-
-        Jac_ = Jac[:,-num_nlin_pars:]
-        npars = Bm[-num_nlin_pars:,:]
-        
-        delta_nlin_pars = npars.flatten() - npars0
-        fid['nlin_correction'] = delta_nlin_pars*Jac_
-        
-
-    def save(self, fn, overwrite = False):
-        super().save(fn, overwrite)
-        sites = np.loadtxt(self.filter_sites_file,'4a,')
-        ch_inland = vj.choose_inland_GPS_for_cmpts(
-            sites, num_epochs= self.num_epochs)
-        with h5py.File(fn) as fid:
-            num_nlin_par = len(self.nlin_par_names)
-            fid['num_nlin_pars'] = num_nlin_par
-            for nth, pn in enumerate(self.nlin_par_names):
-                fid['nlin_pars/'+pn] = self.Bm[nth - num_nlin_par,0]
-            fid['num_sites'] = len(sites)
-            fid['sites'] = sites
-            fid['num_epochs'] = self.num_epochs
-            fid['epochs'] = self.epochs
-            fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
-            fid['misfit/rms_inland_at_epoch'] = self._compute_rms_inland_at_each_epoch()
-            self._save_non_linear_par_correction(fid)
-            fid['num_subflts'] = self.num_subflts
-
-            

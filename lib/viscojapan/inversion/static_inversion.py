@@ -19,11 +19,12 @@ class StaticInversion(Inversion):
         self.file_G = file_G
         self.file_d = file_d
         self.file_sd = file_sd
+        
         self.filter_sites_file = filter_sites_file
+        self.sites = np.loadtxt(self.filter_sites_file,'4a,', usecols=(0,))
 
         self.epoch = epoch
         self.epochs = [epoch]
-        self.nlin_par_names = 0
         self.nlin_par_names = []
 
         
@@ -44,15 +45,4 @@ class StaticInversion(Inversion):
     def set_data_d(self):
         d_ep = EpochalDisplacement(self.file_d, self.filter_sites_file)
         self.d = d_ep[self.epoch]
-
-    def save(self, fn, overwrite = False):
-        super().save(fn, overwrite)
-        sites = np.loadtxt(self.filter_sites_file,'4a')
-        ch_inland = vj.choose_inland_GPS_for_cmpts(sites)
-        with h5py.File(fn) as fid:
-            fid['sites'] = sites
-            fid['misfit/rms_inland'] = self.get_residual_rms(subset=ch_inland)
-            
-            
-        
 

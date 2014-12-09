@@ -9,11 +9,12 @@ from ....moment import ComputeMoment
 from ....utils import get_middle_point
 
 from .plot_slip import _PlotSlip
+from ..plotter import Plotter
 
 __all__ = ['PlotSlipResult']
 
 
-class PlotSlipResult(object):
+class PlotSlipResult(Plotter):
     def __init__(self,                 
                  fault_file,
                  result_file,
@@ -24,6 +25,7 @@ class PlotSlipResult(object):
                  color_label_interval_aslip = 3,
                  earth_file = None
                  ):
+        super().__init__()
         self.fault_file = fault_file
         self.result_file = result_file
 
@@ -37,6 +39,7 @@ class PlotSlipResult(object):
         self.earth_file = earth_file
 
     def plot(self, out_file):
+        super().plot(out_file)
         self._get_info_from_fault_file_and_result_file()
 
         self.gmt = gmt = pGMT.GMT()
@@ -167,7 +170,8 @@ class PlotSlipResult(object):
         com = ComputeMoment(self.fault_file, self.earth_file)
         return com.compute_moment(slip)
     
-    def close(self):
+    def clean(self):
         self.cpt_co.close()
         self.cpt_aslip.close()
+        super().clean()
 

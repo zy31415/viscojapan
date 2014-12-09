@@ -5,6 +5,7 @@ import scipy.sparse as sparse
 from .inversion_parameters_set import InversionParametersSet
 from .cvxopt_qp_wrapper import CvxoptQpWrapper
 from ..utils import delete_if_exists
+from .result_file.result_file_writer import ResultFileWriter
 
 class Inversion(object):
     def __init__(self,
@@ -120,22 +121,11 @@ return: ||W (G B m - d)||
         if overwrite:
             delete_if_exists(fn)
 
-        with h5py.File(fn) as fid:
-            fid['m'] = self.m
-            fid['Bm'] = self.Bm
-            fid['d_pred'] = self.d_pred
-            fid['misfit/norm'] = self.get_residual_norm()
-            fid['misfit/rms'] = self.get_residual_rms()
-            fid['misfit/norm_weighted'] = self.get_residual_norm_weighted()
+        with ResultFileWriter(self, fn) as writer:
+            writer.save()
 
-            for par, name in zip(self.regularization.args,
-                                 self.regularization.arg_names):
-                fid['regularization/%s/coef'%name] = par
-                
-            for nsol, name in zip(self.regularization.components_solution_norms(self.Bm),
-                                  self.regularization.arg_names):
-                fid['regularization/%s/norm'%name] = nsol
-
+        
+        
     
 
         

@@ -1,6 +1,5 @@
-from .results_file_reader import *
+from .result_file_reader import *
 from .collect_from_result_files import *
-
 try:
     from .plot_L import *
 except ImportError:

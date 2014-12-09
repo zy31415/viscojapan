@@ -1,6 +1,6 @@
 import numpy as np
 
-from .results_file_reader import ResultFileReader
+from .result_file_reader import ResultFileReader
 
 __all__ = ['collect_from_result_files']
 

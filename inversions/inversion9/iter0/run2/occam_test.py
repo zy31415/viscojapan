@@ -10,7 +10,7 @@ from epochs import epochs
 
 fault_file = '../fault_model/fault_bott60km.h5'
 
-epochs = epochs[0:4]
+epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
