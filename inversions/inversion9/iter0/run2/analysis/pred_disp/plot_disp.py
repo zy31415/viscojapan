@@ -6,8 +6,6 @@ db_file = 'pred_disp.db'
 
 site = 'J550'
 
-
-
 def read_ts_from_table(table, site, cmpt):
     with sqlite3.connect(db_file) as conn:
         c = conn.cursor()
