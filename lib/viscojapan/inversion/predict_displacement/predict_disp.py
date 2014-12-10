@@ -9,25 +9,29 @@ class DispPred(object):
     def __init__(self,
                  G_file,                 
                  result_file,
-                 filter_sites_file = None,
+                 fault_file,        
                  ):
+        self.result_file = result_file
+        self.result_file_reader = ResultFileReader(
+            self.result_file,
+            fault_file
+            )
+        self.filter_sites = self.result_file_reader.sites
+
         self.G_file = G_file
-        self.filter_sites_file = filter_sites_file
         self.G_reader = EpochalSitesFileReader(
             epoch_file = self.G_file,
-            filter_sites_file = self.filter_sites_file
+            filter_sites = self.filter_sites,
             )
-
-        self.result_file = result_file
-        self.result_file_reader = ResultFileReader(self.result_file)
 
         self.epochs = self.result_file_reader.epochs
         self.num_epochs = len(self.epochs)
 
+        self.fault_file = fault_file
+
     def E_cumu_slip(self, nth_epoch):
         cumuslip = self.result_file_reader.get_total_slip_at_nth_epoch(nth_epoch)
         G0 = self.G_reader[0]
-
         disp = np.dot(G0, cumuslip)
         return disp
         
@@ -69,9 +73,6 @@ class DispPred(object):
                 disp += self.R_nth_epoch(nth, epoch)
         return disp
 
-    @property
-    def filter_sites(self):
-        return self.G_reader.filter_sites
 
 
 

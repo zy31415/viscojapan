@@ -9,8 +9,16 @@ from ...fault_model import FaultFileReader
 __all__ = ['ResultFileReader']
 
 class ResultFileReader(FileIOBase):
-    def __init__(self, file_name):
-        super().__init__(file_name)        
+    def __init__(self, file_name, fault_file=None):
+        super().__init__(file_name)
+        if fault_file is not None:
+            reader = FaultFileReader(fault_file)
+            self.num_subflt_along_strike = reader.num_subflt_along_strike
+            self.num_subflt_along_dip = reader.num_subflt_along_dip
+            self.num_subflts = self.num_subflt_along_strike * self.num_subflt_along_dip
+            self.LLons_mid = reader.LLons_mid
+            self.LLats_mid = reader.LLats_mid
+
 
     def open(self):
         assert exists(self.file_name)
@@ -50,11 +58,11 @@ class ResultFileReader(FileIOBase):
     @property
     def sites(self):
         m = self.fid['sites'][...]
-        return m
+        return [site.decode() for site in m]
 
     @property
     def num_sites(self):
-        return int(self.fid['num_sites'][...])
+        return int(len(self.sites))
 
     @property
     def num_nlin_pars(self):
@@ -75,10 +83,6 @@ class ResultFileReader(FileIOBase):
     @property
     def num_epochs(self):
         return len(self.epochs)
-
-    @property
-    def num_subflts(self):
-        return int(self.fid['num_subflts'][...])
 
     @property
     def residual_norm_weighted(self):
@@ -108,19 +112,19 @@ class ResultFileReader(FileIOBase):
         nth = int(nth)
         assert nth>=0
         assert nth < len(self.epochs)
+        num_subflts = self.num_subflts
+        sslip = self.incr_slip[:num_subflts*(nth+1)].reshape([nth+1, num_subflts])
+        slip = sslip.sum(axis=0).reshape([-1,1])
+        return slip
 
-    def read_3d_slip(self, fault_file):
-        reader = FaultFileReader(fault_file)
-        nx = reader.num_subflt_along_strike
-        ny = reader.num_subflt_along_dip
-
-        lon = reader.LLons_mid
-        lat = reader.LLats_mid
+    def read_3d_slip(self):
+        nx = self.num_subflt_along_strike
+        ny = self.num_subflt_along_dip
 
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 
-        return slip, lon, lat
+        return slip
 
     def get_after_slip_at_nth_epoch(self, nth):
         nth = int(nth)
