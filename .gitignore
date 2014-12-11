@@ -33,3 +33,5 @@ __pycache__
 # gmt:
 gmt.conf
 gmt.history
+
+pred_disp.db
