@@ -1,4 +1,6 @@
 from numpy import logspace
+import numpy as np
+
 from os.path import exists
 import sys
 
@@ -12,7 +14,7 @@ reg_roughes = logspace(-3,1,20)
 
 fault_file = '../fault_model/fault_bott120km.h5'
 
-epochs = epochs[0:3]
+#epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
@@ -40,21 +42,23 @@ reg_boundary = 0.06
 regs_co = logspace(-3,1,20)
 regs_aslip = logspace(-3,1,20)
 
-for nco, reg_co in enumerate(regs_co):
-    for naslip, reg_aslip in enumerate(regs_aslip):
-        outfname = 'outs/nco_%02d_naslip_%02d.h5'%(nco, naslip)
-        if exists(outfname):
-            print("Skip %s !"%outfname)
-            continue
-        print(outfname)
-        inv.regularization = \
-               reg = vj.inv.reg.create_co_aslip_boundary_regularization(
-                   fault_file, num_epochs,
-                   reg_co, reg_aslip, reg_boundary)
-        
-        inv.set_data_L()
-        inv.run()
-        inv.save(outfname, overwrite=True)
 
-            
+for nco, reg_co, naslip, reg_aslip in \
+    vj.utils.pop_from_center((6,10), regs_co, regs_aslip):
+
+    outfname = 'outs/nco_%02d_naslip_%02d.h5'%(nco, naslip)
+    if exists(outfname):
+        print("Skip %s !"%outfname)
+        continue
+    print(outfname)
+    inv.regularization = \
+           reg = vj.inv.reg.create_co_aslip_boundary_regularization(
+               fault_file, num_epochs,
+               reg_co, reg_aslip, reg_boundary)
+    
+    inv.set_data_L()
+    inv.run()
+    inv.save(outfname, overwrite=True)
+
+        
                 
