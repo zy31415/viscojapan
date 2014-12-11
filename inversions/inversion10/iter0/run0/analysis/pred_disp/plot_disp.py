@@ -5,8 +5,7 @@ from pylab import plt
 db_file = 'pred_disp.db'
 
 site = 'J550'
-
-
+cmpt = 'e'
 
 def read_ts_from_table(table, site, cmpt):
     with sqlite3.connect(db_file) as conn:
@@ -21,16 +20,16 @@ def read_ts_from_table(table, site, cmpt):
 epochs, ys = read_ts_from_table(
     'view_total_disp_added',
     site,
-    'e'
+    cmpt
     )
-plt.plot(epochs, ys)
+plt.plot(epochs, ys,'x-')
 
 epochs, ys = read_ts_from_table(
     'tb_total_disp_pred',
     site,
-    'e'
+    cmpt
     )
-plt.plot(epochs, ys)
+plt.plot(epochs, ys,'x-')
 
 plt.show()
     
