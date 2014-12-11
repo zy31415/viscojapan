@@ -5,7 +5,6 @@ import viscojapan as vj
 
 files = glob.glob('../../outs/nco_04_naslip_??.h5')
 
-
 for file in files:        
     plt = vj.gmt.PlotSlipResult(
         fault_file = '../../../fault_model/fault_bott120km.h5',
