@@ -1,15 +1,18 @@
 import numpy as np
 
-from ...epochal_data import EpochalSitesFileReader
+from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, DiffED, EpochalG
 from ..result_file import ResultFileReader
 
 __all__ = ['DispPred']
 
 class DispPred(object):
     def __init__(self,
-                 G_file,                 
+                 file_G0,                 
                  result_file,
-                 fault_file,        
+                 fault_file,
+                 files_Gs = None,
+                 nlin_par_names = None,
+                 file_incr_slip0 = None
                  ):
         self.result_file = result_file
         self.result_file_reader = ResultFileReader(
@@ -17,23 +20,60 @@ class DispPred(object):
             fault_file
             )
         self.filter_sites = self.result_file_reader.sites
-
-        self.G_file = G_file
-        self.G_reader = EpochalSitesFileReader(
-            epoch_file = self.G_file,
-            filter_sites = self.filter_sites,
-            )
-
         self.epochs = self.result_file_reader.epochs
         self.num_epochs = len(self.epochs)
 
+        self.file_G0 = file_G0
+        self.G_reader = EpochalSitesFileReader(
+            epoch_file = self.file_G0,
+            filter_sites = self.filter_sites,
+            )        
+
         self.fault_file = fault_file
+
+        self.files_Gs = files_Gs
+        self.nlin_par_names = nlin_par_names
+        self.file_incr_slip0 = file_incr_slip0
+        if self.files_Gs is not None:
+            self._get_delta_nlin_pars()
+
+    def _get_delta_nlin_pars(self):
+        self.delta_nlin_pars = []
+        for par in self.nlin_par_names:
+            delta = self.result_file_reader.get_nlin_par_val(par) - self.G_reader[par]
+            self.delta_nlin_pars.append(delta)        
+        
 
     def E_cumu_slip(self, nth_epoch):
         cumuslip = self.result_file_reader.get_total_slip_at_nth_epoch(nth_epoch)
         G0 = self.G_reader[0]
         disp = np.dot(G0, cumuslip)
+        if self.files_Gs is not None:
+            disp += self._nlin_correction_E_cumu_slip(nth_epoch)
         return disp
+
+    def _nlin_correction_E_cumu_slip(self, nth_epoch):
+        reader = EpochalFileReader(self.file_incr_slip0)
+        slip0 = reader[0]
+        for nth in range(1, nth_epoch+1):
+            epoch = int(self.epochs[nth])
+            slip0 += reader[epoch]
+
+        dGs = []
+        for file_G, par in zip(self.files_Gs, self.nlin_par_names):
+            G0 = EpochalG(self.file_G0, filter_sites = self.filter_sites)
+            G = EpochalG(file_G, filter_sites = self.filter_sites)
+            diffG = DiffED(ed1=G0, ed2=G, wrt=par)
+            dGs.append(diffG[0])
+
+        corr = None
+        for dG, dpar in zip(dGs, self.delta_nlin_pars):
+            if corr is None:
+                corr  = np.dot(dG, slip0)*dpar
+            else:
+                corr += np.dot(dG, slip0)*dpar
+        return corr
+            
         
     def E_co(self):
         return self.E_cumuslip(0)
@@ -42,10 +82,31 @@ class DispPred(object):
         aslip = self.result_file_reader.get_after_slip_at_nth_epoch(nth_epoch)
         G0 = self.G_reader[0]        
         disp = np.dot(G0, aslip)
+        if self.files_Gs is not None:
+            disp += self._nlin_correction_E_aslip(nth_epoch)
         return disp
+
+    def _nlin_correction_E_aslip(self, nth_epoch):
+        epoch = int(self.epochs[nth_epoch])
+        slip0 = EpochalFileReader(self.file_incr_slip0)[epoch]
+        
+        dGs = []
+        for file_G, par in zip(self.files_Gs, self.nlin_par_names):
+            G0 = EpochalG(self.file_G0, filter_sites = self.filter_sites)
+            G = EpochalG(file_G, filter_sites = self.filter_sites)
+            diffG = DiffED(G0, G, par)
+            dGs.append(diffG[0])
+
+        corr = None
+        for dG, dpar in zip(dGs, self.delta_nlin_pars):
+            if corr is None:
+                corr  = np.dot(dG, slip0)*dpar
+            else:
+                corr += np.dot(dG, slip0)*dpar
+        return corr
         
     def R_nth_epoch(self, from_nth_epoch, to_epoch):
-        epochs = self.result_file_reader.epochs
+        epochs = self.epochs
         from_epoch = epochs[from_nth_epoch]
 
         del_epoch = to_epoch - from_epoch
@@ -56,7 +117,32 @@ class DispPred(object):
             G = self.G_reader[int(del_epoch)] - self.G_reader[0]
             slip = self.result_file_reader.get_incr_slip_at_nth_epoch(from_nth_epoch)
             disp = np.dot(G, slip)
+            if self.files_Gs is not None:
+                disp += self._nlin_correction_R_nth_epoch(from_nth_epoch, to_epoch)
             return disp
+
+    def _nlin_correction_R_nth_epoch(self, from_nth_epoch, to_epoch):
+        from_epoch = int(self.epochs[from_nth_epoch])
+        slip0 = EpochalFileReader(self.file_incr_slip0)[from_epoch]
+
+        del_epoch = int(to_epoch - from_epoch)
+        
+        dGs = []
+        for file_G, par in zip(self.files_Gs, self.nlin_par_names):
+            G0 = EpochalG(self.file_G0, filter_sites = self.filter_sites)
+            G = EpochalG(file_G, filter_sites = self.filter_sites)
+            diffG = DiffED(G0, G, par)
+            dG0 = diffG[0]
+            dG = diffG[del_epoch]
+            dGs.append(dG-dG0)
+
+        corr = None
+        for dG, dpar in zip(dGs, self.delta_nlin_pars):
+            if corr is None:
+                corr  = np.dot(dG, slip0)*dpar
+            else:
+                corr += np.dot(dG, slip0)*dpar
+        return corr
 
     def R_co(self, epoch):
         return self.R_nth_epoch(0, epoch)  

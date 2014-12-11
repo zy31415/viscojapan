@@ -88,6 +88,9 @@ class ResultFileReader(FileIOBase):
     def residual_norm_weighted(self):
         return self.fid['misfit/norm_weighted'][...]
 
+    def get_nlin_par_val(self, pn):
+        return self.fid['nlin_pars/%s'%pn][...]        
+
     def get_incr_slip_at_epoch(self, epoch):
         epochs = self.epochs
         assert epoch in epochs, 'Epoch %d is not in the epochs.'%epoch

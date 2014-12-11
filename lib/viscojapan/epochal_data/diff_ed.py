@@ -39,4 +39,10 @@ wrt - with respect to, variable that the change WRT.
 
     def conv_stack(self, epochs):
         return conv_stack(self, epochs)
+
+    def __getitem__(self, name):
+        if isinstance(name, int):
+            return self.get_epoch_value(name)
+        else:
+            raise ValueError('Not recognized type.')
         
