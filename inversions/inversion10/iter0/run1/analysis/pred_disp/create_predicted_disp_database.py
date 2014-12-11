@@ -16,9 +16,17 @@ pred = vj.inv.DispPred(
     result_file = '../../outs/nrough_06.h5',
     )
 
+# save prediction
 writer = vj.inv.PredDispToDatabaseWriter(
     pred_disp = pred
     )
 
 writer.create_database()
 writer.insert_all()
+
+# save observation
+writer = vj.inv.ObsToDatabaseWriter(
+    file_cumu_disp_obs = '../../../obs/cumu_post_with_seafloor.h5'
+    )
+writer.create_database()
+writer.insert_cumu_disp_obs()

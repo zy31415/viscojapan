@@ -5,7 +5,7 @@ __all__ = ['PredDispToDatabaseWriter']
 class PredDispToDatabaseWriter(object):
     def __init__(self,
                  pred_disp,
-                 db_file = 'pred_disp.db'
+                 db_file = 'pred_disp.db',                 
                  ):
         self.pred_disp = pred_disp
 
@@ -103,6 +103,35 @@ class PredDispToDatabaseWriter(object):
                          )
                          ''')
 
+            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_disp_obs
+                         (site text,
+                         day int,
+                         e real,
+                         n real,
+                         u real,
+                         PRIMARY KEY (site, day)
+                         )
+                         ''')
+
+            c.execute('''CREATE VIEW IF NOT EXISTS view_co_disp_obs
+                         AS 
+                         SELECT site, e, n, u
+                         FROM tb_cumu_disp_obs
+                         WHERE day = 0;
+                         ''')
+            
+            c.execute('''CREATE VIEW IF NOT EXISTS view_post_disp_obs
+                         AS
+                         SELECT tb_cumu_disp_obs.site as site,
+                                tb_cumu_disp_obs.day as day,
+                                tb_cumu_disp_obs.e - view_co_disp_obs.e as e,
+                                tb_cumu_disp_obs.n - view_co_disp_obs.n as n,
+                                tb_cumu_disp_obs.u - view_co_disp_obs.u as u
+                         FROM tb_cumu_disp_obs
+                         JOIN view_co_disp_obs
+                         ON tb_cumu_disp_obs.site = view_co_disp_obs.site;
+                         ''')
+
             # Save (commit) the changes
             conn.commit()
 
@@ -147,7 +176,8 @@ class PredDispToDatabaseWriter(object):
             disps = self.pred_disp.R_aslip(epoch).reshape([-1,3])
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
                      for site, slip in zip(self.filter_sites, disps)]
-        self._insert_into_database('tb_R_aslip', items, duplication)            
+        self._insert_into_database('tb_R_aslip', items, duplication)
+        
 
     def insert_all(self, duplication='REPLACE'):
         self.insert_total_disp_from_result(duplication)
