@@ -66,7 +66,7 @@ class ResultFileReader(FileIOBase):
 
     @property
     def num_nlin_pars(self):
-        return self.fid['num_nlin_pars'][...]
+        return int(self.fid['num_nlin_pars'][...])
 
     @property
     def incr_slip(self):
@@ -78,7 +78,7 @@ class ResultFileReader(FileIOBase):
 
     @property
     def epochs(self):
-        return list(self.fid['epochs'][...])
+        return [int(ii) for ii in self.fid['epochs'][...]]
 
     @property
     def num_epochs(self):
@@ -138,6 +138,9 @@ class ResultFileReader(FileIOBase):
         sslip = self.incr_slip[num_subflts:num_subflts*(nth+1)].reshape([nth, num_subflts])
         slip = sslip.sum(axis=0).reshape([-1,1])
         return slip
+
+    def get_3d_disp(self):
+        return self.d_pred.reshape([self.num_epochs, self.num_sites, 3])        
        
     def get_disp_at_nth_epoch(self, nth):
         nth = int(nth)
@@ -152,6 +155,21 @@ class ResultFileReader(FileIOBase):
         assert epoch in epochs, 'Epoch %d is not in the epochs.'%epoch
         idx = epochs.index(epoch)
         return self.get_disp_at_nth_epoch(idx)
+
+    def get_post_disp_at_nth_epoch(self, nth):
+        nth = int(nth)
+        assert nth>=0
+        assert nth < len(self.epochs)
+        
+        disp = self.get_3d_disp()
+        disp_nth = disp[nth,:,:] - disp[0,:,:]
+        return disp_nth.reshape([-1,1])
+
+    def get_post_disp_at_epoch(self, epoch):
+        epochs = self.epochs
+        assert epoch in epochs, 'Epoch %d is not in the epochs.'%epoch
+        idx = epochs.index(epoch)
+        return self.get_post_disp_at_nth_epoch(idx)
         
         
 

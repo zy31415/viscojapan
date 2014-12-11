@@ -12,7 +12,7 @@ from epochs import epochs
 
 reg_roughes = logspace(-3,1,20)
 
-fault_file = '../fault_model/fault_bott120km.h5'
+fault_file = '../fault_model/fault_bott80km.h5'
 
 #epochs = epochs[0:3]
 num_epochs = len(epochs)
@@ -41,7 +41,6 @@ inv.set_data_except(excepts=['L'])
 reg_boundary = 0.06
 regs_co = logspace(-3,1,20)
 regs_aslip = logspace(-3,1,20)
-
 
 for nco, reg_co, naslip, reg_aslip in \
     vj.utils.pop_from_center((6,10), regs_co, regs_aslip):

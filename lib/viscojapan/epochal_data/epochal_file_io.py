@@ -51,6 +51,11 @@ class EpochalFileWriter(FileIOBase):
         else:
             raise ValueError('Not recognized type.')
 
+    def copy_info_from(self, epoch_file):
+        with h5py.File(epoch_file,'r') as from_file:
+            if 'info' in from_file:
+                from_file.copy('info/',self.fid)
+
 class EpochalFileReader(FileIOBase):
     ''' Use this class to CREATE and READ epochal data file.
 '''
