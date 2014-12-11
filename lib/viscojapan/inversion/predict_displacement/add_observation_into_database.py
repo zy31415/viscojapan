@@ -7,7 +7,7 @@ __all__ = ['ObsToDatabaseWriter']
 class ObsToDatabaseWriter(object):
     def __init__(self,
                  file_cumu_disp_obs,
-                 db_file = 'pred_disp.db',                 
+                 db_file = '~pred_disp.db',                 
                  ):
         self.file_cumu_disp_obs = file_cumu_disp_obs
 

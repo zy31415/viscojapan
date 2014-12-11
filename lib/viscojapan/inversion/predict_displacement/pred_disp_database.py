@@ -5,7 +5,7 @@ __all__ = ['PredDispToDatabaseWriter']
 class PredDispToDatabaseWriter(object):
     def __init__(self,
                  pred_disp,
-                 db_file = 'pred_disp.db',                 
+                 db_file = '~pred_disp.db',                 
                  ):
         self.pred_disp = pred_disp
 
