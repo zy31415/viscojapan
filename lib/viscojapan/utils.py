@@ -18,7 +18,7 @@ __all__ = ['delete_if_exists',
            'assert_strictly_descending_order','assert_strictly_assending_order',
            'get_this_script_dir','next_non_commenting_line',
            'merge_disp_dic','make_grids','as_string',
-           'get_middle_point']
+           'get_middle_point','pop_from_center']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -191,4 +191,20 @@ def get_middle_point(x):
     x1 = (x[:-1,:] + x[1:,:])/2.
     x2 = (x1[:,:-1] + x1[:,1:])/2.
     return x2    
-        
+
+def pop_from_center(center, arr1, arr2):
+    assert len(center) ==2
+    idx = []
+    for ith in range(len(arr1)):
+        for jth in range(len(arr2)):
+            idx.append((ith, jth))
+    idx_sorted = sorted(idx, key=lambda x : np.sqrt((x[0]-center[0])**2+(x[1]-center[1])**2))
+
+    idx1_sorted = [ii[0] for ii in idx_sorted]
+    idx2_sorted = [ii[1] for ii in idx_sorted]
+
+    arr1_sorted = arr1[idx1_sorted]
+    arr2_sorted = arr2[idx2_sorted]
+
+    for idx1, idx2 in zip(idx1_sorted, idx2_sorted):
+        yield(idx1, arr1[idx1], idx2, arr2[idx2])
