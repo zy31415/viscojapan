@@ -5,7 +5,8 @@ from os.path import join, basename
 import numpy as np
 
 
-__all__ = ['ObservationDatatbaseWriter']
+__all__ = ['ObservationDatatbaseWriter',
+           'ObservationDatatbaseReader']
 
 dir_tsana = '/home/zy/workspace/viscojapan/tsana/'
 
@@ -107,3 +108,19 @@ class ObservationDatatbaseWriter(object):
             items += [(site, ti, ei, ni, ui) for ti, ei, ni, ui in zip(t, es, ns, us)]
 
         self._insert_into_database('tb_linres', items, duplication)
+
+class ObservationDatatbaseReader(object):
+    def __init__(self,
+                 obs_db):
+        self.obs_db = obs_db
+
+    def get_time_series(self, site, cmpt):
+        with sqlite3.connect(self.obs_db) as conn:
+            c = conn.cursor()
+            tp = c.execute('select day, %s from tb_linres where site=? order by day'%cmpt,
+                           (site,)).fetchall()
+        
+        ts = [ii[0] for ii in tp]
+        ys = [ii[1] for ii in tp]
+        return ts, ys
+        

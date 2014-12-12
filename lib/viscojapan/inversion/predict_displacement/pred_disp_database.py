@@ -94,7 +94,7 @@ class PredDispToDatabaseWriter(object):
                          AND tb_E_cumu_slip.day = view_R_cumu_slip.day;
                          ''')
 
-            c.execute('''CREATE TABLE IF NOT EXISTS tb_total_disp_pred
+            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_disp_pred
                          (site text,
                          day int,
                          e real,
@@ -103,35 +103,25 @@ class PredDispToDatabaseWriter(object):
                          PRIMARY KEY (site, day)
                          )
                          ''')
-
-##            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_disp_obs
-##                         (site text,
-##                         day int,
-##                         e real,
-##                         n real,
-##                         u real,
-##                         PRIMARY KEY (site, day)
-##                         )
-##                         ''')
-##
-##            c.execute('''CREATE VIEW IF NOT EXISTS view_co_disp_obs
-##                         AS 
-##                         SELECT site, e, n, u
-##                         FROM tb_cumu_disp_obs
-##                         WHERE day = 0;
-##                         ''')
-##            
-##            c.execute('''CREATE VIEW IF NOT EXISTS view_post_disp_obs
-##                         AS
-##                         SELECT tb_cumu_disp_obs.site as site,
-##                                tb_cumu_disp_obs.day as day,
-##                                tb_cumu_disp_obs.e - view_co_disp_obs.e as e,
-##                                tb_cumu_disp_obs.n - view_co_disp_obs.n as n,
-##                                tb_cumu_disp_obs.u - view_co_disp_obs.u as u
-##                         FROM tb_cumu_disp_obs
-##                         JOIN view_co_disp_obs
-##                         ON tb_cumu_disp_obs.site = view_co_disp_obs.site;
-##                         ''')
+            
+            c.execute('''CREATE VIEW IF NOT EXISTS view_co_disp_pred
+                         AS 
+                         SELECT site, e, n, u
+                         FROM tb_cumu_disp_pred
+                         WHERE day = 0;
+                         ''')
+            
+            c.execute('''CREATE VIEW IF NOT EXISTS view_post_disp_pred
+                         AS
+                         SELECT tb_cumu_disp_pred.site as site,
+                                tb_cumu_disp_pred.day as day,
+                                tb_cumu_disp_pred.e - view_co_disp_pred.e as e,
+                                tb_cumu_disp_pred.n - view_co_disp_pred.n as n,
+                                tb_cumu_disp_pred.u - view_co_disp_pred.u as u
+                         FROM tb_cumu_disp_pred
+                         JOIN view_co_disp_pred
+                         ON tb_cumu_disp_pred.site = view_co_disp_pred.site;
+                         ''')
 
             # Save (commit) the changes
             conn.commit()
@@ -152,7 +142,7 @@ class PredDispToDatabaseWriter(object):
             sites = self.pred_disp.result_file_reader.sites
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
                      for site, slip in zip(self.filter_sites, disps)]
-        self._insert_into_database('tb_total_disp_pred', items, duplication)
+        self._insert_into_database('tb_cumu_disp_pred', items, duplication)
         
 
     def insert_E_cumu_slip(self, duplication='REPLACE'):
@@ -192,11 +182,22 @@ class PredDispToDatabaseReader(object):
                  ):
         self.pred_db = pred_db
 
-    def get_time_series(self, site, cmpt):
+    def get_cumu_disp_pred(self, site, cmpt):
         with sqlite3.connect(self.pred_db) as conn:
             c = conn.cursor()
-            tp = c.execute('select day, %s from tb_total_disp_pred where site=? order by day'%cmpt,
-                           (site,))
+            tp = c.execute('select day, %s from tb_cumu_disp_pred where site=? order by day'%cmpt,
+                           (site,)).fetchall()
+        
+        ts = [ii[0] for ii in tp]
+        ys = [ii[1] for ii in tp]
+        return ts, ys
+
+    def get_post_disp_pred(self, site, cmpt):
+        with sqlite3.connect(self.pred_db) as conn:
+            c = conn.cursor()
+            tp = c.execute('select day, %s from view_post_disp_pred where site=? order by day'%cmpt,
+                           (site,)).fetchall()
+        
         ts = [ii[0] for ii in tp]
         ys = [ii[1] for ii in tp]
         return ts, ys
