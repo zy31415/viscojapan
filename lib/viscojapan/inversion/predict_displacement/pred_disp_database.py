@@ -1,6 +1,7 @@
 import sqlite3
 
-__all__ = ['PredDispToDatabaseWriter']
+__all__ = ['PredDispToDatabaseWriter',
+           'PredDispToDatabaseReader']
 
 class PredDispToDatabaseWriter(object):
     def __init__(self,
@@ -103,34 +104,34 @@ class PredDispToDatabaseWriter(object):
                          )
                          ''')
 
-            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_disp_obs
-                         (site text,
-                         day int,
-                         e real,
-                         n real,
-                         u real,
-                         PRIMARY KEY (site, day)
-                         )
-                         ''')
-
-            c.execute('''CREATE VIEW IF NOT EXISTS view_co_disp_obs
-                         AS 
-                         SELECT site, e, n, u
-                         FROM tb_cumu_disp_obs
-                         WHERE day = 0;
-                         ''')
-            
-            c.execute('''CREATE VIEW IF NOT EXISTS view_post_disp_obs
-                         AS
-                         SELECT tb_cumu_disp_obs.site as site,
-                                tb_cumu_disp_obs.day as day,
-                                tb_cumu_disp_obs.e - view_co_disp_obs.e as e,
-                                tb_cumu_disp_obs.n - view_co_disp_obs.n as n,
-                                tb_cumu_disp_obs.u - view_co_disp_obs.u as u
-                         FROM tb_cumu_disp_obs
-                         JOIN view_co_disp_obs
-                         ON tb_cumu_disp_obs.site = view_co_disp_obs.site;
-                         ''')
+##            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_disp_obs
+##                         (site text,
+##                         day int,
+##                         e real,
+##                         n real,
+##                         u real,
+##                         PRIMARY KEY (site, day)
+##                         )
+##                         ''')
+##
+##            c.execute('''CREATE VIEW IF NOT EXISTS view_co_disp_obs
+##                         AS 
+##                         SELECT site, e, n, u
+##                         FROM tb_cumu_disp_obs
+##                         WHERE day = 0;
+##                         ''')
+##            
+##            c.execute('''CREATE VIEW IF NOT EXISTS view_post_disp_obs
+##                         AS
+##                         SELECT tb_cumu_disp_obs.site as site,
+##                                tb_cumu_disp_obs.day as day,
+##                                tb_cumu_disp_obs.e - view_co_disp_obs.e as e,
+##                                tb_cumu_disp_obs.n - view_co_disp_obs.n as n,
+##                                tb_cumu_disp_obs.u - view_co_disp_obs.u as u
+##                         FROM tb_cumu_disp_obs
+##                         JOIN view_co_disp_obs
+##                         ON tb_cumu_disp_obs.site = view_co_disp_obs.site;
+##                         ''')
 
             # Save (commit) the changes
             conn.commit()
@@ -184,3 +185,21 @@ class PredDispToDatabaseWriter(object):
         self.insert_E_cumu_slip(duplication)
         self.insert_R_co(duplication)
         self.insert_R_aslip(duplication)
+
+class PredDispToDatabaseReader(object):
+    def __init__(self,
+                 pred_db,
+                 ):
+        self.pred_db = pred_db
+
+    def get_time_series(self, site, cmpt):
+        with sqlite3.connect(self.pred_db) as conn:
+            c = conn.cursor()
+            tp = c.execute('select day, %s from tb_total_disp_pred where site=? order by day'%cmpt,
+                           (site,))
+        ts = [ii[0] for ii in tp]
+        ys = [ii[1] for ii in tp]
+        return ts, ys
+            
+        
+        

@@ -170,6 +170,19 @@ class ResultFileReader(FileIOBase):
         assert epoch in epochs, 'Epoch %d is not in the epochs.'%epoch
         idx = epochs.index(epoch)
         return self.get_post_disp_at_nth_epoch(idx)
+
+    def get_pred_time_series(self,site, cmpt):
+        disp = self.get_3d_disp()
+        index = self.sites.index(site)
+        if cmpt == 'e':
+            ts = disp[:,index,0]
+        elif cmpt == 'n':
+            ts = disp[:,index,1]
+        elif cmpt == 'u':
+            ts = disp[:,index,2]
+        else:
+            raise ValueError()
+        return ts.flatten(), self.epochs
         
         
 

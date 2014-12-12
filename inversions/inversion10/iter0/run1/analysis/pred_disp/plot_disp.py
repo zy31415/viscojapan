@@ -2,7 +2,7 @@ import sqlite3
 
 from pylab import plt
 
-db_file = 'pred_disp.db'
+db_file = '~pred_disp.db'
 
 site = 'J550'
 

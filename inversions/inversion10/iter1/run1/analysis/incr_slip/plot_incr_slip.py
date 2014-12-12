@@ -12,7 +12,7 @@ for file in files:
     if exists(output_file):
         continue
     plt = vj.gmt.PlotSlipResult(
-        fault_file = '../../../fault_model/fault_bott120km.h5',
+        fault_file = '../../../fault_model/fault_bott80km.h5',
         result_file = file,
         subplot_width = 3.2,
         subplot_height = 5.2,
