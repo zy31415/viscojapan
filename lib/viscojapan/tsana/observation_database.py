@@ -27,7 +27,7 @@ class ObservationDatatbaseWriter(object):
             c = conn.cursor()
 
             # Create table        
-            c.execute('''CREATE TABLE IF NOT EXISTS tb_linres
+            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_obs_linres
                          (site text,
                          day int,
                          e real,
@@ -37,7 +37,7 @@ class ObservationDatatbaseWriter(object):
                          )
                          ''')
 
-            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_post_displacement
+            c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_obs_tsm
                          (site text,
                          day int,
                          e real,
@@ -45,6 +45,37 @@ class ObservationDatatbaseWriter(object):
                          u real,
                          PRIMARY KEY (site, day)
                          )
+                         ''')
+            
+            c.execute('''CREATE VIEW IF NOT EXISTS view_co_obs_tsm
+                         AS 
+                         SELECT site, e, n, u
+                         FROM tb_cumu_obs_tsm
+                         WHERE day = 0;
+                         ''')
+            
+            c.execute('''CREATE VIEW IF NOT EXISTS view_post_obs_tsm
+                         AS
+                         SELECT tb_cumu_obs_tsm.site as site,
+                                tb_cumu_obs_tsm.day as day,
+                                tb_cumu_obs_tsm.e - view_co_obs_tsm.e as e,
+                                tb_cumu_obs_tsm.n - view_co_obs_tsm.n as n,
+                                tb_cumu_obs_tsm.u - view_co_obs_tsm.u as u
+                         FROM tb_cumu_obs_tsm
+                         JOIN view_co_obs_tsm
+                         ON tb_cumu_obs_tsm.site = view_co_obs_tsm.site;
+                         ''')
+            
+            c.execute('''CREATE VIEW IF NOT EXISTS view_post_obs_linres
+                         AS
+                         SELECT tb_cumu_obs_linres.site as site,
+                                tb_cumu_obs_linres.day as day,
+                                tb_cumu_obs_linres.e - view_co_obs_tsm.e as e,
+                                tb_cumu_obs_linres.n - view_co_obs_tsm.n as n,
+                                tb_cumu_obs_linres.u - view_co_obs_tsm.u as u
+                         FROM tb_cumu_obs_linres
+                         JOIN view_co_obs_tsm
+                         ON tb_cumu_obs_linres.site = view_co_obs_tsm.site;
                          ''')
     def _insert_into_database(self, table_name, items, duplication='REPLACE'):        
         with sqlite3.connect(self.db_file) as conn:
@@ -54,7 +85,7 @@ class ObservationDatatbaseWriter(object):
                           items)
             conn.commit()
 
-    def insert_linres(self, duplication='REPLACE'):
+    def insert_cumu_linres(self, duplication='REPLACE'):
         files = glob.glob(join(self.dir_linres,'????.?.lres'))
         print('Insert linres, # of files: %d'%len(files))
         sites = [basename(ii).split('.')[-3] for ii in files]
@@ -74,9 +105,9 @@ class ObservationDatatbaseWriter(object):
             
             items += [(site, ti, ei, ni, ui) for ti, ei, ni, ui in zip(ts, es, ns, us)]
 
-        self._insert_into_database('tb_linres', items, duplication)
+        self._insert_into_database('tb_cumu_obs_linres', items, duplication)
 
-    def insert_cumu_post_displacement(self, duplication='REPLACE'):
+    def insert_cumu_obs_tsm(self, duplication='REPLACE'):
         files = glob.glob(join(self.dir_cumu_post_displacement,'????.cumu'))
         print('Insert cumu_post_disp, # of files: %d'%len(files))
         items = []
@@ -90,7 +121,7 @@ class ObservationDatatbaseWriter(object):
 
             items += [(site, ti, ei, ni, ui) for ti, ei, ni, ui in zip(t, es, ns, us)]
 
-        self._insert_into_database('tb_cumu_post_displacement', items, duplication)
+        self._insert_into_database('tb_cumu_obs_tsm', items, duplication)
 
     def insert_seafloor_original(self, duplication='REPLACE'):
         files = glob.glob(join(self.dir_seafloor_postseismic_time_series, '????.original'))
@@ -107,20 +138,31 @@ class ObservationDatatbaseWriter(object):
 
             items += [(site, ti, ei, ni, ui) for ti, ei, ni, ui in zip(t, es, ns, us)]
 
-        self._insert_into_database('tb_linres', items, duplication)
+        self._insert_into_database('tb_cumu_obs_linres', items, duplication)
 
 class ObservationDatatbaseReader(object):
     def __init__(self,
                  obs_db):
         self.obs_db = obs_db
 
-    def get_time_series(self, site, cmpt):
+    def get_cumu_obs_linres(self, site, cmpt):
         with sqlite3.connect(self.obs_db) as conn:
             c = conn.cursor()
-            tp = c.execute('select day, %s from tb_linres where site=? order by day'%cmpt,
+            tp = c.execute('select day, %s from tb_cumu_obs_linres where site=? order by day'%cmpt,
                            (site,)).fetchall()
         
         ts = [ii[0] for ii in tp]
         ys = [ii[1] for ii in tp]
         return ts, ys
+
+    def get_post_obs_linres(self, site, cmpt):
+        with sqlite3.connect(self.obs_db) as conn:
+            c = conn.cursor()
+            tp = c.execute('select day, %s from view_post_obs_linres where site=? order by day'%cmpt,
+                           (site,)).fetchall()
+        
+        ts = [ii[0] for ii in tp]
+        ys = [ii[1] for ii in tp]
+        return ts, ys
+
         
