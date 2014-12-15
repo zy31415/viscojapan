@@ -10,10 +10,10 @@ from epochs import epochs
 epochs = epochs[1:] + [0]
 
 subflts_files_rake83 = \
-              sorted(glob.glob('../fault_model/subflts_bott120km_rake83/flt_????'))
+              sorted(glob.glob('../fault_model/subflts_bott80km_rake83/flt_????'))
 
 subflts_files_rake90 = \
-              sorted(glob.glob('../fault_model/subflts_bott120km_rake90/flt_????'))
+              sorted(glob.glob('../fault_model/subflts_bott80km_rake90/flt_????'))
 
 cmd = {}
 
