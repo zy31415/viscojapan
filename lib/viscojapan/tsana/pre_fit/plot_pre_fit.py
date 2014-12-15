@@ -5,7 +5,7 @@ from numpy import loadtxt, asarray, inf
 from pylab import plt
 
 from ..utils import cut_ts
-from .linres_reader import read_t, read_y, read_yres, read_ysd, \
+from .linres_file_reader import read_t, read_y, read_yres, read_ysd, \
      read_linsec, read_outlier, read_jumps
 
 _adj_dates = 678577

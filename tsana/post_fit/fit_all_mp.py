@@ -14,14 +14,14 @@ args = parser.parse_args()
 tp=loadtxt('sites/sites','4a', usecols=(0,))
 sites=[ii.decode() for ii in tp]
 
-_dir_postres='pots_res'
+_dir_postres='post_res'
 
 from multiprocessing import Pool, cpu_count
 
 def run(site):
     t1=time.time()
 
-    fn=join(_dir_postres,'%s-post'%site)
+    fn=join(_dir_postres,'%s.post'%site)
     if exists(fn):
         print('Waring: file %s exists and skipped!'%fn)
     else:
