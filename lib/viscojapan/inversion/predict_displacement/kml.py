@@ -23,28 +23,19 @@ class KMLShowTimeSeries(object):
     def plot(self):
         if not exists(self.dir_plots):
             makedirs(self.dir_plots)
-            
+
         plt = PredictedTimeSeriesPlotter(self.db_pred)
-
-        loc = 2
-        leg_fs = 6
-
+        
         for site in self.sites:
             print(site)
             for cmpt in 'e', 'n', 'u':        
-                plt.plot_cumu_obs_linres(site, cmpt, label='obs.')
-                plt.plot_cumu_disp_pred(site, cmpt, label='pred.')
-                plt.plt.legend(loc=loc, prop={'size':leg_fs})
-                plt.plt.title('%s-%s'%(site, cmpt))
+                plt.plot_cumu_disp(site, cmpt)
                 plt.plt.savefig('plots/%s.%s.cumu.png'%(site, cmpt))
                 plt.plt.close()
 
-                plt.plot_post_obs_linres(site,cmpt, label='obs.')
-                plt.plot_post_disp_pred(site,cmpt, label='pred.')
-                plt.plt.legend(loc=loc, prop={'size':leg_fs})
-                plt.plt.title('%s-%s'%(site, cmpt))
+                plt.plot_post_disp(site, cmpt)
                 plt.plt.savefig('plots/%s.%s.post.png'%(site, cmpt))
-                plt.plt.close()      
+                plt.plt.close()
         
     def save_kml(self, fn):        
         pos_dic = get_pos_dic()

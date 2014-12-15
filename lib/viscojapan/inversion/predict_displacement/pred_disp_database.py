@@ -60,12 +60,13 @@ class PredDispToDatabaseWriter(object):
             c.execute('''CREATE VIEW IF NOT EXISTS view_E_aslip
                          AS 
                          SELECT tb_E_cumu_slip.site as site,
+                                tb_E_cumu_slip.day as day,
                                 tb_E_cumu_slip.e - view_E_co.e as e,
                                 tb_E_cumu_slip.n - view_E_co.n as n,
                                 tb_E_cumu_slip.u - view_E_co.u as u
-                         FROM view_E_co
-                         JOIN tb_E_cumu_slip
-                         ON view_E_co.site = tb_E_cumu_slip.site;
+                         FROM tb_E_cumu_slip
+                         JOIN view_E_co
+                         ON tb_E_cumu_slip.site = view_E_co.site;
                          ''')
 
             c.execute('''CREATE VIEW IF NOT EXISTS view_R_cumu_slip
@@ -182,25 +183,38 @@ class PredDispToDatabaseReader(object):
                  ):
         self.pred_db = pred_db
 
-    def get_cumu_disp_pred(self, site, cmpt):
+    def _select_time_series(self, site, cmpt, tb_name):
         with sqlite3.connect(self.pred_db) as conn:
             c = conn.cursor()
-            tp = c.execute('select day, %s from tb_cumu_disp_pred where site=? order by day'%cmpt,
-                           (site,)).fetchall()
+            tp = c.execute('select day, {cmpt} from {tb_name} where site=? order by day'\
+                           .format(cmpt=cmpt, tb_name=tb_name),
+                           (site,)
+                           ).fetchall()
         
         ts = [ii[0] for ii in tp]
         ys = [ii[1] for ii in tp]
         return ts, ys
 
+    def get_cumu_disp_pred(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'tb_cumu_disp_pred')        
+
     def get_post_disp_pred(self, site, cmpt):
-        with sqlite3.connect(self.pred_db) as conn:
-            c = conn.cursor()
-            tp = c.execute('select day, %s from view_post_disp_pred where site=? order by day'%cmpt,
-                           (site,)).fetchall()
-        
-        ts = [ii[0] for ii in tp]
-        ys = [ii[1] for ii in tp]
-        return ts, ys
+        return self._select_time_series(site, cmpt, 'view_post_disp_pred')
+
+    def get_R_co(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'tb_R_co')
+
+    def get_E_cumu_slip(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'tb_E_cumu_slip')
+
+    def get_E_aslip(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'view_E_aslip')
+
+    def get_R_aslip(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'tb_R_aslip')
+
+    
+    
             
         
         
