@@ -12,8 +12,6 @@ class PredDispToDatabaseWriter(object):
 
         self.epochs = self.pred_disp.epochs
         self.num_epochs = len(self.epochs)
-
-        self.filter_sites = self.pred_disp.filter_sites
         
         self.db_file = db_file
 
@@ -137,37 +135,40 @@ class PredDispToDatabaseWriter(object):
 
     def insert_total_disp_from_result(self, duplication='REPLACE'):
         items = []
+        sites = self.pred_disp.sites_in_inversion
         for nth, epoch in enumerate(self.epochs):
             disps = self.pred_disp.result_file_reader.get_disp_at_epoch(epoch)
             disps = disps.reshape([-1,3])
-            sites = self.pred_disp.result_file_reader.sites
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
-                     for site, slip in zip(self.filter_sites, disps)]
+                     for site, slip in zip(sites, disps)]
         self._insert_into_database('tb_cumu_disp_pred', items, duplication)
         
 
     def insert_E_cumu_slip(self, duplication='REPLACE'):
         items = []
+        sites = self.pred_disp.sites_for_prediction
         for nth, epoch in enumerate(self.epochs):
             disps = self.pred_disp.E_cumu_slip(nth).reshape([-1,3])
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
-                     for site, slip in zip(self.filter_sites, disps)]
+                     for site, slip in zip(sites, disps)]
         self._insert_into_database('tb_E_cumu_slip', items, duplication)
 
     def insert_R_co(self, duplication='REPLACE'):
         items = []
+        sites = self.pred_disp.sites_for_prediction
         for epoch in self.epochs:
             disps = self.pred_disp.R_co(epoch).reshape([-1,3])
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
-                     for site, slip in zip(self.filter_sites, disps)]
+                     for site, slip in zip(sites, disps)]
         self._insert_into_database('tb_R_co', items, duplication)
 
     def insert_R_aslip(self, duplication='REPLACE'):
         items = []
+        sites = self.pred_disp.sites_for_prediction
         for epoch in self.epochs:
             disps = self.pred_disp.R_aslip(epoch).reshape([-1,3])
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
-                     for site, slip in zip(self.filter_sites, disps)]
+                     for site, slip in zip(sites, disps)]
         self._insert_into_database('tb_R_aslip', items, duplication)
         
 

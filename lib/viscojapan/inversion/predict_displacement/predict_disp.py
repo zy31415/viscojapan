@@ -2,7 +2,7 @@ import numpy as np
 
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, DiffED, EpochalG
 from ..result_file import ResultFileReader
-from ..utils import as_string
+from ...utils import as_string
 
 __all__ = ['DispPred']
 
@@ -20,19 +20,21 @@ class DispPred(object):
             self.result_file,
             fault_file
             )
+        self.sites_in_inversion = self.result_file_reader.sites
 
         self.epochs = self.result_file_reader.epochs
         self.num_epochs = len(self.epochs)
 
         self.file_G0 = file_G0
+        self.file_G0_reader = EpochalSitesFileReader(
+            epoch_file = self.file_G0,
+            )
+        
         self.files_Gs = files_Gs
 
         self._assert_all_G_files_have_the_same_sites_list()
+        self.sites_for_prediction = self.file_G0_reader.filter_sites
         
-        self.file_G0_reader = EpochalSitesFileReader(
-            epoch_file = self.file_G0,
-            )        
-
         self.fault_file = fault_file
         
         self.nlin_par_names = nlin_par_names
@@ -42,11 +44,11 @@ class DispPred(object):
 
     def _assert_all_G_files_have_the_same_sites_list(self):
         reader = EpochalFileReader(self.file_G0)
-        sites = as_string(reader.sites)
+        sites = as_string(reader['sites'])
 
         for G in self.files_Gs:
             reader = EpochalFileReader(G)
-            assert sites == as_string(reader.sites)
+            assert sites == as_string(reader['sites'])
         
     def _get_delta_nlin_pars(self):
         self.delta_nlin_pars = []
