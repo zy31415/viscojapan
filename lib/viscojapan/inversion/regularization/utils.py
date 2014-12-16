@@ -6,7 +6,8 @@ from .intensity import Intensity
 from .boundary import BoundaryRegDeadNorthAndSouth
 
 __all__ = ['create_co_aslip_boundary_regularization',
-           'create_temporal_edge_roughening']
+           'create_temporal_edge_roughening',
+           'create_rough_aslip_boundary_regularization']
 
 def create_roughening_temporal_regularization(
     fault_file, epochs, rough, temp):
@@ -87,6 +88,31 @@ def create_co_aslip_boundary_regularization(
 
     return reg
 
-    
+def create_rough_aslip_boundary_regularization(
+    fault_file, num_epochs,
+    rough, aslip, boundary):
+
+    rough_per_epoch = Roughening.create_from_fault_file(fault_file)
+    rough_reg = ExpandForAllEpochs(
+        reg = rough_per_epoch,
+        num_epochs = num_epochs)
+
+    intensity = Intensity.create_from_fault_file(fault_file)
+    aslip_reg = RegularizationExceptFirstEpoch(
+        reg = intensity,
+        num_epochs = num_epochs)    
+
+    bd = BoundaryRegDeadNorthAndSouth.\
+         create_from_fault_file(fault_file)
+    boundary_reg = ExpandForAllEpochs(
+        reg = bd,
+        num_epochs = num_epochs)
+
+    reg = Composite().\
+          add_component(rough_reg, arg=rough, arg_name='roughness'). \
+          add_component(aslip_reg, arg=aslip, arg_name='aslip'). \
+          add_component(boundary_reg, arg=boundary, arg_name='boundary')
+
+    return reg   
     
     
