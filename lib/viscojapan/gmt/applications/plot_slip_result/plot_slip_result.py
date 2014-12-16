@@ -23,7 +23,9 @@ class PlotSlipResult(Plotter):
                  num_plots_per_row = 5,
                  color_label_interval_co = 20,
                  color_label_interval_aslip = 3,
-                 earth_file = None
+                 earth_file = None,
+                 max_aslip = None,
+                 max_co_slip = None,
                  ):
         super().__init__()
         self.fault_file = fault_file
@@ -37,6 +39,8 @@ class PlotSlipResult(Plotter):
         self.color_label_interval_aslip = color_label_interval_aslip
 
         self.earth_file = earth_file
+        self.max_aslip = max_aslip
+        self.max_co_slip = max_co_slip
 
     def plot(self, out_file):
         super().plot(out_file)
@@ -91,9 +95,11 @@ class PlotSlipResult(Plotter):
         self.num_epochs = reader.num_epochs
         self.slip = reader.incr_slip.reshape(
             (self.num_epochs,freader.num_subflt_along_dip, freader.num_subflt_along_strike))
-        self.max_aslip = np.amax(self.slip[1:,:,:])
+        if self.max_aslip is None:
+            self.max_aslip = np.amax(self.slip[1:,:,:])
         self.co_slip = self.slip[0,:,:]
-        self.max_co_slip = np.amax(self.co_slip)        
+        if self.max_co_slip is None:
+            self.max_co_slip = np.amax(self.co_slip)        
 
 
     def _plot_coseismic_slip(self):

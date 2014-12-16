@@ -99,8 +99,9 @@ for site in 'CHOS', 'FUKU', 'KAMN', 'KAMS', 'MYGI', 'MYGW':
     cfs = fit_post(site)
     cfs.go()
     vj.tsana.plot_post(cfs, False, loc=0,
-                       save_fig_path = 'plots/')
-    t = range(1201)
+                       save_fig_path = 'plots/',
+                       file_type='pdf')
+    t = range(1621)
     e, n, u = predict(cfs, t)
     save_prediction(site, t, e, n, u)
     

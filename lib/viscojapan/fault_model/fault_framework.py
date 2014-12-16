@@ -19,8 +19,7 @@ def plot_fault_framework(fault_framework):
     plt.gca().set_yticks(fm.DEP)
     plt.gca().set_xticks(fm.Y_PC)
     plt.grid('on')
-    plt.title('Ground x versus depth')
-    plt.xlabel('Ground X (km)')
+    plt.xlabel('From trench to continent(km)')
     plt.ylabel('depth (km)')
 
     for xi, yi, dip in zip(fm.Y_PC, fm.DEP, fm.DIP_D):

@@ -120,13 +120,21 @@ class ResultFileReader(FileIOBase):
         slip = sslip.sum(axis=0).reshape([-1,1])
         return slip
 
-    def read_3d_slip(self):
+    def get_3d_incr_slip(self):
         nx = self.num_subflt_along_strike
         ny = self.num_subflt_along_dip
 
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 
+        return slip
+
+    def get_3d_total_slip(self):
+        incr_slip = self.get_3d_incr_slip()
+        slip = [incr_slip[0,:,:]]
+        for ii in incr_slip:
+            slip.append(slip[-1]+ii)
+        slip = np.asarray(slip)
         return slip
 
     def get_after_slip_at_nth_epoch(self, nth):

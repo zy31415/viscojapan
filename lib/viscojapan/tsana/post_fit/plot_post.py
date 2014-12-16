@@ -35,12 +35,12 @@ def plot_cf(cf, color):
     plt.gcf().autofmt_xdate()
     
 def plot_post(cfs,ifshow=False,loc=2,
-              save_fig_path = None):
+              save_fig_path = None, file_type='png'):
     for cf in cfs:
         plot_cf(cf, color='blue')
         plt.legend(loc=loc)
         if ifshow:
             plt.show()
         if save_fig_path is not None:
-            plt.savefig(join(save_fig_path, '%s_%s.png'%(cf.SITE, cf.CMPT)))
+            plt.savefig(join(save_fig_path, '%s_%s.%s'%(cf.SITE, cf.CMPT, file_type)))
         plt.close()

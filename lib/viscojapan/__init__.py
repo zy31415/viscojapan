@@ -1,5 +1,4 @@
 from .epochal_data import *
-from .fault_model import *
 from .moment import *
 
 from .test_utils import MyTestCase
@@ -23,3 +22,4 @@ from . import inversion as inv
 from . import utils 
 from . import sites
 from . import earth_model as em
+from . import fault_model as fm

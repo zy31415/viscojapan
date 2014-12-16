@@ -17,6 +17,7 @@ class FaultModelPlotter(Plotter):
                  ):
         super().__init__()
         self.fault_file = fault_file
+        self.fs_focal_mechanism = 0
         
 
     def plot(self, output_file):
@@ -49,7 +50,8 @@ class FaultModelPlotter(Plotter):
         plot_seafloor_stations(gplt, marker_size=0.4,color='red')
         plot_GEONET_Japan_stations(gplt, color='red')
 
-        plot_focal_mechanism_USGS_wphase(gplt,K=None)
+        plot_focal_mechanism_USGS_wphase(gplt,K=None,
+                                         fontsize=self.fs_focal_mechanism)
 
         gmt.save(output_file)
 
