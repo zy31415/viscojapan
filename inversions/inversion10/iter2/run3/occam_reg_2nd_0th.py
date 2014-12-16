@@ -5,8 +5,6 @@ from os.path import exists
 import sys
 
 import viscojapan as vj
-from viscojapan.inversion import OccamDeconvolution
-from viscojapan.inversion.basis_function import BasisMatrix
 
 from epochs import epochs
 
@@ -14,12 +12,12 @@ reg_roughes = logspace(-3,1,20)
 
 fault_file = '../fault_model/fault_bott80km.h5'
 
-# epochs = epochs[0:3]
+#epochs = epochs[0:3]
 num_epochs = len(epochs)
 
-basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
+basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
-inv = OccamDeconvolution(
+inv = vj.inv.OccamDeconvolution(
     file_G0 = '../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
     files_Gs = ['../green_function/G1_He50km_VisM1.0E19_Rake83.h5',
                 '../green_function/G2_He60km_VisM6.3E18_Rake83.h5',
