@@ -193,6 +193,8 @@ def get_middle_point(x):
     return x2    
 
 def pop_from_center(center, arr1, arr2):
+    arr1 = np.asarray(arr1)
+    arr2 = np.asarray(arr2)
     assert len(center) ==2
     idx = []
     for ith in range(len(arr1)):
