@@ -1,6 +1,6 @@
 import viscojapan as vj
 
-site = 'J550'
+site = '_MGI'
 
 for cmpt in 'e', 'n', 'u':
     plt = vj.inv.PredictedTimeSeriesPlotter('../pred_disp/~pred_disp.db')

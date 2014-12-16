@@ -2,9 +2,12 @@ from pylab import plt
 
 import viscojapan as vj
 
-reader = vj.ResultFileReader('../outs/nrough_06.h5')
-fault_file = '../../fault_model/fault_bott60km.h5'
-earth_file = '../../earth_model_nongravity/He50km_VisM6.3E18/earth.model_He50km_VisM6.3E18'
+
+fault_file = '../../../fault_model/fault_bott80km.h5'
+earth_file = '../../../earth_model_nongravity/He50km_VisM6.3E18/earth.model_He50km_VisM6.3E18'
+reader = vj.inv.ResultFileReader('../../outs/nrough_06_naslip_11.h5',
+                                 fault_file)
+
 
 compute = vj.ComputeMoment(fault_file, earth_file)
 epochs = reader.epochs
@@ -20,9 +23,15 @@ for nth, epoch in enumerate(epochs):
 
 plt.subplot(211)
 plt.plot(epochs, mos)
+plt.grid('on')
+plt.ylabel('Moment(Nm)')
+
 plt.subplot(212)
 plt.plot(epochs, mws)
-plt.savefig('total_slip_mo_mw_evolution.png')
+plt.grid('on')
+plt.xlabel('days after the mainshock')
+plt.ylabel('Mw')
+plt.savefig('total_slip_mo_mw_evolution.pdf')
 plt.close()
 
 
@@ -37,8 +46,15 @@ for nth, epoch in enumerate(epochs):
     mws.append(mw)
 
 plt.subplot(211)
-plt.plot(epochs[1:], mos)
+plt.plot(epochs[1:], mos,'-o')
+plt.grid('on')
+plt.ylabel('Moment(Nm)')
+
 plt.subplot(212)
-plt.plot(epochs[1:], mws)
-plt.savefig('after_slip_mo_mw_evolution.png')
+plt.plot(epochs[1:], mws,'-o')
+plt.grid('on')
+plt.xlabel('days after the mainshock')
+plt.ylabel('Mw')
+
+plt.savefig('after_slip_mo_mw_evolution.pdf')
 plt.close()

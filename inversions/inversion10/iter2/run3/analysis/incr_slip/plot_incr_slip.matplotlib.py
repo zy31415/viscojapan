@@ -12,7 +12,8 @@ aslip = reader.get_after_slip_at_nth_epoch(2)
 
 
 mplt = vj.plots.MapPlotFault(fault_file)
-mplt.plot_slip(co_slip)
+#mplt.plot_slip(co_slip)
+mplt.plot_slip(aslip)
 mplt.plot_fault()
 
 mplt = vj.plots.MapPlotSlab()

@@ -17,13 +17,13 @@ for id, tp in co_dic.items():
     ts = np.insert(ts, 0 , 0)
     
     es = tp[:,1] + eco
-    es = np.insert(es, 0 , 0)
+    es = np.insert(es, 0 , eco)
     
     ns = tp[:,2] + nco
-    ns = np.insert(ns, 0 , 0)
+    ns = np.insert(ns, 0 , nco)
     
     us = tp[:,3] + uco
-    us = np.insert(us, 0 , 0)
+    us = np.insert(us, 0 , uco)
 
     _txt = np.asarray([ts, es, ns, us]).T
     np.savetxt('cumu_post/%s.original'%id.decode(), _txt, '%d %f %f %f',

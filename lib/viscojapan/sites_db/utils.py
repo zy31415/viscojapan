@@ -13,7 +13,7 @@ this_script_dir = get_this_script_dir(__file__)
 file_database = join(this_script_dir, 'gps_sites.sqlite3')
 
 __all__ = ['get_pos_dic', 'get_pos', 'get_networks_dic','get_pos_dic_of_a_network',
-           'gen_network_sites_file']
+           'gen_network_sites_file','get_true_name_by_id']
 
 def get_pos_dic():
     with sqlite3.connect(file_database) as conn:
@@ -42,10 +42,15 @@ def get_networks_dic():
                               network).fetchall()
             out[network[0]]=sites
         return out
-            
 
     return {ii[0]:(ii[1], ii[2]) for ii in tp}
     
+
+def get_true_name_by_id(id):
+    with sqlite3.connect(file_database) as conn:
+        c = conn.cursor()
+        name = c.execute('select name from tb_sites where id=?;', (id,)).fetchall()
+    return name[0][0]
 
 def get_pos_dic_of_a_network(network):
     with sqlite3.connect(file_database) as conn:
