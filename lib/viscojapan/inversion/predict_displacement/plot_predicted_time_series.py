@@ -47,6 +47,7 @@ class PredictedTimeSeriesPlotter(object):
     def plot_post_obs_linres(self, site, cmpt, **kwargs):
         ts, ys = self.obs_reader.get_post_obs_linres(site, cmpt)
         plt.plot(ts, ys, 'x', **kwargs)
+        return ys
 
     def plot_E_cumu_slip(self, site, cmpt,
                          lw=1, ms = 7,
@@ -91,8 +92,8 @@ class PredictedTimeSeriesPlotter(object):
 
     def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7,
                        if_ylim=True):
-        self.plot_post_obs_linres(site,cmpt, label='obs.')
-        y = self.plot_post_disp_pred(site,cmpt, label='pred.')
+        y = self.plot_post_obs_linres(site,cmpt, label='obs.')
+        y += self.plot_post_disp_pred(site,cmpt, label='pred.')
         y += self.plot_R_co(site, cmpt,
                             style = '-^', label='Rco', color='orange')
         y += self.plot_E_aslip(site, cmpt, color='green')

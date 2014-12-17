@@ -74,6 +74,8 @@ class ResultFileReader(FileIOBase):
             return self.Bm
         else:
             num_nlin_pars = self.num_nlin_pars
+            if num_nlin_pars ==0:
+                return self.Bm
             return self.Bm[:-num_nlin_pars]
 
     @property
@@ -87,6 +89,19 @@ class ResultFileReader(FileIOBase):
     @property
     def residual_norm_weighted(self):
         return self.fid['misfit/norm_weighted'][...]
+
+    @property
+    def rms(self):
+        return float(self.fid['misfit/rms'][...])
+
+    @property
+    def rms_inland(self):
+        return float(self.fid['misfit/rms_inland'][...])
+
+    @property
+    def rms_inland_at_epoch(self):
+        return self.fid['misfit/rms_inland_at_epoch'][...]
+    
 
     def get_nlin_par_val(self, pn):
         return self.fid['nlin_pars/%s'%pn][...]        
@@ -123,7 +138,6 @@ class ResultFileReader(FileIOBase):
     def get_3d_incr_slip(self):
         nx = self.num_subflt_along_strike
         ny = self.num_subflt_along_dip
-
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 

@@ -5,7 +5,7 @@ import viscojapan as vj
 
 bd = .3
 
-for site in '_FUK', '_KMN', '_KMS', '_MGI', '_MGW':    
+for site in '_CHS','_FUK', '_KMN', '_KMS', '_MGI', '_MGW':    
     for cmpt in 'e', 'n', 'u':
         reader = vj.inv.ResultFileReader('../../outs/nrough_06_naslip_11.h5')
         y_pred, t_pred = reader.get_pred_time_series(site, cmpt)
@@ -36,6 +36,6 @@ for site in '_FUK', '_KMN', '_KMS', '_MGI', '_MGW':
         name = vj.sites_db.get_true_name_by_id(site)
         plt.title('%s-%s'%(name, cmpt))
         
-        plt.savefig('plots_seafloor/%s.%s.pdf'%(site,cmpt))
+        plt.savefig('plots_seafloor/%s-%s.pdf'%(site,cmpt))
         #plt.show()
         plt.close()
