@@ -101,7 +101,9 @@ class ResultFileReader(FileIOBase):
     @property
     def rms_inland_at_epoch(self):
         return self.fid['misfit/rms_inland_at_epoch'][...]
-    
+
+    def get_rms_at_sites(self,cmpt):
+        return self.fid['misfit/at_sites/%s'%cmpt][...]   
 
     def get_nlin_par_val(self, pn):
         return self.fid['nlin_pars/%s'%pn][...]        

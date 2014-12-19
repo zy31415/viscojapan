@@ -13,7 +13,7 @@ from ...epochal_data import EpochalFileReader
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
 from ...utils import assert_col_vec_and_get_nrow, delete_if_exists
-from ...sites import choose_inland_GPS_cmpts_for_all_epochs
+from ...sites_db import choose_inland_GPS_cmpts_for_all_epochs
 
 __all__ = ['OccamDeconvolution']
 

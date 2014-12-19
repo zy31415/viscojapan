@@ -32,11 +32,14 @@ class MyBasemap(Basemap):
                  region_code = 'near',
                  x_interval = 2,
                  y_interval = 2.,
+                 resolution = 'l',
                  ):
+        self.resolution = resolution
         # initialization parameters and default value
         self._init_ranges_and_intervals(region_box, region_code, x_interval, y_interval)
         
         self._init()
+        
 
     def _init_ranges_and_intervals(self, region_box, region_code, x_interval, y_interval):
         self.x_interval = x_interval
@@ -65,7 +68,7 @@ class MyBasemap(Basemap):
         
         super().__init__(llcrnrlon=self.region_box[0],llcrnrlat=self.region_box[1],
                          urcrnrlon=self.region_box[2],urcrnrlat=self.region_box[3],
-                         resolution='l',area_thresh=1000.,projection='eqdc',
+                         resolution=self.resolution, area_thresh=1000.,projection='eqdc',
                          lon_0=lon_0,lat_0=lat_0,
                          lat_1=lat_0-5,lat_2=lat_0+5,
                          celestial=False)

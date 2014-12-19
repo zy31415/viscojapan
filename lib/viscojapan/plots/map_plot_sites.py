@@ -61,14 +61,17 @@ class MapPlotDisplacement(MapPlot):
 
 
     def plot_sites(self, sites,
-                   marker='s', color='white', ms=5, text=True, fs=8):
-        lons,lats=vj.get_pos(sites)
+                   marker='s', color='white', ms=5, text=True, fs=8,
+                   offset_X=0, offset_Y=0):
+        lons,lats=vj.sites_db.get_pos(sites)
         self.basemap.plot(lons,lats, linestyle='None', 
                           marker=marker, color=color, ms=ms, latlon=True)
         if text:
+            lons += offset_X
+            lats += offset_Y
             x,y = self.basemap(lons,lats)
             for xi, yi, ti in zip(x,y,sites):
-                plt.text(xi+10, yi+15, ti.decode(), fontsize=fs)
+                plt.text(xi, yi, ti, fontsize=fs)
             
 
     def plot_sites_seafloor(self, sites_file=None, sites_seafloor=None, text=True):

@@ -4,7 +4,7 @@ import numpy as np
 import h5py
 
 from ...file_io_base import FileIOBase
-from ...sites import choose_inland_GPS_cmpts_for_all_epochs,\
+from ...sites_db import choose_inland_GPS_cmpts_for_all_epochs,\
      choose_inland_GPS_cmpts_at_nth_epochs
 
 class ResultFileWriter(FileIOBase):
@@ -26,10 +26,8 @@ class ResultFileWriter(FileIOBase):
         fid['d_pred'] = inv.d_pred
 
         # misfit information:
-        fid['misfit/norm'] = inv.get_residual_norm()
-        fid['misfit/rms'] = inv.get_residual_rms()
-        fid['misfit/norm_weighted'] = inv.get_residual_norm_weighted()
-
+        self._save_misfit()
+        
         # regularization information
         for par, name in zip(inv.regularization.args,
                              inv.regularization.arg_names):
@@ -40,7 +38,7 @@ class ResultFileWriter(FileIOBase):
             fid['regularization/%s/norm'%name] = nsol
         
         self._save_non_linear_parameters()
-        self._save_inland_misfit()
+        
 
     def _save_non_linear_parameters(self):
         inv = self.inv
@@ -49,7 +47,16 @@ class ResultFileWriter(FileIOBase):
         num_nlin_pars = len(inv.nlin_par_names)
         fid['num_nlin_pars'] = num_nlin_pars
         for nth, pn in enumerate(inv.nlin_par_names):
-            fid['nlin_pars/'+pn] = inv.Bm[nth - num_nlin_pars,0]        
+            fid['nlin_pars/'+pn] = inv.Bm[nth - num_nlin_pars,0]
+
+    def _save_misfit(self):
+        inv = self.inv
+        self.fid['misfit/norm'] = inv.get_residual_norm()
+        self.fid['misfit/rms'] = inv.get_residual_rms()
+        self.fid['misfit/norm_weighted'] = inv.get_residual_norm_weighted()
+
+        self._save_inland_misfit()
+        self._save_misfit_at_sites()
 
     def _save_inland_misfit(self):
         inv = self.inv
@@ -59,7 +66,7 @@ class ResultFileWriter(FileIOBase):
 
         fid['epochs'] = inv.epochs
         fid['sites'] = inv.sites
-        ch_inland_sites = choose_inland_GPS_cmpts_for_all_epochs(inv.sites, num_epochs)     
+        ch_inland_sites = choose_inland_GPS_cmpts_for_all_epochs(inv.sites, num_epochs)
         fid['misfit/rms_inland'] = inv.get_residual_rms(subset = ch_inland_sites)
     
         rms_inland_at_epoch = []
@@ -72,7 +79,15 @@ class ResultFileWriter(FileIOBase):
             rms_inland_at_epoch.append(inv.get_residual_rms(subset = ch_inland_sites))
 
         fid['misfit/rms_inland_at_epoch'] = np.asarray(rms_inland_at_epoch)
-        
-        
 
-    
+    def _save_misfit_at_sites(self):
+        num_epochs = self.inv.num_epochs
+        num_sites = len(self.inv.sites)
+        d = self.inv.d_pred - self.inv.d        
+        d = d.reshape((num_epochs, num_sites, 3))
+        rms = np.sqrt((d**2).sum(axis=0)/num_epochs)
+        self.fid['misfit/at_sites/e'] = rms[:,0]
+        self.fid['misfit/at_sites/n'] = rms[:,1]
+        self.fid['misfit/at_sites/u'] = rms[:,2]
+        
+        
