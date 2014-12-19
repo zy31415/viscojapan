@@ -36,25 +36,24 @@ inv = vj.inv.OccamDeconvolution(
 
 inv.set_data_except(excepts=['L'])
 
-reg_boundary = 0.06
-regs_rough = logspace(-3,1,20)
-regs_aslip = logspace(-3,1,20)
+edge = 0.08
+temp = 0.02
+cumu_roughs = logspace(-3,1,20)
 
-for nrough, reg_rough, naslip, reg_aslip in \
-    vj.utils.pop_from_center((6,10), regs_rough, regs_aslip):
+for nrough, cumu_rough, _ , _ in \
+    vj.utils.pop_from_center((6,0), cumu_roughs, [0]):
 
-    outfname = 'outs_test/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
+    outfname = 'outs/ncumurough_%02d.h5'%(nrough)
     if exists(outfname):
         print("Skip %s !"%outfname)
         continue
     print(outfname)
     inv.regularization = \
-           reg = vj.inv.reg.create_rough_aslip_boundary_regularization(
-               fault_file, num_epochs,
-               reg_rough,
-               reg_aslip,
-               reg_boundary)
-    print(reg().shape)
+           reg = vj.inv.reg.create_CumuRough_Edge_Temp_regularization(
+               fault_file, epochs,
+               cumu_rough = cumu_rough,
+               edge = edge,
+               temp = temp)
     
     inv.set_data_L()
     inv.run()

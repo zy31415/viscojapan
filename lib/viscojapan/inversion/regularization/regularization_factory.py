@@ -1,13 +1,16 @@
 from .regularization import Composite
-from .roughening import Roughening, ExpandForAllEpochs, \
-     RegularizationForOnlyFirstEpoch, RegularizationExceptFirstEpoch
+from .roughening import Roughening
+from .expand_for_epochs import ExpandForAllEpochs, \
+     ExpandForOnlyFirstEpoch, ExpandExceptFirstEpoch, ExpandForCumulativeSlip
 from .temporal_regularization import TemporalRegularization
 from .intensity import Intensity
 from .boundary import BoundaryRegDeadNorthAndSouth
 
 __all__ = ['create_co_aslip_boundary_regularization',
            'create_temporal_edge_roughening',
-           'create_rough_aslip_boundary_regularization']
+           'create_rough_aslip_boundary_regularization',
+           'create_CumuRough_Edge_Temp_regularization'
+           ]
 
 def create_roughening_temporal_regularization(
     fault_file, epochs, rough, temp):
@@ -66,12 +69,12 @@ def create_co_aslip_boundary_regularization(
     co, aslip, boundary):
 
     rough = Roughening.create_from_fault_file(fault_file)
-    co_reg = RegularizationForOnlyFirstEpoch(
+    co_reg = ExpandForOnlyFirstEpoch(
         reg = rough,
         num_epochs = num_epochs)
 
     intensity = Intensity.create_from_fault_file(fault_file)
-    aslip_reg = RegularizationExceptFirstEpoch(
+    aslip_reg = ExpandExceptFirstEpoch(
         reg = intensity,
         num_epochs = num_epochs)    
 
@@ -98,7 +101,7 @@ def create_rough_aslip_boundary_regularization(
         num_epochs = num_epochs)
 
     intensity = Intensity.create_from_fault_file(fault_file)
-    aslip_reg = RegularizationExceptFirstEpoch(
+    aslip_reg = ExpandExceptFirstEpoch(
         reg = intensity,
         num_epochs = num_epochs)    
 
@@ -115,4 +118,32 @@ def create_rough_aslip_boundary_regularization(
 
     return reg   
     
+
+def create_CumuRough_Edge_Temp_regularization(
+    fault_file, epochs,
+    cumu_rough,
+    edge,
+    temp
+    ):
+
+    num_epochs = len(epochs)
     
+    # cumu rough
+    tp = Roughening.create_from_fault_file(fault_file)
+    reg_cumu_rough = ExpandForCumulativeSlip(reg = tp,
+                                           num_epochs = num_epochs)
+
+    # edge
+    tp = BoundaryRegDeadNorthAndSouth.create_from_fault_file(fault_file)
+    reg_edge = ExpandForAllEpochs(tp, num_epochs)
+
+    # temp
+    reg_temp = TemporalRegularization.create_from_fault_file(fault_file, epochs)
+    
+    
+    reg = Composite().\
+          add_component(reg_cumu_rough, arg=cumu_rough, arg_name='cumu_rough').\
+          add_component(reg_edge, arg=edge, arg_name='edge').\
+          add_component(reg_temp, arg=temp, arg_name='temp')
+    
+    return reg    
