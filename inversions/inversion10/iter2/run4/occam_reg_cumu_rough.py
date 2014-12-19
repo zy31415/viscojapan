@@ -12,7 +12,7 @@ reg_roughes = logspace(-3,1,20)
 
 fault_file = '../fault_model/fault_bott80km.h5'
 
-#epochs = epochs[0:3]
+epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
@@ -36,14 +36,14 @@ inv = vj.inv.OccamDeconvolution(
 
 inv.set_data_except(excepts=['L'])
 
-edge = 0.08
 temp = 0.02
+edges = logspace(-3,1,20)
 cumu_roughs = logspace(-3,1,20)
 
-for nrough, cumu_rough, _ , _ in \
-    vj.utils.pop_from_center((6,0), cumu_roughs, [0]):
+for nrough, cumu_rough, nedge , edge in \
+    vj.utils.pop_from_center((6,12), cumu_roughs, edges):
 
-    outfname = 'outs/ncumurough_%02d.h5'%(nrough)
+    outfname = 'outs/ncumurough_%02d_nedge_%02d.h5'%(nrough,nedge)
     if exists(outfname):
         print("Skip %s !"%outfname)
         continue
