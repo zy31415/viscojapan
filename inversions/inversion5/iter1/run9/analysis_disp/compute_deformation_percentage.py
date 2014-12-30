@@ -16,6 +16,8 @@ Rco = np.asarray([ii[2] for ii in tp])[:,1:]
 tp = np.loadtxt('disp_cmpts/Raslip','4a,1a, 21f')
 Raslip = np.asarray([ii[2] for ii in tp])[:,1:]
 
+print(Raslip.shape)
+
 _total_post = elastic_post + Rco + Raslip
 
 ch1 = (elastic_post*_total_post>0)

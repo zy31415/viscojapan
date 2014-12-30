@@ -18,11 +18,18 @@ class VecFieldPlotter(object):
 
         self.color = color
 
-    def plot_vectors(self):
+    def plot_vectors(self,
+                     arrow_width = '0.03i',
+                     head_length = '0.1i',
+                     head_width = '0.1i'):
         self.gplt.psvelo(
             self.vec_file,
             J='', R='',O='',K='',
-            A = '0.07i/0.1i/0.1i+a45+g+e',
+            A = '{arrow_width}/{head_length}/{head_width}+a45+g+e'.format(
+                arrow_width = arrow_width,
+                head_length = head_length,
+                head_width = head_width,
+                ),
             Sr = '%s/1/0'%self.scale,
             G = self.color,
             W = '0.5,%s'%self.color,
@@ -37,6 +44,9 @@ class VecFieldPlotter(object):
         leg_txt,
         text_offset_lon = 0.1,
         text_offset_lat = 0.1,
+        arrow_width = '0.03i',
+        head_length = '0.1i',
+        head_width = '0.1i'
         ):
         with tempfile.NamedTemporaryFile(mode='w+t') as text:
             text.write('%f %f %f 0.'%(lon, lat, leg_len))
@@ -44,7 +54,11 @@ class VecFieldPlotter(object):
             self.gplt.psvelo(
                 text.name,
                 J='', R='',O='',K='',
-                A='0.07i/0.1i/0.1i+a45+g+e+jc',
+                A='{arrow_width}/{head_length}/{head_width}+a45+g+e+jc'.format(
+                arrow_width = arrow_width,
+                head_length = head_length,
+                head_width = head_width,
+                ),
                 Sr = '%f/1/0'%self.scale,
                 G = self.color,
                 W = '0.5,%s'%self.color,

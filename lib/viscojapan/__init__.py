@@ -23,3 +23,4 @@ from . import utils
 from . import sites
 from . import earth_model as em
 from . import fault_model as fm
+from . import latex

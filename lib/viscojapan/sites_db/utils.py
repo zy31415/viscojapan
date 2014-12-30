@@ -50,6 +50,8 @@ def get_true_name_by_id(id):
     with sqlite3.connect(file_database) as conn:
         c = conn.cursor()
         name = c.execute('select name from tb_sites where id=?;', (id,)).fetchall()
+    if name[0][0] is None:
+        return id
     return name[0][0]
 
 def get_pos_dic_of_a_network(network):

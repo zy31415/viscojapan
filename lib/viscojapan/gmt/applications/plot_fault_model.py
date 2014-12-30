@@ -20,9 +20,8 @@ class FaultModelPlotter(Plotter):
         self.fs_focal_mechanism = 0
         
 
-    def plot(self, output_file):
-        super().plot(output_file)
-        gmt = pGMT.GMT()
+    def plot(self):
+        gmt = self.gmt
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
                    'LABEL_FONT_SIZE','9',
                    'MAP_FRAME_TYPE','plain',
@@ -47,12 +46,23 @@ class FaultModelPlotter(Plotter):
             O = '', K='')
 
         plot_fault_model(gplt,self.fault_file)
-        plot_seafloor_stations(gplt, marker_size=0.4,color='red')
         plot_GEONET_Japan_stations(gplt, color='red')
 
-        plot_focal_mechanism_USGS_wphase(gplt,K=None,
+        plot_focal_mechanism_USGS_wphase(gplt,
                                          fontsize=self.fs_focal_mechanism)
 
-        gmt.save(output_file)
+    def plot_seafloor(self, network='SEAFLOOR',
+                      justification='TR',
+                      text_offset_X = 0,
+                      text_offset_Y = 0,
+                      ):
+        plot_seafloor_stations(self.gmt.gplt, marker_size=0.5,color='red',
+                               network=network,
+                               justification = justification,
+                               text_offset_X = text_offset_X,
+                               text_offset_Y = text_offset_Y)
+
+        
+        
 
             

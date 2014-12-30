@@ -16,7 +16,8 @@ earth_file = join(
 plt = vj.gmt.SlipAtOneEpochPlotter(
     res_file,
     fault_file,
-    earth_file
+    earth_file,
+    if_seafloor = False,
     )
 
 plt.plot('inverted_coseismic_slip_seafloor_inf.pdf')

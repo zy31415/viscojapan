@@ -1,7 +1,8 @@
-
 import pGMT
 
 import viscojapan as vj
+from ..gadgets import plot_seafloor_stations, plot_focal_mechanism_JMA, \
+     plot_GEONET_Japan_stations
 
 from .plotter import Plotter
 
@@ -11,25 +12,21 @@ class SlipAtOneEpochPlotter(Plotter):
     def __init__(self,
                  result_file,
                  fault_file,
-                 earth_file
+                 earth_file,
                  ):
         super().__init__()
         self.result_file = result_file
         self.fault_file = fault_file
         self.earth_file = earth_file
 
-        self.trash_files = ['gmt.conf', 'gmt.history']
-
-
-    def plot(self, output_file):
-        super().plot(output_file)
-        gmt = pGMT.GMT()
+    def plot(self):
+        gmt = self.gmt
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
                    'LABEL_FONT_SIZE','9',
                    'FONT_ANNOT_PRIMARY','6',
                    'MAP_FRAME_TYPE','plain')
 
-        gplt = gmt.gplt
+        gplt = self.gplt
 
         gplt.psbasemap(
             R = '140/145/35/41.5',       # region
@@ -63,9 +60,19 @@ class SlipAtOneEpochPlotter(Plotter):
         # plot focal mechanism
         #vj.gmt.plot_focal_mechanism_CMT(gplt,scale=0.4, fontsize=0)
         #vj.gmt.plot_focal_mechanism_USGS_wphase(gplt,scale=0.4, fontsize=8)
-        vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.4, fontsize=0, K=None)
+        plot_focal_mechanism_JMA(gplt,scale=0.4, fontsize=0)
+        plot_GEONET_Japan_stations(gplt)
 
-        gmt.save(output_file)
+    def plot_seafloor(self, network='SEAFLOOR',
+                      justification='TR',
+                      text_offset_X = 0,
+                      text_offset_Y = 0,
+                      ):
+        plot_seafloor_stations(self.gmt.gplt, marker_size=0.5,color='red',
+                               network=network,
+                               justification = justification,
+                               text_offset_X = text_offset_X,
+                               text_offset_Y = text_offset_Y)
 
         
         

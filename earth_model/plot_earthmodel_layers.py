@@ -34,8 +34,8 @@ codes = [Path.MOVETO,
 path = Path(verts, codes)
 patch = patches.PathPatch(path, facecolor='lightgreen', lw=2)
 ax.add_patch(patch)
-ax.text(100,90,r'''Maxwell Viscoelastic Lower Crust ($H_e \sim 220km$)
-$\eta_s (Pa \cdot s)$
+ax.text(100,90,r'''Maxwell Viscoelastic Lower Crust and Uppermost Mantle
+    ($H_e \sim 220km$)     $\eta = ? Pa \cdot s$
 ''',
         verticalalignment='top')
 #plot([0,700,700,0,0],[63,63,220,220,63])
@@ -43,14 +43,14 @@ $\eta_s (Pa \cdot s)$
 ########
 # Upper Mantle
 ax.text(100,400,r'''Maxwell Viscoelastic Upper Mantle (220~670km)
-$\eta=1.0 \times 10^{20} Pa \cdot s$
+$\eta_1=1.0 \times 10^{20} Pa \cdot s$
 ''',
         verticalalignment='top')
 
 ########
 # Lower Mantle
 ax.text(100,700,r'''Maxwell Viscoelastic Lower Mantle (670~2891km)
-$\eta=1.0 \times 10^{21} Pa \cdot s$
+$\eta_2=1.0 \times 10^{21} Pa \cdot s$
 ''',
         verticalalignment='top')
 

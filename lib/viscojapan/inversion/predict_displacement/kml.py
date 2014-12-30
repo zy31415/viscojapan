@@ -1,5 +1,6 @@
-from os.path import exists
+from os.path import exists, join
 from os import makedirs
+from multiprocessing import Pool
 
 import simplekml
 
@@ -20,22 +21,30 @@ class KMLShowTimeSeries(object):
         self.db_pred = db_pred
         self.dir_plots = 'plots/'
 
-    def plot(self):
+    def plot_site(self, site, file_ext):
         if not exists(self.dir_plots):
             makedirs(self.dir_plots)
 
         plt = PredictedTimeSeriesPlotter(self.db_pred)
         
-        for site in self.sites:
-            print(site)
-            for cmpt in 'e', 'n', 'u':        
-                plt.plot_cumu_disp(site, cmpt)
-                plt.plt.savefig('plots/%s.%s.cumu.png'%(site, cmpt))
-                plt.plt.close()
+        print(site)
+        
+        for cmpt in 'e', 'n', 'u':        
+            plt.plot_cumu_disp(site, cmpt)
+            plt.plt.savefig(join(self.dir_plots, '%s.%s.cumu.%s'%(site, cmpt, file_ext)))
+            plt.plt.close()
 
-                plt.plot_post_disp(site, cmpt)
-                plt.plt.savefig('plots/%s.%s.post.png'%(site, cmpt))
-                plt.plt.close()
+            plt.plot_post_disp(site, cmpt)
+            plt.plt.savefig(join(self.dir_plots, '%s.%s.post.%s'%(site, cmpt, file_ext)))
+            plt.plt.close()
+
+    def _plot_site_for_Pool(self, kwargs):
+        self.plot_site(**kwargs)
+
+    def plot(self, file_ext = 'png', nproc = 1):
+        pool = Pool(processes = nproc)
+        kwargs = [{'site':site, 'file_ext':file_ext} for site in self.sites]        
+        pool.map(self._plot_site_for_Pool, kwargs)
         
     def save_kml(self, fn):        
         pos_dic = get_pos_dic()

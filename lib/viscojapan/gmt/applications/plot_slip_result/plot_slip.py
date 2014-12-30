@@ -2,8 +2,8 @@ import tempfile
 
 import numpy as np
 
-from ...gadgets.utils import plot_seafloor_stations, plot_slab
-from ...gadgets.plot_focal_mechanism import plot_focal_mechanism_USGS_wphase
+from ...gadgets import plot_seafloor_stations, plot_slab, \
+     plot_focal_mechanism_USGS_wphase
 
 class _PlotSlip(object):
     def __init__(self,
@@ -98,7 +98,9 @@ class _PlotSlip(object):
             O = '', K='')
 
         plot_seafloor_stations(gplt, marker_size=0.1,
-                                      lw='faint',color='green')
+                               lw='faint',color='green',
+                               fontsize=None
+                               )
 
         plot_focal_mechanism_USGS_wphase(gplt,scale=0.1, fontsize=0)
         plot_slab(gplt,

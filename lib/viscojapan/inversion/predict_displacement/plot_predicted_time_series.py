@@ -3,6 +3,7 @@ import numpy as np
 
 from .pred_disp_database import PredDispToDatabaseReader
 from ...tsana.observation_database import ObservationDatatbaseReader
+from ...sites_db import get_true_name_by_id
 
 from date_conversion import adjust_mjd_for_plot_date
 
@@ -106,7 +107,10 @@ class PredictedTimeSeriesPlotter(object):
             plt.ylim(calculate_lim(y))
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
-        plt.title('Cumulative Disp.: %s-%s '%(site, cmpt))
+        plt.title('Cumulative Disp.: {site} - {cmpt}'.format(
+            site = get_true_name_by_id(site),
+            cmpt = cmpt
+            ))
 
     def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7,
                        if_ylim=True):
@@ -123,7 +127,10 @@ class PredictedTimeSeriesPlotter(object):
             plt.ylim(calculate_lim(y))
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
-        plt.title('Postseismic Disp.: %s-%s '%(site, cmpt))
+        plt.title('Postseismic Disp. : {site} - {cmpt}'.format(
+            site = get_true_name_by_id(site),
+            cmpt = cmpt
+            ))
 
 
     

@@ -2,7 +2,6 @@ import numpy as np
 
 from .fault_model import FaultFileReader
 from .earth_model import EarthModelFileReader
-from .inversion import ResultFileReader
 
 __all__ = ['ComputeMoment']
 
@@ -31,10 +30,6 @@ class ComputeMoment(object):
         mo = np.sum(mos)
         mw = 2./3.*np.log10(mo) - 6. 
         return mo, mw
-
-##    def compute_moment_on_inversion_result_file(self, result_file):
-##        reader = ResultFileReader(result_file)
-##        return self.compute_moment(reader.slip)
         
 
 def get_mos_mws_from_epochal_file(epochal_file):

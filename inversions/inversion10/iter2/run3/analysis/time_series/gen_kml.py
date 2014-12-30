@@ -5,4 +5,6 @@ kml = vj.inv.KMLShowTimeSeries(
     db_pred = '../pred_disp/~pred_disp.db'
     )
 kml.save_kml('time_series.kml')
-kml.plot()
+kml.plot(file_ext = 'pdf', nproc=6)
+kml.plot(file_ext = 'png', nproc=6)
+

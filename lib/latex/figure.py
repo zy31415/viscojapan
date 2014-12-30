@@ -1,6 +1,44 @@
 import sys
+import tempfile
+import subprocess
+import os
+from os.path import basename
 
-__all__ = ['Figure', 'Subfigure']
+__all__ = ['Latex', 'LatexDoc', 'Figure', 'Subfigure', 'PDFComplie']
+
+class Latex(object):
+    def __init__(self):
+        self.elements = []
+
+    def print(self, file=sys.stdout):
+        for ele in self.elements:
+            ele.print(file=file)
+
+class LatexDoc():
+    def __init__(self):
+        self.elements = []
+
+    def print(self, file=sys.stdout):
+        print('\\documentclass[11pt,letterpaper]{article}',
+              file = file)
+
+        print('\\usepackage[letterpaper,margin=10mm]{geometry}',
+              file = file)        
+        
+        print('''
+\\usepackage{graphicx}
+\\usepackage{caption}
+\\usepackage{subcaption}
+''', file = file)
+        
+        print('\\begin{document}',
+              file = file)
+        print('\\pagenumbering{gobble}', file=file)
+        for ele in self.elements:
+            ele.print(file=file)
+
+        print('\\end{document}',
+              file = file)
 
 class Figure(object):
     def __init__(self,
@@ -8,15 +46,9 @@ class Figure(object):
                  label = None,
                  if_continued = False):
         self._subfigures = []
-        if caption is None:
-            self.caption = ''
-        else:
-            self.caption = caption
 
-        if label is None:
-            self.label = ''
-        else:
-            self.label = label
+        self.caption = caption
+        self.label = label
 
         self.if_continued = if_continued
 
@@ -36,27 +68,74 @@ class Figure(object):
             print('''    \\ContinuedFloat''', file=file)
 
     def _print_suffix(self, file=sys.stdout):
-        print('''    \\caption{{{caption}}}
-    \\label{{{label}}}
-\\end{{figure}}'''.format(
-    caption = self.caption,
-    label = self.label),
-              file=file)
+        if self.caption is not None:
+            print('\\caption{{{caption}}}'.format(caption=self.caption),
+                  file = file)
+
+        if self.label is not None:
+            print('\\label{{{label}}}'.format(label=self.label),
+                  file = file)
+        print('\\end{figure}', file=file)
         
 class Subfigure(object):
     def __init__(self,
                  width,
                  trim,
-                 file):
+                 file,
+                 caption = None):
         self.width = width
         self.trim = trim
         self.file = file
+        self.caption = caption
+        
     def print(self, file=sys.stdout):
-        print('''    \\begin{{subfigure}}[b]{{{width}\\textwidth}}
-        \\centering
-        \\includegraphics[width=1.0\\textwidth, clip=true, trim={trim[0]} {trim[1]} {trim[2]} {trim[3]}]{{{file}}}
-    \\end{{subfigure}}'''.format(
-        width = self.width,
-        trim = self.trim,
-        file = self.file),
+        print('\\begin{{subfigure}}[b]{{{width}\\textwidth}}'.format(width = self.width),
               file = file)
+        
+        print('''\\centering
+\\includegraphics[width=1.0\\textwidth, clip=true, trim={trim[0]} {trim[1]} {trim[2]} {trim[3]}]{{{file}}}'''.format(
+    trim = self.trim,
+    file = self.file),
+              file = file)
+
+        if self.caption is not None:
+            print('\\caption{{{caption}}}'.format(caption = self.caption),
+                  file = file)
+        
+        print('\\end{subfigure}',
+              file = file)
+        
+class PDFComplie(object):
+    def __init__(self,
+                 latex
+                 ):
+        self.latex = latex
+
+    def compile(self, out_file):
+        fid = tempfile.NamedTemporaryFile(mode='w+t', dir='./')
+        self.latex.print(fid)
+        fid.seek(0)
+
+        p = subprocess.Popen(
+            ['pdflatex', fid.name],
+            stdout = subprocess.PIPE,
+            stderr = subprocess.PIPE,
+            )
+        
+        self.stdout, self.stderr = p.communicate()
+        
+        if p.returncode != 0:
+            print(self.stderr.decode())
+            print(self.stdout.decode())
+            raise Exception('Command returned an error.')
+        
+        base_name = basename(fid.name)
+        fid.close()
+        self._clean(base_name)
+        os.rename(base_name+'.pdf', out_file)
+
+    def _clean(self, basename):
+        os.remove(basename + '.aux')
+        os.remove(basename + '.log')
+        
+            

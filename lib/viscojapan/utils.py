@@ -18,7 +18,8 @@ __all__ = ['delete_if_exists',
            'assert_strictly_descending_order','assert_strictly_assending_order',
            'get_this_script_dir','next_non_commenting_line',
            'merge_disp_dic','make_grids','as_string',
-           'get_middle_point','pop_from_center']
+           'get_middle_point','pop_from_center',
+           'mo_to_mw', 'mw_to_mo']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):
@@ -210,3 +211,9 @@ def pop_from_center(center, arr1, arr2):
 
     for idx1, idx2 in zip(idx1_sorted, idx2_sorted):
         yield(idx1, arr1[idx1], idx2, arr2[idx2])
+
+def mo_to_mw(mo):
+    return 2./3.*np.log10(mo) - 6.
+
+def mw_to_mo(mw):
+    return 10**((3.*mw+18.)/2.)

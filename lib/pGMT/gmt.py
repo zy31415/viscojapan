@@ -26,16 +26,27 @@ class GMT(GMTGuru):
         else:
             raise NotImplementedError()
 
+        self._clean()
+        
+
     def save_ps(self, filename):
         self.gplt.save_ps(filename)
 
     def save_pdf(self, filename, **kwargs):
         _assert_file_name_extension(filename, '.pdf')
-        self.save_ps(filename[:-3]+'ps')        
-        self.ps2raster(filename[:-3]+'ps', T='f', **kwargs)
+        fn, ext = os.path.splitext(filename)
+        self.save_ps(fn + '.ps')        
+        self.ps2raster(fn + '.ps', T='f', **kwargs)
+        os.remove(fn + '.ps')
 
     def save_shell_script(self, filename, output_file=None):
         self.gplt.save_shell_script(filename, output_file)
+
+    def _clean(self):
+        trash_files = ['gmt.conf', 'gmt.history']
+        for file in trash_files:
+            if os.path.exists(file):
+                os.remove(file)
 
 
 
