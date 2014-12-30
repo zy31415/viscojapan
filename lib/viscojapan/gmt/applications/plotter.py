@@ -3,7 +3,6 @@ import pGMT
 
 class Plotter(object):
     def __init__(self):
-        self.trash_files = ['gmt.conf', 'gmt.history']
         self.gmt = pGMT.GMT()
         self.gplt = self.gmt.gplt
         

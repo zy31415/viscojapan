@@ -3,7 +3,7 @@ import glob
 
 import viscojapan as vj
 
-files = glob.glob('../../outs/nrough_06_naslip_??.h5')
+files = glob.glob('../../outs/nrough_??_naslip_??.h5')
 
 for file in files:
     fn, _ = splitext(basename(file))
@@ -21,5 +21,5 @@ for file in files:
         color_label_interval_aslip = .3,
         )
     
-    plt.plot(output_file)
-    plt.clean()
+    plt.plot()
+    plt.save(output_file)

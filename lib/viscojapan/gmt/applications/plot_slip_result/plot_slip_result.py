@@ -42,8 +42,7 @@ class PlotSlipResult(Plotter):
         self.max_aslip = max_aslip
         self.max_co_slip = max_co_slip
 
-    def plot(self, out_file):
-        super().plot(out_file)
+    def plot(self):
         self._get_info_from_fault_file_and_result_file()
 
         self.gmt = gmt = pGMT.GMT()
@@ -74,10 +73,6 @@ class PlotSlipResult(Plotter):
                 _plt.add_psscale(
                     gridline_interval = self.color_label_interval_aslip)                
 
-
-        gplt.finish()
-            
-        gmt.save(out_file)
 
     def _get_info_from_fault_file_and_result_file(self):        
         freader = FaultFileReader(self.fault_file)

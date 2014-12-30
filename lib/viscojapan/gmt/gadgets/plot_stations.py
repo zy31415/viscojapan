@@ -7,7 +7,6 @@ from ...sites_db import get_pos_dic_of_a_network, get_true_name_by_id, get_pos
 __all__ = ['plot_stations', 'plot_seafloor_stations', 'plot_GEONET_Japan_stations']
 
 def plot_stations(gplt, sites, S, color, fill_color,
-
                   lw='thick',
                   fontsize = None,
                   fontcolor = 'black',
