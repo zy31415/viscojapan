@@ -13,7 +13,10 @@ class Test_slip_analyser(MyTestCase):
 
     def test1(self):
         result_file = join(self.share_dir,'nrough_06_naslip_11.h5')        
-        ana = vj.inv.SlipAnalyser()
+        ana = vj.inv.SlipAnalyser(
+            result_file,
+            fault_file = join(self.share_dir,'fault_bott80km.h5')            
+            )
         
 if __name__ == '__main__':
     unittest.main()
