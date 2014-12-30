@@ -4,16 +4,12 @@ import h5py
 import numpy as np
 
 from ...file_io_base import FileIOBase
-from ...fault_model import FaultFileReader
-from ...moment import ComputeMoment
-from ...plots import plot_Mos_Mws
 
 __all__ = ['ResultFileReader']
 
 class ResultFileReader(FileIOBase):
     def __init__(self, file_name):
-        super().__init__(file_name)
-        
+        super().__init__(file_name)        
 
 
     def open(self):
