@@ -182,15 +182,6 @@ class OccamDeconvolution(Inversion):
             rms.append(self.get_residual_rms(subset = ch))
         return np.asarray(rms,float)
 
-    def get_residual_rms(self, subset=None):
-        diff = (self.d_pred - self.disp_obs)
-        if subset is not None:            
-            assert len(subset)==len(diff), \
-                   'subset length (%d) is smaller than that of diff (%d)'\
-                   %(len(subset),len(diff))
-            diff = diff[subset]
-        return np.sqrt(np.mean(diff**2))
-
     def get_residual_rms_at_inlands_sites(self):
         ch_inland = choose_inland_GPS_cmpts_for_all_epochs(
             self.sites,

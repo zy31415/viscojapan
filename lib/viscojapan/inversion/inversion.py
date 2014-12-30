@@ -102,9 +102,12 @@ return: ||G B m - d||
         return np.linalg.norm(diff)
 
     def get_residual_rms(self, subset=None):
-        diff = self.d_pred - self.d
-        if subset is not None:
-            assert len(subset)==len(diff), 'subset length is smaller than diff'
+        # note that self.disp_obs is different from self.d
+        diff = (self.d_pred - self.disp_obs)
+        if subset is not None:            
+            assert len(subset)==len(diff), \
+                   'subset length (%d) is smaller than that of diff (%d)'\
+                   %(len(subset),len(diff))
             diff = diff[subset]
         return np.sqrt(np.mean(diff**2))
 

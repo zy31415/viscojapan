@@ -61,6 +61,11 @@ class ResultFileReader(FileIOBase):
         return m
 
     @property
+    def d_obs(self):
+        m = self.fid['d_obs'][...]
+        return m
+
+    @property
     def sites(self):
         m = self.fid['sites'][...]
         return [site.decode() for site in m]
@@ -172,8 +177,36 @@ class ResultFileReader(FileIOBase):
             slip = np.zeros((num_subflts,1))
         return slip
 
-    def get_3d_disp(self):
-        return self.d_pred.reshape([self.num_epochs, self.num_sites, 3])        
+    def get_3d_disp_pred(self):
+        return self.d_pred.reshape([self.num_epochs, self.num_sites, 3])
+
+    def get_3d_disp_obs(self):
+        return self.d_obs.reshape([self.num_epochs, self.num_sites, 3])
+
+    def get_rms(self, subset_epochs=None, subset_sites=None, subset_cmpt=None):
+        d_pred = self.get_3d_disp_pred()
+        
+        d_obs = self.get_3d_disp_obs()
+        
+        diff = d_pred - d_obs
+
+        if subset_epochs is None:
+            ch_epochs = np.s_[:]
+        else:
+            assert len(subset_epochs) == self.num_epochs
+
+        if subset_sites is None:
+            ch_sites = np.s_[:]
+        else:
+            assert len(ch_sites) == self.num_sites
+
+        if subset_cmpt is None:
+            ch_cmpt = np.s_[:]
+        else:
+            assert len(subset_cmpt) == 3
+
+        diff = diff[ch_epochs, ch_sites, ch_cmpt]
+        return np.sqrt(np.mean(diff**2))
        
     def get_disp_at_nth_epoch(self, nth):
         nth = int(nth)

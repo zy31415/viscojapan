@@ -21,14 +21,12 @@ class ResultFileWriter(FileIOBase):
         fid = self.fid
 
         # basic inputs:
-        fid['d_obs'] = inv.d
+        fid['d_obs'] = inv.disp_obs
 
         # basic results:
         fid['m'] = inv.m
         fid['Bm'] = inv.Bm
-        fid['d_pred'] = inv.d_pred
-
-        
+        fid['d_pred'] = inv.d_pred        
 
         # misfit information:
         self._save_misfit()
