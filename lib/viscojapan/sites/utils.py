@@ -9,10 +9,7 @@ from ..utils import get_this_script_dir
 from ..hypocenter import TOHOKU_EPICENTER
 
 
-__all__ = ['get_epi_dist','sorted_by_epi_dist','get_sites_seafloor',
-           'get_maxmin_lonlat','get_sites_in_box','get_all_sites',
-           'remove_sites_from',
-           ]
+__all__ = []
 
 
 this_file_path = get_this_script_dir(__file__)
@@ -35,12 +32,7 @@ def sorted_by_epi_dist(sites):
     dist_sorted = [ii[1] for ii in tp]
     return sites_sorted, dist_sorted
 
-def get_maxmin_lonlat():
-    tp = np.loadtxt(sites_file,'4a,2f')
-    lons = [ii[1][0] for ii in tp]
-    lats = [ii[1][1] for ii in tp]
 
-    return np.amin(lons),np.amax(lons), np.amin(lats),np.amax(lats)
 
 def get_all_sites():
     tp=loadtxt(sites_file,'4a, 2f')
@@ -54,25 +46,7 @@ def get_sites_seafloor():
     res = [si.encode() for si in sites_seafloor]
     return res
 
-def get_sites_in_box(box):
-    lon1 = box[0]
-    lat1 = box[1]
-    lon2 = box[2]
-    lat2 = box[3]
 
-    pos_dic = get_pos_dic()
-    sites = []
-    for site, pos in pos_dic.items():
-        lon = pos[0]
-        lat = pos[1]
-        if lon>lon1 and lon<lon2 and lat>lat1 and lat<lat2:
-            sites.append(site)
-    return sites
 
-def remove_sites_from(sites0, sites1):
-    out = []
-    for site in sites0:
-        if site not in sites1:
-            out.append(site)
-    return out
+
 
