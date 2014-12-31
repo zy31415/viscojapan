@@ -1,3 +1,5 @@
+import numpy as np
+
 from .result_file_reader import ResultFileReader
 
 __all__ = ['DispAnalyser']
@@ -27,45 +29,58 @@ class DispAnalyser(object):
         disp = self.get_cumu_obs_3d()
         return disp - disp[0,:,:]
 
-    def _get_rms(d_pred, d_obs, subset_epochs=None, subset_sites=None, subset_cmpt=None):    
+    def _get_rms(self, d_pred, d_obs,
+                 subset_epochs=None, subset_sites=None, subset_cmpt=None,
+                 axis = None):    
         diff = d_pred - d_obs
 
         if subset_epochs is None:
             ch_epochs = np.s_[:]
         else:
             assert len(subset_epochs) == self.num_epochs
+            ch_epochs =  np.asarray(subset_epochs, dtype='bool')
 
         if subset_sites is None:
             ch_sites = np.s_[:]
         else:
             assert len(ch_sites) == self.num_sites
+            ch_sites =  np.asarray(subset_sites, dtype='bool')
 
         if subset_cmpt is None:
             ch_cmpt = np.s_[:]
         else:
             assert len(subset_cmpt) == 3
+            ch_cmpt = np.asarray(subset_cmpt, dtype='bool')
 
         diff = diff[ch_epochs, ch_sites, ch_cmpt]
-        return np.sqrt(np.mean(diff**2))
+        return np.sqrt(np.mean(diff**2, axis = axis))
 
 
-    def get_cumu_rms(self, subset_epochs=None, subset_sites=None, subset_cmpt=None):
+    def get_cumu_rms(self,
+                     subset_epochs=None, subset_sites=None, subset_cmpt=None,
+                     axis = None):
         d_pred = self.get_cumu_pred_3d()        
         d_obs = self.get_cumu_obs_3d()
-        
-        return self._get_rms(d_pred, d_obs,
+        return self._get_rms(d_pred = d_pred,
+                             d_obs = d_obs,
                              subset_epochs=subset_epochs,
                              subset_sites=subset_sites,
-                             subset_cmpt=subset_cmpt)
+                             subset_cmpt=subset_cmpt,
+                             axis = axis
+                             )
 
-    def get_post_rms(self, subset_epochs=None, subset_sites=None, subset_cmpt=None):
+    def get_post_rms(self,
+                     subset_epochs=None, subset_sites=None, subset_cmpt=None,
+                     axis = None):
         d_pred = self.get_post_pred_3d()        
         d_obs = self.get_post_obs_3d()
         
         return self._get_rms(d_pred, d_obs,
                              subset_epochs=subset_epochs,
                              subset_sites=subset_sites,
-                             subset_cmpt=subset_cmpt)
+                             subset_cmpt=subset_cmpt,
+                             axis = axis
+                             )
 
     def get_ts_cumu_pred(self,site, cmpt):
         disp = self.get_cumu_pred_3d()

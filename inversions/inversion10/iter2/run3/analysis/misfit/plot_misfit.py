@@ -1,5 +1,3 @@
-
-
 import numpy  as np
 
 import pGMT
@@ -8,15 +6,25 @@ import viscojapan as vj
 
 res_file = '../../outs/nrough_06_naslip_11.h5'
 
-reader = vj.inv.ResultFileReader(res_file)
+ana = vj.inv.DispAnalyser(res_file)
 
-rms_e = reader.get_rms_at_sites('e')
-rms_n = reader.get_rms_at_sites('n')
-rms_u = reader.get_rms_at_sites('u')
+rms_cumu_e = ana.get_cumu_rms(subset_cmpt = [True, False, False],
+                         axis = 0)
+rms_cumu_n = ana.get_cumu_rms(subset_cmpt = [False, True, False],
+                         axis = 0)
+rms_cumu_u = ana.get_cumu_rms(subset_cmpt = [False, False, True],
+                         axis = 0)
 
-sites = reader.sites
+rms_post_e = ana.get_post_rms(subset_cmpt = [True, False, False],
+                         axis = 0)
+rms_post_n = ana.get_post_rms(subset_cmpt = [False, True, False],
+                         axis = 0)
+rms_post_u = ana.get_post_rms(subset_cmpt = [False, False, True],
+                         axis = 0)
 
-plt = vj.gmt.ZPlotter(sites=sites, Z=rms_e)
+sites = ana.result_file_reader.sites
+
+plt = vj.gmt.ZPlotter(sites=sites, Z=rms_post_e)
 plt.plot(clim=[-2.5,1.1])
 plt.save('misfit.pdf')
 
