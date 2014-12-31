@@ -1,7 +1,8 @@
 from tempfile import mkstemp
 from os.path import exists
 
-from numpy import dot, hstack, copy
+import numpy as np
+from numpy import dot, hstack
 
 from ...epochal_data.epochal_slip import EpochalIncrSlip
 from ...epochal_data.diff_ed import DiffED
@@ -91,7 +92,7 @@ class D_(object):
 
     def __call__(self):
         self.disp_obs = self.d.vstack(self.epochs)
-        d_ = copy(self.disp_obs)
+        d_ = np.copy(self.disp_obs)
         for J, val in zip(self.jacobian_vecs, self.nlin_par_values):
             d_ += (J(self.epochs)*val)
         return d_

@@ -136,10 +136,12 @@ class OccamDeconvolution(Inversion):
         d_.epochs = self.epochs
 
         obs = EpochalDisplacement(self.file_d, self.filter_sites_file)
-        self.disp_obs = obs.vstack(self.epochs)
+        
         d_.d = obs        
         self.d = d_()
+        
         self.disp_obs = d_.disp_obs
+        print('obs')
         print(self.disp_obs)
 
     def set_data_sd(self):
@@ -148,7 +150,6 @@ class OccamDeconvolution(Inversion):
         sig_stacked = sig.vstack(self.epochs)
         self.sd = sig_stacked
         assert_col_vec_and_get_nrow(self.sd)
-        
         
     def predict(self):
         Bm = self.Bm
