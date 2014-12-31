@@ -16,13 +16,13 @@ class DispPred(object):
                  file_incr_slip0 = None
                  ):
         self.result_file = result_file
-        self.result_file_reader = SlipResultReader(
+        self.slip_result_reader = SlipResultReader(
             self.result_file,
             fault_file
             )
-        self.sites_in_inversion = self.result_file_reader.sites
+        self.sites_in_inversion = self.slip_result_reader.sites
 
-        self.epochs = self.result_file_reader.epochs
+        self.epochs = self.slip_result_reader.epochs
         self.num_epochs = len(self.epochs)
 
         self.file_G0 = file_G0
@@ -53,12 +53,12 @@ class DispPred(object):
     def _get_delta_nlin_pars(self):
         self.delta_nlin_pars = []
         for par in self.nlin_par_names:
-            delta = self.result_file_reader.get_nlin_par_val(par) - self.file_G0_reader[par]
+            delta = self.slip_result_reader.get_nlin_par_val(par) - self.file_G0_reader[par]
             self.delta_nlin_pars.append(delta)        
         
 
     def E_cumu_slip(self, nth_epoch):
-        cumuslip = self.result_file_reader.get_total_slip_at_nth_epoch(nth_epoch)
+        cumuslip = self.slip_result_reader.get_total_slip_at_nth_epoch(nth_epoch)
         G0 = self.file_G0_reader[0]
         disp = np.dot(G0, cumuslip)
         if self.files_Gs is not None:
@@ -92,7 +92,7 @@ class DispPred(object):
         return self.E_cumuslip(0)
 
     def E_aslip(self, nth_epoch):
-        aslip = self.result_file_reader.get_after_slip_at_nth_epoch(nth_epoch)
+        aslip = self.slip_result_reader.get_after_slip_at_nth_epoch(nth_epoch)
         G0 = self.file_G0_reader[0]        
         disp = np.dot(G0, aslip)
         if self.files_Gs is not None:
@@ -128,7 +128,7 @@ class DispPred(object):
             return np.zeros([self.file_G0_reader[0].shape[0],1])
         else:
             G = self.file_G0_reader[int(del_epoch)] - self.file_G0_reader[0]
-            slip = self.result_file_reader.get_incr_slip_at_nth_epoch(from_nth_epoch)
+            slip = self.slip_result_reader.get_incr_slip_at_nth_epoch(from_nth_epoch)
             disp = np.dot(G, slip)
             if self.files_Gs is not None:
                 disp += self._nlin_correction_R_nth_epoch(from_nth_epoch, to_epoch)

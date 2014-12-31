@@ -2,19 +2,13 @@ import numpy as np
 
 from .result_file_reader import ResultFileReader
 
-__all__ = ['DispAnalyser']
+__all__ = ['DispResultReader']
 
-class DispAnalyser(object):
+class DispResultReader(ResultFileReader):
     def __init__(self,
                  result_file):
-        self.result_file = result_file
-        self.result_file_reader = ResultFileReader(result_file)
-
-        self.d_pred = self.result_file_reader.d_pred
-        self.d_obs = self.result_file_reader.d_obs
-        self.num_epochs = self.result_file_reader.num_epochs
-        self.num_sites = self.result_file_reader.num_sites
-
+        super().__init__(result_file)        
+        
     def get_cumu_pred_3d(self):
         return self.d_pred.reshape([self.num_epochs, self.num_sites, 3])
 

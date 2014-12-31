@@ -5,5 +5,5 @@ from .plot_L import *
 from .plot_fault_slip import *
 
 from .slip_result_reader import *
-from .disp_analyser import *
+from .disp_result_reader import *
 from .plot_misfits import *

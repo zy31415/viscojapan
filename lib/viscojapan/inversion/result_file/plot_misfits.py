@@ -6,7 +6,7 @@ import numpy as np
 
 import latex
 
-from .disp_analyser import DispAnalyser
+from .disp_result_reader import DispResultReader
 from ...gmt.applications.plot_Z_at_sites import ZPlotter
 
 __all__ = ['MisfitPlotter']
@@ -19,7 +19,7 @@ Combine each subplots using latex into a pdf file.
                  result_file
                  ):
         self.result_file = result_file
-        self.analyser = DispAnalyser(self.result_file)
+        self.analyser = DispResultReader(self.result_file)
         self.sites = self.analyser.result_file_reader.sites
 
         self._cwd = tempfile.mkdtemp()
