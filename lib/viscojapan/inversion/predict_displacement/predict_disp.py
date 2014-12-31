@@ -1,7 +1,7 @@
 import numpy as np
 
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, DiffED, EpochalG
-from ..result_file import ResultFileReader
+from ..result_file import SlipResultReader
 from ...utils import as_string
 
 __all__ = ['DispPred']
@@ -16,7 +16,7 @@ class DispPred(object):
                  file_incr_slip0 = None
                  ):
         self.result_file = result_file
-        self.result_file_reader = ResultFileReader(
+        self.result_file_reader = SlipResultReader(
             self.result_file,
             fault_file
             )

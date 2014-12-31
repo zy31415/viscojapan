@@ -6,7 +6,7 @@ import viscojapan as vj
 
 pred = vj.inv.DispPred(
     file_G0 = '../../../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
-    result_file = '../../outs/nrough_06_naslip_10.h5',
+    result_file = '../../outs/nrough_05_naslip_11.h5',
     fault_file = '../../../fault_model/fault_bott80km.h5',
     files_Gs = ['../../../green_function/G1_He50km_VisM1.0E19_Rake83.h5',
                 '../../../green_function/G2_He60km_VisM6.3E18_Rake83.h5',

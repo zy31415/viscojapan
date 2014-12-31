@@ -3,16 +3,14 @@ from ...fault_model import FaultFileReader
 from ...moment import ComputeMoment
 from ...plots import plot_Mos_Mws
 
-__all__ = ['SlipAnalyser']
+__all__ = ['SlipResultReader']
 
-class SlipAnalyser(object):
+class SlipResultReader(ResultFileReader):
     def __init__(self,
                  result_file,
                  fault_file,
                  earth_file=None):
-
-        self.result_file = result_file
-        self.result_file_reader = ResultFileReader(result_file)
+        super().__init__(result_file)
 
         self.fault_file = fault_file
         if fault_file is not None:
