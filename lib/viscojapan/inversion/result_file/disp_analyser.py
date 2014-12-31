@@ -37,20 +37,17 @@ class DispAnalyser(object):
         if subset_epochs is None:
             ch_epochs = np.s_[:]
         else:
-            assert len(subset_epochs) == self.num_epochs
-            ch_epochs =  np.asarray(subset_epochs, dtype='bool')
+            ch_epochs =  np.asarray(subset_epochs)
 
         if subset_sites is None:
             ch_sites = np.s_[:]
         else:
-            assert len(ch_sites) == self.num_sites
-            ch_sites =  np.asarray(subset_sites, dtype='bool')
+            ch_sites =  np.asarray(subset_sites)
 
         if subset_cmpt is None:
             ch_cmpt = np.s_[:]
         else:
-            assert len(subset_cmpt) == 3
-            ch_cmpt = np.asarray(subset_cmpt, dtype='bool')
+            ch_cmpt = np.asarray(subset_cmpt)
 
         diff = diff[ch_epochs, ch_sites, ch_cmpt]
         return np.sqrt(np.mean(diff**2, axis = axis))

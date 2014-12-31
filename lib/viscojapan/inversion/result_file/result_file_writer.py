@@ -21,8 +21,6 @@ class ResultFileWriter(FileIOBase):
         fid = self.fid
 
         # basic inputs:
-        print('write...')
-        print(inv.disp_obs)
         fid['d_obs'] = inv.disp_obs
 
         # basic results:

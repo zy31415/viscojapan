@@ -10,7 +10,7 @@ import pGMT
 from .utils import file_kur_top, file_etopo1
 from .plot_slip_txt_file import GMTSlipPlotter
 from ...fault_model import FaultFileReader
-from ...inversion import ResultFileReader
+from ...inversion.result_file.result_file_reader import ResultFileReader
 from ...moment import ComputeMoment
 from ...utils import get_middle_point
 
