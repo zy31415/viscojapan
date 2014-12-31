@@ -85,4 +85,8 @@ class DispResultReader(ResultFileReader):
         else:
             raise ValueError()
         return ts.flatten(), self.epochs
+
+    def get_cumu_pred_at_nth_epoch(self, nth_epoch):
+        disp = self.get_cumu_pred_3d()
+        return disp[nth_epoch,:,:]
     

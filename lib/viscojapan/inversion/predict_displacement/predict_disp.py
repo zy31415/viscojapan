@@ -1,7 +1,7 @@
 import numpy as np
 
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, DiffED, EpochalG
-from ..result_file import SlipResultReader
+from ..result_file import SlipResultReader, DispResultReader
 from ...utils import as_string
 
 __all__ = ['DispPred']
@@ -20,6 +20,8 @@ class DispPred(object):
             self.result_file,
             fault_file
             )
+        self.disp_result_reader = DispResultReader(self.result_file)
+        
         self.sites_in_inversion = self.slip_result_reader.sites
 
         self.epochs = self.slip_result_reader.epochs

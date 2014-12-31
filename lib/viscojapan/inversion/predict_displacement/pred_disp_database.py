@@ -137,8 +137,9 @@ class PredDispToDatabaseWriter(object):
         items = []
         sites = self.pred_disp.sites_in_inversion
         for nth, epoch in enumerate(self.epochs):
-            disps = self.pred_disp.result_file_reader.get_disp_at_epoch(epoch)
-            disps = disps.reshape([-1,3])
+            disps = self.pred_disp.disp_result_reader.\
+                    get_cumu_pred_at_nth_epoch(nth)
+    
             items += [(site, int(epoch), slip[0], slip[1], slip[2])
                      for site, slip in zip(sites, disps)]
         self._insert_into_database('tb_cumu_disp_pred', items, duplication)
