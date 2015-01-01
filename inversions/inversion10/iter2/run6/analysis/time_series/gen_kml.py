@@ -6,5 +6,5 @@ kml = vj.inv.KMLShowTimeSeries(
     )
 kml.save_kml('time_series.kml')
 #kml.plot(file_ext = 'pdf', nproc=6)
-kml.plot(file_ext = 'png', nproc=4)
+kml.plot(file_ext = 'png', nproc=6)
 
