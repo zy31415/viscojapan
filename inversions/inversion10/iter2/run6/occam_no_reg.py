@@ -37,9 +37,6 @@ inv = vj.inv.OccamDeconvolution(
 inv.set_data_except(excepts=['L'])
 
 outfname = 'outs/result_no_reg.h5'%(nrough, naslip)
-if exists(outfname):
-    print("Skip %s !"%outfname)
-    continue
 print(outfname)
 inv.regularization = \
        reg = vj.inv.reg.create_rough_aslip_boundary_regularization(
