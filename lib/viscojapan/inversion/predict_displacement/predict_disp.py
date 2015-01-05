@@ -74,7 +74,6 @@ class DispPred(object):
     def _nlin_correction_E_cumu_slip(self, nth_epoch):
         reader = EpochalFileReader(self.file_incr_slip0)
         slip0 = reader[0]
-        slip0 = self.basis.
         for nth in range(1, nth_epoch+1):
             epoch = int(self.epochs[nth])
             slip0 += reader[epoch]
