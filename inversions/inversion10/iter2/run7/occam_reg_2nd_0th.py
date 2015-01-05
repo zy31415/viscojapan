@@ -18,7 +18,7 @@ num_epochs = len(epochs)
 #basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
 # unit basis matrix
-basis = BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
+basis = vj.inv.basis.BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
 inv = vj.inv.OccamDeconvolution(
     file_G0 = '../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
