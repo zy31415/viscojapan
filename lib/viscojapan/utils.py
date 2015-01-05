@@ -19,7 +19,7 @@ __all__ = ['delete_if_exists',
            'get_this_script_dir','next_non_commenting_line',
            'merge_disp_dic','make_grids','as_string',
            'get_middle_point','pop_from_center',
-           'mo_to_mw', 'mw_to_mo']
+           'mo_to_mw', 'mw_to_mo', 'adjust_mjd_for_plot_date']
 
 def delete_if_exists(fn):
     if os.path.exists(fn):

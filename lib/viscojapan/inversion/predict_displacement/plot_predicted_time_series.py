@@ -42,6 +42,20 @@ class PredictedTimeSeriesPlotter(object):
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw, color=color, **kwargs)
         return list(ys)
 
+    def plot_cumu_disp_pred_added(self, site, cmpt, color='green', lw=1, **kwargs):        
+        ts, ys = self.pred_reader.get_cumu_disp_added(site, cmpt)
+        plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
+                      color=color, label='cumulative disp. prediction added',
+                      **kwargs)
+        return list(ys)
+
+    def plot_post_disp_pred_added(self, site, cmpt, color='green', lw=1, **kwargs):        
+        ts, ys = self.pred_reader.get_post_disp_added(site, cmpt)
+        plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
+                      color=color, label='postseismic disp. prediction added',
+                      **kwargs)
+        return list(ys)
+
     def plot_cumu_obs_linres(self, site, cmpt,label='obs.', **kwargs):
         ts, ys = self.obs_reader.get_cumu_obs_linres(site, cmpt)
         plt.plot_date(shift_t(ts), regularize_y(ys), 'x', ms=5, label=label, **kwargs)
@@ -94,7 +108,9 @@ class PredictedTimeSeriesPlotter(object):
         return list(ys)
 
     def plot_cumu_disp(self, site, cmpt, loc=2, leg_fs=7,
-                       if_ylim=False):        
+                       if_ylim=False,
+                       if_plot_added = False,
+                       ):        
         self.plot_cumu_obs_linres(site, cmpt)
         y = self.plot_cumu_disp_pred(site, cmpt, label='pred.')
         y += self.plot_R_co(site, cmpt,
@@ -105,6 +121,9 @@ class PredictedTimeSeriesPlotter(object):
         plt.grid('on')
         if if_ylim:
             plt.ylim(calculate_lim(y))
+
+        if if_plot_added:
+            self.plot_cumu_disp_pred_added(site, cmpt)
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
         plt.title('Cumulative Disp.: {site} - {cmpt}'.format(
@@ -113,7 +132,8 @@ class PredictedTimeSeriesPlotter(object):
             ))
 
     def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7,
-                       if_ylim=True):
+                       if_plot_added = False,
+                       ):
         y = self.plot_post_obs_linres(site,cmpt, label='obs.')
         y += self.plot_post_disp_pred(site,cmpt, label='pred.')
         y += self.plot_R_co(site, cmpt,
@@ -123,8 +143,9 @@ class PredictedTimeSeriesPlotter(object):
 
         plt.grid('on')
 
-        if if_ylim:
-            plt.ylim(calculate_lim(y))
+        if if_plot_added:
+            self.plot_post_disp_pred_added(site, cmpt)
+            
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
         plt.title('Postseismic Disp. : {site} - {cmpt}'.format(

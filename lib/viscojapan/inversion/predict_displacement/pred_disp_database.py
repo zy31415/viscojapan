@@ -80,7 +80,7 @@ class PredDispToDatabaseWriter(object):
                          AND tb_R_co.day = tb_R_aslip.day;
                          ''') 
 
-            c.execute('''CREATE VIEW IF NOT EXISTS view_total_disp_added
+            c.execute('''CREATE VIEW IF NOT EXISTS view_cumu_disp_added
                          AS 
                          SELECT tb_E_cumu_slip.site as site,
                                 tb_E_cumu_slip.day as day,
@@ -91,6 +91,19 @@ class PredDispToDatabaseWriter(object):
                          JOIN view_R_cumu_slip
                          ON tb_E_cumu_slip.site = view_R_cumu_slip.site
                          AND tb_E_cumu_slip.day = view_R_cumu_slip.day;
+                         ''')
+
+            c.execute('''CREATE VIEW IF NOT EXISTS view_post_disp_added
+                         AS 
+                         SELECT view_E_aslip.site as site,
+                                view_E_aslip.day as day,
+                                view_E_aslip.e + view_R_cumu_slip.e as e,
+                                view_E_aslip.n + view_R_cumu_slip.n as n,
+                                view_E_aslip.u + view_R_cumu_slip.u as u
+                         FROM view_E_aslip
+                         JOIN view_R_cumu_slip
+                         ON view_E_aslip.site = view_R_cumu_slip.site
+                         AND view_E_aslip.day = view_R_cumu_slip.day;
                          ''')
 
             c.execute('''CREATE TABLE IF NOT EXISTS tb_cumu_disp_pred
@@ -198,7 +211,13 @@ class PredDispToDatabaseReader(object):
         return ts, ys
 
     def get_cumu_disp_pred(self, site, cmpt):
-        return self._select_time_series(site, cmpt, 'tb_cumu_disp_pred')        
+        return self._select_time_series(site, cmpt, 'tb_cumu_disp_pred')
+
+    def get_cumu_disp_added(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'view_cumu_disp_added')
+
+    def get_post_disp_added(self, site, cmpt):
+        return self._select_time_series(site, cmpt, 'view_post_disp_added') 
 
     def get_post_disp_pred(self, site, cmpt):
         return self._select_time_series(site, cmpt, 'view_post_disp_pred')

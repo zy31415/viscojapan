@@ -2,9 +2,9 @@ import sqlite3
 
 from pylab import plt
 
-db_file = 'pred_disp.db'
+db_file = '~pred_disp.db'
 
-site = 'J550'
+site = 'J799'
 
 
 
@@ -26,7 +26,7 @@ epochs, ys = read_ts_from_table(
 plt.plot(epochs, ys)
 
 epochs, ys = read_ts_from_table(
-    'tb_total_disp_pred',
+    'tb_cumu_disp_pred',
     site,
     'e'
     )
