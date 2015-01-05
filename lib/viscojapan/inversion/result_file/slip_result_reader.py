@@ -1,3 +1,5 @@
+import numpy as np
+
 from .result_file_reader import ResultFileReader
 from ...fault_model import FaultFileReader
 from ...moment import ComputeMoment
@@ -23,6 +25,37 @@ class SlipResultReader(ResultFileReader):
             
 
         self.earth_file = earth_file
+
+    def get_3d_incr_slip(self):
+        nx = self.num_subflt_along_strike
+        ny = self.num_subflt_along_dip
+        slip = self.incr_slip
+        slip = slip.reshape([self.num_epochs, ny, nx])
+
+        return slip
+
+    def get_3d_afterslip(self):
+        incr_slip = self.get_3d_incr_slip()
+        slip = [np.zeros_like(incr_slip[0,:,:])]
+        for ii in incr_slip[1:,:,:]:
+            slip.append(slip[-1]+ii)
+        slip = np.asarray(slip)
+        return slip
+
+    def get_3d_cumu_slip(self):
+        incr_slip = self.get_3d_incr_slip()
+        slip = [incr_slip[0,:,:]]
+        for ii in incr_slip[1:,:,:]:
+            slip.append(slip[-1]+ii)
+        slip = np.asarray(slip)
+        return slip
+
+    def get_cumu_slip_at_nth_epoch(self, nth):
+        nth = int(nth)
+        assert nth>=0
+        assert nth < len(self.epochs)
+        
+        return self.get_3d_cumu_slip()[nth,:,:] 
         
     def get_incr_slip_at_epoch(self, epoch):
         epochs = self.epochs
@@ -35,62 +68,19 @@ class SlipResultReader(ResultFileReader):
         assert nth>=0
         assert nth < len(self.epochs)
         
-        num_subflts = self.num_subflts
-        return self.incr_slip[num_subflts*nth:num_subflts*(nth+1)]
+        return self.get_3d_incr_slip()[nth,:,:]    
 
-    def get_total_slip_at_epoch(self, epoch):
-        epochs = self.epochs
-        assert epoch in epochs, 'Epoch %d is not in the epochs.'%epoch
-        idx = epochs.index(epoch)
-        return self.get_total_slip_at_nth_epoch(idx)
-
-    def get_total_slip_at_nth_epoch(self, nth):
-        nth = int(nth)
-        assert nth>=0
-        assert nth < len(self.epochs)
-        num_subflts = self.num_subflts
-        sslip = self.incr_slip[:num_subflts*(nth+1)].reshape([nth+1, num_subflts])
-        slip = sslip.sum(axis=0).reshape([-1,1])
-        return slip
-
-    def get_3d_incr_slip(self):
-        nx = self.num_subflt_along_strike
-        ny = self.num_subflt_along_dip
-        slip = self.incr_slip
-        slip = slip.reshape([self.num_epochs, ny, nx])
-
-        return slip
-
-    def get_3d_total_slip(self):
-        incr_slip = self.get_3d_incr_slip()
-        slip = [incr_slip[0,:,:]]
-        for ii in incr_slip:
-            slip.append(slip[-1]+ii)
-        slip = np.asarray(slip)
-        return slip
-
-    def get_after_slip_at_nth_epoch(self, nth):
-        nth = int(nth)
-        assert nth>=0
-        assert nth < len(self.epochs)
-
-        num_subflts = self.num_subflts
-        
-        if nth > 0:
-            sslip = self.incr_slip[num_subflts:num_subflts*(nth+1)].reshape([nth, num_subflts])
-            slip = sslip.sum(axis=0).reshape([-1,1])
-        if nth == 0:
-            slip = np.zeros((num_subflts,1))
-        return slip
-
-    def get_total_slip_Mos_Mws(self):
+    def get_cumu_slip_Mos_Mws(self):
         assert self.earth_file is not None, 'Missing earth_file!'
         compute = ComputeMoment(self.fault_file, self.earth_file)
         epochs = self.epochs
         mos = []
         mws = []
+
+        slip = self.get_3d_cumu_slip()
+        
         for nth, epoch in enumerate(epochs):
-            aslip = self.get_total_slip_at_nth_epoch(nth)
+            aslip = slip[nth,:,:]
             mo, mw = compute.compute_moment(aslip)
             mos.append(mo)
             mws.append(mw)
@@ -103,10 +93,13 @@ class SlipResultReader(ResultFileReader):
         mos = []
         mws = []
         _epochs = []
+
+        slip = self.get_3d_afterslip()
+        
         for nth, epoch in enumerate(epochs):
             if epoch == 0:
                 continue
-            aslip = self.get_after_slip_at_nth_epoch(nth)
+            aslip = slip[nth,:,:]
             mo, mw = compute.compute_moment(aslip)
             mos.append(mo)
             mws.append(mw)

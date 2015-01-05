@@ -9,3 +9,10 @@ Change to the following regularization method:
 and 0zth order for afterslip.
 
 Use BasisMatrixBSpline as basis function.
+
+
+Run7
+Use unit matrix for basis matrix.
+I didn't handle basis matrix carefully, thus causes a lot trouble.
+
+Jan 05, 2015
