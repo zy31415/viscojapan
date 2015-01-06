@@ -12,7 +12,7 @@ reg_roughes = logspace(-3,1,20)
 
 fault_file = '../fault_model/fault_bott80km.h5'
 
-epochs = epochs[0:3]
+#epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 #basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))

@@ -27,8 +27,7 @@ class DispPred(object):
 
         self.epochs = self.slip_result_reader.epochs
         self.num_epochs = len(self.epochs)
-        self._check_epochs
-
+        
         self.file_G0 = file_G0
         self.file_G0_reader = EpochalSitesFileReader(
             epoch_file = self.file_G0,
@@ -43,6 +42,7 @@ class DispPred(object):
         
         self.nlin_par_names = nlin_par_names
         self.file_incr_slip0 = file_incr_slip0
+        self._check_incr_slip0_file_spacing()
 
         if self.files_Gs is not None:
             self._get_delta_nlin_pars()
@@ -55,6 +55,15 @@ class DispPred(object):
         for G in self.files_Gs:
             reader = EpochalFileReader(G)
             assert sites == as_string(reader['sites'])
+
+    def _check_incr_slip0_file_spacing(self):
+        reader  = EpochalIncrSlipFileReader(self.file_incr_slip0)
+        print(reader.epochs, self.epochs)
+        assert reader.epochs == self.epochs, \
+               '''Epochs of initial slip input is the same as that is in the result file
+{slip0}
+{result}
+'''.format(slip0 = reader.epochs, result=self.epochs)
         
     def _get_delta_nlin_pars(self):
         self.delta_nlin_pars = []
