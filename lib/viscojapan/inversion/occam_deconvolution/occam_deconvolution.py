@@ -8,8 +8,7 @@ import h5py
 
 import viscojapan as vj
 from ...epochal_data import \
-     EpochalG, EpochalDisplacement,EpochalDisplacementSD, \
-     DiffED, EpochalIncrSlipFileReader
+     EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
 from ...epochal_data import EpochalFileReader
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
@@ -52,14 +51,13 @@ class OccamDeconvolution(Inversion):
         self.file_d = file_d
         self.file_sd = file_sd
         
+        self.file_incr_slip0 = file_incr_slip0
+        
         self.filter_sites_file = filter_sites_file
         self.sites = np.loadtxt(self.filter_sites_file,'4a,', usecols=(0,))
         
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
-
-        self.file_incr_slip0 = file_incr_slip0
-        self._check_incr_slip0_file_spacing()
 
         super().__init__(
             regularization,
@@ -98,17 +96,18 @@ class OccamDeconvolution(Inversion):
             dGs.append(
                 DiffED(ed1 = self.G0, ed2 = G,
                        wrt = par_name))
-            
+
+        # repacing input initial incr slip.
+        file_incr_slip0 = 'incr_slip0_respacing.h5'
+        delete_if_exists(file_incr_slip0)
+        vj.EpochalIncrSlip(self.file_incr_slip0).respacing(
+            self.epochs, file_incr_slip0)
+        self.file_incr_slip0 = file_incr_slip0
+        
         jacobian_vecs = []
         for dG in dGs:
             jacobian_vecs.append(JacobianVec(dG, self.file_incr_slip0))
         self.jacobian_vecs = jacobian_vecs
-
-    def _check_incr_slip0_file_spacing(self):
-        reader  = EpochalIncrSlipFileReader(self.file_incr_slip0)
-        for t1, t2 in zip(reader.epochs, self.epochs):
-            assert t1 == t2, \
-                   'Epochs of initial slip input is not aligned with the epochs input. Respacing is needed.'
     
     def set_data_B(self):
         print('Set data B ...')

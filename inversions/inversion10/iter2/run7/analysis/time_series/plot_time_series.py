@@ -1,7 +1,7 @@
 import viscojapan as vj
 
-site = '_KMN'
-#site = 'ULAB'
+#site = '_KMN'
+site = 'ULAB'
 #site = 'J795'
 
 #for cmpt in 'e', 'n', 'u':

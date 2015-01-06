@@ -13,7 +13,7 @@ pred = vj.inv.DispPred(
                 '../../../green_function/G3_He50km_VisM6.3E18_Rake90.h5'
                 ],
     nlin_par_names = ['log10(visM)','log10(He)','rake'],
-    file_incr_slip0 = '../../slip0/slip0.h5',
+    file_incr_slip0 = '../../incr_slip0_respacing.h5',
     )
 
 writer = vj.inv.PredDispToDatabaseWriter(

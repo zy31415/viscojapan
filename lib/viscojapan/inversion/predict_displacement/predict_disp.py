@@ -27,6 +27,7 @@ class DispPred(object):
 
         self.epochs = self.slip_result_reader.epochs
         self.num_epochs = len(self.epochs)
+        self._check_epochs
 
         self.file_G0 = file_G0
         self.file_G0_reader = EpochalSitesFileReader(
