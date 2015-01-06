@@ -76,7 +76,7 @@ class EpochalFileReader(FileIOBase):
         assert epoch <= max_day, 'Max day: %d'%max_day
         assert epoch >= min_day, 'Min day: %d'%min_day
 
-    def _get_epoch_value(self, epoch):
+    def get_epoch_value_no_interpolation(self, epoch):
         epochs = self.get_epochs()
         assert epoch in epochs, "Interpolation is not allowed in this method."
         out = self.fid['epochs/%04d'%epoch][...]
@@ -86,7 +86,7 @@ class EpochalFileReader(FileIOBase):
         self._assert_within_range(epoch)
         epochs = self.get_epochs()
         if epoch in epochs:
-            return self._get_epoch_value(epoch)
+            return self.get_epoch_value_no_interpolation(epoch)
         for nth, ti in enumerate(epochs[1:]):
             if epoch <= ti:
                 break
@@ -96,8 +96,8 @@ class EpochalFileReader(FileIOBase):
         assert (t1<t2) and (t1<=epoch) and (epoch<=t2), \
                'Epoch %d should be in %d ~ %d'%(epoch, t1, t2)
         
-        G1=self._get_epoch_value(t1)
-        G2=self._get_epoch_value(t2)
+        G1=self.get_epoch_value_no_interpolation(t1)
+        G2=self.get_epoch_value_no_interpolation(t2)
 
         G=(epoch-t1)/(t2-t1)*(G2-G1)+G1
 
@@ -115,6 +115,10 @@ class EpochalFileReader(FileIOBase):
     def get_epochs(self):
         out = sorted([int(ii) for ii in self.fid['epochs'].keys()])
         return out
+
+    @property
+    def epochs(self):
+        return self.get_epochs()
 
     def has_info(self, key):
         return 'info/%s'%key in self.fid

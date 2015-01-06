@@ -1,19 +1,12 @@
-from os.path import exists, join
-import tempfile as tf
-import shutil
+import numpy as np
 
-from numpy import asarray
+from .epochal_file_io import EpochalFileReader
+from ..utils import assert_col_vec_and_get_nrow
 
-from .epochal_data import EpochalData
-from ..utils import overrides
-from .stacking import vstack_column_vec
+__all__ = ['slip_to_incr_slip', 'incr_slip_to_slip',
+           'interpolate_incr_slip_file',
+           'EpochalIncrSlipFileReader']
 
-from .epochal_incr_slip_file_reader import slip_to_incr_slip,\
-     incr_slip_to_slip, interpolate_incr_slip_file
-
-__all__ = ['EpochalSlip','EpochalIncrSlip']
-
-# function definition
 def slip_to_incr_slip(f_slip, f_incr_slip):
     assert exists(f_slip)
     
@@ -59,36 +52,47 @@ def interpolate_incr_slip_file(in_incr_slip, epochs, out_incr_slip):
     tmp2_cum_slip = join(temp_path, 'cum2.h5')
     EpochalData(tmp1_cum_slip).respacing(epochs, tmp2_cum_slip)    
     slip_to_incr_slip(tmp2_cum_slip, out_incr_slip)
-    shutil.rmtree(temp_path)    
+    shutil.rmtree(temp_path)
+    
 
-# classes definition
+class EpochalIncrSlipFileReader(EpochalFileReader):
+    def __init__(self, epoch_file):
+        super().__init__(epoch_file)
 
-class EpochalSlip(EpochalData):
-    def __init__(self, file_slip):
-        super().__init__(file_slip)
-
-    def get_slip_at_subflt(self, irow, icol):
-        epochs = self.get_epochs()
-        ys = []
-        for epoch in epochs:
-            slip = self.get_epoch_value(epoch)
-            ys.append(slip[irow, icol])
-        return asarray(ys,float)
-
-class EpochalIncrSlip(EpochalSlip):
-    ''' Note that no time interpolation in this class.
-'''
-    def __init__(self, file_incr_slip):
-        super().__init__(file_incr_slip)
-
-    @overrides(EpochalSlip)
     def get_epoch_value(self, epoch):
-        return self._get_epoch_value(epoch)
+        return self.get_epoch_value_no_interpolation(epoch)
+
+    def get_incr_slip_at_nth_epoch(self, nth_epoch):
+        return self[self.epochs[nth_epoch]]
+
+    def get_aslip_at_nth_epoch(self,nth_epoch):
+        assert nth_epoch >=0
+
+        if nth_epoch ==0:
+            return np.zeros_like(self[0])
+        
+        slip = self.get_incr_slip_at_nth_epoch(nth_epoch)
+        
+        for n in range(2,nth_epoch+1):
+            slip += self.get_incr_slip_at_nth_epoch(n)
+        return slip
+    
+    def get_cumu_slip_at_nth_epoch(self,nth_epoch):
+        assert nth_epoch >=0
+        slip0 = self[0]
+
+        aslip = self.get_aslip_at_nth_epoch(nth_epoch)
+        
+        return slip0 + aslip
 
     def vstack(self):
-        epochs = self.get_epochs()
-        return vstack_column_vec(self, epochs)
-
+        epochs = self.epochs
+        res = self.get_epoch_value(epochs[0])
+        assert_col_vec_and_get_nrow(res)
+        for epoch in epochs[1:]:
+            res = np.vstack((res,epoch_data.get_epoch_value(epoch)))
+        return res
+        
     def to_cum_slip_file(self, out_file):
         incr_slip_to_slip(self.epoch_file, out_file)
 
@@ -103,4 +107,9 @@ class EpochalIncrSlip(EpochalSlip):
 
         if delete_temp:
             shutil.rmtree(temp_path)
+        
+        
+        
 
+    
+    
