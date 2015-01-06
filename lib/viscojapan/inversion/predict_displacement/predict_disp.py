@@ -46,7 +46,6 @@ class DispPred(object):
         if self.files_Gs is not None:
             self._get_delta_nlin_pars()
 
-        self.B = basis()
 
     def _assert_all_G_files_have_the_same_sites_list(self):
         reader = EpochalFileReader(self.file_G0)
@@ -68,6 +67,7 @@ class DispPred(object):
         G0 = self.file_G0_reader[0]
         disp = np.dot(G0, cumuslip)
         if self.files_Gs is not None:
+            pass
             disp += self._nlin_correction_E_cumu_slip(nth_epoch)
         return disp
 
@@ -156,7 +156,7 @@ class DispPred(object):
         for file_G, par in zip(self.files_Gs, self.nlin_par_names):
             G0 = EpochalG(self.file_G0)
             G = EpochalG(file_G)
-            diffG = DiffED(G0, G, par)
+            diffG = DiffED(ed1=G0, ed2=G, wrt=par)
             dG0 = diffG[0]
             dG = diffG[del_epoch]
             dGs.append(dG-dG0)
