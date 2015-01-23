@@ -2,7 +2,7 @@ from .epochal_data import *
 from .moment import *
 
 from .test_utils import MyTestCase
-from .hypocenter import *
+from .constants import *
 
 # just import subpackage name
 from . import pollitz
@@ -26,3 +26,4 @@ from . import fault_model as fm
 from . import latex
 
 adjust_mjd_for_plot_date = 678577
+t_eq = 55631

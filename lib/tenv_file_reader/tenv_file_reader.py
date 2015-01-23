@@ -1,8 +1,30 @@
-from pylab import *
 from os.path import basename
-__all__ = ['read_tenv_ts','read_tenv_tssd','read_tenv_t','plot_tenv_ts']
 
-_ts_data_type=dtype("a4,a7,f,i,i,i,(1,3)f8,f,(1,3)f8,f,f")
+import numpy as np
+from pylab import *
+
+
+__all__ = ['read_tenv_file', 'read_tenv_ts','read_tenv_tssd','read_tenv_t','plot_tenv_ts']
+
+_ts_data_type = dtype("a4,a7,f,i,i,i,(1,3)f8,f,(1,3)f8,f,f")
+
+_ts_data_type2 = np.dtype(
+    [('site', np.bytes_, 4),
+     ('std', np.bytes_, 7),
+     ('dyr', np.float64, 1),
+     ('mjd', np.int64, 1),
+     ('week', np.int64, 1),
+     ('weekday', np.int64, 1),
+     ('e', np.float64, 1),
+     ('n', np.float64, 1),
+     ('u', np.float64, 1),
+     ('vertical', np.float64, 1),
+     ('esd', np.float64, 1),
+     ('nsd', np.float64, 1),
+     ('usd', np.float64, 1),
+     ('en', np.float64, 1),
+     ('eu', np.float64, 1)]
+    )
 
 def file_len(fname):
     ''' Count the number of lines in a file.
@@ -11,6 +33,9 @@ def file_len(fname):
         for i, l in enumerate(f):
             pass
     return i + 1
+
+def read_tenv_file(fn):
+    return np.loadtxt(fn, _ts_data_type2)    
 
 def read_tenv_ts(f,cmpt):
     """Fetch time series of a site form database.

@@ -16,6 +16,11 @@ class DispResultReader(ResultFileReader):
         disp = self.get_cumu_pred_3d()
         return disp - disp[0,:,:]
 
+    def get_post_pred_at_epoch(self, epoch):
+        assert epoch in self.epochs
+        idx = self.epochs.index(epoch)
+        return self.get_post_pred_3d()[idx,:,:]
+
     def get_cumu_obs_3d(self):
         return self.d_obs.reshape([self.num_epochs, self.num_sites, 3])
 

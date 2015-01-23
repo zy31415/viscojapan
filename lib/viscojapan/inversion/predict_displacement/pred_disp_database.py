@@ -1,4 +1,5 @@
 import sqlite3
+import numpy as np
 
 __all__ = ['PredDispToDatabaseWriter',
            'PredDispToDatabaseReader']
@@ -233,6 +234,30 @@ class PredDispToDatabaseReader(object):
 
     def get_R_aslip(self, site, cmpt):
         return self._select_time_series(site, cmpt, 'tb_R_aslip')
+
+    def _select_for_all_stations(self, tb_name, epoch):
+        with sqlite3.connect(self.pred_db) as conn:
+            c = conn.cursor()
+            tp = c.execute('select site, e, n, u from {tb_name} where day=? order by site;'\
+                           .format(tb_name=tb_name),
+                           (epoch,)
+                           ).fetchall()
+        sites = [ii[0] for ii in tp]
+        ys = np.asarray([[ii[1],ii[2],ii[3]] for ii in tp])
+        
+        return sites, ys
+
+    def get_R_co_at_epoch(self, epoch):
+        return self._select_for_all_stations('tb_R_co', epoch)
+
+    def get_post_disp_added_at_epoch(self, epoch):
+        return self._select_for_all_stations('view_post_disp_added', epoch)
+
+    def get_E_aslip_at_epoch(self, epoch):
+        return self._select_for_all_stations('view_E_aslip', epoch)
+
+    def get_R_aslip_at_epoch(self, epoch):
+        return self._select_for_all_stations('tb_R_aslip', epoch)
 
     
     

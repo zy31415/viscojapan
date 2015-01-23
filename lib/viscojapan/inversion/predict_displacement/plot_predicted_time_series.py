@@ -109,6 +109,7 @@ class PredictedTimeSeriesPlotter(object):
 
     def plot_cumu_disp(self, site, cmpt, loc=2, leg_fs=7,
                        if_ylim=False,
+                       added_label = None,
                        ):        
         self.plot_cumu_obs_linres(site, cmpt)
         y = self.plot_cumu_disp_pred(site, cmpt, label='pred.')
@@ -121,7 +122,8 @@ class PredictedTimeSeriesPlotter(object):
         if if_ylim:
             plt.ylim(calculate_lim(y))
 
-        self.plot_cumu_disp_pred_added(site, cmpt)
+        self.plot_cumu_disp_pred_added(site, cmpt, label=added_label)
+        plt.ylabel(r'm')
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
         plt.title('Cumulative Disp.: {site} - {cmpt}'.format(
@@ -129,7 +131,8 @@ class PredictedTimeSeriesPlotter(object):
             cmpt = cmpt
             ))
 
-    def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7
+    def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7,
+                       added_label = None
                        ):
         y = self.plot_post_obs_linres(site,cmpt, label='obs.')
         y += self.plot_post_disp_pred(site,cmpt, label='pred.')
@@ -140,9 +143,10 @@ class PredictedTimeSeriesPlotter(object):
 
         plt.grid('on')
 
-        self.plot_post_disp_pred_added(site, cmpt)
+        self.plot_post_disp_pred_added(site, cmpt, label=added_label)
         
         plt.legend(loc=loc, prop={'size':leg_fs})
+        plt.ylabel(r'm')
         plt.gcf().autofmt_xdate()
         plt.title('Postseismic Disp. : {site} - {cmpt}'.format(
             site = get_true_name_by_id(site),

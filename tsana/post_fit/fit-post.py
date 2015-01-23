@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+import pickle
 import argparse
 
 from viscojapan.tsana.post_fit.post import fit_post
@@ -14,12 +14,19 @@ parser=argparse.ArgumentParser(description=''' Do postseismic curve fitting.
 ''')
 parser.add_argument('site',type=str,nargs=1,help='site that is used to do curve fitting.')
 parser.add_argument('-p',action='store_true',help='Plot the resutls.')
+parser.add_argument('-s',action='store_true',help='Pickle cfs.')
 
 args = parser.parse_args()
 
 site=args.site[0]
 cfs=fit_post(site)
 cfs.go()
+
+if args.s:
+    with open('cfs.pkl/%s.pkl'%site,'wb') as fid:
+        pickle.dump(cfs, fid)
+
+
 ResidualWriter(cfs).save('post_res/%s.post'%site)
 
 save_cumu_post(cfs, days, 'cumu_post_displacement/%s.cumu'%site)

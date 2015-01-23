@@ -38,7 +38,6 @@ class GMTSlipPlotter(object):
         self.A = A
 
     def plot_slip(self):
-        self._init()
         self.gplt.grdimage(
             self.slip_file_grd_cutted, J='', R='',
             C = self.cpt_file,
@@ -46,10 +45,13 @@ class GMTSlipPlotter(object):
             I = self.intensity_file,
             )
 
-    def _init(self):
+    def init(self,
+             original_cpt_file = 'no_green',
+             if_cpt_reverse = False
+             ):
         self._init_working_dir()
         self._prepare_slip_file()
-        self._prepare_cpt_file()
+        self._prepare_cpt_file(original_cpt_file, if_cpt_reverse)
         self._prepare_intensity_file()
 
     def _init_working_dir(self):
@@ -113,14 +115,23 @@ class GMTSlipPlotter(object):
                         N='1/NaN',G=file_mask)
         gmt.grdmath(grd_in, file_mask, 'OR', '= ', grd_out)
 
-    def _prepare_cpt_file(self):
+    def _prepare_cpt_file(self,
+                          original_cpt_file = 'no_green',
+                          if_cpt_reverse = False
+                          ):
         self.cpt_file = join(self._workdir, 'slip.cpt')
         gmt = pGMT.GMT()
+
+        if if_cpt_reverse:
+            I = ''
+        else:
+            I = None
         gmt.grd2cpt(
             self.slip_file_grd,
             #C='temperature.cpt',
-            C='no_green',
-            Z=''
+            C=original_cpt_file,
+            Z='',
+            I = I,
             )
         gmt.save_stdout(self.cpt_file)
 
@@ -164,17 +175,29 @@ class GMTSlipPlotter(object):
                 W = W,
                 )
 
-    def plot_scale(self):
-        with tempfile.NamedTemporaryFile('w+t') as text:
-            text.write('''#
-B %s 0.1 0.2 -Baf::/:m:
-'''%(self.cpt_file))
-            text.seek(0,0)
-            self.gplt.pslegend(
-                text.name, R='', J='', O='', K='',
-                F='+gazure1', C='0.04i/0.07i', L='1.2',
-                D='143.5/35.2/4/1.2/BL'
-                )
+    def plot_scale(self,
+                   xpos = '0',
+                   ypos = '0',
+                   tick_interval = '10',
+                   ):
+        self.gplt.psscale(
+            R='', J='', O = '', K='',
+            C = self.cpt_file,
+            D='{xpos}/{ypos}/3/.2'.format(xpos=xpos, ypos=ypos),
+            B='{tick_interval}::/:m:'.format(tick_interval=tick_interval),
+            )
+            
+            
+##        with tempfile.NamedTemporaryFile('w+t') as text:
+##            text.write('''#
+##B %s 0.1 0.2 -Baf::/:m:
+##'''%(self.cpt_file))
+##            text.seek(0,0)
+##            self.gplt.pslegend(
+##                text.name, R='', J='', O='', K='',
+##                F='+gazure1', C='0.04i/0.07i', L='1.2',
+##                D='143.5/35.2/4/1.2/BL'
+##                )
         
 
     

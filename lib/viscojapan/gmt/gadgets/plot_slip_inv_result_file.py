@@ -24,10 +24,10 @@ def get_slip_results_for_gmt(res_file, fault_file):
     lats_m = get_middle_point(lats)
     lons_m = get_middle_point(lons)
 
-    with h5py.File(res_file) as fid:
-        slip = fid['Bm'][...]
-    slip = slip.reshape([-1, reader.num_subflt_along_strike])
+    reader = SlipResultReader(res_file, fault_file)
+
     
+    slip = reader.get_3d_incr_slip()    
 
     _arr = np.array([lons_m.flatten(), lats_m.flatten(), slip.flatten()]).T
 

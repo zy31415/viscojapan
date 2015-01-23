@@ -1,6 +1,7 @@
 __all__ = ['RegMod','IndepRegMod','JointRegMod']
 
 from numpy import sqrt, mean
+import numpy as np
 
 class RegMod():
     """ Interface.
@@ -58,7 +59,7 @@ class IndepRegMod(RegMod):
         """ Return chi-square.
 """
         res = (self.func(self.data._t)-self.data._y0)/self.data._y0_sd
-        res = sum(res**2)
+        res = (res**2).sum()
         return res
 
     # override
@@ -222,3 +223,33 @@ SITE and CMPT tags.
         fordel = self.get_cf(SITE, CMPT)
         for tp in fordel:
             self.cfs.remove(tp)
+
+    def aic(self):
+        '''
+AIC = 2*k - 2*ln(L)
+    = 2*k + p*ln(2*pi) + ln|Sig| + \
+      (G(m)-d)^T * Sig^-1 * (G(m)-d)
+
+where k - number of parameters
+      L - likelyhood
+      p - number of data
+      Sig - sigma matrix
+
+Ref:
+For Likelyhood defination:
+    Johnson, Applied multivariate statistical analysis, p150
+'''
+        num_pars = self.np()
+        num_data = self.ndata()
+    
+        ysd = []
+        for cf in self:
+            ysd.append(cf.data._y0_sd)
+        ysd = np.asarray(ysd).flatten()        
+            
+        aic = 2*num_pars + num_data*np.log(2*np.pi) + \
+              np.log(ysd**2).sum() + \
+              self.chisq()
+        return aic
+        
+        

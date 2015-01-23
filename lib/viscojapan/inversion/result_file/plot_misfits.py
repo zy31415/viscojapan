@@ -20,7 +20,7 @@ Combine each subplots using latex into a pdf file.
                  ):
         self.result_file = result_file
         self.analyser = DispResultReader(self.result_file)
-        self.sites = self.analyser.result_file_reader.sites
+        self.sites = self.analyser.sites
 
         self._cwd = tempfile.mkdtemp()
 
@@ -208,7 +208,7 @@ Combine each subplots using latex into a pdf file.
         alls = np.sqrt((es**2 + ns**2 + us**2)/3.)
         
         return self._plot(es, ns, us, alls, 'RMS of postseismic offsets (m) at epoch %d at each station'%\
-                          (self.analyser.result_file_reader.epochs[nth]))
+                          (self.analyser.epochs[nth]))
         
     def _clean(self):
         shutil.rmtree(self._cwd)

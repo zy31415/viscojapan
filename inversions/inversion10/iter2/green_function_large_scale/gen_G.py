@@ -16,7 +16,7 @@ def add_task(mod_str, visK, visM, He, rake, model_num):
         G_file = 'G%d_'%model_num + mod_str + '.h5',
         num_subflts = num_subflts,
         pollitz_outputs_dir = 'outs_' + mod_str,
-        sites_file = 'stations.in',
+        sites_file = 'stations_large_scale.in',
         extra_info ={
         'He':He,
         'log10(He)' : log10(He),

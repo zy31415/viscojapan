@@ -1,7 +1,7 @@
 import numpy as np
 from pylab import plt
 
-from .result_file_reader import ResultFileReader
+from .slip_result_reader import SlipResultReader
 
 __all__ = ['FaultSlipPlotter']
 
@@ -10,12 +10,21 @@ class FaultSlipPlotter(object):
                  result_file,
                  fault_file):
         self.result_file = result_file
-        self.reader_result_file = ResultFileReader(
+        self.reader_result_file = SlipResultReader(
             self.result_file,
             fault_file)
         
-    def plot(self, output_file):
-        slip = self.reader_result_file.get_3d_total_slip()
+    def plot(self, output_file,
+             if_x_log=False,
+             xlim=[0, 1344],
+             ylim = [0,100],
+             yticks = [20, 40, 60],
+             xticks = [1, 10, 100, 1000],
+             xticklabels = [r'$10^0$', r'$10^1$', r'$10^2$', r'$10^3$'],
+             rotation = 45,
+             fontsize = 10,
+             ):
+        slip = self.reader_result_file.get_3d_cumu_slip()
         num_subflts_strike = slip.shape[2]
         num_subflts_dip = slip.shape[1]        
         
@@ -27,12 +36,13 @@ class FaultSlipPlotter(object):
         for ii in range(num_subflts_dip):
             for jj in range(num_subflts_strike):
                 ax = axes[ii][jj]
-                slip_subflt = slip[:,ii,jj][0:-1]
+                slip_subflt = slip[:,ii,jj]
                 plt.sca(ax)
                 plt.fill_between(x=epochs, y1=slip_subflt, y2=0, color='r')
-                ax.set_xscale('log')
-                plt.xlim([0.1, 300])
-                plt.ylim([0,100])
+                if if_x_log:
+                    ax.set_xscale('log')                    
+                plt.xlim(xlim)
+                plt.ylim(ylim)
                 plt.grid('on')
                 plt.box('on')
 
@@ -47,11 +57,8 @@ class FaultSlipPlotter(object):
             plt.tick_params(axis='x',which='major',
                                 bottom='on', top='off', left='off', right='off',
                                 labelbottom='on', labeltop='off', labelleft='off', labelright='off')
-            ax.set_xticks([1, 10, 100, 1000])
-            ax.set_xticklabels([r'$10^0$', r'$10^1$', r'$10^2$', r'$10^3$'])
-            for tick in ax.xaxis.get_major_ticks():
-                tick.label.set_fontsize(10)
-                tick.label.set_rotation('horizontal')
+            ax.set_xticks(xticks)
+            ax.set_xticklabels(xticklabels, rotation=rotation, fontsize=fontsize)
             plt.xlabel('day')
 
         for ax in axes[0,1::2]:
@@ -59,11 +66,8 @@ class FaultSlipPlotter(object):
             plt.tick_params(axis='x',which='major',
                                 bottom='off', top='on', left='off', right='off',
                                 labelbottom='off', labeltop='on', labelleft='off', labelright='off')
-            ax.set_xticks([1, 10, 100, 1000])
-            ax.set_xticklabels([r'$10^0$', r'$10^1$', r'$10^2$', r'$10^3$'])
-            for tick in ax.xaxis.get_major_ticks():
-                tick.label.set_fontsize(10)
-                tick.label.set_rotation('horizontal')
+            ax.set_xticks(xticks)
+            ax.set_xticklabels(xticklabels, rotation=rotation, fontsize=fontsize)
             plt.xlabel('day')
 
         for ax in axes[::2,0]:
@@ -71,7 +75,8 @@ class FaultSlipPlotter(object):
             plt.tick_params(axis='y',which='major',
                                 bottom='off', top='off', left='on', right='off',
                                 labelbottom='off', labeltop='off', labelleft='on', labelright='off')
-            ax.set_yticklabels(range(0,100,20))
+            ax.set_yticks(yticks)
+            #ax.set_yticklabels(range(0,100,20))
             for tick in ax.yaxis.get_major_ticks():
                 tick.label.set_fontsize(10)
                 tick.label.set_rotation('horizontal')
@@ -82,7 +87,8 @@ class FaultSlipPlotter(object):
             plt.tick_params(axis='y',which='major',
                                 bottom='off', top='off', left='off', right='on',
                                 labelbottom='off', labeltop='off', labelleft='off', labelright='on')
-            ax.set_yticklabels(range(0,100,20))
+            ax.set_yticks(yticks)
+            #ax.set_yticklabels(range(0,100,20))
             for tick in ax.yaxis.get_major_ticks():
                 tick.label.set_fontsize(10)
                 tick.label.set_rotation('horizontal')

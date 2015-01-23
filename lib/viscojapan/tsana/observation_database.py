@@ -164,6 +164,6 @@ class ObservationDatatbaseReader(object):
         ts = [ii[0] for ii in tp]
         ys = [ii[1] for ii in tp]
         #print(ys)
-        return ts, ys
+        return np.asarray(ts), np.asarray(ys)
 
         

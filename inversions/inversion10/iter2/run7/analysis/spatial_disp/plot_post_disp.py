@@ -1,9 +1,9 @@
 import viscojapan as vj
 from pylab import plt
 
-res_file = '../../outs/nco_06_naslip_10.h5'
+res_file = '../../outs/nrough_05_naslip_11.h5'
 disp_obs_file = '../../../obs/cumu_post_with_seafloor.h5'
-epoch = 1100
+epoch = 1344
 
 scale = 16.
 X = 0.1
@@ -16,12 +16,12 @@ bm = vj.plots.MyBasemap(
     region_code='near')
 
 # prediction
-reader = vj.inv.ResultFileReader(res_file)
+reader = vj.inv.DispResultReader(res_file)
 sites = reader.sites
-disp = reader.get_post_disp_at_epoch(epoch)
+disp = reader.get_post_pred_at_epoch(epoch)
 
 mplt = vj.plots.MapPlotDisplacement(bm)
-mplt.plot_disp(disp, sites, color='red',
+mplt.plot_disp(disp.flatten(), sites, color='red',
                X = X, Y = Y, U=U, label=label_pred,
                scale = scale)
 

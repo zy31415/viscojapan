@@ -7,7 +7,7 @@ from numpy import loadtxt, asarray, nan
 
 from ...sites_db import get_pos_dic
 
-__all__ = ['read_vel_sd','read_vel','gen_vel_and_vsd_file']
+__all__ = ['LinResReader','read_vel_sd','read_vel','gen_vel_and_vsd_file']
 
 class LinResReader(object):
     def __init__(self,site,cmpt):
