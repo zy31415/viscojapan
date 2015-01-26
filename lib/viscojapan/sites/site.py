@@ -1,5 +1,7 @@
 import pyproj as pj
 
+__all__ = ['Site']
+
 class Site(object):
     ''' Represent a site.
 '''
@@ -44,21 +46,12 @@ class Site(object):
         else:
             return True
 
-    @property
-    def epi_dist(self) -> float:
-        ''' Distance from the epicenter in KM.
-'''
-        epi_lon0, epi_lat0 = vj.TOHOKU_EPICENTER
-        p = pj.Geod(ellps='WGS84')
-        az1, az2, dis = p.inv(self.lon, self.lat, epi_lon0, epi_lat0)
-        return dis/1000.
-
     def __eq__(self, other):
         return self.name == other.name
 
     def __str__(self):
-        out = '%s at (%8.4f, %8.4f), %8.3f km from the epi.'%\
-               (self.name, self.lon, self.lat, self.epi_dist)
+        out = '%s (%s) at (%8.4f, %8.4f)'%\
+               (self.id, self.name, self.lon, self.lat)
         #out += '\n  %s\n'%(super().__str__())
         return out
         

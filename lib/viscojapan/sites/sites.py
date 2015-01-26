@@ -9,23 +9,26 @@ import viscojapan as vj
 import sqlite3
 from ..sites_db import get_pos_dic, get_networks_dic
 
-__all__=['read_sites_from_txt', 'save_sites_to_txt',
+__all__=['save_sites_to_txt',
          'save_sites_to_kml']
 
-def read_sites_from_txt_id(fn):
-    sites = np.loadtxt(fn, '4a', usecols=(0,))
-    return [Site(ii.decode()) for ii in sites]
 
-def save_sites_to_txt(sites, fn, header=None):
+def save_sites_to_txt(sites, fn,
+                      format='id name lon lat',
+                      header=None):
     with open(fn, 'wt') as fid:
         if header is not None:
             fid.write(header)
             if header[-1] != '\n':
                 fid.write('\n')                
-        fid.write('# site lon lat\n')
-        for site in self:
-            fid.write('%s %f %f \n'%(site.name, site.lon, site.lat))
-
+        fid.write('# ' + format +'\n')
+        formats = format.split()
+        for site in sites:
+            for fm in formats:
+                val = getattr(site, fm)
+                fid.write('{val}  '.format(val=val))
+            fid.write('\n')
+                
 def save_sites_to_kml(sites, fn, label_color='red', icon_name='flag'):
     kml = sk.Kml()
     for site in sites:
@@ -58,18 +61,18 @@ https://sites.google.com/site/gmapsdevelopment/
 
 def get_kml_html_description_for_onshore(site):
     description = '''<![CDATA[
-<a href="http://geodesy.unr.edu/NGLStationPages/stations/{0}.sta">
-    {0}</a>, {1:.3f} km from the epicenter of 2011 Tohoku earthquake.
+<a href="http://geodesy.unr.edu/NGLStationPages/stations/{id}.sta">
+    {name} ({id})</a>
 <br>
-<img src="http://geodesy.unr.edu/tsplots/IGS08/TimeSeries/{0}.png">
-]]>'''.format(site.name, site.epi_dist)
+<img src="http://geodesy.unr.edu/tsplots/IGS08/TimeSeries/{id}.png">
+]]>'''.format(id=site.id, name=site.name)
     return description
 
 def get_kml_html_description_for_seafloor(site):
     description = '''<![CDATA[
-Seafloor station:  {0} <br>
-{1:.3f} km from the epicenter of 2011 Tohoku earthquake. <br>
-]]>'''.format(site.name, site.epi_dist)
+Seafloor station:  {name}{id} <br>
+<br>
+]]>'''.format(id=site.id, name=site.name)
     return description
 
 
