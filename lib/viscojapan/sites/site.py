@@ -1,10 +1,15 @@
 import pyproj as pj
 
+from ..constants import TOHOKU_EPICENTER
+
 __all__ = ['Site']
 
 class Site(object):
     ''' Represent a site.
 '''
+    epi_lon0 = TOHOKU_EPICENTER[0]
+    epi_lat0 = TOHOKU_EPICENTER[1]    
+    
     def __init__(self,
                  id = None,
                  name = None,
@@ -45,6 +50,14 @@ class Site(object):
             return False
         else:
             return True
+
+    @property
+    def epi_dist(self):
+        p = pj.Geod(ellps='WGS84')
+        az1, az2, dis = p.inv(self.lon, self.lat,
+                              self.epi_lon0, self.epi_lat0)
+        dis /=1000. # m => km
+        return dis
 
     def __eq__(self, other):
         return self.name == other.name
