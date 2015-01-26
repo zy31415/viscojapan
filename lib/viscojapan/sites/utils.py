@@ -32,8 +32,6 @@ def sorted_by_epi_dist(sites):
     dist_sorted = [ii[1] for ii in tp]
     return sites_sorted, dist_sorted
 
-
-
 def get_all_sites():
     tp=loadtxt(sites_file,'4a, 2f')
     return [ii[0] for ii in tp]

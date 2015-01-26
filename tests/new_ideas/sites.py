@@ -12,7 +12,7 @@ from ..sites_db import get_pos_dic, get_networks_dic
 __all__=['read_sites_from_txt', 'save_sites_to_txt',
          'save_sites_to_kml']
 
-def read_sites_from_txt_id(fn):
+def read_sites_from_txt(fn):
     sites = np.loadtxt(fn, '4a', usecols=(0,))
     return [Site(ii.decode()) for ii in sites]
 

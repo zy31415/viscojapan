@@ -12,12 +12,16 @@ gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
 
 gplt = gmt.gplt
 
-north = 80
+north = 60
 south = 12
-east = 200
-west = 80
+east = 190
+west = 100
 gplt.psbasemap(
-    R = '80/200/12/80',       # region
+    R = '{west}/{east}/{south}/{north}'.format(
+        west = west,
+        east = east,
+        south = south,
+        north = north),       # region
     JD = '{lon0}/{lat0}/{lat1}/{lat2}/{wid}'\
     .format(lon0 = vj.TOHOKU_EPICENTER[0],
             lat0 = vj.TOHOKU_EPICENTER[1],
@@ -59,7 +63,7 @@ pltxyz.plot_contour(
 gplt.pscoast(
     R = '', J = '',
     D = 'h', N = 'a/faint,100,-.',
-    W = 'faint,50',A='5000',Lf='190/15/35/1000+lkm+jt',
+    W = 'faint,50',A='5000',Lf='180/15/35/500+lkm+jt',
     K = '',
     O = '')
 
@@ -68,5 +72,5 @@ vj.gmt.plot_plate_boundary(gplt, color='100')
 vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.2, fontsize=0)
 gplt.finish()
 
-gmt.save('Raslip.pdf')
+gmt.save('Raslip_1344day.pdf')
 

@@ -12,16 +12,12 @@ gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
 
 gplt = gmt.gplt
 
-north = 60
+north = 80
 south = 12
-east = 190
-west = 100
+east = 200
+west = 80
 gplt.psbasemap(
-    R = '{west}/{east}/{south}/{north}'.format(
-        west = west,
-        east = east,
-        south = south,
-        north = north),       # region
+    R = '80/200/12/80',       # region
     JD = '{lon0}/{lat0}/{lat1}/{lat2}/{wid}'\
     .format(lon0 = vj.TOHOKU_EPICENTER[0],
             lat0 = vj.TOHOKU_EPICENTER[1],
@@ -39,7 +35,7 @@ vj.gmt.plot_etopo1(gplt)
 
 pltxyz = vj.gmt.GMTXYZ(
     gmt,
-    file_xyz = 'Rco',
+    file_xyz = 'pred_15yr',
     if_log_color_scale = True,
     cpt_scale = '-3.1/0.6/0.001',
     interp_inc = '40k',
@@ -47,10 +43,20 @@ pltxyz = vj.gmt.GMTXYZ(
     )
 #pltxyz.maskout_water(A='1000k',D='h')
 #pltxyz.plot_xyz()
+
+label_line = 'L142.37/38.30/80/60,'
+label_line += '142.37/38.30/90/20,'
+label_line += '142.37/38.30/-160/40,'
+label_line += '158/38.30/180/5,'
+label_line += '185/45/185/75,'
+label_line += '100/65/185/75,'
+label_line += '125/15/80/30,'
+label_line += '143/15/160/18,'
+
 pltxyz.plot_contour(
-    contours=[0.001, 0.0026, 0.005,0.01,0.1,0.2],
+    contours=[0.001, 0.003, 0.005,0.01,0.1, 1],
     W='thick,red',
-    label_line = 'L142.37/38.30/80/60,142.37/38.30/90/20,142.37/38.30/-160/40,158/38.30/180/5',
+    label_line = label_line,
     label_font_size = 8,
     smooth_factor = 100,
     )
@@ -63,7 +69,7 @@ pltxyz.plot_contour(
 gplt.pscoast(
     R = '', J = '',
     D = 'h', N = 'a/faint,100,-.',
-    W = 'faint,50',A='5000',Lf='180/15/35/500+lkm+jt',
+    W = 'faint,50',A='5000',Lf='190/15/35/1000+lkm+jt',
     K = '',
     O = '')
 
@@ -72,5 +78,6 @@ vj.gmt.plot_plate_boundary(gplt, color='100')
 vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.2, fontsize=0)
 gplt.finish()
 
-gmt.save('Rco_1344day.pdf')
+gmt.save('R_15yr.pdf')
+
 
