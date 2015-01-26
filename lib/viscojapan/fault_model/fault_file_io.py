@@ -7,7 +7,7 @@ import h5py
 
 from ..utils import assert_positive_integer, get_middle_point
 
-__all__ = ['FaultFileWriter', 'FaultFileReader']
+__all__ = ['FaultFileReader']
 
 class FaultFileReader(object):
     def __init__(self, fault_file):
@@ -113,26 +113,6 @@ class FaultFileReader(object):
 
     def __del__(self):
         self.close()        
-
-
-class FaultFileWriter(FaultFileReader):
-    def __init__(self, fault_file):
-        super().__init__(fault_file)
-
-    def open(self):
-        ''' 'a' - Read/write if exists, create otherwise (default)'''
-        fid = h5py.File(self.fault_file, 'a')
-        return fid
-
-    @FaultFileReader.num_subflt_along_strike.setter
-    def num_subflt_along_strike(self, val):
-        assert_positive_integer(val)
-        self.fid['num_subflt_along_strike'] = val
-
-    @FaultFileReader.num_subflt_along_dip.setter
-    def num_subflt_along_dip(self, val):
-        assert_positive_integer(val)
-        self.fid['num_subflt_along_dip'] = val
 
 
     
