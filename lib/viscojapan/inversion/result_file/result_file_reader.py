@@ -1,10 +1,9 @@
 from os.path import exists
 
 import h5py
-import numpy as np
 
 from ...file_io_base import FileIOBase
-from ..slip import Slip
+from ...slip import Slip
 from ...fault_model import FaultFileReader
 
 __all__ = ['ResultFileReader']

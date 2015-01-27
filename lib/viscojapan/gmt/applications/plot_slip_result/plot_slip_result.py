@@ -5,7 +5,7 @@ import numpy as np
 import pGMT
 from ....inversion import ResultFileReader
 from ....fault_model import FaultFileReader
-from ....moment import ComputeMoment
+from ....moment import MomentCalculator
 from ....utils import get_middle_point
 
 from .plot_slip import _PlotSlip
@@ -156,6 +156,6 @@ class PlotSlipResult(Plotter):
         
 
     def compute_Mo_Mw(self, slip):
-        com = ComputeMoment(self.fault_file, self.earth_file)
+        com = MomentCalculator(self.fault_file, self.earth_file)
         return com.compute_moment(slip)
     

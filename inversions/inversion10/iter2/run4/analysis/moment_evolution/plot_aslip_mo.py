@@ -9,7 +9,7 @@ reader = vj.inv.ResultFileReader('../../outs/ncumurough_06_nedge_12.h5',
                                  fault_file)
 
 
-compute = vj.ComputeMoment(fault_file, earth_file)
+compute = vj.MomentCalculator(fault_file, earth_file)
 epochs = reader.epochs
 mos = []
 mws = []

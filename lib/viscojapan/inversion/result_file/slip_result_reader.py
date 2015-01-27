@@ -2,7 +2,7 @@ import numpy as np
 
 from .result_file_reader import ResultFileReader
 from ...fault_model import FaultFileReader
-from ...moment import ComputeMoment
+from ...moment import MomentCalculator
 from ...plots import plot_Mos_Mws
 
 __all__ = ['SlipResultReader']
@@ -72,7 +72,7 @@ class SlipResultReader(ResultFileReader):
 
     def get_cumu_slip_Mos_Mws(self):
         assert self.earth_file is not None, 'Missing earth_file!'
-        compute = ComputeMoment(self.fault_file, self.earth_file)
+        compute = MomentCalculator(self.fault_file, self.earth_file)
         epochs = self.epochs
         mos = []
         mws = []
@@ -88,7 +88,7 @@ class SlipResultReader(ResultFileReader):
 
     def get_afterslip_Mos_Mws(self):
         assert self.earth_file is not None, 'Missing earth_file!'
-        compute = ComputeMoment(self.fault_file, self.earth_file)
+        compute = MomentCalculator(self.fault_file, self.earth_file)
         epochs = self.epochs
         mos = []
         mws = []

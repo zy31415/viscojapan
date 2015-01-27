@@ -9,7 +9,7 @@ from numpy import logspace
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.post_inversion_form_slip import FormSlip
-from viscojapan.inversion.slip import incr_slip_to_slip
+from viscojapan.slip import incr_slip_to_slip
 from days import days
 
 path_outs = './outs_tik2/'

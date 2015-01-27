@@ -7,7 +7,7 @@ import viscojapan as vj
 nreses =[]
 rakes = []
 
-com  = vj.ComputeMoment('../../fault_model/fault_bott60km.h5',
+com  = vj.MomentCalculator('../../fault_model/fault_bott60km.h5',
                         'earth.model_He63km_VisM1.0E19'
                         )
 

@@ -1,7 +1,7 @@
 from pylab import *
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
-from viscojapan.inversion.slip import EpochalData
+from viscojapan.slip import EpochalData
 
 disp_obs = EpochalData('cumu_post.h5')
 

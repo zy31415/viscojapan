@@ -15,7 +15,7 @@ for ii in incr_slip:
     slip.append(slip[-1]+ii)
 slip = np.asarray(slip)
 
-cm = vj.ComputeMoment('../../fault_model/fault_bott40km.h5',
+cm = vj.MomentCalculator('../../fault_model/fault_bott40km.h5',
                  'earth.modelBURG-SUM_40km')
 mo = []
 mw = []

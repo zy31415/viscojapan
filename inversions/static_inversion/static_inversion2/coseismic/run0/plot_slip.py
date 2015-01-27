@@ -37,7 +37,7 @@ def plot_file(file):
     mplt = vj.plots.MapPlotDisplacement()
     mplt.plot_sites_seafloor(sites_seafloor = sites_seafloor)
 
-    mo, mw = vj.ComputeMoment(fault_file, earth_file).moment(slip)
+    mo, mw = vj.MomentCalculator(fault_file, earth_file).moment(slip)
     plt.title('Mo=%g, Mw=%.2f'%(mo, mw))
     #plt.show()
     plt.savefig(fname)

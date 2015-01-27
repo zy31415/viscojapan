@@ -2,7 +2,7 @@ from pylab import *
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
 from viscojapan.plot_utils import Map, append_title
-from viscojapan.inversion.slip import EpochalIncrSlip
+from viscojapan.slip import EpochalIncrSlip
 from days import days as epochs
 
 def plot_incr_slip(ano,epoch):

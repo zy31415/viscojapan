@@ -11,7 +11,7 @@ from .utils import file_kur_top, file_etopo1
 from .plot_slip_txt_file import GMTSlipPlotter
 from ...fault_model import FaultFileReader
 from ...inversion.result_file.result_file_reader import ResultFileReader
-from ...moment import ComputeMoment
+from ...moment import MomentCalculator
 from ...utils import get_middle_point
 
 __all__ = ['GMTInversionResultFileSlipPlotter']
@@ -87,7 +87,7 @@ class GMTInversionResultFileSlipPlotter(GMTSlipPlotter):
     def compute_moment(self):
         with h5py.File(self.result_file) as fid:
             slip = fid['Bm'][...]
-        com = ComputeMoment(self.fault_file, self.earth_file)
+        com = MomentCalculator(self.fault_file, self.earth_file)
         mo, mw = \
             com.compute_moment(slip)
         return mo, mw

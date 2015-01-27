@@ -15,7 +15,7 @@ for ano in range(30):
         mplt = vj.plots.MapPlotSlab()
         mplt.plot_top()
 
-        mo, mw = vj.ComputeMoment(fault_file, earth_file).moment(slip)
+        mo, mw = vj.MomentCalculator(fault_file, earth_file).moment(slip)
 
         plt.title('Mo = %.5g, Mw = %.4f'%(mo, mw))
         #plt.show()
