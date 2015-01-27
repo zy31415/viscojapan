@@ -35,21 +35,19 @@ class MomentCalculator(object):
         return mo, mw
 
     def get_cumu_slip_Mos_Mws(self, slip):
-        return self._get_Mos_Mws(slip3d=self.slip.get_3d_cumu_slip())
+        return self._get_Mos_Mws(slip3d=slip.get_3d_cumu_slip())
 
     def get_afterslip_Mos_Mws(self, slip):
-        return self._get_Mos_Mws(slip3d=self.slip.get_3d_afterslip())
+        return self._get_Mos_Mws(slip3d=slip.get_3d_afterslip())
 
     def _get_Mos_Mws(self, slip3d):
-        epochs = slip3d.epochs
         mos = []
         mws = []
-        for nth, epoch in enumerate(epochs):
-            si = slip3d[nth,:,:]
+        for si in slip3d:
             mo, mw = self.compute_moment(slip2d=si)
             mos.append(mo)
             mws.append(mw)
-        return mos, mws, epochs
+        return mos, mws
 
 def get_mos_mws_from_epochal_file(epochal_file):
     slip = EpochalIncrSlip(epochal_file)
