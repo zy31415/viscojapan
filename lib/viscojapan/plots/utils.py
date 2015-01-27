@@ -5,7 +5,6 @@ import matplotlib.ticker as ticker
 
 
 from .my_basemap import region_ranges
-from ..utils import mw_to_mo, mo_to_mw
 
 __all__=['plot_box_on_basemap','plot_regions_on_basemap']
 

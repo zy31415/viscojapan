@@ -1,12 +1,12 @@
 from .epochal_data import *
 from .moment import *
-
 from .test_utils import MyTestCase
 from .constants import *
 
 # just import subpackage name
 from . import pollitz
 from . import tsana
+from . import slip
 
 try:
     from . import plots

@@ -2,8 +2,7 @@ import numpy as np
 
 from .result_file_reader import ResultFileReader
 from ...fault_model import FaultFileReader
-from ...moment import MomentCalculator
-from ...plots import plot_Mos_Mws
+from ...moment import MomentCalculator, plot_Mos_Mws
 
 __all__ = ['SlipResultReader']
 
