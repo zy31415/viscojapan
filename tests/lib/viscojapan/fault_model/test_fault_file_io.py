@@ -1,7 +1,7 @@
 import unittest
 from os.path import join
 
-from viscojapan.fault_model.fault_file_io import FaultFileReader
+from viscojapan.fault_model.fault_file_reader import FaultFileReader
 from viscojapan.utils import get_this_script_dir
 from viscojapan.test_utils import MyTestCase
 

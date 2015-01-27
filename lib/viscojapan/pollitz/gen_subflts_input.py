@@ -5,7 +5,7 @@ import numpy as np
 from numpy import size
 import h5py
 
-from ..fault_model.fault_file_io import FaultFileReader
+from ..fault_model.fault_file_reader import FaultFileReader
 
 __all__=['gen_subflts_input',
          'gen_subflts_input_point_source']

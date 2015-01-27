@@ -1,7 +1,7 @@
 import simplekml as sk
 import numpy as np
 
-from .fault_file_io import FaultFileReader
+from .fault_file_reader import FaultFileReader
 
 __all__ = ['gen_kml_for_fault_file']
 

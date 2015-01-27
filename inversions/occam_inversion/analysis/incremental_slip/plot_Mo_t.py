@@ -1,11 +1,9 @@
-import sys
-
 from pylab import *
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
-from viscojapan.slip import EpochalIncrSlip
+from viscojapan.inversion.slip import EpochalIncrSlip
 from viscojapan.plot_utils import Map, append_title
-from viscojapan.slip import EpochalIncrSlip
+from viscojapan.inversion.slip import EpochalIncrSlip
 from days import days as epochs
 
 def plot_Mw_t(ano,label=''):

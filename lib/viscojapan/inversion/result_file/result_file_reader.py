@@ -4,6 +4,8 @@ import h5py
 import numpy as np
 
 from ...file_io_base import FileIOBase
+from ..slip import Slip
+from ...fault_model import FaultFileReader
 
 __all__ = ['ResultFileReader']
 
@@ -13,6 +15,7 @@ class ResultFileReader(FileIOBase):
 
 
     def open(self):
+        print(self.file_name)
         assert exists(self.file_name)
         return h5py.File(self.file_name,'r')
 
@@ -103,7 +106,19 @@ class ResultFileReader(FileIOBase):
         return self.fid['misfit/at_sites/%s'%cmpt][...]   
 
     def get_nlin_par_val(self, pn):
-        return self.fid['nlin_pars/%s'%pn][...]        
+        return self.fid['nlin_pars/%s'%pn][...]
+
+    def get_slip(self, fault_file):
+        reader = FaultFileReader(fault_file)
+        nx = reader.num_subflt_along_strike
+        ny = reader.num_subflt_along_dip
+        slip = self.incr_slip
+        slip = slip.reshape([self.num_epochs, ny, nx])
+
+        return Slip(incr_slip=slip,
+             epochs=self.epochs)
+
+
 
 
 

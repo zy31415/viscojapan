@@ -18,7 +18,8 @@ class Test_results_file_reader(MyTestCase):
             )
         
         slip = reader.incr_slip
-        reader.num_sites        
+        reader.num_sites
+        print(reader.get_slip())
         
 if __name__ == '__main__':
     unittest.main()

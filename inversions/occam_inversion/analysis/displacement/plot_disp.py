@@ -1,11 +1,7 @@
-import sys
-
 from pylab import *
 
 sys.path.append('/home/zy/workspace/viscojapan/lib')
-from viscojapan.plot_utils import Map, append_title
-from viscojapan.slip import EpochalData
-from days import days as epochs
+from viscojapan.inversion.slip import EpochalData
 
 disp_obs = EpochalData('cumu_post.h5')
 

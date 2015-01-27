@@ -1,4 +1,4 @@
-from viscojapan.fault_model.fault_file_io import FaultFileIO
+from viscojapan.fault_model.fault_file_reader import FaultFileIO
 from viscojapan.plots import MapPlotFault, plt, MapPlotSlab
 
 mplt = MapPlotFault('fault_He50km_1.h5')
