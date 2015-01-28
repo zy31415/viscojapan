@@ -4,6 +4,7 @@ import h5py
 
 from ...file_io_base import FileIOBase
 from ...slip import Slip
+from ...displacement import Disp
 from ...fault_model import FaultFileReader
 
 __all__ = ['ResultFileReader']
@@ -114,8 +115,20 @@ class ResultFileReader(FileIOBase):
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 
-        return Slip(incr_slip=slip,
+        return Slip(incr_slip3d=slip,
              epochs=self.epochs)
+
+    def get_pred_disp(self):
+        return self._get_disp(self.d_pred)
+
+    def get_obs_disp(self):
+        return self._get_disp(self.d_obs)
+
+    def _get_disp(self, disp_arr):
+        disp3d = disp_arr.reshape([self.num_epochs, self.num_sites,3])
+        return Disp(cumu_disp3d= disp3d,
+                    epochs = self.epochs,
+                    sites = self.sites)
 
 
 
