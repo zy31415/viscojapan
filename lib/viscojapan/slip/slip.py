@@ -63,14 +63,14 @@ class Slip(object):
         assert nth>=0
         assert nth < self.num_epochs
 
-        return self.get_3d_cumu_slip()[nth,:,:]
+        return self.cumu_slip3d[nth,:,:]
 
     def get_afterslip_at_nth_epoch(self, nth):
         nth = int(nth)
         assert nth>=0
         assert nth < self.num_epochs
 
-        return self.get_3d_afterslip()[nth,:,:]
+        return self.afterslip3d[nth,:,:]
 
     def get_slip_rate_at_nth_epoch(self, nth):
         if nth == 0:

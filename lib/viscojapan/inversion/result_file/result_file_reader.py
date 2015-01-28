@@ -79,6 +79,16 @@ class ResultFileReader(FileIOBase):
             return self.Bm[:-num_nlin_pars]
 
     @property
+    def nlin_pars(self):
+        if 'num_nlin_pars' not in self.fid:
+            return []
+        else:
+            num_nlin_pars = self.num_nlin_pars
+            if num_nlin_pars ==0:
+                return []
+            return self.Bm[-num_nlin_pars:]
+
+    @property
     def epochs(self):
         return [int(ii) for ii in self.fid['epochs'][...]]
 

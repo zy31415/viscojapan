@@ -7,6 +7,7 @@ from .constants import *
 from . import pollitz
 from . import tsana
 from . import slip
+from . import displacement
 
 try:
     from . import plots
