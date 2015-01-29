@@ -54,7 +54,6 @@ class DeformPartitioner(object):
 
     def _check_incr_slip0_file_spacing(self):
         reader  = EpochalIncrSlipFileReader(self.file_incr_slip0)
-        print(reader.epochs, self.epochs)
         assert reader.epochs == self.epochs, \
                '''Epochs of initial slip input is the same as that is in the result file
 {slip0}
@@ -148,6 +147,9 @@ class DeformPartitioner(object):
     def R_co(self, epoch):
         return self.R_nth_epoch(0, epoch)
 
+    def R_co_at_nth_epoch(self, nth):
+        return self.R_co(self.epochs[nth])
+
     def R_aslip(self, epoch):
         num_epochs = self.num_epochs
         disp = None
@@ -160,3 +162,6 @@ class DeformPartitioner(object):
                 arr = self.R_nth_epoch(nth, epoch)
                 disp += arr
         return disp
+
+    def R_aslip_at_nth_epoch(self, nth):
+        return self.R_aslip(self.epochs[nth])

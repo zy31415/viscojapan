@@ -11,11 +11,11 @@ class TestSites(MyTestCase):
         MyTestCase.setUp(self)
 
     def test_SitesDBReader_get(self):
-        reader = vj.sites_db.SitesDBReader()
+        reader = vj.sites_db.SitesDB()
         reader.get('J550')
 
     def test_SitesDBReader_gets(self):
-        reader = vj.sites_db.SitesDBReader()
+        reader = vj.sites_db.SitesDB()
         sites = reader.gets(['J550','J460'])
 ##        for site in sites:
 ##            print(site)

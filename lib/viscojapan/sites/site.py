@@ -60,7 +60,7 @@ class Site(object):
         return dis
 
     def __eq__(self, other):
-        return self.name == other.name
+        return self.id == other.id
 
     def __str__(self):
         out = '%s (%s) at (%8.4f, %8.4f)'%\

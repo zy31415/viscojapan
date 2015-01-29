@@ -6,6 +6,7 @@ from ...file_io_base import FileIOBase
 from ...slip import Slip
 from ...displacement import Disp
 from ...fault_model import FaultFileReader
+from ...sites_db import SitesDB
 
 __all__ = ['ResultFileReader']
 
@@ -58,7 +59,8 @@ class ResultFileReader(FileIOBase):
     @property
     def sites(self):
         m = self.fid['sites'][...]
-        return [site.decode() for site in m]
+        sites = [site.decode() for site in m]
+        return SitesDB().gets(sites)
 
     @property
     def num_sites(self):

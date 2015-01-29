@@ -10,7 +10,7 @@ class TestSites(vj.test_utils.MyTestCase):
         
     def test_save_sites_to_txt(self):
         sites = ['J550', 'J551', '_FUK']
-        sites = vj.sites_db.SitesDBReader().gets(sites)
+        sites = vj.sites_db.SitesDB().gets(sites)
         
 
         # test save txt
@@ -21,7 +21,7 @@ class TestSites(vj.test_utils.MyTestCase):
             )
     def test_save_sites_to_kml(self):
         sites = ['J550', 'J551', '_FUK']
-        sites = vj.sites_db.SitesDBReader().gets(sites)
+        sites = vj.sites_db.SitesDB().gets(sites)
 
         vj.sites.save_sites_to_kml(
             sites,

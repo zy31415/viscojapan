@@ -9,7 +9,7 @@ class TestSites(vj.test_utils.MyTestCase):
         super().setUp()
         
     def test_Site(self):
-        site = vj.sites_db.SitesDBReader().get('ULAB')
+        site = vj.sites_db.SitesDB().get('ULAB')
         print(site.epi_dist)
 
 if __name__=='__main__':

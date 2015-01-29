@@ -3,9 +3,9 @@ import sqlite3
 from .share import file_gps_sites_db
 from ..sites import Site
 
-__all__ = ['SitesDBReader', 'sitesDBReader']
+__all__ = ['SitesDB']
 
-class SitesDBReader(object):
+class SitesDB(object):
     file_database = file_gps_sites_db
 
     def __init__(self):
@@ -27,4 +27,3 @@ class SitesDBReader(object):
     def gets(self, ids):
         return [self.get(id) for id in ids]
 
-sitesDBReader = SitesDBReader()
