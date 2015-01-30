@@ -127,7 +127,7 @@ class ResultFileReader(FileIOBase):
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 
-        return Slip(incr_slip3d=slip,
+        return Slip(incr3d=slip,
              epochs=self.epochs)
 
     def get_pred_disp(self):
