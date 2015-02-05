@@ -22,7 +22,7 @@ class TestDisp(vj.test_utils.MyTestCase):
         disp.post3d
 
         np.testing.assert_array_almost_equal(disp.get_co_disp(),
-                                             disp.get_cumu_disp_at_nth_epoch(0))
+                                             disp.get_cumu_at_nth_epoch(0))
 
         vel = disp.vel3d
         vel = disp.get_vel3d(unit='mm/yr')

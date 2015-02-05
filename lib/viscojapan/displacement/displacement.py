@@ -55,8 +55,11 @@ class Disp(object):
         assert self.epochs[0] == 0
         return self._cumu_disp3d[0]
 
-    def get_cumu_disp_at_nth_epoch(self, nth):
+    def get_cumu_at_nth_epoch(self, nth):
         return self.cumu3d[nth,:,:]
+
+    def get_post_at_nth_epoch(self, nth):
+        return self.post3d[nth,:,:]
 
     def cumu_ts(self,site, cmpt):
         return self._extract_time_series(self.cumu3d, site, cmpt)

@@ -1,3 +1,5 @@
+from os.path import exists
+
 import h5py
 import numpy as np
 
@@ -11,6 +13,7 @@ __all__ = ['DeformPartitionResultReader']
 class DeformPartitionResultReader(object):
     def __init__(self, fn):
         self.fn = fn
+        assert exists(self.fn), "File %s doesn't exist!"%self.fn
 
     @property
     def Rco(self):
