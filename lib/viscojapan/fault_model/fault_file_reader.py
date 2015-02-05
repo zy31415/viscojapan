@@ -16,6 +16,7 @@ class FaultFileReader(object):
 
     def open(self):
         ''' 'r' - Readonly, file must exist'''
+        print(self.fault_file)
         assert exists(self.fault_file), \
                'File %s does not exist!'%self.fault_file
         fid = h5py.File(self.fault_file, 'r')

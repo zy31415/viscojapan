@@ -63,8 +63,9 @@ class Site(object):
         return self.id == other.id
 
     def __str__(self):
-        out = '%s (%s) at (%8.4f, %8.4f)'%\
-               (self.id, self.name, self.lon, self.lat)
+        out = '{id} ({name}) at ({lon}, {lat})'.format(
+            id=self.id, name=self.name, lon=self.lon, lat=self.lat)
+
         #out += '\n  %s\n'%(super().__str__())
         return out
         

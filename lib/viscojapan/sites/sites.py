@@ -1,16 +1,30 @@
 from os.path import join
+import collections
+import sqlite3
 
 import numpy as np
 import pyproj as pj
 import simplekml as sk
 
-import viscojapan as vj
-
-import sqlite3
+from .site import Site
 from ..sites_db import get_pos_dic, get_networks_dic
 
-__all__=['save_sites_to_txt',
+__all__=['Sites', 'save_sites_to_txt',
          'save_sites_to_kml']
+
+def _is_Site(self, obj):
+    assert isinstance(obj, Site), 'Must be Site object.'
+
+class Sites(collections.UserList):
+    def __init__(self, *args, **kwargs):
+        for ii in args[0]:
+            _is_Site(ii)
+
+        super().__init__(*args, **kwargs)
+
+    def __setitem__(self, key, value):
+        _is_Site(value)
+        super().__setitem__(key, value)
 
 
 def save_sites_to_txt(sites, fn,

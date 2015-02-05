@@ -3,6 +3,7 @@ import h5py
 
 from .deformation_partitioner import DeformPartitioner
 from ...displacement import Disp
+from ...sites import Site
 
 __author__ = 'zy'
 __all__ = ['DeformPartitioner2Disp']
@@ -46,9 +47,10 @@ class DeformPartitioner2Disp(DeformPartitioner):
 
         res = np.asarray(res)
 
+        sites = [Site(s) for s in self.file_G0_reader.filter_sites]
         disp = Disp(cumu_disp3d=res,
              epochs=self.epochs,
-             sites=self.file_G0_reader.filter_sites
+             sites = sites
         )
 
         return disp
@@ -60,4 +62,4 @@ class DeformPartitioner2Disp(DeformPartitioner):
             fid['Rco'] = self.R_co_to_disp_obj().cumu3d
             fid['Raslip'] = self.R_aslip_to_disp_obj().cumu3d
             fid['epochs'] = self.epochs
-            fid['sites'] = [site.encode() for site in disp.sites]
+            fid['sites'] = [site.id.encode() for site in disp.sites]

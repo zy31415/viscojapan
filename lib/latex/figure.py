@@ -4,7 +4,8 @@ import subprocess
 import os
 from os.path import basename
 
-__all__ = ['Latex', 'LatexDoc', 'Figure', 'Subfigure', 'PDFComplie']
+__all__ = ['Latex', 'LatexDoc', 'Figure', 'Subfigure', 'PDFComplie','VSpace',
+           'NextParagraph']
 
 class Latex(object):
     def __init__(self):
@@ -79,23 +80,29 @@ class Figure(object):
         
 class Subfigure(object):
     def __init__(self,
-                 width,
+                 subfig_width,
                  trim,
                  file,
-                 caption = None):
-        self.width = width
+                 incl_width = 1.,
+                 caption = None,
+                 rotation = 0):
+        self.subfig_width = subfig_width
+        self.incl_width = incl_width
         self.trim = trim
         self.file = file
         self.caption = caption
+        self.rotation = rotation
         
     def print(self, file=sys.stdout):
-        print('\\begin{{subfigure}}[b]{{{width}\\textwidth}}'.format(width = self.width),
+        print('\\begin{{subfigure}}[b]{{{width}\\textwidth}}'.format(width = self.subfig_width),
               file = file)
         
         print('''\\centering
-\\includegraphics[width=1.0\\textwidth, clip=true, trim={trim[0]} {trim[1]} {trim[2]} {trim[3]}]{{{file}}}'''.format(
-    trim = self.trim,
-    file = self.file),
+\\includegraphics[width={incl_width}\\textwidth, clip=true, trim={trim[0]} {trim[1]} {trim[2]} {trim[3]}, angle={rotation}]{{{file}}}'''.format(
+            incl_width = self.incl_width,
+            trim = self.trim,
+            file = self.file,
+            rotation = self.rotation),
               file = file)
 
         if self.caption is not None:
@@ -104,6 +111,21 @@ class Subfigure(object):
         
         print('\\end{subfigure}',
               file = file)
+        
+class VSpace(object):
+    def __init__(self,
+                 size = '10mm'):
+        self.size = size
+        
+    def print(self, size='10mm', file=sys.stdout):
+        print('\\vspace{{{size}}}'.format(size=self.size), file=file)
+
+class NextParagraph(object):
+    def __init__(self):
+        pass
+        
+    def print(self, file=sys.stdout):
+        print('\n\n', file=file)
         
 class PDFComplie(object):
     def __init__(self,
