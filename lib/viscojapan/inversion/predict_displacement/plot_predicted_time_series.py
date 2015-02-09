@@ -3,7 +3,7 @@ import numpy as np
 
 from .pred_disp_database import PredDispToDatabaseReader
 from ...tsana.observation_database import ObservationDatatbaseReader
-from ...sites_db import get_true_name_by_id
+from ...sites_db import get_site_true_name
 
 from date_conversion import adjust_mjd_for_plot_date
 
@@ -127,7 +127,7 @@ class PredictedTimeSeriesPlotter(object):
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
         plt.title('Cumulative Disp.: {site} - {cmpt}'.format(
-            site = get_true_name_by_id(site),
+            site = get_site_true_name(site),
             cmpt = cmpt
             ))
 
@@ -149,7 +149,7 @@ class PredictedTimeSeriesPlotter(object):
         plt.ylabel(r'm')
         plt.gcf().autofmt_xdate()
         plt.title('Postseismic Disp. : {site} - {cmpt}'.format(
-            site = get_true_name_by_id(site),
+            site = get_site_true_name(site),
             cmpt = cmpt
             ))
 

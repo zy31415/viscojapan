@@ -33,7 +33,7 @@ for site in '_CHS','_FUK', '_KMN', '_KMS', '_MGI', '_MGW':
         plt.xlabel('days after mainshock')
         plt.ylabel('displacement (m)')
 
-        name = vj.sites_db.get_true_name_by_id(site)
+        name = vj.sites_db.get_site_true_name(site)
         plt.title('%s-%s'%(name, cmpt))
         
         plt.savefig('plots_seafloor/%s-%s.pdf'%(site,cmpt))

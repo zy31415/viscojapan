@@ -11,22 +11,25 @@ class TestSites(vj.test_utils.MyTestCase):
     def test_save_sites_to_txt(self):
         sites = ['J550', 'J551', '_FUK']
         sites = vj.sites_db.SitesDB().gets(sites)
-        
 
         # test save txt
-        vj.sites.save_sites_to_txt(
-            sites,
+        sites.save_to_txt(
             fn = join(self.outs_dir, 'sites.txt'),
-            format = 'id name lon lat'
+            cols = 'id lon lat'
             )
-    def test_save_sites_to_kml(self):
+
+    def test_lons_lats(self):
         sites = ['J550', 'J551', '_FUK']
         sites = vj.sites_db.SitesDB().gets(sites)
 
-        vj.sites.save_sites_to_kml(
-            sites,
-            fn = join(self.outs_dir, 'sites.kml')
-            )
+        sites.lons
+        sites.lats
+
+    def test_lon_lat_range(self):
+        sites = ['J550', 'J551', '_FUK']
+        sites = vj.sites_db.SitesDB().gets(sites)
+        print(sites.max_lon, sites.min_lon)
+        print(sites.max_lat, sites.min_lat)
 
 
 if __name__=='__main__':

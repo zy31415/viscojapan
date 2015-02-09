@@ -1,20 +1,6 @@
-from os.path import join
 import re
 
-from numpy import loadtxt, asarray
-import numpy as np
-import pyproj as pj
-
-__all__ = []
-
-    
-def sorted_by_epi_dist(sites):
-    dist = get_epi_dist(sites)
-    dic1 = {s:d for s, d in zip(sites, dist)}
-    tp = sorted(dic1.items(), key=lambda x: x[1], reverse=True)
-    sites_sorted = [ii[0] for ii in tp]
-    dist_sorted = [ii[1] for ii in tp]
-    return sites_sorted, dist_sorted
+from numpy import loadtxt
 
 def get_all_sites():
     tp=loadtxt(sites_file,'4a, 2f')
@@ -27,8 +13,6 @@ def get_sites_seafloor():
         sites_seafloor = re.findall('^_.{3}', fid.read(),re.M)
     res = [si.encode() for si in sites_seafloor]
     return res
-
-
 
 
 

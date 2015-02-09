@@ -25,8 +25,8 @@ class SitesDB(object):
             name = id
         lon = tp[1]
         lat = tp[2]
-        return Site(id=id, name=name, lon=lon, lat=lat)
-        
+        return Site(id=id, lon=lon, lat=lat)
+
 
     def gets(self, ids):
         return Sites([self.get(id) for id in ids])

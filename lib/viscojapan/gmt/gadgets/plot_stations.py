@@ -2,7 +2,7 @@ import tempfile
 
 import pGMT
 
-from ...sites_db import get_pos_dic_of_a_network, get_true_name_by_id, get_pos
+from ...sites_db import get_pos_dic_of_a_network, get_site_true_name, get_pos
 
 __all__ = ['plot_stations', 'plot_seafloor_stations', 'plot_GEONET_Japan_stations']
 
@@ -17,7 +17,7 @@ def plot_stations(gplt, sites, S='c.2', color='red', fill_color='red',
     lons, lats = get_pos(sites)
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, lon, lat in zip(sites, lons, lats):
-            site = get_true_name_by_id(site)
+            site = get_site_true_name(site)
             fid.write('%f %f %s\n'%(lon, lat, site))
         fid.seek(0,0)
         gplt.psxy(
@@ -28,7 +28,7 @@ def plot_stations(gplt, sites, S='c.2', color='red', fill_color='red',
         
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, lon, lat in zip(sites, lons, lats):
-            site = get_true_name_by_id(site)
+            site = get_site_true_name(site)
             fid.write('%f %f %s\n'%(lon+text_offset_X,
                                     lat+text_offset_Y,
                                     site))

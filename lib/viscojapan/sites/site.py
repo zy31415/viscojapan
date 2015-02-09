@@ -1,33 +1,24 @@
-import pyproj as pj
 
-from ..constants import TOHOKU_EPICENTER
 
 __all__ = ['Site']
 
 class Site(object):
     ''' Represent a site.
+    Keep this class simple.
+    Remember Single Responsibility Principle
 '''
-    epi_lon0 = TOHOKU_EPICENTER[0]
-    epi_lat0 = TOHOKU_EPICENTER[1]    
-    
     def __init__(self,
                  id = None,
-                 name = None,
                  lon = None,
                  lat = None
                  ):
         self._id = id
-        self._name = name        
         self._lon = lon
         self._lat = lat
 
     @property
     def id(self) -> str:
         return self._id
-    
-    @property
-    def name(self) -> str:
-        return self._name
 
     @property
     def lon(self) -> bool:
@@ -39,33 +30,28 @@ class Site(object):
 
     @property
     def if_seafloor(self)  -> bool:
-        if self._name[0] == '_':
+        if self._id[0] == '_':
             return True
         else:
             return False
 
     @property
     def if_onshore(self) -> bool:
-        if self._name[0] == '_':
+        if self._id[0] == '_':
             return False
         else:
             return True
 
-    @property
-    def epi_dist(self):
-        p = pj.Geod(ellps='WGS84')
-        az1, az2, dis = p.inv(self.lon, self.lat,
-                              self.epi_lon0, self.epi_lat0)
-        dis /=1000. # m => km
-        return dis
-
     def __eq__(self, other):
-        return self.id == other.id
+        return other and self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
 
     def __str__(self):
-        out = '{id} ({name}) at ({lon}, {lat})'.format(
-            id=self.id, name=self.name, lon=self.lon, lat=self.lat)
+        out = '{id} at ({lon}, {lat})'.format(
+            id=self.id, lon=self.lon, lat=self.lat)
 
         #out += '\n  %s\n'%(super().__str__())
         return out
-        
+

@@ -9,8 +9,10 @@ class TestSites(vj.test_utils.MyTestCase):
         super().setUp()
         
     def test_Site(self):
-        site = vj.sites_db.SitesDB().get('ULAB')
-        print(site.epi_dist)
+        site1 = vj.sites_db.SitesDB().get('ULAB')
+        site2 = vj.sites_db.SitesDB().get('J550')
+        site1 == site2
+
 
 if __name__=='__main__':
     unittest.main()
