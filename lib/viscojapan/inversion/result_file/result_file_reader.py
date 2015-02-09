@@ -16,7 +16,6 @@ class ResultFileReader(FileIOBase):
 
 
     def open(self):
-        print(self.file_name)
         assert exists(self.file_name)
         return h5py.File(self.file_name,'r')
 
@@ -120,10 +119,19 @@ class ResultFileReader(FileIOBase):
     def get_nlin_par_val(self, pn):
         return self.fid['nlin_pars/%s'%pn][...]
 
-    def get_slip(self, fault_file):
-        reader = FaultFileReader(fault_file)
-        nx = reader.num_subflt_along_strike
-        ny = reader.num_subflt_along_dip
+    def get_slip(self,
+                 fault_file = None,
+                 num_subflt_along_strike = None,
+                 num_subflt_along_dip = None,
+    ):
+        if fault_file is not None:
+            reader = FaultFileReader(fault_file)
+            num_subflt_along_strike = reader.num_subflt_along_strike
+            num_subflt_along_dip = reader.num_subflt_along_dip
+
+        nx = num_subflt_along_strike
+        ny = num_subflt_along_dip
+
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 

@@ -4,7 +4,7 @@ from os import makedirs
 
 import pGMT
 
-from .utils import file_kur_top, file_etopo1
+from ..share import file_kur_top, file_etopo1
 
 __all__ = ['GMTSlipPlotter']
 

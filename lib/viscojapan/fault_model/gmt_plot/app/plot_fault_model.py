@@ -2,12 +2,12 @@ import os
 
 import pGMT
 
-from ..gadgets import plot_etopo1, plot_slab,\
+from viscojapan.gmt.gadgets import plot_etopo1, plot_slab,\
      plot_fault_model, plot_seafloor_stations, \
      plot_GEONET_Japan_stations, \
      plot_focal_mechanism_USGS_wphase
 
-from .plotter import Plotter
+from viscojapan.gmt.applications.plotter import Plotter
 
 __all__ = ['FaultModelPlotter']
 

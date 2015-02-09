@@ -7,10 +7,9 @@ import numpy as np
 
 import pGMT
 
-from .utils import file_kur_top, file_etopo1
+from ..share import file_etopo1
 from .plot_slip_txt_file import GMTSlipPlotter
 from ...fault_model import FaultFileReader
-from ...inversion.result_file.result_file_reader import ResultFileReader
 from ...moment import MomentCalculator
 from ...utils import get_middle_point
 

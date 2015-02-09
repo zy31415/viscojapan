@@ -7,12 +7,10 @@ import pyproj as pj
 import simplekml as sk
 
 from .site import Site
-from ..sites_db import get_pos_dic, get_networks_dic
 
-__all__=['Sites', 'save_sites_to_txt',
-         'save_sites_to_kml']
+__all__=['Sites', 'save_sites_to_kml']
 
-def _is_Site(self, obj):
+def _is_Site(obj):
     assert isinstance(obj, Site), 'Must be Site object.'
 
 class Sites(collections.UserList):
@@ -26,22 +24,21 @@ class Sites(collections.UserList):
         _is_Site(value)
         super().__setitem__(key, value)
 
-
-def save_sites_to_txt(sites, fn,
-                      format='id name lon lat',
-                      header=None):
-    with open(fn, 'wt') as fid:
-        if header is not None:
-            fid.write(header)
-            if header[-1] != '\n':
-                fid.write('\n')                
-        fid.write('# ' + format +'\n')
-        formats = format.split()
-        for site in sites:
-            for fm in formats:
-                val = getattr(site, fm)
-                fid.write('{val}  '.format(val=val))
-            fid.write('\n')
+    def save_to_txt(self, fn,
+                    cols='id name lon lat',
+                    header=None):
+        with open(fn, 'wt') as fid:
+            if header is not None:
+                fid.write(header)
+                if header[-1] != '\n':
+                    fid.write('\n')
+            fid.write('# ' + cols +'\n')
+            formats = cols.split()
+            for site in self:
+                for fm in formats:
+                    val = getattr(site, fm)
+                    fid.write('{val}  '.format(val=val))
+                fid.write('\n')
                 
 def save_sites_to_kml(sites, fn, label_color='red', icon_name='flag'):
     kml = sk.Kml()

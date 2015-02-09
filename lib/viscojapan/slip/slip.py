@@ -76,6 +76,9 @@ class Slip(object):
         idx = epochs.index(epoch)
         return self.get_incr_slip_at_nth_epoch(idx)
 
+    def get_incr_slip_at_subfault(self, nth_dip, nth_stk):
+        return self.incr_slip3d[:, nth_dip, nth_stk]
+
     def get_cumu_slip_at_nth_epoch(self, nth):
         nth = int(nth)
         assert nth>=0
@@ -93,6 +96,9 @@ class Slip(object):
 
         return self.afterslip3d[nth,:,:]
 
+    def get_afterslip_at_subfault(self, nth_dip, nth_stk):
+        return self.afterslip3d[:, nth_dip, nth_stk]
+
     def get_slip_rate_at_nth_epoch(self, nth):
         if nth == 0:
             # rate of coseismic slip is infinite
@@ -103,5 +109,15 @@ class Slip(object):
             delta_t = self.epochs[nth] - self.epochs[nth-1]
             slip_rate = self.incr_slip3d[nth]/delta_t
         return slip_rate
+
+    def get_slip_rate_at_subfault(self, nth_dip, nth_stk):
+        incr_slip = self.get_incr_slip_at_subfault(nth_dip,nth_stk)
+        dt = np.diff(self.epochs)
+
+        return incr_slip[1:]/dt
+
+
+
+
 
 
