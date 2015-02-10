@@ -18,9 +18,6 @@ class Disp(object):
         assert disp_shape[0] == self.num_epochs
 
         self.sites = sites
-        assert isinstance(self.sites, list)
-        for site in sites:
-            assert isinstance(site, Site)
         self.num_sites = len(self.sites)
         assert self.num_sites == disp_shape[1]
 

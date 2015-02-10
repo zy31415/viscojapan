@@ -18,8 +18,8 @@ def plot_stations(gplt, sites, S='c.2', color='red', fill_color='red',
     lats = sites.lats
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, lon, lat in zip(sites, lons, lats):
-            site = get_site_true_name(site)
-            fid.write('%f %f %s\n'%(lon, lat, site))
+            site_name = get_site_true_name(site)
+            fid.write('%f %f %s\n'%(lon, lat, site_name))
         fid.seek(0,0)
         gplt.psxy(
             fid.name,

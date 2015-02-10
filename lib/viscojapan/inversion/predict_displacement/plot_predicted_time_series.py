@@ -1,7 +1,8 @@
 from pylab import plt
 import numpy as np
 
-from .pred_disp_database import PredDispToDatabaseReader
+#from .pred_disp_database import PredDispToDatabaseReader
+from .deformation_partition_file_reader import DeformPartitionResultReader
 from ...tsana.observation_database import ObservationDatatbaseReader
 from ...sites_db import get_site_true_name
 
@@ -27,10 +28,14 @@ def regularize_y(ys):
 
 class PredictedTimeSeriesPlotter(object):
     def __init__(self,
-                 pred_db,
+                 partition_file,
                  ):
-        self.pred_db = pred_db
-        self.pred_reader = PredDispToDatabaseReader(self.pred_db)
+        self.partition_file = partition_file
+        reader = DeformPartitionResultReader(self.partition_file)
+        self.Rco = reader.Rco
+        self.Ecumu = reader.Ecumu
+        self.Raslip = reader.Raslip
+
 
         self.plt = plt
 

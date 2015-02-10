@@ -5,7 +5,7 @@ import numpy as np
 
 from ...displacement import Disp
 from ..result_file import ResultFileReader
-from ...sites import Site
+from ...sites import Site, Sites
 
 __author__ = 'zy'
 __all__ = ['DeformPartitionResultReader']
@@ -33,7 +33,7 @@ class DeformPartitionResultReader(object):
             sites = fid['sites'][...]
             epochs = fid['epochs'][...]
 
-        sites = [Site(site.decode()) for site in sites]
+        sites = Sites([Site(site.decode()) for site in sites])
 
         return Disp(cumu_disp3d=disp3d,
              epochs=epochs,
