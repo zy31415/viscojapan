@@ -1,5 +1,6 @@
 import numpy as np
 
+from ..result_file import ResultFileReader
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, \
      DiffED, EpochalG, EpochalIncrSlipFileReader
 from ...utils import as_string
@@ -11,15 +12,16 @@ __author__ = 'zy'
 class DeformPartitioner(object):
     def __init__(self,
                  file_G0,
-                 epochs,
-                 slip,
+                 result_file,
+                 fault_file,
                  files_Gs = None,
-                 nlin_pars = None,
                  nlin_par_names = None,
                  file_incr_slip0 = None,
                  ):
 
-        self.epochs = epochs
+        reader = ResultFileReader(result_file)
+
+        self.epochs = reader.epochs
         self.num_epochs = len(self.epochs)
 
         self.file_G0 = file_G0
@@ -27,7 +29,7 @@ class DeformPartitioner(object):
             epoch_file = self.file_G0,
             )
 
-        self.slip = slip
+        self.slip = reader.get_slip(fault_file=fault_file)
 
         self.files_Gs = files_Gs
 
@@ -35,7 +37,7 @@ class DeformPartitioner(object):
 
         self.sites_for_prediction = self.file_G0_reader.filter_sites
 
-        self.nlin_par_vals = nlin_pars
+        self.nlin_par_vals = reader.nlin_pars
         self.nlin_par_names = nlin_par_names
         self.file_incr_slip0 = file_incr_slip0
         self._check_incr_slip0_file_spacing()
