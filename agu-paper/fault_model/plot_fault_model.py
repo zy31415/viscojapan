@@ -1,19 +1,6 @@
 import pGMT
 import viscojapan as vj
 
-
-def plot_seafloor(gplt,
-                  network='SEAFLOOR',
-              justification='TR',
-              text_offset_X = 0,
-              text_offset_Y = 0,
-              ):
-    vj.gmt.plot_seafloor_stations(gplt, marker_size=0.5,color='red',
-                           network=network,
-                           justification = justification,
-                           text_offset_X = text_offset_X,
-                           text_offset_Y = text_offset_Y)
-
 fault = vj.fm.Fault('fault_bott80km.h5')
 
 gmt = pGMT.GMT()
@@ -39,15 +26,19 @@ gplt.pscoast(
     W = 'faint,100', L='f145/34/38/100+lkm+jt',
     O = '', K='')
 
-vj.fm.gmt_plot.gplt_fault_model(gplt, fault)
+vj.fm.gmt_plot.gplt_fault_meshes_marking_dip_changes(gplt, fault)
 
 vj.gmt.plot_GEONET_Japan_stations(gplt, color='red')
 
-plot_seafloor(
-    gplt,              
-    network = 'SEAFLOOR_POST',    
-    text_offset_X = -0.1,
-    text_offset_Y = -0.1
+vj.gmt.plot_seafloor_stations(
+    gplt,
+    fontsize=8,
+    marker_size=0.5,
+    color='red',
+    network = 'SEAFLOOR_POST',
+    justification = 'RT',
+    text_offset_X = -0.13,
+    text_offset_Y = -0.05
     )
 
 vj.gmt.plot_focal_mechanism_USGS_wphase(

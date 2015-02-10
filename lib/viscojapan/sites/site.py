@@ -49,9 +49,7 @@ class Site(object):
         return hash(self.id)
 
     def __str__(self):
-        out = '{id} at ({lon}, {lat})'.format(
+        out = '{id} ({lon:.5f},{lat:.5f})'.format(
             id=self.id, lon=self.lon, lat=self.lat)
-
-        #out += '\n  %s\n'%(super().__str__())
         return out
 

@@ -2,7 +2,7 @@ import tempfile
 
 import pGMT
 
-from ...sites_db import get_pos_dic_of_a_network, get_site_true_name, get_pos
+from ...sites_db import get_sites_from_network, get_site_true_name, get_pos
 
 __all__ = ['plot_stations', 'plot_seafloor_stations', 'plot_GEONET_Japan_stations']
 
@@ -14,7 +14,8 @@ def plot_stations(gplt, sites, S='c.2', color='red', fill_color='red',
                   text_offset_X = 0,
                   text_offset_Y = 0,
                   ):
-    lons, lats = get_pos(sites)
+    lons = sites.lons
+    lats = sites.lats
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, lon, lat in zip(sites, lons, lats):
             site = get_site_true_name(site)
@@ -50,7 +51,7 @@ def plot_seafloor_stations(gplt, marker_size=0.5, color='red',
                            text_offset_X = 0,
                            text_offset_Y = 0,
                            ):
-    sites = get_pos_dic_of_a_network(network).keys()
+    sites = get_sites_from_network(network)
     plot_stations(
         gplt, sites,
         S = 's%f'%marker_size,
@@ -65,7 +66,7 @@ def plot_seafloor_stations(gplt, marker_size=0.5, color='red',
     
 def plot_GEONET_Japan_stations(gplt, marker_size=0.05, color='red',
                                fontsize=None):
-    sites = get_pos_dic_of_a_network('GEONET').keys()
+    sites = get_sites_from_network('GEONET')
     plot_stations(
         gplt, sites,
         S = 'c%f'%marker_size,

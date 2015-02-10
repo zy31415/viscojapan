@@ -3,6 +3,8 @@ import tempfile
 
 import viscojapan as vj
 
+fault = vj.fm.Fault('fault_bott80km.h5')
+
 gmt = pGMT.GMT()
 gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
            'LABEL_FONT_SIZE','9',
@@ -30,6 +32,11 @@ gplt.pscoast(
 
 # plot plate boundary
 vj.gmt.plot_plate_boundary(gplt, color='100')
+
+vj.fm.gmt_plot.gplt_marking_dip_change_on_fault_meshes(
+    gplt, fault,
+    width='thick'
+    )
 vj.gmt.plot_focal_mechanism_USGS_wphase(gplt,scale=0.2, fontsize=0)
 
 # plot stations:
@@ -59,6 +66,8 @@ vj.gmt.plot_plate_names(gplt,
                         adjust_Okhotsk = (3,3),
                         adjust_Philippine = (-2,-5)
                         )
+
+
 
 # legend
 with tempfile.NamedTemporaryFile('w+t') as text:

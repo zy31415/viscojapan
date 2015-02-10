@@ -57,4 +57,17 @@ class Sites(collections.UserList):
     @property
     def min_lat(self):
         return min(self.lats)
+
+    def __str__(self):
+        num = len(self)
+        head = ['Sites list (# %d):'%num]
+        body = []
+        for nth, site in enumerate(self):
+            body.append('  ' + str(site))
+
+        if len(body)>16:
+            body = body[:10] + ['  ...'] + body[-5:]
+
+        out = '\n'.join(head + body)
+        return out
                 
