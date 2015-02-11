@@ -44,17 +44,13 @@ plt.legend(loc=2, prop={'size':6})
 ## 
 ax2 = plt.subplot(212, sharex=ax1)
 
-site = vj.sites.Site(id=site)
-
-reader = vj.inv.DeformPartitionResultReader('partition.h5')
-Rco = reader.Rco.post_ts(site, cmpt)
-Easlip = reader.Ecumu.post_ts(site, cmpt)
-Raslip = reader.Raslip.post_ts(site,cmpt)
-
-#pplt = vj.inv.PredictedTimeSeriesPlotter('../../inversions/inversion10/iter2/run7/analysis/pred_disp/~pred_disp.db')
-#pplt.plot_post_disp(site, cmpt)
-##plt.title('')
-##plt.ylim([0,1])
-##plt.savefig('2EXPs_vs_pred_%s-%s.png'%(site, cmpt))
-##plt.savefig('2EXPs_vs_pred_%s-%s.pdf'%(site, cmpt))
-##plt.show()
+pplt = vj.inv.PredictedTimeSeriesPlotter(
+    partition_file = 'partition.h5',
+    result_file = 'nrough_05_naslip_11.h5'
+    )
+pplt.plot_post_disp(site, cmpt)
+plt.title('')
+plt.ylim([0,1])
+plt.savefig('2EXPs_vs_pred_%s-%s.png'%(site, cmpt))
+plt.savefig('2EXPs_vs_pred_%s-%s.pdf'%(site, cmpt))
+plt.show()

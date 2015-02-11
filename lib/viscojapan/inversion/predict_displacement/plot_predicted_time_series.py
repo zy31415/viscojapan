@@ -5,6 +5,7 @@ import numpy as np
 from .deformation_partition_file_reader import DeformPartitionResultReader
 from ...tsana.observation_database import ObservationDatatbaseReader
 from ...sites_db import get_site_true_name
+from ..result_file import ResultFileReader
 
 from date_conversion import adjust_mjd_for_plot_date
 
@@ -29,13 +30,18 @@ def regularize_y(ys):
 class PredictedTimeSeriesPlotter(object):
     def __init__(self,
                  partition_file,
+                 result_file,
                  ):
         self.partition_file = partition_file
         reader = DeformPartitionResultReader(self.partition_file)
         self.Rco = reader.Rco
         self.Ecumu = reader.Ecumu
         self.Raslip = reader.Raslip
+        self.d_added = reader.d_added
 
+        self.result_file = result_file
+        reader = ResultFileReader(self.result_file)
+        self.d_pred = reader.get_pred_disp()
 
         self.plt = plt
 
@@ -43,19 +49,25 @@ class PredictedTimeSeriesPlotter(object):
         self.obs_reader = ObservationDatatbaseReader(self.obs_db)
         
     def plot_cumu_disp_pred(self, site, cmpt, color='red', lw=2, **kwargs):
-        ts, ys = self.pred_reader.get_cumu_disp_pred(site, cmpt)
+        ys = self.d_pred.cumu_ts(site, cmpt)
+        ts = self.d_pred.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw, color=color, **kwargs)
         return list(ys)
 
     def plot_cumu_disp_pred_added(self, site, cmpt, color='red', lw=1, label=None, **kwargs):        
-        ts, ys = self.pred_reader.get_cumu_disp_added(site, cmpt)
+        ys = self.d_added.cumu_ts(site, cmpt)
+        ts = self.d_added.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
                       color=color, label=label,
                       **kwargs)
         return list(ys)
 
     def plot_post_disp_pred_added(self, site, cmpt, color='red', lw=1, label=None, **kwargs):        
-        ts, ys = self.pred_reader.get_post_disp_added(site, cmpt)
+        ys = self.d_added.post_ts(site, cmpt)
+        ts = self.d_added.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
                       color=color, label=label,
                       **kwargs)
@@ -67,12 +79,16 @@ class PredictedTimeSeriesPlotter(object):
 
     def plot_R_co(self, site, cmpt,
                   style = '-^', lw=1, **kwargs):
-        ts, ys = self.pred_reader.get_R_co(site, cmpt)
+        ys = self.Rco.post_ts(site, cmpt)
+        ts = self.Rco.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), style, lw=lw, ms = 4*lw, **kwargs)
         return list(ys)
 
     def plot_post_disp_pred(self, site, cmpt, color='red', lw=2.5, **kwargs):
-        ts, ys = self.pred_reader.get_post_disp_pred(site, cmpt)
+        ys = self.d_pred.post_ts(site, cmpt)
+        ts = self.d_pred.epochs
+
         ys = np.asarray(regularize_y(ys), float)
         ys = np.nan_to_num(ys)
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=3*lw, color=color, **kwargs)
@@ -88,7 +104,9 @@ class PredictedTimeSeriesPlotter(object):
     def plot_E_cumu_slip(self, site, cmpt,
                          lw=1, ms = 7,
                          label='E',**kwargs):
-        ts, ys = self.pred_reader.get_E_cumu_slip(site, cmpt)
+        ys = self.Ecumu.cumu_ts(site, cmpt)
+        ts = self.Ecumu.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), '-+', lw=lw, ms=ms,
                  label = label,
                  **kwargs)
@@ -97,7 +115,9 @@ class PredictedTimeSeriesPlotter(object):
     def plot_E_aslip(self, site, cmpt,
                      lw=1, ms=7,
                      label='Easlip',**kwargs):
-        ts, ys = self.pred_reader.get_E_aslip(site, cmpt)
+        ys = self.Ecumu.post_ts(site, cmpt)
+        ts = self.Ecumu.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), '-+', lw=lw, ms=ms,
                  label = label,
                  **kwargs)
@@ -106,7 +126,9 @@ class PredictedTimeSeriesPlotter(object):
     def plot_R_aslip(self, site, cmpt,
                      ls='-', marker='o',
                      lw=1, ms=2, label='Raslip',**kwargs):
-        ts, ys = self.pred_reader.get_R_aslip(site, cmpt)
+        ys = self.Raslip.post_ts(site, cmpt)
+        ts = self.Raslip.epochs
+
         plt.plot_date(shift_t(ts), regularize_y(ys), ls=ls, marker=marker, lw=lw, ms=ms,
                  label = label,
                  **kwargs)
@@ -132,7 +154,7 @@ class PredictedTimeSeriesPlotter(object):
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
         plt.title('Cumulative Disp.: {site} - {cmpt}'.format(
-            site = get_site_true_name(site),
+            site = get_site_true_name(site_id=site),
             cmpt = cmpt
             ))
 
@@ -154,7 +176,7 @@ class PredictedTimeSeriesPlotter(object):
         plt.ylabel(r'm')
         plt.gcf().autofmt_xdate()
         plt.title('Postseismic Disp. : {site} - {cmpt}'.format(
-            site = get_site_true_name(site),
+            site = get_site_true_name(site_id = site),
             cmpt = cmpt
             ))
 

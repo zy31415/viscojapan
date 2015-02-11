@@ -11,7 +11,7 @@ res_reader = vj.inv.ResultFileReader(result_file)
 
 slip = res_reader.get_slip(fault_file)
 
-pred = vj.inv.DeformPartitioner(
+pred = vj.inv.DeformPartitionerForResultFile(
     file_G0 = '../../../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
     result_file = result_file,
     fault_file = fault_file,

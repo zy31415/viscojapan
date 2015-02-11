@@ -5,7 +5,6 @@ import numpy as np
 
 from ...displacement import Disp
 from ..result_file import ResultFileReader
-from ...sites import Site, Sites
 
 __author__ = 'zy'
 __all__ = ['DeformPartitionResultReader']
@@ -27,18 +26,23 @@ class DeformPartitionResultReader(object):
     def Ecumu(self):
         return self._read('Ecumu')
 
-    def _read(self, cmpt):
+    @property
+    def d_added(self):
+        return self._read('d_added')
+
+    def _read(self, cmpt, sites='sites_for_prediction'):
         with h5py.File(self.fn,'r') as fid:
             disp3d = fid[cmpt][...]
-            sites = fid['sites'][...]
+            sites = fid[sites][...]
             epochs = fid['epochs'][...]
 
-        sites = Sites([Site(site.decode()) for site in sites])
+        sites = [site.decode() for site in sites]
 
         return Disp(cumu_disp3d=disp3d,
              epochs=epochs,
              sites=sites
         )
+
 
     def check_partition_result(self, result_file):
 
