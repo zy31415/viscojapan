@@ -141,8 +141,6 @@ class OccamDeconvolution(Inversion):
         self.d = d_()
         
         self.disp_obs = d_.disp_obs
-        print('obs')
-        print(self.disp_obs)
 
     def set_data_sd(self):
         super().set_data_sd()

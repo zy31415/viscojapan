@@ -13,7 +13,7 @@ reg_roughes = logspace(-3,1,20)
 fault_file = '../fault_model/fault_bott80km.h5'
 
 epochs = epochs[0:3]
-#num_epochs = len(epochs)
+num_epochs = len(epochs)
 
 #basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
@@ -46,7 +46,7 @@ regs_aslip = logspace(-3,1,20)
 for nrough, reg_rough, naslip, reg_aslip in \
     vj.utils.pop_from_center((5,11), regs_rough, regs_aslip):
 
-    outfname = 'outs/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
+    outfname = 'outs_test/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
     if exists(outfname):
         print("Skip %s !"%outfname)
         continue

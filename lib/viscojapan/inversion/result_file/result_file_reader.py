@@ -20,18 +20,6 @@ class ResultFileReader(FileIOBase):
         return h5py.File(self.file_name,'r')
 
     @property
-    def log10_He_(self):
-        return self.fid['nlin_pars/log10(He)'][...]
-
-    @property
-    def log10_visM_(self):
-        return self.fid['nlin_pars/log10(visM)'][...]
-
-    @property
-    def rake(self):
-        return self.fid['nlin_pars/rake'][...]
-
-    @property
     def roughening_norm(self):
         return self.fid['regularization/roughening/norm'][...]
 
@@ -67,11 +55,11 @@ class ResultFileReader(FileIOBase):
 
     @property
     def num_nlin_pars(self):
-        return int(self.fid['num_nlin_pars'][...])
+        return int(self.fid['nlin_pars/num_nlin_pars'][...])
 
     @property
     def incr_slip(self):
-        if 'num_nlin_pars' not in self.fid:
+        if self.num_nlin_pars == 0:
             return self.Bm
         else:
             num_nlin_pars = self.num_nlin_pars
@@ -79,15 +67,47 @@ class ResultFileReader(FileIOBase):
                 return self.Bm
             return self.Bm[:-num_nlin_pars]
 
+    ####
+    # Nonlinear parameters
     @property
     def nlin_pars(self):
-        if 'num_nlin_pars' not in self.fid:
+        self.nlin_par_solved_values()
+
+    @property
+    def nlin_par_solved_values(self):
+        if self.num_nlin_pars == 0:
             return []
         else:
-            num_nlin_pars = self.num_nlin_pars
-            if num_nlin_pars ==0:
-                return []
-            return self.Bm[-num_nlin_pars:]
+            return self.fid['nlin_pars/nlin_par_solved_values'][...]
+
+    @property
+    def nlin_par_initial_values(self):
+        if self.num_nlin_pars == 0:
+            return []
+        else:
+            return self.fid['nlin_pars/nlin_par_initial_values'][...]
+
+    @property
+    def nlin_par_names(self):
+        return list(self.fid['nlin_pars/nlin_par_names'][...])
+
+    def get_nlin_par_solved_value(self, pn):
+        idx = list(self.nlin_par_names).index(pn)
+        return self.nlin_par_solved_values[idx]
+
+    @property
+    def log10_He_(self):
+        return self.get_nlin_par_solved_value('log10(He)')
+
+    @property
+    def log10_visM_(self):
+        return self.get_nlin_par_solved_value('log10(visM)')
+
+    @property
+    def rake(self):
+        return self.get_nlin_par_solved_value('rake')
+
+    ########
 
     @property
     def epochs(self):
@@ -116,8 +136,6 @@ class ResultFileReader(FileIOBase):
     def get_rms_at_sites(self,cmpt):
         return self.fid['misfit/at_sites/%s'%cmpt][...]   
 
-    def get_nlin_par_val(self, pn):
-        return self.fid['nlin_pars/%s'%pn][...]
 
     def get_slip(self,
                  fault_file = None,

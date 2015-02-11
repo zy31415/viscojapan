@@ -1,6 +1,6 @@
 import simplekml as sk
 
-from ..sites_db import get_site_true_name
+from ..sites_db.sites_true_name import get_site_true_name
 
 __author__ = 'zy'
 __all__=['save_sites_to_kml']

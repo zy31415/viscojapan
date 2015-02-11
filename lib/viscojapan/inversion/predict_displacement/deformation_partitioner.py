@@ -8,7 +8,6 @@ from ...utils import as_string
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
 
-
 class DeformPartitioner(object):
     def __init__(self,
                  file_G0,
