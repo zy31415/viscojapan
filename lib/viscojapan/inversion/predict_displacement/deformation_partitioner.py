@@ -1,9 +1,12 @@
 import numpy as np
+import h5py
 
 from ..result_file import ResultFileReader
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, \
      DiffED, EpochalG, EpochalIncrSlipFileReader
 from ...utils import as_string
+from ...sites import Site
+from ...displacement import Disp
 
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
@@ -17,9 +20,10 @@ class DeformPartitioner(object):
                  file_incr_slip0 = None,
                  ):
 
-        reader = ResultFileReader(result_file)
+        result_file_reader = ResultFileReader(result_file)
+        self.result_file_reader = result_file_reader
 
-        self.epochs = reader.epochs
+        self.epochs = result_file_reader.epochs
         self.num_epochs = len(self.epochs)
 
         self.file_G0 = file_G0
@@ -27,7 +31,7 @@ class DeformPartitioner(object):
             epoch_file = self.file_G0,
             )
 
-        self.slip = reader.get_slip(fault_file=fault_file)
+        self.slip = result_file_reader.get_slip(fault_file=fault_file)
 
         self.files_Gs = files_Gs
 
@@ -35,8 +39,8 @@ class DeformPartitioner(object):
 
         self.sites_for_prediction = self.file_G0_reader.filter_sites
 
-        self.nlin_par_names = reader.nlin_par_names
-        self.delta_nlin_pars = reader.delta_nlin_par_values
+        self.nlin_par_names = result_file_reader.nlin_par_names
+        self.delta_nlin_pars = result_file_reader.delta_nlin_par_values
 
         self.file_incr_slip0 = file_incr_slip0
         self._check_incr_slip0_file_spacing()
@@ -187,12 +191,33 @@ class DeformPartitioner(object):
 
         return disp
 
+    def _save_prediction_from_result_file(self, fid):
+        fid['result_file/d_pred'] = self.result_file_reader.d_pred
+        fid['result_file/sites'] = self.result_file_reader.sites
+
+
     # save to a file
     def save(self,fn):
         with h5py.File(fn,'w') as fid:
-            disp = self.E_cumu_slip_to_disp_obj()
-            fid['Ecumu'] = disp.cumu3d
-            fid['Rco'] = self.R_co_to_disp_obj().cumu3d
-            fid['Raslip'] = self.R_aslip_to_disp_obj().cumu3d
+            print('Ecumu ...')
+            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().cumu3d
+            fid['Ecumu'] = disp3d_Ecumu
+
+            print('Rco ...')
+            disp3d_Rco = self.R_co_to_disp_obj().cumu3d
+            fid['Rco'] = disp3d_Rco
+
+            print('Raslip ...')
+            disp3d_Raslip = self.R_aslip_to_disp_obj().cumu3d
+            fid['Raslip'] = disp3d_Raslip
+
+            fid['d_added'] = disp3d_Ecumu + disp3d_Rco + disp3d_Raslip
+
+            print('epochs ...')
             fid['epochs'] = self.epochs
+
+            print('sites ...')
             fid['sites'] = [site.id.encode() for site in disp.sites]
+
+            print('Prediction from the result file')
+            self._save_prediction_from_result_file(fid)

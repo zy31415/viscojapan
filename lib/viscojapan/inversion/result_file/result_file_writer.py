@@ -50,7 +50,7 @@ class ResultFileWriter(FileIOBase):
         num_nlin_pars = len(inv.nlin_par_names)
         fid['nlin_pars/num_nlin_pars'] = num_nlin_pars
         if num_nlin_pars > 0:
-            fid['nlin_pars/num_nlin_par_names'] = [ii.encode() for ii in inv.nlin_par_names]
+            fid['nlin_pars/nlin_par_names'] = [ii.encode() for ii in inv.nlin_par_names]
             fid['nlin_pars/nlin_par_initial_values'] = inv.nlin_par_initial_values
             fid['nlin_pars/nlin_par_solved_values'] = inv.Bm[-num_nlin_pars:,0]
 

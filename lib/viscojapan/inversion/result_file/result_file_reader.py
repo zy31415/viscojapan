@@ -93,7 +93,8 @@ class ResultFileReader(FileIOBase):
 
     @property
     def nlin_par_names(self):
-        return list(self.fid['nlin_pars/nlin_par_names'][...])
+        par_names = self.fid['nlin_pars/nlin_par_names'][...]
+        return [ii.decode() for ii in par_names]
 
     def get_nlin_par_solved_value(self, pn):
         idx = list(self.nlin_par_names).index(pn)
