@@ -105,6 +105,7 @@ class EpochalSitesFilteredData(EpochalSitesData):
         ch = self._gen_filter()
         return out[ch,:]
 
+# TODO EpochalG should be replaced with a reader file.
 class EpochalG(EpochalSitesFilteredData):
     def __init__(self,epoch_file,
                  filter_sites_file=None, filter_sites=None):

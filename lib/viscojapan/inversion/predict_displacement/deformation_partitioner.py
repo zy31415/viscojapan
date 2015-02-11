@@ -1,8 +1,11 @@
 import numpy as np
+import h5py
 
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, \
      DiffED, EpochalG, EpochalIncrSlipFileReader
 from ...utils import as_string
+from ...sites import Site
+from ...displacement import Disp
 
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
@@ -16,33 +19,44 @@ class DeformPartitioner(object):
                  files_Gs = None,
                  nlin_pars = None,
                  nlin_par_names = None,
-                 file_incr_slip0 = None,
+                 file_incr_slip0 = None, # TODO change file_incr_slip0 to slip object to allow more flexibility.
+                 sites_for_prediction = None
                  ):
 
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
 
         self.file_G0 = file_G0
-        self.file_G0_reader = EpochalSitesFileReader(
-            epoch_file = self.file_G0,
-            )
+        self.files_Gs = files_Gs
+        self.sites_for_prediction = sites_for_prediction
+        self._init_G_files_reader()
 
         self.slip = slip
 
-        self.files_Gs = files_Gs
-
-        self._assert_all_G_files_have_the_same_sites_list()
-
-        self.sites_for_prediction = self.file_G0_reader.filter_sites
-
         self.nlin_par_vals = nlin_pars
         self.nlin_par_names = nlin_par_names
+
         self.file_incr_slip0 = file_incr_slip0
         self._check_incr_slip0_file_spacing()
 
         if self.files_Gs is not None:
             self._get_delta_nlin_pars()
 
+    def _init_G_files_reader(self):
+
+        self._assert_all_G_files_have_the_same_sites_list()
+
+        self.file_G0_reader = EpochalSitesFileReader(epoch_file = self.file_G0,
+                                                     filter_sites = self.sites_for_prediction
+                                                     )
+        if self.sites_for_prediction is None:
+            self.sites_for_prediction = self.file_G0_reader.all_sites
+
+        self.files_Gs_readers = [EpochalSitesFileReader(epoch_file = fG,
+                                                       filter_sites = self.sites_for_prediction
+                                                       )
+                                for fG in self.files_Gs
+                                ]
 
     def _assert_all_G_files_have_the_same_sites_list(self):
         reader = EpochalFileReader(self.file_G0)
@@ -55,7 +69,7 @@ class DeformPartitioner(object):
     def _check_incr_slip0_file_spacing(self):
         reader  = EpochalIncrSlipFileReader(self.file_incr_slip0)
         assert reader.epochs == self.epochs, \
-               '''Epochs of initial slip input is the same as that is in the result file
+               '''Epochs of initial slip input is not the same as that is in the result file
 {slip0}
 {result}
 '''.format(slip0 = reader.epochs, result=self.epochs)
@@ -165,3 +179,55 @@ class DeformPartitioner(object):
 
     def R_aslip_at_nth_epoch(self, nth):
         return self.R_aslip(self.epochs[nth])
+
+    # output to displacement object
+    def E_cumu_slip_to_disp_obj(self):
+        return self._form_disp_obj(self.E_cumu_slip)
+
+    def E_aslip_to_disp_obj(self):
+        return self._form_disp_obj(self.R_aslip)
+
+    def R_co_to_disp_obj(self):
+        return self._form_disp_obj(self.R_co_at_nth_epoch)
+
+    def R_aslip_to_disp_obj(self):
+        return self._form_disp_obj(self.R_aslip_at_nth_epoch)
+
+    def _form_disp_obj(self, func):
+        res = []
+        for nth, epoch in enumerate(self.epochs):
+            res.append(func(nth).reshape([-1, 3]))
+
+        res = np.asarray(res)
+
+        sites = [Site(s) for s in self.file_G0_reader.filter_sites]
+        disp = Disp(cumu_disp3d=res,
+             epochs=self.epochs,
+             sites = sites
+        )
+
+        return disp
+
+    # save to a file
+    def save(self,fn):
+        with h5py.File(fn,'w') as fid:
+            print('Ecumu ...')
+            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().cumu3d
+            fid['Ecumu'] = disp3d_Ecumu
+
+            print('Rco ...')
+            disp3d_Rco = self.R_co_to_disp_obj().cumu3d
+            fid['Rco'] = disp3d_Rco
+
+            print('Raslip ...')
+            disp3d_Raslip = self.R_aslip_to_disp_obj().cumu3d
+            fid['Raslip'] = disp3d_Raslip
+
+            fid['d_added'] = disp3d_Ecumu + disp3d_Rco + disp3d_Raslip
+
+            print('epochs ...')
+            fid['epochs'] = self.epochs
+
+            print('sites ...')
+            fid['sites_for_prediction'] = [site.encode() for site in self.sites_for_prediction]
+

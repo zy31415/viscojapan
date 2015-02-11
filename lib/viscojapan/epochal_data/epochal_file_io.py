@@ -56,6 +56,7 @@ class EpochalFileWriter(FileIOBase):
             if 'info' in from_file:
                 from_file.copy('info/',self.fid)
 
+# TODO: Change data structure. Store 3D array.
 class EpochalFileReader(FileIOBase):
     ''' Use this class to CREATE and READ epochal data file.
 '''

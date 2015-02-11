@@ -18,14 +18,14 @@ class Test_DeformPartitioner(vj.test_utils.MyTestCase):
 
 
         pred = vj.inv.DeformPartitioner(
-            epochs=res_reader.epochs,
+            epochs = res_reader.epochs,
             slip=res_reader.get_slip(fault_file),
             file_G0 = join(self.share_dir, 'G0_He50km_VisM6.3E18_Rake83.h5'),
             files_Gs = [join(self.share_dir, 'G1_He50km_VisM1.0E19_Rake83.h5'),
                         join(self.share_dir, 'G2_He60km_VisM6.3E18_Rake83.h5'),
                         join(self.share_dir, 'G3_He50km_VisM6.3E18_Rake90.h5')
                         ],
-            nlin_pars=res_reader.nlin_pars,
+            nlin_pars = res_reader.nlin_par_solved_values,
             nlin_par_names = ['log10(visM)','log10(He)','rake'],
             file_incr_slip0 = join(self.share_dir, 'slip0.h5')
         )
@@ -35,6 +35,8 @@ class Test_DeformPartitioner(vj.test_utils.MyTestCase):
         disp = pred.R_nth_epoch(3, 500)
         disp = pred.R_co(500)
         disp = pred.R_aslip(500)
+
+        pred.save(join(self.outs_dir, 'partition.h5'))
 
 
 

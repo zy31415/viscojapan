@@ -71,7 +71,7 @@ class ResultFileReader(FileIOBase):
     # Nonlinear parameters
     @property
     def nlin_pars(self):
-        self.nlin_par_solved_values()
+        return self.nlin_par_solved_values()
 
     @property
     def nlin_par_solved_values(self):

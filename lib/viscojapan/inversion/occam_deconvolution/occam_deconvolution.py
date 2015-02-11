@@ -33,14 +33,14 @@ class OccamDeconvolution(Inversion):
     def __init__(self,
                  file_G0,
                  files_Gs,
-                 nlin_par_names,                 
-                 file_d,
-                 file_sd,
+                 nlin_par_names,
+                 file_d,  # TODO file_d should be replaced with a disp object?
+                 file_sd, # TODO file_sd should be replaced with a sd object?
                  filter_sites_file,
                  epochs,                 
                  regularization,
                  basis,
-                 file_incr_slip0,
+                 file_incr_slip0,  #TODO file_incr_slip0 should be replaced with a slip object?
                  ):
         
         self.file_G0 = file_G0
