@@ -14,7 +14,6 @@ class DeformPartitioner(object):
                  result_file,
                  fault_file,
                  files_Gs = None,
-                 nlin_par_names = None,
                  file_incr_slip0 = None,
                  ):
 
@@ -36,13 +35,11 @@ class DeformPartitioner(object):
 
         self.sites_for_prediction = self.file_G0_reader.filter_sites
 
-        self.nlin_par_vals = reader.nlin_pars
-        self.nlin_par_names = nlin_par_names
+        self.nlin_par_names = reader.nlin_par_names
+        self.delta_nlin_pars = reader.delta_nlin_par_values
+
         self.file_incr_slip0 = file_incr_slip0
         self._check_incr_slip0_file_spacing()
-
-        if self.files_Gs is not None:
-            self._get_delta_nlin_pars()
 
 
     def _assert_all_G_files_have_the_same_sites_list(self):
@@ -60,12 +57,6 @@ class DeformPartitioner(object):
 {slip0}
 {result}
 '''.format(slip0 = reader.epochs, result=self.epochs)
-
-    def _get_delta_nlin_pars(self):
-        self.delta_nlin_pars = []
-        for name, par in zip(self.nlin_par_names, self.nlin_par_vals):
-            delta = par - self.file_G0_reader[name]
-            self.delta_nlin_pars.append(delta)
 
 
     def E_cumu_slip(self, nth_epoch):

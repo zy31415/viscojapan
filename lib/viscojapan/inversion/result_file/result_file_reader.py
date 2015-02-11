@@ -88,6 +88,10 @@ class ResultFileReader(FileIOBase):
             return self.fid['nlin_pars/nlin_par_initial_values'][...]
 
     @property
+    def delta_nlin_par_values(self):
+        return self.nlin_par_solved_values - self.nlin_par_initial_values
+
+    @property
     def nlin_par_names(self):
         return list(self.fid['nlin_pars/nlin_par_names'][...])
 
