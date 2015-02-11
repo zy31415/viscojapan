@@ -1,5 +1,5 @@
 __all__ = ['EpochFileReader']
-# TODO: Change data structure. Store 3D array.
+
 class EpochFileReader(FileIOBase):
     ''' Use this class to CREATE and READ epochal data file.
 '''
