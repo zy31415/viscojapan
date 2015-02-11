@@ -67,7 +67,7 @@ class PostFit(object):
             func.cmpt=cmpt.upper()
             nth=1
             for jump in self.jumps:
-                f_jump=SubFcEq()
+                f_jump=SubFcJump()
                 f_jump.T0=jump
                 f_jump.jump=.001
                 f_jump.tag='JUMP_%d'%nth

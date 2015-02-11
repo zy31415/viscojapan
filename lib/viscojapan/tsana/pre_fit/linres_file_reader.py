@@ -6,12 +6,13 @@ import numpy as np
 from numpy import loadtxt, asarray, nan
 
 from ...sites_db import get_pos_dic
+from .share import dir_linres
 
 __all__ = ['LinResReader','read_vel_sd','read_vel','gen_vel_and_vsd_file']
 
 class LinResReader(object):
     def __init__(self,site,cmpt):
-        self.dir_linres = '../pre_fit/linres/'
+        self.dir_linres = dir_linres
         self.site=site
         self.cmpt=cmpt
 

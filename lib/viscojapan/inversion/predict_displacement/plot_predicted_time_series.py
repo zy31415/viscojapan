@@ -159,9 +159,10 @@ class PredictedTimeSeriesPlotter(object):
             ))
 
     def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7,
-                       added_label = None
+                       added_label = None,
+                       marker_for_obs = 'x',
                        ):
-        y = self.plot_post_obs_linres(site,cmpt, label='obs.')
+        y = self.plot_post_obs_linres(site,cmpt, label='obs.', marker=marker_for_obs)
         y += self.plot_post_disp_pred(site,cmpt, label='pred.')
         y += self.plot_R_co(site, cmpt,
                             style = '-^', label='Rco', color='orange')
