@@ -3,7 +3,7 @@ import glob
 
 import viscojapan as vj
 
-files = glob.glob('../../outs/nrough_??_naslip_??.h5')
+files = glob.glob('../../outs/nrough_05_naslip_11.h5')
 
 for file in files:
     fn, _ = splitext(basename(file))
@@ -11,7 +11,7 @@ for file in files:
     print(output_file)
     if exists(output_file):
         continue
-    plt = vj.gmt.PlotSlipResult(
+    plt = vj.slip.plot.PlotSlipResult(
         fault_file = '../../../fault_model/fault_bott80km.h5',
         result_file = file,
         subplot_width = 3.2,
