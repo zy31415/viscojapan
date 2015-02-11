@@ -1,25 +1,29 @@
 import numpy as np
+import h5py
 
+from ..result_file import ResultFileReader
 from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, \
      DiffED, EpochalG, EpochalIncrSlipFileReader
 from ...utils import as_string
+from ...sites import Site
+from ...displacement import Disp
 
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
 
-
 class DeformPartitioner(object):
     def __init__(self,
                  file_G0,
-                 epochs,
-                 slip,
+                 result_file,
+                 fault_file,
                  files_Gs = None,
-                 nlin_pars = None,
-                 nlin_par_names = None,
                  file_incr_slip0 = None,
                  ):
 
-        self.epochs = epochs
+        result_file_reader = ResultFileReader(result_file)
+        self.result_file_reader = result_file_reader
+
+        self.epochs = result_file_reader.epochs
         self.num_epochs = len(self.epochs)
 
         self.file_G0 = file_G0
@@ -27,7 +31,7 @@ class DeformPartitioner(object):
             epoch_file = self.file_G0,
             )
 
-        self.slip = slip
+        self.slip = result_file_reader.get_slip(fault_file=fault_file)
 
         self.files_Gs = files_Gs
 
@@ -35,13 +39,11 @@ class DeformPartitioner(object):
 
         self.sites_for_prediction = self.file_G0_reader.filter_sites
 
-        self.nlin_par_vals = nlin_pars
-        self.nlin_par_names = nlin_par_names
+        self.nlin_par_names = result_file_reader.nlin_par_names
+        self.delta_nlin_pars = result_file_reader.delta_nlin_par_values
+
         self.file_incr_slip0 = file_incr_slip0
         self._check_incr_slip0_file_spacing()
-
-        if self.files_Gs is not None:
-            self._get_delta_nlin_pars()
 
 
     def _assert_all_G_files_have_the_same_sites_list(self):
@@ -59,12 +61,6 @@ class DeformPartitioner(object):
 {slip0}
 {result}
 '''.format(slip0 = reader.epochs, result=self.epochs)
-
-    def _get_delta_nlin_pars(self):
-        self.delta_nlin_pars = []
-        for name, par in zip(self.nlin_par_names, self.nlin_par_vals):
-            delta = par - self.file_G0_reader[name]
-            self.delta_nlin_pars.append(delta)
 
 
     def E_cumu_slip(self, nth_epoch):
@@ -165,3 +161,63 @@ class DeformPartitioner(object):
 
     def R_aslip_at_nth_epoch(self, nth):
         return self.R_aslip(self.epochs[nth])
+
+    # output to displacement object
+
+    def E_cumu_slip_to_disp_obj(self):
+        return self._form_disp_obj(self.E_cumu_slip)
+
+    def E_aslip_to_disp_obj(self):
+        return self._form_disp_obj(self.R_aslip)
+
+    def R_co_to_disp_obj(self):
+        return self._form_disp_obj(self.R_co_at_nth_epoch)
+
+    def R_aslip_to_disp_obj(self):
+        return self._form_disp_obj(self.R_aslip_at_nth_epoch)
+
+    def _form_disp_obj(self, func):
+        res = []
+        for nth, epoch in enumerate(self.epochs):
+            res.append(func(nth).reshape([-1, 3]))
+
+        res = np.asarray(res)
+
+        sites = [Site(s) for s in self.file_G0_reader.filter_sites]
+        disp = Disp(cumu_disp3d=res,
+             epochs=self.epochs,
+             sites = sites
+        )
+
+        return disp
+
+    def _save_prediction_from_result_file(self, fid):
+        fid['result_file/d_pred'] = self.result_file_reader.d_pred
+        fid['result_file/sites'] = self.result_file_reader.sites
+
+
+    # save to a file
+    def save(self,fn):
+        with h5py.File(fn,'w') as fid:
+            print('Ecumu ...')
+            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().cumu3d
+            fid['Ecumu'] = disp3d_Ecumu
+
+            print('Rco ...')
+            disp3d_Rco = self.R_co_to_disp_obj().cumu3d
+            fid['Rco'] = disp3d_Rco
+
+            print('Raslip ...')
+            disp3d_Raslip = self.R_aslip_to_disp_obj().cumu3d
+            fid['Raslip'] = disp3d_Raslip
+
+            fid['d_added'] = disp3d_Ecumu + disp3d_Rco + disp3d_Raslip
+
+            print('epochs ...')
+            fid['epochs'] = self.epochs
+
+            print('sites ...')
+            fid['sites'] = [site.id.encode() for site in disp.sites]
+
+            print('Prediction from the result file')
+            self._save_prediction_from_result_file(fid)
