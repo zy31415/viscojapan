@@ -8,7 +8,7 @@ import viscojapan as vj
 __author__ = 'zy'
 
 
-class Test_plot_slip_and_rate_at_subflt(vj.test_utils.MyTestCase):
+class Test_plot_slip_and_rate_at_subflt(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()

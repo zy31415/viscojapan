@@ -62,7 +62,7 @@ for nrough, reg_rough, naslip, reg_aslip in \
     
     inv.set_data_L()
     inv.run()
-    inv.save(outfname, overwrite=True)
+    inv.save(outfname, overwrite=True)  # TODO - check results for the new epic file.
 
         
                 

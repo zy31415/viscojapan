@@ -10,7 +10,6 @@ from ...displacement import Disp
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
 
-
 class DeformPartitioner(object):
     def __init__(self,
                  file_G0, # TODO - fix the file reader here

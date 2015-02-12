@@ -6,7 +6,7 @@ import viscojapan as vj
 __author__ = 'zy'
 
 
-class Test_PlotSlipResult(vj.test_utils.MyTestCase):
+class Test_PlotSlipResult(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()
