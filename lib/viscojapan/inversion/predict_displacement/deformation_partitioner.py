@@ -1,8 +1,8 @@
 import numpy as np
 import h5py
 
-# from ..epoch_file_reader_for_inversion import EpochSitesFileReader, \
-#     EpochG, EpochSlip
+
+from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochSlip
 from ...utils import as_string
 from ...sites import Site
 from ...displacement import Disp
@@ -18,86 +18,57 @@ class DeformPartitioner(object):
                  files_Gs = None, # TODO - fix the file reader here
                  nlin_pars = None,
                  nlin_par_names = None,
-                 file_incr_slip0 = None, # TODO change file_incr_slip0 to slip object to allow more flexibility.
+                 file_slip0 = None, # TODO change file_incr_slip0 to slip object to allow more flexibility.
                  sites_for_prediction = None
                  ):
 
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
 
-        self.file_G0 = file_G0
-        self.files_Gs = files_Gs
+
+        self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction)
+        if sites_for_prediction is None:
+            sites_for_prediction = self.G0.sites
+
         self.sites_for_prediction = sites_for_prediction
-        self._init_G_files_reader()
+
+        self.Gs = [EpochG(f, mask_sites=sites_for_prediction) for f in files_Gs]
+
 
         self.slip = slip
 
         self.nlin_par_vals = nlin_pars
         self.nlin_par_names = nlin_par_names
 
-        self.file_incr_slip0 = file_incr_slip0
-        self._check_incr_slip0_file_spacing()
 
-        if self.files_Gs is not None:
+        self.slip0 = EpochSlip(file_slip0)
+
+        if files_Gs is not None:
             self._get_delta_nlin_pars()
 
-    def _init_G_files_reader(self):
-
-        self._assert_all_G_files_have_the_same_sites_list()
-
-        self.file_G0_reader = EpochalSitesFileReader(epoch_file = self.file_G0,
-                                                     filter_sites = self.sites_for_prediction
-                                                     )
-        if self.sites_for_prediction is None:
-            self.sites_for_prediction = self.file_G0_reader.all_sites
-
-        self.files_Gs_readers = [EpochalSitesFileReader(epoch_file = fG,
-                                                       filter_sites = self.sites_for_prediction
-                                                       )
-                                for fG in self.files_Gs
-                                ]
-
-    def _assert_all_G_files_have_the_same_sites_list(self):
-        reader = EpochalFileReader(self.file_G0)
-        sites = as_string(reader['sites'])
-
-        for G in self.files_Gs:
-            reader = EpochalFileReader(G)
-            assert sites == as_string(reader['sites'])
-
-    def _check_incr_slip0_file_spacing(self):
-        reader  = EpochalIncrSlipFileReader(self.file_incr_slip0)
-        assert reader.epochs == self.epochs, \
-               '''Epochs of initial slip input is not the same as that is in the result file
-{slip0}
-{result}
-'''.format(slip0 = reader.epochs, result=self.epochs)
 
     def _get_delta_nlin_pars(self):
         self.delta_nlin_pars = []
         for name, par in zip(self.nlin_par_names, self.nlin_par_vals):
-            delta = par - self.file_G0_reader[name]
+            delta = par - self.G0[name]
             self.delta_nlin_pars.append(delta)
 
 
     def E_cumu_slip(self, nth_epoch):
         cumuslip = self.slip.get_cumu_slip_at_nth_epoch(nth_epoch).reshape([-1,1])
-        G0 = self.file_G0_reader[0]
+        G0 = self.G0[0]
         disp = np.dot(G0, cumuslip)
-        if self.files_Gs is not None:
+
+        if len(self.Gs) > 0:
             disp += self._nlin_correction_E_cumu_slip(nth_epoch)
+
         return disp
 
     def _nlin_correction_E_cumu_slip(self, nth_epoch):
-        reader = EpochalIncrSlipFileReader(self.file_incr_slip0)
-
-        slip0 = reader.get_cumu_slip_at_nth_epoch(nth_epoch)
-
+        slip0 = self.slip0.get_cumu_slip_at_nth_epoch(nth_epoch).reshape([-1,1])
         dGs = []
-        for file_G, par in zip(self.files_Gs, self.nlin_par_names):
-            G0 = EpochalG(self.file_G0)
-            G = EpochalG(file_G)
-            diffG = DiffED(ed1=G0, ed2=G, wrt=par)
+        for Gi, par in zip(self.Gs, self.nlin_par_names):
+            diffG = DifferentialG(ed1=self.G0, ed2=Gi, wrt=par)
             dGs.append(diffG[0])
 
         corr = None
@@ -123,28 +94,26 @@ class DeformPartitioner(object):
         del_epoch = int(del_epoch)
 
         if del_epoch <= 0:
-            return np.zeros([self.file_G0_reader[0].shape[0],1])
+            return np.zeros([self.G0[0].shape[0],1])
 
-        G = self.file_G0_reader[del_epoch] - self.file_G0_reader[0]
+        G = self.G0[del_epoch] - self.G0[0]
         s = self.slip.get_incr_slip_at_nth_epoch(from_nth_epoch).reshape([-1,1])
         disp = np.dot(G, s)
-        if self.files_Gs is not None:
+        if len(self.Gs) > 0:
             corr = self._nlin_correction_R_nth_epoch(from_nth_epoch, to_epoch)
             disp += corr
         return disp
 
     def _nlin_correction_R_nth_epoch(self, from_nth_epoch, to_epoch):
         from_epoch = int(self.epochs[from_nth_epoch])
-        reader = EpochalIncrSlipFileReader(self.file_incr_slip0)
-        slip0 = reader[from_epoch]
+
+        slip0 = self.slip0.get_incr_slip_at_nth_epoch(from_nth_epoch).reshape([-1,1])
 
         del_epoch = int(to_epoch - from_epoch)
 
         dGs = []
-        for file_G, par in zip(self.files_Gs, self.nlin_par_names):
-            G0 = EpochalG(self.file_G0)
-            G = EpochalG(file_G)
-            diffG = DiffED(ed1=G0, ed2=G, wrt=par)
+        for Gi, par in zip(self.Gs, self.nlin_par_names):
+            diffG = DifferentialG(ed1=self.G0, ed2=Gi, wrt=par)
             dG0 = diffG[0]
             dG = diffG[del_epoch]
             dGs.append(dG-dG0)
@@ -199,7 +168,7 @@ class DeformPartitioner(object):
 
         res = np.asarray(res)
 
-        sites = [Site(s) for s in self.file_G0_reader.filter_sites]
+        sites = [Site(s) for s in self.G0.mask_sites]
         disp = Disp(cumu_disp3d=res,
              epochs=self.epochs,
              sites = sites

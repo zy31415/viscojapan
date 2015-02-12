@@ -12,12 +12,12 @@ class TestMomentCalculator(vj.test_utils.MyTestCase):
         super().setUp()
 
     def test_MomentCalculator(self):
-        res_file = join(self.share_dir,'nrough_05_naslip_11.h5')
-        fault_file = join(self.share_dir, 'fault_bott80km.h5')
+        res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
+        fault_file = '/home/zy/workspace/viscojapan/tests/share/fault_bott80km.h5'
         reader = vj.inv.ResultFileReader(res_file)
-        slip = reader.get_slip(fault_file)
+        slip = reader.get_slip()
 
-        earth_file = join(self.share_dir,'earth.model_He50km_VisM6.3E18')
+        earth_file = '/home/zy/workspace/viscojapan/tests/share/earth.model_He50km_VisM6.3E188'
 
         cal = vj.moment.MomentCalculator(fault_file, earth_file)
 

@@ -33,15 +33,15 @@ class Test_PredictedTimeSeriesPlotter(vj.test_utils.MyTestCase):
         plotter.plot_E_cumu_slip(site, cmpt)
         plotter.plot_E_aslip(site, cmpt)
         plotter.plot_R_aslip(site, cmpt)
-        plt.show()
+        # plt.show()
         plt.close()
 
         plotter.plot_cumu_disp(site, cmpt)
-        plt.show()
+        # plt.show()
         plt.close()
 
         plotter.plot_post_disp(site, cmpt)
-        plt.show()
+        # plt.show()
         plt.close()
 
 
