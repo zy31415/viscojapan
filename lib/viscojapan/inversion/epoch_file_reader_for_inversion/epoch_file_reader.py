@@ -52,14 +52,15 @@ class EpochFileReader(object):
         epochs = self.epochs
         if epoch in epochs:
             return self.get_data_at_epoch_no_interpolation(epoch)
+
         for nth, ti in enumerate(epochs[1:]):
             if epoch <= ti:
                 break
+
         t1 = epochs[nth]
         t2 = epochs[nth+1]
 
-        assert (t1<t2) and (t1<=epoch) and (epoch<=t2), \
-               'Epoch %d should be in %d ~ %d'%(epoch, t1, t2)
+        assert (t1<t2) and (t1<=epoch) and (epoch<=t2), 'Epoch %d should be in %d ~ %d'%(epoch, t1, t2)
 
         G1=self.get_data_at_epoch_no_interpolation(t1)
         G2=self.get_data_at_epoch_no_interpolation(t2)
