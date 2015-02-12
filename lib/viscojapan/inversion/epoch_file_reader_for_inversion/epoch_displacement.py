@@ -1,14 +1,14 @@
 import numpy as np
 
-from .epochal_sites_file_reader import EpochalSitesFileReader
+from .epoch_sites_file_reader import EpochSitesFileReader
 
 __author__ = 'zy'
-__all__ = ['EpochalDisplacement', 'EpochalDisplacementSD']
+__all__ = ['EpochDisplacement', 'EpochDisplacementSD']
 
-class EpochalDisplacement(EpochalSitesFileReader):
+class EpochDisplacement(EpochSitesFileReader):
     def __init__(self,file_name,
-                 filter_sites_file=None, filter_sites=None):
-        super().__init__(file_name, filter_sites_file, filter_sites)
+                 mask_sites=None):
+        super().__init__(file_name, mask_sites)
 
     def _gen_mask(self):
         ch = []
@@ -21,11 +21,11 @@ class EpochalDisplacement(EpochalSitesFileReader):
         return np.vstack([self.get_data_at_epoch(epoch).reshape([-1,1]) for epoch in epochs])
 
 
-class EpochalDisplacementSD(EpochalDisplacement):
+class EpochDisplacementSD(EpochDisplacement):
     def __init__(self,file_name,
-                 filter_sites_file=None, filter_sites=None):
-        super().__init__(file_name, filter_sites)
+                 mask_sites=None):
+        super().__init__(file_name, mask_sites)
 
     def get_data_at_epoch(self, epoch):
         assert epoch in self.epochs, "EpochalDisplacementSD doesn't allow interpolation."
-        super().get_data_at_epoch()
+        return super().get_data_at_epoch(epoch)

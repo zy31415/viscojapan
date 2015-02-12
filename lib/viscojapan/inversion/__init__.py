@@ -7,6 +7,7 @@ from .predict_displacement import *
 
 from . import regularization as reg
 from . import basis_function as basis
+from . import epoch_file_reader_for_inversion as ep
 
 __author__ = 'zy'
 

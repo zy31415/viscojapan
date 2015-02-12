@@ -1,12 +1,13 @@
 import numpy as np
 
-from .epochal_sites_file_reader import EpochalSitesFileReader
+from .epoch_sites_file_reader import EpochSitesFileReader
 
 __author__ = 'zy'
 __all__ = ['EpochG','DifferentialG']
 
 def stack_G_for_convolution(self, epochs):
     N = len(epochs)
+    x = self.get_data_at_epoch(0)
     sh1, sh2 = self.get_data_at_epoch(0).shape
     G = np.zeros((sh1*N, sh2*N), dtype='float')
     for nth in range(0, N):
@@ -21,10 +22,10 @@ def stack_G_for_convolution(self, epochs):
     return G
 
 
-class EpochG(EpochalSitesFileReader):
+class EpochG(EpochSitesFileReader):
     def __init__(self,file_name,
-                 filter_sites=None):
-        super().__init__(file_name, filter_sites)
+                 mask_sites=None):
+        super().__init__(file_name, mask_sites)
 
     def _gen_mask(self):
         ch = []

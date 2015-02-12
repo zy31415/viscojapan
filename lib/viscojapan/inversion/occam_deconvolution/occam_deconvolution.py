@@ -28,8 +28,6 @@ def col_zeros_padding(mat, n):
     
 
 class OccamDeconvolution(Inversion):
-    ''' Connet relative objects to work together to do inversion.
-'''
     def __init__(self,
                  file_G0,
                  files_Gs,

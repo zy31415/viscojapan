@@ -12,7 +12,10 @@ class EpochFileReader(object):
         self.file_name = file_name
         self.fid = self.open()
 
-        self._epochs = self.fid['epochs']
+        self.data3d = self.fid['data3d']
+        self._epochs = self.fid['epochs'][...]
+
+        assert self.data3d.shape[0] == self.num_epochs
 
     def open(self):
         assert exists(self.file_name), "File must exists!"
@@ -24,14 +27,13 @@ class EpochFileReader(object):
             self.fid.close()
         self.fid = None
 
-    def __enter__(self):
-        return self
+    @property
+    def epochs(self):
+        return self._epochs
 
-    def __exit__(self, type, value, traceback):
-        self.close()
-
-    def __del__(self):
-        self.close()
+    @property
+    def num_epochs(self):
+        return len(self.epochs)
 
     def _assert_within_range(self,epoch):
         epochs = self.epochs
@@ -44,8 +46,9 @@ class EpochFileReader(object):
     def get_data_at_epoch_no_interpolation(self, epoch):
         epochs = self.epochs
         assert epoch in epochs, "Interpolation is not allowed in this method."
-        out = self.fid['epochs/%04d'%epoch][...]
-        return out
+        out = self.data3d[self.epochs == epoch,:,:]
+        assert out.shape[0] == 1
+        return out[0,:,:]
 
     def get_data_at_epoch(self, epoch):
         self._assert_within_range(epoch)
@@ -78,10 +81,6 @@ class EpochFileReader(object):
             out = self.fid[key].attrs[attr][...]
         return out
 
-    @property
-    def epochs(self):
-        return self._epochs
-
     def has_info(self, key):
         return key in self.fid
 
@@ -92,6 +91,15 @@ class EpochFileReader(object):
             return self.get_info(name)
         else:
             raise ValueError('Not recognized type.')
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.close()
+
+    def __del__(self):
+        self.close()
 
 
 

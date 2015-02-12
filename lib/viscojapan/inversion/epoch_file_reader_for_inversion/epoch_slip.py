@@ -9,6 +9,9 @@ class EpochalSlip(EpochFileReader):
     def __init__(self, file_name):
         super().__init__(file_name)
 
+        self.num_subflt_along_strike = self.data3d.shape[2]
+        self.num_subflt_along_dip = self.data3d.shape[1]
+
     def stack(self, epochs):
         out1 = [self.get_data_at_epoch(epoch).reshape([-1.1]) for epoch in epochs]
         out2 = [out1[0]]

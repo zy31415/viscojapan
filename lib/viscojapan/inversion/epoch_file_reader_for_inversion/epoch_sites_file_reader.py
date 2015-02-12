@@ -3,10 +3,10 @@ import numpy as np
 from .epoch_file_reader import EpochFileReader
 from ...utils import as_string
 
-__all__ = ['EpochalSitesFileReader']
+__all__ = ['EpochSitesFileReader']
 
 
-class EpochalSitesFileReader(EpochFileReader):
+class EpochSitesFileReader(EpochFileReader):
     def __init__(self,
                  file_name,
                  mask_sites=None):
@@ -15,7 +15,7 @@ class EpochalSitesFileReader(EpochFileReader):
 
         assert self.has_info('sites'), 'File %s should have sites information.'\
                %self.file_name
-        self._sites = as_string(self['sites'])
+        self._sites = as_string(self['sites'][...])
 
         if mask_sites is None:
             mask_sites = self.sites
@@ -38,8 +38,8 @@ class EpochalSitesFileReader(EpochFileReader):
     def _gen_mask(self):
         raise NotImplementedError()
 
-    def get_epoch_value(self,time):
-        out = super().get_epoch_value(time)
+    def get_data_at_epoch(self,time):
+        out = super().get_data_at_epoch(time)
         ch = self._gen_mask()
         return out[ch,:]
 
