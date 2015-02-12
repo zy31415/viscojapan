@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.sparse as sparse
 
-
 from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochDisplacement, EpochDisplacementSD, \
     EpochSlip
 
@@ -26,13 +25,13 @@ class OccamDeconvolution(Inversion):
                  file_G0,
                  files_Gs,
                  nlin_par_names,
-                 file_d,  # TODO file_d should be replaced with a disp object?
-                 file_sd, # TODO file_sd should be replaced with a sd object?
+                 file_d,
+                 file_sd,
                  sites,
                  epochs,                 
                  regularization,
                  basis,
-                 file_slip0,  #TODO file_incr_slip0 should be replaced with a slip object?
+                 file_slip0,
                  ):
 
         super().__init__(

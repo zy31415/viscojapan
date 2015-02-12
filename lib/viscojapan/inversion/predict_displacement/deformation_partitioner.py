@@ -13,10 +13,10 @@ __author__ = 'zy'
 
 class DeformPartitioner(object):
     def __init__(self,
-                 file_G0,
+                 file_G0, # TODO - fix the file reader here
                  epochs,
                  slip,
-                 files_Gs = None,
+                 files_Gs = None, # TODO - fix the file reader here
                  nlin_pars = None,
                  nlin_par_names = None,
                  file_incr_slip0 = None, # TODO change file_incr_slip0 to slip object to allow more flexibility.
