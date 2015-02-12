@@ -57,7 +57,7 @@ def get_mos_mws_from_epochal_file(epochal_file):
     mos = []
     for epoch in epochs:
         alpha = slip.get_info('alpha')
-        s = slip.get_epoch_value(epoch)
+        s = slip.get_data_at_epoch(epoch)
 
         M = MomentCalculator()
         mo,mw = M.moment(s)

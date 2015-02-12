@@ -13,7 +13,7 @@ matrix that represents convolution.
 '''
     N = len(epochs)
 
-    sh1, sh2 = epoch_data.get_epoch_value(0).shape
+    sh1, sh2 = epoch_data.get_data_at_epoch(0).shape
 
     G=zeros((sh1*N, sh2*N), dtype='float')
     for nth in range(0, N):
@@ -21,7 +21,7 @@ matrix that represents convolution.
         for mth in range(nth, N):
             t2 = epochs[mth]
             #print(t2,t1,t2-t1)
-            G_ = epoch_data.get_epoch_value(t2-t1)
+            G_ = epoch_data.get_data_at_epoch(t2-t1)
             #print(mth*sh1,(mth+1)*sh1,nth*sh2,(nth+1)*sh2)
             G[mth*sh1:(mth+1)*sh1,
               nth*sh2:(nth+1)*sh2] = G_
@@ -41,16 +41,16 @@ See test routine.
         for mth in range(nth, N):
             t2 = epochs[mth]
             #print(t2,t1,t2-t1)
-            _G = epoch_data.get_epoch_value(t2-t1)
+            _G = epoch_data.get_data_at_epoch(t2-t1)
             G[mth][nth] = _G
     G_sparse = bmat(G)
     return G_sparse    
 
 def vstack_column_vec(epoch_data, epochs):
-    res = epoch_data.get_epoch_value(epochs[0])
+    res = epoch_data.get_data_at_epoch(epochs[0])
     assert_col_vec_and_get_nrow(res)
     for epoch in epochs[1:]:
-        res = vstack((res,epoch_data.get_epoch_value(epoch)))
+        res = vstack((res,epoch_data.get_data_at_epoch(epoch)))
     return res
 
 def _assert_a_is_integer_multiple_of_b(a,b):

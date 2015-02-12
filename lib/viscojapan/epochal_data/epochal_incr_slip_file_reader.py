@@ -90,7 +90,7 @@ class EpochalIncrSlipFileReader(EpochalFileReader):
         res = self.get_epoch_value(epochs[0])
         assert_col_vec_and_get_nrow(res)
         for epoch in epochs[1:]:
-            res = np.vstack((res,epoch_data.get_epoch_value(epoch)))
+            res = np.vstack((res,epoch_data.get_data_at_epoch(epoch)))
         return res
         
     def to_cum_slip_file(self, out_file):

@@ -1,7 +1,7 @@
-import h5py 
+import h5py
 from .stacking import conv_stack
 
-class DiffED(object):
+class DifferentialG(object):
     ''' This class computes the diffretial of two EpochData objects
 with respcet to (wrt) the change of an indicated variable.
 '''
@@ -16,11 +16,11 @@ wrt - with respect to, variable that the change WRT.
         self.wrt = wrt
 
         self._init()
-        
+
     def _init(self):
         assert self.ed1.has_info(self.wrt)
         assert self.ed2.has_info(self.wrt)
-        
+
         self._get_vars()
 
     def _get_vars(self):
@@ -45,4 +45,4 @@ wrt - with respect to, variable that the change WRT.
             return self.get_epoch_value(name)
         else:
             raise ValueError('Not recognized type.')
-        
+
