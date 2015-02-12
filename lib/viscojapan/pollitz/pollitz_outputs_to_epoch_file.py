@@ -52,10 +52,10 @@ green's function: These properties are highly recommended:
             self.sites = loadtxt(self.sites_file, '4a', usecols=(0,))
 
         self.G_file = G_file
-
-        self.G = h5py.File(self.G_file,'w')
-        shape = (self.num_epochs, self.num_subflts, len(self.sites)*3)
-        self.G.create_dataset(name='data3d', shape=shape, dtype='float')
+        self.G_fid = h5py.File(self.G_file,'w')
+        shape = (self.num_epochs, len(self.sites)*3, self.num_subflts)
+        self.G_fid.create_dataset(name='data3d', shape=shape, dtype='float')
+        self.G = self.G_fid['data3d']
 
         self.G_file_overwrite = G_file_overwrite
 
@@ -110,22 +110,22 @@ green's function: These properties are highly recommended:
             if day == 0:
                 self.G[0,:,:] = G
             else:
-                G0 = self.G.get_epoch_value(0)
+                G0 = self.G[0,:,:]
                 self.G[nth,:,:] = G + G0
 
-        self.G['epochs'] = self.epochs
+        self.G_fid['epochs'] = self.epochs
 
     def _write_info_to_hdf5(self):
         sites = self.sites
-        self.G['sites'] = as_bytes(sites)
-        self.G['num_subflts'] = self.num_subflts
+        self.G_fid['sites'] = as_bytes(sites)
+        self.G_fid['num_subflts'] = self.num_subflts
 
     def _write_extra_info_to_hdf5(self):        
         for key, value in self.extra_info.items():
-            self.G[key] = value
+            self.G_fid[key] = value
         for key, attrs in self.extra_info_attrs.items():
             for key_attr, value_attr in attrs.items():
-                self.G[key].attrs[key_attr] = value_attr
+                self.G_fid[key].attrs[key_attr] = value_attr
 
     def __call__(self):
         self._check_pollitz_outputs_existence()

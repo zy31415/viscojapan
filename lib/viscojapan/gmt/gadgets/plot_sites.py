@@ -18,7 +18,7 @@ def plot_stations(gplt, sites, S='c.2', color='red', fill_color='red',
     lats = sites.lats
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, lon, lat in zip(sites, lons, lats):
-            site_name = get_site_true_name(site)
+            site_name = get_site_true_name(site = site)
             fid.write('%f %f %s\n'%(lon, lat, site_name))
         fid.seek(0,0)
         gplt.psxy(
@@ -29,7 +29,7 @@ def plot_stations(gplt, sites, S='c.2', color='red', fill_color='red',
         
     with tempfile.NamedTemporaryFile('w+t') as fid:
         for site, lon, lat in zip(sites, lons, lats):
-            site = get_site_true_name(site)
+            site = get_site_true_name(site = site)
             fid.write('%f %f %s\n'%(lon+text_offset_X,
                                     lat+text_offset_Y,
                                     site))
