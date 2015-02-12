@@ -2,6 +2,8 @@ __author__ = 'zy'
 
 import numpy as np
 
+from .interpolation_array3d import interpolation_array3d
+
 __all__ = ['Slip']
 
 def incr3d_to_cumu3d(incr3d):
@@ -17,23 +19,25 @@ def cumu3d_to_incr3d(cumu3d):
     incr3d = np.concatenate([res1,res2], axis=0)
     return incr3d
 
+
 class Slip(object):
     def __init__(self,
                  incr3d,
                  epochs
                  ):
-        # store cumulative slip instead of incremental slip, because it's easies to interpolate cumulative slip
-        self.init_from_incr3d(incr3d, epochs)
-
-    def init_from_incr3d(self, incr3d, epochs):
         self._cumu3d = incr3d_to_cumu3d(incr3d)
         self._epochs = epochs
         self._init()
 
-    def init_from_cumu3d(self, cumu3d, epochs):
-        self._cumu3d = cumu3d
-        self.epochs = epochs
-        self._init()
+    @classmethod
+    def init_from_incr3d(cls, incr3d, epochs):
+        cumu3d = cumu3d_to_incr3d(incr3d)
+        return cls(cumu3d, epochs)
+
+    @classmethod
+    def init_from_cumu3d(cls, cumu3d, epochs):
+        return cls(cumu3d, epochs)
+
 
     def _init(self):
         slip_shape = self._cumu3d.shape
@@ -85,6 +89,10 @@ class Slip(object):
         assert nth < self.num_epochs
 
         return self.cumu_slip3d[nth,:,:]
+
+    def get_cumu_slip_at_epoch(self, epoch):
+        return interpolation_array3d(self.cumu_slip3d, self.epochs, epoch)
+
 
     def get_cumu_slip_at_subfault(self, nth_dip, nth_stk):
         return self.cumu_slip3d[:, nth_dip, nth_stk]        
