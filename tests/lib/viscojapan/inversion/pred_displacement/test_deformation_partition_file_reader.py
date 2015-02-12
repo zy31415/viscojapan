@@ -5,7 +5,7 @@ from os.path import join
 
 import viscojapan as vj
 
-class Test_DeformPartitionResultReader(vj.test_utils.MyTestCase):
+class Test_DeformPartitionResultReader(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()

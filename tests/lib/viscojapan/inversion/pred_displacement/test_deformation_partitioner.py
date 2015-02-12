@@ -5,29 +5,27 @@ from os.path import join
 
 import viscojapan as vj
 
-class Test_DeformPartitioner(vj.test_utils.MyTestCase):
+class Test_DeformPartitioner(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()
 
     def test1(self):
-        res_file = join(self.share_dir, 'nrough_05_naslip_11.h5')
+        res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
         res_reader = vj.inv.ResultFileReader(res_file)
-
-        fault_file = join(self.share_dir, 'fault_bott80km.h5')
 
 
         pred = vj.inv.DeformPartitioner(
             epochs = res_reader.epochs,
-            slip=res_reader.get_slip(fault_file),
-            file_G0 = join(self.share_dir, 'G0_He50km_VisM6.3E18_Rake83.h5'),
-            files_Gs = [join(self.share_dir, 'G1_He50km_VisM1.0E19_Rake83.h5'),
-                        join(self.share_dir, 'G2_He60km_VisM6.3E18_Rake83.h5'),
-                        join(self.share_dir, 'G3_He50km_VisM6.3E18_Rake90.h5')
+            slip=res_reader.get_slip(),
+            file_G0 = '/home/zy/workspace/viscojapan/tests/share/G0_He50km_VisM6.3E18_Rake83.h5',
+            files_Gs = ['/home/zy/workspace/viscojapan/tests/share/G1_He50km_VisM1.0E19_Rake83.h5',
+                        '/home/zy/workspace/viscojapan/tests/share/G2_He60km_VisM6.3E18_Rake83.h5',
+                        '/home/zy/workspace/viscojapan/tests/share/G3_He50km_VisM6.3E18_Rake90.h5'
                         ],
             nlin_pars = res_reader.nlin_par_solved_values,
             nlin_par_names = ['log10(visM)','log10(He)','rake'],
-            file_incr_slip0 = join(self.share_dir, 'slip0.h5')
+            file_slip0 = '/home/zy/workspace/viscojapan/tests/share/slip0.h5'
         )
 
         disp = pred.E_co()
