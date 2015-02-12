@@ -15,6 +15,9 @@ fault_file = '../fault_model/fault_bott80km.h5'
 epochs = epochs[0:3]
 num_epochs = len(epochs)
 
+sites = np.loadtxt('sites_with_seafloor', '4a', usecols=(0,))
+sites = vj.utils.as_string(sites)
+
 #basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
 # unit basis matrix
@@ -30,8 +33,8 @@ inv = vj.inv.OccamDeconvolution(
 
     file_d = '../obs/cumu_post_with_seafloor.h5',
     file_sd = '../sd/sd_uniform.h5', 
-    file_incr_slip0 = 'slip0/slip0.h5',
-    filter_sites_file = 'sites_with_seafloor',
+    file_slip0 = 'slip0/slip0.h5',
+    sites = sites,
     epochs = epochs,
     regularization = None,
     basis = basis,          
