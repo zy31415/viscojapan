@@ -14,23 +14,23 @@ class OccamDeconvolutionSeparateCoPost(OccamDeconvolution):
                  nlin_par_names,                 
                  file_d,
                  file_sd,
-                 filter_sites_file,
+                 sites,
                  epochs,                 
                  regularization,
                  basis,
-                 file_incr_slip0,
+                 file_slip0,
                  ):
         super().__init__(file_G0, files_Gs, nlin_par_names,
-                         file_d, file_sd, filter_sites_file, epochs,
-                         regularization, basis, file_incr_slip0)
+                         file_d, file_sd, sites, epochs,
+                         regularization, basis, file_slip0)
 
         assert self.epochs[0] == 0, 'The first epoch must be zero.'
         self.num_epochs = len(self.epochs) - 1
 
-        ep = vj.EpochalIncrSlip(file_incr_slip0)
+        ep = vj.EpochalIncrSlip(file_slip0)
         self.num_subflts = len(ep[0].flatten())
 
-        ep = vj.EpochalDisplacement(file_sd, filter_sites_file)
+        ep = vj.EpochalDisplacement(file_sd, sites)
         self.num_obs = len(ep[0].flatten())
 
         self._compute_disp_caused_by_coseismic_slip()
@@ -40,9 +40,9 @@ class OccamDeconvolutionSeparateCoPost(OccamDeconvolution):
         self.G = self.G[self.num_obs:, self.num_subflts:]
 
     def _compute_disp_caused_by_coseismic_slip(self):
-        self.co_slip = vj.EpochalIncrSlip(self.file_incr_slip0)[0]
+        self.co_slip = vj.EpochalIncrSlip(self.file_slip0)[0]
         coseismic_disp = []        
-        ep = vj.EpochalG(self.file_G0, self.filter_sites_file)        
+        ep = vj.EpochalG(self.file_G0, self.sites)
         for nth, epoch in enumerate(self.epochs):
             G = ep[epoch]
             d_co = np.dot(G, self.co_slip)

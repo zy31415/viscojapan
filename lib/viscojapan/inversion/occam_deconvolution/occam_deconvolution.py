@@ -7,9 +7,12 @@ import scipy.sparse as sparse
 import h5py
 
 import viscojapan as vj
-from ...epochal_data import \
-     EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
-from ...epochal_data import EpochalFileReader
+# from ...epochal_data import \
+#      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
+# from ...epochal_data import EpochalFileReader
+
+from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochDisplacement, EpochDisplacementSD
+
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
 from ...utils import assert_col_vec_and_get_nrow, delete_if_exists
@@ -34,11 +37,11 @@ class OccamDeconvolution(Inversion):
                  nlin_par_names,
                  file_d,  # TODO file_d should be replaced with a disp object?
                  file_sd, # TODO file_sd should be replaced with a sd object?
-                 filter_sites_file,
+                 sites,
                  epochs,                 
                  regularization,
                  basis,
-                 file_incr_slip0,  #TODO file_incr_slip0 should be replaced with a slip object?
+                 file_slip0,  #TODO file_incr_slip0 should be replaced with a slip object?
                  ):
         
         self.file_G0 = file_G0
@@ -49,11 +52,10 @@ class OccamDeconvolution(Inversion):
         self.file_d = file_d
         self.file_sd = file_sd
         
-        self.file_incr_slip0 = file_incr_slip0
+        self.file_slip0 = file_slip0
         
-        self.filter_sites_file = filter_sites_file
-        self.sites = np.loadtxt(self.filter_sites_file,'4a,', usecols=(0,))
-        
+        self.sites = sites
+
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
 
@@ -67,7 +69,7 @@ class OccamDeconvolution(Inversion):
     def _load_nlin_initial_values(self):
         self.nlin_par_initial_values = []
 
-        with EpochalFileReader(self.file_G0) as reader:
+        with EpochG(self.file_G0) as reader:
             for name in self.nlin_par_names:
                 self.nlin_par_initial_values.append(float(reader[name]))
         
@@ -82,29 +84,23 @@ class OccamDeconvolution(Inversion):
             setattr(self, name,val)
 
     def _init_jacobian_vecs(self):
-        self.G0 = EpochalG(self.file_G0, self.filter_sites_file)
+        self.G0 = EpochG(self.file_G0, self.sites)
         self.num_subflts = self.G0[0].shape[1]
 
         Gs = []
         for file_G in self.files_Gs:
-            Gs.append(EpochalG(file_G, self.filter_sites_file))
+            Gs.append(EpochG(file_G, self.sites))
 
         dGs = []
         for G, par_name in zip(Gs, self.nlin_par_names):
             dGs.append(
-                DiffED(ed1 = self.G0, ed2 = G,
+                DifferentialG(ed1 = self.G0, ed2 = G,
                        wrt = par_name))
 
-        # repacing input initial incr slip.
-        file_incr_slip0 = 'incr_slip0_respacing.h5'
-        delete_if_exists(file_incr_slip0)
-        vj.EpochalIncrSlip(self.file_incr_slip0).respacing(
-            self.epochs, file_incr_slip0)
-        self.file_incr_slip0 = file_incr_slip0
-        
         jacobian_vecs = []
         for dG in dGs:
-            jacobian_vecs.append(JacobianVec(dG, self.file_incr_slip0))
+            jacobian_vecs.append(JacobianVec(dG, self.file_slip0))
+
         self.jacobian_vecs = jacobian_vecs
     
     def set_data_B(self):
@@ -133,7 +129,7 @@ class OccamDeconvolution(Inversion):
         d_.nlin_par_values = self.nlin_par_initial_values
         d_.epochs = self.epochs
 
-        obs = EpochalDisplacement(self.file_d, self.filter_sites_file)
+        obs = EpochDisplacement(self.file_d, self.sites)
         
         d_.d = obs        
         self.d = d_()
@@ -142,8 +138,8 @@ class OccamDeconvolution(Inversion):
 
     def set_data_sd(self):
         super().set_data_sd()
-        sig = EpochalDisplacementSD(self.file_sd, self.filter_sites_file)
-        sig_stacked = sig.vstack(self.epochs)
+        sig = EpochDisplacementSD(self.file_sd, self.sites)
+        sig_stacked = sig.stack(self.epochs)
         self.sd = sig_stacked
         assert_col_vec_and_get_nrow(self.sd)
         
