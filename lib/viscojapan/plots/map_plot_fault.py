@@ -6,7 +6,7 @@ import viscojapan as vj
 from .map_plot import MapPlot
 from ..fault_model import FaultFileReader
 from ..utils import assert_file_exists
-from ..epochal_data import EpochalSlip, EpochalIncrSlip
+#from ..epochal_data import EpochalSlip, EpochalIncrSlip # TODO - Fix the epoch file reader import here.
 
 class MapPlotFault(MapPlot):
     def __init__(self, fault_file, basemap = None):

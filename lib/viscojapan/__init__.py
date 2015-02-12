@@ -4,10 +4,8 @@ from . import tsana
 from . import slip
 from . import displacement
 
-try:
-    from . import plots
-except ImportError:
-    print("    No pylab! Cannot plot with matplotlib.")
+
+from . import plots
 
 from . import gmt
 

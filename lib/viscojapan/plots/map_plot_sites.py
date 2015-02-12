@@ -12,7 +12,7 @@ import viscojapan as vj
 from .map_plot import MapPlot
 
 from ..utils import get_this_script_dir
-from ..epochal_data import EpochalDisplacement, EpochalG
+# from ..epochal_data import EpochalDisplacement, EpochalG # TODO - fix the epoch data file import here.
 
 this_file_path = get_this_script_dir(__file__)
 
