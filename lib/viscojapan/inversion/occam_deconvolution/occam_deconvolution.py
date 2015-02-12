@@ -149,7 +149,8 @@ class OccamDeconvolution(Inversion):
 
         self.d_pred = d
 
-    def _compute_rms_inland_at_each_epoch(self):
+
+    def _compute_rms_inland_at_each_epoch(self): # TODO - How to handle misfits? Do I need this here?
         rms = []
         for nth, epoch in enumerate(self.epochs):
             ch = choose_inland_GPS_cmpts_at_nth_epochs(
