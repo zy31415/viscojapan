@@ -14,7 +14,7 @@ class Test_results_file_reader(MyTestCase):
 
     def test1(self):
         reader = ResultFileReader(
-            join(self.share_dir,'nrough_06_naslip_11.h5')
+            join(self.share_dir,'nrough_05_naslip_11.h5')
             )
         
         slip = reader.incr_slip

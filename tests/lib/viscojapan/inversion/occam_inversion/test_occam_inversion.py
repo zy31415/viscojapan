@@ -5,7 +5,7 @@ import numpy as np
 
 import viscojapan as vj
 
-class TestOccamDeconvolution(vj.MyTestCase):
+class Test_OccamDeconvolution(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()

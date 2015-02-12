@@ -29,12 +29,10 @@ class ResultFileWriter(FileIOBase):
         fid['Bm'] = inv.Bm
 
         # save fault geometry:
-        fid['num_subflt_along_dip'] = inv.slip0.num_subflt_along_dip
-        fid['num_subflt_along_strike'] = inv.slip0..num_subflt_along_strike
+        fid['num_subflt_along_dip'] = inv.num_subflt_along_dip
+        fid['num_subflt_along_strike'] = inv.num_subflt_along_strike
 
-        fid['d_pred'] = inv.d_pred        
-
-
+        fid['d_pred'] = inv.d_pred
 
         # misfit information:
         self._save_misfit()

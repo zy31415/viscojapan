@@ -5,7 +5,6 @@ import h5py
 from ...file_io_base import FileIOBase
 from ...slip import Slip
 from ...displacement import Disp
-from ...fault_model import FaultFileReader
 
 
 __all__ = ['ResultFileReader']
@@ -32,6 +31,18 @@ class ResultFileReader(FileIOBase):
     def m(self):
         m = self.fid['m'][...]
         return m
+
+    @property
+    def num_subflt_along_dip(self):
+        out = self.fid['num_subflt_along_dip'][...]
+        return int(out)
+
+    @property
+    def num_subflt_along_strike(self):
+        out = self.fid['num_subflt_along_strike'][...]
+        return int(out)
+
+
 
     @property
     def d_pred(self):
@@ -142,18 +153,11 @@ class ResultFileReader(FileIOBase):
         return self.fid['misfit/at_sites/%s'%cmpt][...]   
 
 
-    def get_slip(self, # TODO - Now with new epoch file, you don't need these parameters.
-                 fault_file = None,
-                 num_subflt_along_strike = None,
-                 num_subflt_along_dip = None,
-    ):
-        if fault_file is not None:
-            reader = FaultFileReader(fault_file)
-            num_subflt_along_strike = reader.num_subflt_along_strike
-            num_subflt_along_dip = reader.num_subflt_along_dip
+    def get_slip(self):
+        nx = self.num_subflt_along_strike
+        ny = self.num_subflt_along_dip
 
-        nx = num_subflt_along_strike
-        ny = num_subflt_along_dip
+        print(nx, ny)
 
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
@@ -175,7 +179,3 @@ class ResultFileReader(FileIOBase):
 
 
 
-
-
-    
-        
