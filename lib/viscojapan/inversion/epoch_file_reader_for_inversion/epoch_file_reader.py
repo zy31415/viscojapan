@@ -34,7 +34,7 @@ class EpochFileReader(object):
         self.close()
 
     def _assert_within_range(self,epoch):
-        epochs = self.get_epochs()
+        epochs = self.epochs
 
         max_day = max(epochs)
         min_day = min(epochs)
@@ -42,14 +42,14 @@ class EpochFileReader(object):
         assert epoch >= min_day, 'Min day: %d'%min_day
 
     def get_data_at_epoch_no_interpolation(self, epoch):
-        epochs = self.get_epochs()
+        epochs = self.epochs
         assert epoch in epochs, "Interpolation is not allowed in this method."
         out = self.fid['epochs/%04d'%epoch][...]
         return out
 
     def get_data_at_epoch(self, epoch):
         self._assert_within_range(epoch)
-        epochs = self.get_epochs()
+        epochs = self.epochs
         if epoch in epochs:
             return self.get_data_at_epoch_no_interpolation(epoch)
         for nth, ti in enumerate(epochs[1:]):

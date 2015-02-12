@@ -1,25 +1,31 @@
+import numpy as np
+
+from .epochal_sites_file_reader import EpochalSitesFileReader
+
 __author__ = 'zy'
+__all__ = ['EpochalDisplacement', 'EpochalDisplacementSD']
 
-class EpochalDisplacement(EpochalSitesFilteredData):
-    def __init__(self,epoch_file,
+class EpochalDisplacement(EpochalSitesFileReader):
+    def __init__(self,file_name,
                  filter_sites_file=None, filter_sites=None):
-        super().__init__(epoch_file, filter_sites_file, filter_sites)
+        super().__init__(file_name, filter_sites_file, filter_sites)
 
-    def get_time_series(self, site, cmpt):
-        epochs = self.get_epochs()
-        ys = zeros_like(epochs,float)
-        for nth, epoch in enumerate(epochs):
-            tp = self.get_epoch_value_at_site(site, cmpt, epoch)
-            ys[nth] = tp
-        return ys
+    def _gen_mask(self):
+        ch = []
+        for site in self.mask_sites:
+            ch.append(self.sites.index(site))
+        ch = np.asarray(ch)
+        return ch
 
-    def vstack(self, epochs):
-        return vstack_column_vec(self, epochs)
+    def stack(self, epochs):
+        return np.vstack([self.get_data_at_epoch(epoch).reshape([-1,1]) for epoch in epochs])
 
 
-def vstack_column_vec(epoch_data, epochs):
-    res = epoch_data.get_data_at_epoch(epochs[0])
-    assert_col_vec_and_get_nrow(res)
-    for epoch in epochs[1:]:
-        res = vstack((res,epoch_data.get_data_at_epoch(epoch)))
-    return res
+class EpochalDisplacementSD(EpochalDisplacement):
+    def __init__(self,file_name,
+                 filter_sites_file=None, filter_sites=None):
+        super().__init__(file_name, filter_sites)
+
+    def get_data_at_epoch(self, epoch):
+        assert epoch in self.epochs, "EpochalDisplacementSD doesn't allow interpolation."
+        super().get_data_at_epoch()
