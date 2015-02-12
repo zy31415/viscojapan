@@ -57,7 +57,7 @@ class ResultFileReader(FileIOBase):
     def num_nlin_pars(self):
         return int(self.fid['nlin_pars/num_nlin_pars'][...])
 
-    @property
+    @property # TODO - Maybe you can get rid of this one
     def incr_slip(self):
         if self.num_nlin_pars == 0:
             return self.Bm
@@ -142,7 +142,7 @@ class ResultFileReader(FileIOBase):
         return self.fid['misfit/at_sites/%s'%cmpt][...]   
 
 
-    def get_slip(self,
+    def get_slip(self, # TODO - Now with new epoch file, you don't need these parameters.
                  fault_file = None,
                  num_subflt_along_strike = None,
                  num_subflt_along_dip = None,

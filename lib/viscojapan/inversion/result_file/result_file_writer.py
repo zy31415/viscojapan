@@ -17,7 +17,7 @@ class ResultFileWriter(FileIOBase):
         assert not os.path.exists(self.file_name)
         return h5py.File(self.file_name,'w')
 
-    def save(self):
+    def save(self): # TODO - Now you can save fault grid geometry information!
         inv = self.inv
         fid = self.fid
 
