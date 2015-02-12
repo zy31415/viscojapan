@@ -6,7 +6,9 @@ from .temporal_regularization import TemporalRegularization
 from .intensity import Intensity
 from .boundary import BoundaryRegDeadNorthAndSouth
 
-__all__ = ['create_co_aslip_boundary_regularization',
+__all__ = ['create_roughening_temporal_regularization',
+           'create_temporal_damping_roughening_regularization',
+           'create_co_aslip_boundary_regularization',
            'create_temporal_edge_roughening',
            'create_rough_aslip_boundary_regularization',
            'create_CumuRough_Edge_Temp_regularization'

@@ -27,6 +27,8 @@ class EpochG(EpochSitesFileReader):
                  mask_sites=None):
         super().__init__(file_name, mask_sites)
 
+        self.num_subflts = self.data3d.shape[2]
+
     def _gen_mask(self):
         ch = []
         for site in self.mask_sites:

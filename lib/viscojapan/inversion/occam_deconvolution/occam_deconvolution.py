@@ -1,21 +1,12 @@
-import tempfile 
-
-from numpy import asarray, dot
-from numpy.linalg import norm
 import numpy as np
 import scipy.sparse as sparse
-import h5py
 
-import viscojapan as vj
-# from ...epochal_data import \
-#      EpochalG, EpochalDisplacement,EpochalDisplacementSD, DiffED
-# from ...epochal_data import EpochalFileReader
 
-from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochDisplacement, EpochDisplacementSD
+from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochDisplacement, EpochDisplacementSD, \
+    EpochSlip
 
 from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
-from ...utils import assert_col_vec_and_get_nrow, delete_if_exists
 from ...sites_db import choose_inland_GPS_cmpts_for_all_epochs
 
 __all__ = ['OccamDeconvolution']
@@ -43,63 +34,60 @@ class OccamDeconvolution(Inversion):
                  basis,
                  file_slip0,  #TODO file_incr_slip0 should be replaced with a slip object?
                  ):
-        
-        self.file_G0 = file_G0
-        self.files_Gs = files_Gs
-        
-        self.nlin_par_names = nlin_par_names
-        
-        self.file_d = file_d
-        self.file_sd = file_sd
-        
-        self.file_slip0 = file_slip0
-        
-        self.sites = sites
-
-        self.epochs = epochs
-        self.num_epochs = len(self.epochs)
 
         super().__init__(
             regularization,
             basis,)
+
+        self.G0 = EpochG(file_G0, sites)
+        self.num_subflts = self.G0.num_subflts
+
+        self.Gs = [EpochG(f, sites) for f in files_Gs]
+
+        self.nlin_par_names = nlin_par_names
+        
+        self.d = EpochDisplacement(file_d, sites)
+
+        self.sd = EpochDisplacementSD(file_sd, sites)
+
+        self.slip0 = EpochSlip(file_slip0)
+        
+        self.sites = sites
+
+        self.epochs = epochs
+
+        self.num_epochs = len(self.epochs)
+
         
         self._init()
-        self._init_jacobian_vecs()
 
-    def _load_nlin_initial_values(self):
-        self.nlin_par_initial_values = []
-
-        with EpochG(self.file_G0) as reader:
-            for name in self.nlin_par_names:
-                self.nlin_par_initial_values.append(float(reader[name]))
-        
-    def iterate_nlin_par_name_val(self):
-        for name, val in zip(self.nlin_par_names, self.nlin_par_initial_values):
-            yield name, val        
 
     def _init(self):
         self._load_nlin_initial_values()
+        self._init_jacobian_vecs()
+
+
+    def _load_nlin_initial_values(self):
+        self.nlin_par_initial_values = []
+        for name in self.nlin_par_names:
+            self.nlin_par_initial_values.append(self.G0[name])
+
         self.num_nlin_pars = len(self.nlin_par_initial_values)
         for name, val in self.iterate_nlin_par_name_val():
             setattr(self, name,val)
+        
+    def iterate_nlin_par_name_val(self):
+        for name, val in zip(self.nlin_par_names, self.nlin_par_initial_values):
+            yield name, val
 
     def _init_jacobian_vecs(self):
-        self.G0 = EpochG(self.file_G0, self.sites)
-        self.num_subflts = self.G0[0].shape[1]
-
-        Gs = []
-        for file_G in self.files_Gs:
-            Gs.append(EpochG(file_G, self.sites))
-
         dGs = []
-        for G, par_name in zip(Gs, self.nlin_par_names):
-            dGs.append(
-                DifferentialG(ed1 = self.G0, ed2 = G,
-                       wrt = par_name))
+        for G, par_name in zip(self.Gs, self.nlin_par_names):
+            dGs.append(DifferentialG(ed1 = self.G0, ed2 = G, wrt = par_name))
 
         jacobian_vecs = []
         for dG in dGs:
-            jacobian_vecs.append(JacobianVec(dG, self.file_slip0))
+            jacobian_vecs.append(JacobianVec(dG, self.slip0))
 
         self.jacobian_vecs = jacobian_vecs
     
@@ -129,26 +117,21 @@ class OccamDeconvolution(Inversion):
         d_.nlin_par_values = self.nlin_par_initial_values
         d_.epochs = self.epochs
 
-        obs = EpochDisplacement(self.file_d, self.sites)
-        
-        d_.d = obs        
+        d_.d = self.d
         self.d = d_()
         
         self.disp_obs = d_.disp_obs
 
     def set_data_sd(self):
         super().set_data_sd()
-        sig = EpochDisplacementSD(self.file_sd, self.sites)
-        sig_stacked = sig.stack(self.epochs)
-        self.sd = sig_stacked
-        assert_col_vec_and_get_nrow(self.sd)
+        self.sd = self.sd.stack(self.epochs)
         
     def predict(self):
         Bm = self.Bm
         Jac = self.G
         num_nlin_pars = self.num_nlin_pars
 
-        npars0 = asarray(self.nlin_par_initial_values).reshape([-1,1])
+        npars0 = np.asarray(self.nlin_par_initial_values).reshape([-1,1])
 
         G = Jac[:,:-num_nlin_pars]
 
@@ -158,10 +141,10 @@ class OccamDeconvolution(Inversion):
 
         npars = Bm[-num_nlin_pars:,:]
 
-        d = dot(G,slip)
+        d = np.dot(G,slip)
 
         delta_nlin_pars = npars - npars0
-        delta_d = dot(Jac_, delta_nlin_pars)
+        delta_d = np.dot(Jac_, delta_nlin_pars)
 
         d = d + delta_d
 
@@ -200,5 +183,5 @@ return: ||W (G B m - d)||
 '''
         diff = (self.d_pred - self.disp_obs)
         res_w = self.W.dot(diff)
-        nres_w = norm(res_w)
+        nres_w = np.linalg.norm(res_w)
         return nres_w

@@ -1,9 +1,11 @@
 from os.path import join, exists
 
 from numpy import NaN, loadtxt, asarray, zeros
+import h5py
 
-from ..epochal_data import EpochalData
-from ..utils import delete_if_exists
+from ..utils import delete_if_exists, as_bytes
+
+__all__ = ['PollitzOutputsToEpochalData']
 
 class PollitzOutputsToEpochalData(object):
     ''' This class reform the original outputs by STATIC1D & VISCO1D
@@ -32,6 +34,8 @@ green's function: These properties are highly recommended:
 
         # initialize the following variables!
         self.epochs = epochs
+        self.num_epochs = len(epochs)
+
         self.num_subflts = num_subflts
         self.pollitz_outputs_dir = pollitz_outputs_dir      
 
@@ -48,7 +52,11 @@ green's function: These properties are highly recommended:
             self.sites = loadtxt(self.sites_file, '4a', usecols=(0,))
 
         self.G_file = G_file
-        self.G = EpochalData(G_file)
+
+        self.G = h5py.File(self.G_file,'w')
+        shape = (self.num_epochs, self.num_subflts, len(self.sites)*3)
+        self.G.create_dataset(name='data3d', shape=shape, dtype='float')
+
         self.G_file_overwrite = G_file_overwrite
 
         if extra_info is None:
@@ -96,26 +104,28 @@ green's function: These properties are highly recommended:
         return G
 
     def _write_G_to_hdf5(self):    
-        for day in self.epochs:
+        for nth, day in enumerate(self.epochs):
             print("Read files at day = %04d ..."%day)
             G = self._read_a_day(day)
             if day == 0:
-                self.G.set_epoch_value(0, G)
+                self.G[0,:,:] = G
             else:
                 G0 = self.G.get_epoch_value(0)
-                self.G.set_epoch_value(day, G + G0)
+                self.G[nth,:,:] = G + G0
+
+        self.G['epochs'] = self.epochs
 
     def _write_info_to_hdf5(self):
         sites = self.sites
-        self.G.set_info('sites', [ii for ii in sites])
-        self.G.set_info('num_subflts', self.num_subflts)
+        self.G['sites'] = as_bytes(sites)
+        self.G['num_subflts'] = self.num_subflts
 
     def _write_extra_info_to_hdf5(self):        
         for key, value in self.extra_info.items():
-            self.G.set_info(key,value)
+            self.G[key] = value
         for key, attrs in self.extra_info_attrs.items():
             for key_attr, value_attr in attrs.items():
-                self.G.set_info_attr(key, key_attr, value_attr)
+                self.G[key].attrs[key_attr] = value_attr
 
     def __call__(self):
         self._check_pollitz_outputs_existence()

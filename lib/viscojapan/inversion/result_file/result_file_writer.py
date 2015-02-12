@@ -6,6 +6,7 @@ import h5py
 from ...file_io_base import FileIOBase
 from ...sites_db import choose_inland_GPS_cmpts_for_all_epochs,\
      choose_inland_GPS_cmpts_at_nth_epochs
+from ...utils import as_bytes
 
 class ResultFileWriter(FileIOBase):
     def __init__(self, inv, file_name):
@@ -70,7 +71,7 @@ class ResultFileWriter(FileIOBase):
         num_epochs = len(inv.epochs)
 
         fid['epochs'] = inv.epochs
-        fid['sites'] = inv.sites
+        fid['sites'] = as_bytes(inv.sites)
         ch_inland_sites = choose_inland_GPS_cmpts_for_all_epochs(inv.sites, num_epochs)
         fid['misfit/rms_inland'] = inv.get_residual_rms(subset = ch_inland_sites)
     

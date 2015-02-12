@@ -25,7 +25,6 @@ from . import sites
 from . import sites_db
 from . import moment
 
-from .epochal_data import *
 from .test_utils import MyTestCase
 from .constants import *
 from .sites import Site

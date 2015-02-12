@@ -89,7 +89,7 @@ This means Green's function for bases might not be accurate.
 '''
         # first term
         assert self.ncol_W == self.nrow_G
-        assert self.ncol_G == self.nrow_B
+        assert self.ncol_G == self.nrow_B, '%d != %d'%(self.ncol_G, self.nrow_B)
         assert self.ncol_W == self.nrow_d
 
         # second term

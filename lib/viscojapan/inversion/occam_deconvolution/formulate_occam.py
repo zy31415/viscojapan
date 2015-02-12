@@ -1,11 +1,6 @@
-from tempfile import mkstemp
-from os.path import exists
-
 import numpy as np
 from numpy import dot, hstack
 
-from ...epochal_data.epochal_slip import EpochalIncrSlip
-from ...epochal_data.diff_ed import DiffED
 
 def _check_shape_for_matrix_product(A,B):
     sh1 = A.shape
@@ -24,16 +19,14 @@ The one-dimension equivalence is derivative of a curve at certain point.
 '''
     def __init__(self,
                  dG,
-                 f_incr_slip0):
+                 slip0):
         '''
 Arguments:
     dG - DiffED object.
     slip0 - incremental slip on the fault as initial value.
 '''
         self.dG = dG
-        self.f_incr_slip0 = f_incr_slip0
-        
-        assert exists(self.f_incr_slip0)
+        self.slip0 = slip0
 
     def __call__(self, epochs):
         ''' This function returns Jacobian vector with respect to
@@ -41,11 +34,8 @@ nonlinear parameter wrt at epochs.
 Return:
     Jacobian vector    
 '''
-        dG_stacked = self.dG.conv_stack(epochs)
-
-        incr_slip = EpochalIncrSlip(self.f_incr_slip0)
-
-        m_stacked = incr_slip.vstack()
+        dG_stacked = self.dG.stack(epochs)
+        m_stacked = self.slip0.stack(epochs)
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
         
@@ -65,7 +55,7 @@ class Jacobian(object):
     def __call__(self):
         jacobian = []
         jacobian.append(
-            self.G.conv_stack(self.epochs)
+            self.G.stack(self.epochs)
             )
         for J in self.jacobian_vecs:
             jacobian.append(J(self.epochs))
@@ -87,11 +77,12 @@ class D_(object):
 
         # true obsevation is recorded:
         self.disp_obs = None
+
         # EpochalData object of observation
         self.d = None
 
     def __call__(self):
-        self.disp_obs = self.d.vstack(self.epochs)
+        self.disp_obs = self.d.stack(self.epochs)
         d_ = np.copy(self.disp_obs)
         for J, val in zip(self.jacobian_vecs, self.nlin_par_values):
             d_ += (J(self.epochs)*val)

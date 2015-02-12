@@ -17,7 +17,7 @@ __all__ = ['delete_if_exists',
            'assert_descending_order','assert_assending_order',
            'assert_strictly_descending_order','assert_strictly_assending_order',
            'get_this_script_dir','next_non_commenting_line',
-           'merge_disp_dic','make_grids','as_string',
+           'merge_disp_dic','make_grids','as_string','as_bytes',
            'get_middle_point','pop_from_center',
            'adjust_mjd_for_plot_date']
 
@@ -187,6 +187,13 @@ def as_string(input):
     if isinstance(input, bytes):
         return input.decode()
     return [as_string(ii) for ii in input]
+
+def as_bytes(input):
+    if isinstance(input, bytes):
+        return input
+    if isinstance(input, str):
+        return input.encode()
+    return [as_bytes(ii) for ii in input]
 
 def get_middle_point(x):
     x1 = (x[:-1,:] + x[1:,:])/2.

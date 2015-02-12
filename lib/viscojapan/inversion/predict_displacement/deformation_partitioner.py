@@ -1,8 +1,8 @@
 import numpy as np
 import h5py
 
-from ...epochal_data import EpochalSitesFileReader, EpochalFileReader, \
-     DiffED, EpochalG, EpochalIncrSlipFileReader
+# from ..epoch_file_reader_for_inversion import EpochSitesFileReader, \
+#     EpochG, EpochSlip
 from ...utils import as_string
 from ...sites import Site
 from ...displacement import Disp

@@ -18,7 +18,7 @@ class EpochFileReader(object):
         assert self.data3d.shape[0] == self.num_epochs
 
     def open(self):
-        assert exists(self.file_name), "File must exists!"
+        assert exists(self.file_name), "File %s not exists!"%self.file_name
         fid = h5py.File(self.file_name,'r')
         return fid
 
