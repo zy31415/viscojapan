@@ -52,10 +52,6 @@ green's function: These properties are highly recommended:
             self.sites = loadtxt(self.sites_file, '4a', usecols=(0,))
 
         self.G_file = G_file
-        self.G_fid = h5py.File(self.G_file,'w')
-        shape = (self.num_epochs, len(self.sites)*3, self.num_subflts)
-        self.G_fid.create_dataset(name='data3d', shape=shape, dtype='float')
-        self.G = self.G_fid['data3d']
 
         self.G_file_overwrite = G_file_overwrite
 
@@ -84,6 +80,11 @@ green's function: These properties are highly recommended:
         else:
             assert not exists(self.G_file), \
                    "Output HDF5 already exists!"
+
+        self.G_fid = h5py.File(self.G_file,'w')
+        shape = (self.num_epochs, len(self.sites)*3, self.num_subflts)
+        self.G_fid.create_dataset(name='data3d', shape=shape, dtype='float')
+        self.G = self.G_fid['data3d']
 
     def _form_file_name(self, day, fltno):
         fn1 = 'day_%04d_flt_%04d.out'%(day,fltno)
@@ -133,5 +134,6 @@ green's function: These properties are highly recommended:
         self._write_G_to_hdf5()
         self._write_info_to_hdf5()
         self._write_extra_info_to_hdf5()
+        self.G_fid.close()
 
     

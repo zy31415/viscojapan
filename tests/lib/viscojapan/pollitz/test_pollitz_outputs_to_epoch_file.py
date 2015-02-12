@@ -3,11 +3,9 @@ from os.path import join
 
 import numpy as np
 
-from viscojapan.pollitz import PollitzOutputsToEpochalData
-from viscojapan.sites import Sites
-from viscojapan.test_utils import MyTestCase
+import viscojapan as vj
 
-class Test_PollitzOutputsToEpochalData(MyTestCase):
+class Test_PollitzOutputsToEpochalData(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()
@@ -17,8 +15,8 @@ class Test_PollitzOutputsToEpochalData(MyTestCase):
         visM = 1E19
         visK = 5E17
         rake = 90
-        sites =  Sites.init_from_txt(join(self.share_dir, 'sites'))
-        model = PollitzOutputsToEpochalData(                
+        sites =  np.loadtxt(join(self.share_dir, 'sites'),'4a', usecols=(0,))
+        model = vj.pollitz.PollitzOutputsToEpochalData(
             epochs = [0, 60],
             G_file = join(self.outs_dir, 'G.h5'),
             num_subflts = 10,
