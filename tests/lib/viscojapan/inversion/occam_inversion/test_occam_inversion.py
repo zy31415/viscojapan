@@ -10,7 +10,6 @@ class Test_OccamDeconvolution(vj.MyTestCase):
         self.this_script = __file__
         super().setUp()
 
-
     def test_occam_inversion(self):
         epochs = [0, 5, 10]
 

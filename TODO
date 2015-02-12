@@ -1,3 +1,5 @@
 TODO - Do EXP and 2EXPs model analysis for all stations; Compare 2EXPs with deformation mechanisms partition; Like you did for J550.
 
 TODO - Seems that euler can handle more epochs!
+
+TODO - array3d and epochs is the basic data structure. Displacement, slip and Gs are all based on this data structure. Redesign your program from this point of view.
