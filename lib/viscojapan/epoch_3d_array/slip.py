@@ -32,7 +32,7 @@ class Slip(Epoch3DArray):
                          epochs = epochs
         )
 
-        slip_shape = self.array_3d.shape
+        slip_shape = self.get_array_3d.shape
         self.num_subflt_along_strike = slip_shape[2]
         self.num_subflt_along_dip = slip_shape[1]
 
@@ -59,7 +59,7 @@ class Slip(Epoch3DArray):
 
     @property
     def cumu_slip_3d(self):
-        return self.array_3d
+        return self.get_array_3d
 
     # return slip at a time slice:
     def get_coseismic_slip(self):
@@ -75,8 +75,8 @@ class Slip(Epoch3DArray):
         return self.incr_slip_3d[nth,:,:]
 
     def get_incr_slip_at_epoch(self, epoch):
-        assert epoch in self.epochs, 'Epoch %d is not in the epochs.'%epoch
-        idx = self.epochs.index(epoch)
+        assert epoch in self.get_epochs, 'Epoch %d is not in the epochs.'%epoch
+        idx = self.get_epochs.index(epoch)
         return self.get_incr_slip_at_nth_epoch(idx)
 
     def get_afterslip_at_nth_epoch(self, nth):
@@ -91,7 +91,7 @@ class Slip(Epoch3DArray):
             # rate of coseismic slip is infinite
             slip_rate = self.incr_slip_3d[0,:,:] + np.inf
         else:
-            slip_rate = self.velocity_3d[nth-1,:,:]
+            slip_rate = self.get_velocity_3d[nth-1,:,:]
         return slip_rate
 
     # get sip history at a subfault
@@ -105,7 +105,21 @@ class Slip(Epoch3DArray):
         return self.afterslip_3d[:, nth_dip, nth_stk]
 
     def get_slip_rate_at_subfault(self, nth_dip, nth_stk):
-        return self.velocity_3d[:,nth_dip, nth_stk]
+        return self.get_velocity_3d[:,nth_dip, nth_stk]
+
+    def respace(self, epochs):
+        '''
+        Respace current object and return a new one.
+        :param epochs: list
+        :return: Epoch3DArray
+        '''
+        if list(epochs) == self.get_epochs:
+            return self
+
+        return self.__init__(
+            array3d = np.dstack([self.get_data_at_epoch(t) for t in epochs]),
+            epochs = epochs
+            )
 
 
 

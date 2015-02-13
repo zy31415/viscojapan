@@ -7,7 +7,7 @@ ep = vj.EpochalDisplacement('../cumu_post.h5')
 
 co = ep[0]
 disp = ep[1200] - co
-sites = ep.sites
+sites = ep.get_sites
 
 sites_7_2EXPs = vj.tsana.get_sites_according_to_postmodel('../../config/postmodel',7,'2EXPs')
 sites_6_2EXPs = vj.tsana.get_sites_according_to_postmodel('../../config/postmodel',6,'2EXPs')

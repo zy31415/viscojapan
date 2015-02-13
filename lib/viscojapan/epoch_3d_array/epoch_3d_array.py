@@ -12,7 +12,7 @@ def _assert_within_range(epochs,epoch):
 def _assert_ascending(arr):
     assert all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
 
-class Epoch3DArray(object):
+class _Epoch3DArray(object):
     def __init__(self,
                  array_3d,
                  epochs):
@@ -26,26 +26,17 @@ class Epoch3DArray(object):
 
         self.num_epochs = len(self._epochs)
 
-    @property
-    def array_3d(self):
+    def get_array_3d(self):
         return self._array_3d
 
-    @property
-    def velocity_3d(self):
-        dt = np.diff(self.epochs).reshape([-1,1,1])
-        vel = np.diff(self.array_3d, axis=0)/dt
-        return vel
-
-    @property
-    def epochs(self):
+    def get_epochs(self):
         return self._epochs
-
 
     # Serialization
     def save(self, fn):
         with h5py.File(fn, 'w') as fid:
-            fid['array3d'] = self.array_3d
-            fid['epochs'] = self.epochs
+            fid['array3d'] = self._array_3d
+            fid['epochs'] = self._epochs
 
     @classmethod
     def load(cls,fn,
@@ -61,6 +52,20 @@ class Epoch3DArray(object):
 
         return cls(array3d, epochs)
 
+
+class Epoch3DArray(_Epoch3DArray):
+    def __init__(self,
+                 array_3d,
+                 epochs):
+
+        super().__init__(array_3d=array_3d,
+                         epochs=epochs)
+
+    def get_velocity_3d(self):
+        dt = np.diff(self.get_epochs()).reshape([-1,1,1])
+        vel = np.diff(self.get_array_3d(), axis=0)/dt
+        return vel
+
     # Get data at an epoch
     def get_data_at_nth_epoch(self, nth):
         '''
@@ -74,42 +79,27 @@ class Epoch3DArray(object):
         :param epoch: int
         :return: np.ndarray
         '''
-        assert epoch in self.epochs
-        idx = self.epochs.index(epoch)
-        return self.array_3d[idx,:,:]
+        assert epoch in self.get_epochs
+        idx = self.get_epochs().index(epoch)
+        return self.get_array_3d()[idx,:,:]
 
     def get_data_at_epoch(self, epoch):
-        if epoch in self.epochs:
+        if epoch in self.get_epochs:
             return self.get_data_at_epoch_no_interpolation(epoch)
 
-        for nth, ti in enumerate(self.epochs[1:]):
+        for nth, ti in enumerate(self.get_epochs[1:]):
             if epoch <= ti:
                 break
 
-        t1 = self.epochs[nth]
-        t2 = self.epochs[nth+1]
+        t1 = self.get_epochs()[nth]
+        t2 = self.get_epochs()[nth+1]
 
-        val1 = self.array_3d[nth, :, :]
-        val2 = self.array_3d[nth, :, :]
+        val1 = self.get_array_3d()[nth, :, :]
+        val2 = self.get_array_3d()[nth, :, :]
 
         val = (epoch-t1) / (t2-t1) * (val2-val1) + val1
 
         return val
-
-    def respace(self, epochs):
-        '''
-        Respace current object and return a new one.
-        :param epochs: list
-        :return: Epoch3DArray
-        '''
-        if list(epochs) == self.epochs:
-            return self
-
-        return self.__init__(
-            array3d = np.dstack([self.get_data_at_epoch(t) for t in epochs]),
-            epochs = epochs
-            )
-
 
 
 

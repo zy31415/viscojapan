@@ -9,7 +9,7 @@ disp = reader.get_pred_disp()
 
 post = disp.get_post_at_nth_epoch(-1)
 
-sites = disp.sites
+sites = disp.get_sites
 
 tp = np.loadtxt('stations_large_scale.in','4a, f, f')
 pos_dic = {ii[0].decode():(ii[1], ii[2]) for ii in tp}

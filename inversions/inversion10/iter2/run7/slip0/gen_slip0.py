@@ -17,5 +17,5 @@ slip = vj.slip.Slip.init_from_incr3d(incr_slip, epochs)
 ## plt.show()
 
 with h5py.File('slip0.h5','w') as fid:
-    fid['data3d'] = slip.cumu_slip3d
+    fid['data3d'] = slip.cumu_slip_3d
     fid['epochs'] = epochs

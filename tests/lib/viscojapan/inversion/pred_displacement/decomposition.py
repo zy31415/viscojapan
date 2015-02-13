@@ -14,7 +14,7 @@ site = vj.SitesDB().get('_MGW')
 y_Ecumu = Ecumu.cumu_ts(site,'e')
 y_Rco = Rco.cumu_ts(site,'e')
 y_Raslip = Raslip.cumu_ts(site,'e')
-epochs = Ecumu.epochs
+epochs = Ecumu.get_epochs
 
 
 y_added = y_Ecumu + y_Rco + y_Raslip

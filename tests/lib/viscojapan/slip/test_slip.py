@@ -17,9 +17,9 @@ class TestSlip(vj.test_utils.MyTestCase):
         reader = vj.inv.ResultFileReader(res_file)
         slip = reader.get_slip(fault_file)
 
-        s_afterslip = slip.afterslip3d
+        s_afterslip = slip.afterslip_3d
         s_co = slip.get_coseismic_slip()
-        s_3d_incr_slip = slip.incr_slip3d
+        s_3d_incr_slip = slip.incr_slip_3d
         rate = slip.get_slip_rate_at_nth_epoch(1)
 
 
