@@ -93,7 +93,7 @@ class ResultFileWriter(FileIOBase):
 
     def _save_misfit_at_sites(self):
         num_epochs = self.inv.num_epochs
-        num_sites = len(self.inv.sties)
+        num_sites = len(self.inv.sites)
         d = self.inv.d_pred - self.inv.d        
         d = d.reshape((num_epochs, num_sites, 3))
         rms = np.sqrt((d**2).sum(axis=0)/num_epochs)
