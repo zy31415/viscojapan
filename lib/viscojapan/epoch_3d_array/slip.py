@@ -22,28 +22,28 @@ def cumu3d_to_incr3d(cumu3d):
 
 class Slip(Epoch3DArray):
     def __init__(self,
-                 cumu3d,
+                 cumu_slip_3d,
                  epochs
                  ):
 
         assert epochs[0] == 0, 'The class is designed to represent slip that starts at t=0.'
 
-        super().__init__(array3d = cumu3d,
+        super().__init__(array3d = cumu_slip_3d,
                          epochs = epochs
         )
 
-        slip_shape = self.array3d.shape
+        slip_shape = self.array_3d.shape
         self.num_subflt_along_strike = slip_shape[2]
         self.num_subflt_along_dip = slip_shape[1]
 
     # constructors
     @classmethod
-    def init_from_incr3d(cls, incr3d, epochs):
+    def init_with_incr_slip_3d(cls, incr3d, epochs):
         cumu3d = incr3d_to_cumu3d(incr3d)
         return cls(cumu3d=cumu3d, epochs=epochs)
 
     @classmethod
-    def init_from_cumu3d(cls, cumu3d, epochs):
+    def init_with_cumu_slip_3d(cls, cumu3d, epochs):
         return cls(cumu3d=cumu3d, epochs=epochs)
 
     # return slip as 3d array
@@ -59,11 +59,10 @@ class Slip(Epoch3DArray):
 
     @property
     def cumu_slip_3d(self):
-        return self.array3d
+        return self.array_3d
 
     # return slip at a time slice:
-    @property
-    def coseismic_slip(self):
+    def get_coseismic_slip(self):
         return self.cumu_slip_3d[0,:,:]
 
     def get_cumu_slip_at_nth_epoch(self, nth):
@@ -92,10 +91,7 @@ class Slip(Epoch3DArray):
             # rate of coseismic slip is infinite
             slip_rate = self.incr_slip_3d[0,:,:] + np.inf
         else:
-            assert nth>0
-            assert nth < self.num_epochs
-            delta_t = self.epochs[nth] - self.epochs[nth-1]
-            slip_rate = self.incr_slip_3d[nth]/delta_t
+            slip_rate = self.velocity_3d[nth-1,:,:]
         return slip_rate
 
     # get sip history at a subfault
@@ -109,10 +105,8 @@ class Slip(Epoch3DArray):
         return self.afterslip_3d[:, nth_dip, nth_stk]
 
     def get_slip_rate_at_subfault(self, nth_dip, nth_stk):
-        incr_slip = self.get_incr_slip_at_subfault(nth_dip,nth_stk)
-        dt = np.diff(self.epochs)
+        return self.velocity_3d[:,nth_dip, nth_stk]
 
-        return incr_slip[1:]/dt
 
 
 

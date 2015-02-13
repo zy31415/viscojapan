@@ -14,21 +14,27 @@ def _assert_ascending(arr):
 
 class Epoch3DArray(object):
     def __init__(self,
-                 array3d,
+                 array_3d,
                  epochs):
 
-        assert len(array3d.shape) == 3
-        self._array3d = array3d
+        assert len(array_3d.shape) == 3
+        self._array_3d = array_3d
 
         self._epochs = list(epochs)
-        assert array3d.shape[0] == len(self._epochs)
+        assert array_3d.shape[0] == len(self._epochs)
         _assert_ascending(epochs)
 
         self.num_epochs = len(self._epochs)
 
     @property
-    def array3d(self):
-        return self._array3d
+    def array_3d(self):
+        return self._array_3d
+
+    @property
+    def velocity_3d(self):
+        dt = np.diff(self.epochs).reshape([-1,1,1])
+        vel = np.diff(self.array_3d, axis=0)/dt
+        return vel
 
     @property
     def epochs(self):
@@ -38,7 +44,7 @@ class Epoch3DArray(object):
     # Serialization
     def save(self, fn):
         with h5py.File(fn, 'w') as fid:
-            fid['array3d'] = self.array3d
+            fid['array3d'] = self.array_3d
             fid['epochs'] = self.epochs
 
     @classmethod
@@ -61,7 +67,7 @@ class Epoch3DArray(object):
         :param nth: int
         :return: np.ndarray
         '''
-        return self._array3d[nth,:,:]
+        return self._array_3d[nth,:,:]
 
     def get_data_at_epoch_no_interpolation(self, epoch):
         '''
@@ -70,7 +76,7 @@ class Epoch3DArray(object):
         '''
         assert epoch in self.epochs
         idx = self.epochs.index(epoch)
-        return self.array3d[idx,:,:]
+        return self.array_3d[idx,:,:]
 
     def get_data_at_epoch(self, epoch):
         if epoch in self.epochs:
@@ -83,8 +89,8 @@ class Epoch3DArray(object):
         t1 = self.epochs[nth]
         t2 = self.epochs[nth+1]
 
-        val1 = self.array3d[nth, :, :]
-        val2 = self.array3d[nth, :, :]
+        val1 = self.array_3d[nth, :, :]
+        val2 = self.array_3d[nth, :, :]
 
         val = (epoch-t1) / (t2-t1) * (val2-val1) + val1
 
