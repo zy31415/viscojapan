@@ -16,6 +16,6 @@ pred = vj.inv.DeformPartitionerForResultFile(
     file_slip0 = '../../slip0/slip0.h5',
     )
 
-pred.save('partition_large_scale.h5')
+pred.save('deformation_partition_large_scale.h5')
 
 
