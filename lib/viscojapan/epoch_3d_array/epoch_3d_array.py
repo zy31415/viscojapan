@@ -120,6 +120,9 @@ class Epoch3DArray(_Epoch3DArray):
 
         return val
 
+    def __getitem__(self, name):
+        return self.get_data_at_epoch(name)
+
     def _assert_epoch_within_range(self, epoch):
         epochs = self.get_epochs()
         max_day = max(epochs)

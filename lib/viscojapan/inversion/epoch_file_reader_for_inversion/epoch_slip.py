@@ -2,17 +2,22 @@ import h5py
 
 import numpy as np
 
-from ...slip import Slip
+from ...epoch_3d_array import Slip
 
 __author__ = 'zy'
 __al__ = ['EpochSlip']
 
 
 class EpochSlip(Slip):
-    @classmethod
-    def init_from_file(cls, file_name):
+
+    def __init__(self, file_name):
+
         fid = h5py.File(file_name, 'r')
-        return cls.init_from_cumu3d(fid['data3d'], list(fid['epochs'][...]))
+        cumu_slip_3d = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
+        epochs = list(fid['epochs'][...])
+
+        super().__init__(cumu_slip_3d = cumu_slip_3d,
+                         epochs = epochs)
 
     def stack(self, epochs):
         out1 = [self.get_cumu_slip_at_epoch(epoch).reshape([-1,1]) for epoch in epochs]

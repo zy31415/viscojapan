@@ -1,6 +1,9 @@
 import numpy as np
+import h5py
 
-from .epoch_sites_file_reader import EpochSitesFileReader
+from ...utils import as_string
+
+from ...epoch_3d_array import G as GClass
 
 __author__ = 'zy'
 __all__ = ['EpochG','DifferentialG']
@@ -22,22 +25,42 @@ def stack_G_for_convolution(self, epochs):
     return G
 
 
-class EpochG(EpochSitesFileReader):
+class EpochG(GClass):
     def __init__(self,file_name,
-                 mask_sites=None):
-        super().__init__(file_name, mask_sites)
+                 mask_sites=None,
+                 memory_mode = False):
 
-        self.num_subflts = self.data3d.shape[2]
+        fid = h5py.File(file_name,'r')
 
-    def _gen_mask(self):
-        ch = []
-        for site in self.mask_sites:
-            ch.append(self.sites.index(site))
-        ch = np.asarray(ch)
-        ch1 = np.asarray([ch*3, ch*3+1, ch*3+2]).T.flatten()
-        return ch1
+        if memory_mode:
+            array_3d = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
+        else:
+            array_3d = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY]
 
-    # Monkey Patch :-)
+        epochs = fid['epochs'][...]
+        sites = as_string(fid['sites'][...])
+
+        super().__init__(g_3d = array_3d,
+                        epochs = epochs,
+                        sites = sites,
+                        mask_sites = mask_sites)
+
+        self.fid = fid
+
+    def has_info(self, key):
+        return key in self.fid
+
+    def get_info(self, key):
+        return self.fid[key][...]
+
+    def __getitem__(self, name):
+        if isinstance(name, int):
+            return self[name]
+        elif isinstance(name, str):
+            return self.get_info(name)
+        else:
+            raise ValueError('Not recognized type.')
+
     stack = stack_G_for_convolution
 
 
