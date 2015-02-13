@@ -157,8 +157,6 @@ class ResultFileReader(FileIOBase):
         nx = self.num_subflt_along_strike
         ny = self.num_subflt_along_dip
 
-        print(nx, ny)
-
         slip = self.incr_slip
         slip = slip.reshape([self.num_epochs, ny, nx])
 

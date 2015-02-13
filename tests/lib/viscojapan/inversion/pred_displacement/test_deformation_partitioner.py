@@ -14,7 +14,6 @@ class Test_DeformPartitioner(vj.MyTestCase):
         res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
         res_reader = vj.inv.ResultFileReader(res_file)
 
-
         pred = vj.inv.DeformPartitioner(
             epochs = res_reader.epochs,
             slip=res_reader.get_slip(),
@@ -34,7 +33,7 @@ class Test_DeformPartitioner(vj.MyTestCase):
         disp = pred.R_co(500)
         disp = pred.R_aslip(500)
 
-        pred.save(join(self.outs_dir, 'partition.h5'))
+        pred.save(join(self.outs_dir, 'deformation_partition.h5'))
 
 
 

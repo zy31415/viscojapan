@@ -3,7 +3,6 @@ import h5py
 
 
 from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochSlip
-from ...utils import as_string
 from ...sites import Site
 from ...displacement import Disp
 
