@@ -13,10 +13,10 @@ def _assert_ascending(arr):
     assert all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
 
 class _Epoch3DArray(object):
+    HDF5_DATASET_NAME_FOR_3D_ARRAY = 'array_3d'
     def __init__(self,
                  array_3d,
                  epochs):
-
         assert len(array_3d.shape) == 3
         self._array_3d = array_3d
 
@@ -35,22 +35,23 @@ class _Epoch3DArray(object):
     # Serialization
     def save(self, fn):
         with h5py.File(fn, 'w') as fid:
-            fid['array3d'] = self._array_3d
+            fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY] = self._array_3d[...]
             fid['epochs'] = self._epochs
 
     @classmethod
-    def load(cls,fn,
+    def load(cls,fid,
              memory_mode = False # if memory_mode is True, all the data will be loaded into memory.
     ):
-        with h5py.File(fn, 'w') as fid:
-            if memory_mode:
-                array3d = fid['array3d'][...]
-            else:
-                array3d = fid['array3d']
+        if memory_mode:
+            array_3d = fid[cls.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
+        else:
+            array_3d = fid[cls.HDF5_DATASET_NAME_FOR_3D_ARRAY]
 
-            epochs = fid['epochs'][...]
+        epochs = fid['epochs'][...]
 
-        return cls(array3d, epochs)
+        return cls(array_3d=array_3d, epochs=epochs)
+
+
 
 # functions in this class are not allowed to access the private variables:
 #  _array_3d and _epochs
