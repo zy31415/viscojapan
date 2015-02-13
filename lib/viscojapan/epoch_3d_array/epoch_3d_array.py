@@ -52,7 +52,10 @@ class _Epoch3DArray(object):
 
         return cls(array3d, epochs)
 
-
+# functions in this class are not allowed to access the private variables:
+#  _array_3d and _epochs
+# This is why I design a new class based on _Epoch3DArray.
+#
 class Epoch3DArray(_Epoch3DArray):
     def __init__(self,
                  array_3d,
