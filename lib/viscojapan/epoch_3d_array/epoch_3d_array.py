@@ -2,6 +2,7 @@ import numpy as np
 import h5py
 
 __author__ = 'zy'
+__all__ = ['Epoch3DArray']
 
 def _assert_within_range(epochs,epoch):
     max_day = max(epochs)
@@ -13,7 +14,7 @@ def _assert_ascending(arr):
     assert all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
 
 class _Epoch3DArray(object):
-    HDF5_DATASET_NAME_FOR_3D_ARRAY = 'array_3d'
+    HDF5_DATASET_NAME_FOR_3D_ARRAY = 'data3d'
     def __init__(self,
                  array_3d,
                  epochs):
@@ -27,6 +28,17 @@ class _Epoch3DArray(object):
         self.num_epochs = len(self._epochs)
 
     def get_array_3d(self):
+        '''
+        Note - This is the only data fetch function that directly accesses the private variable member _array_3d.
+        All other data fetch functions access the core 3d data through this method.
+        Therefore, if you change the behavior of this function through overriding in the subclasses, then all the
+         behaviour of other data fetch functions will be affected.
+
+         This is how I implement the mask sites functionality - overriding function get_array_3d and applying a mask
+         onto its outputs.
+         .
+        :return: ndarray(dim=3)
+        '''
         return self._array_3d
 
     def get_epochs(self):
@@ -76,27 +88,30 @@ class Epoch3DArray(_Epoch3DArray):
         :param nth: int
         :return: np.ndarray
         '''
-        return self._array_3d[nth,:,:]
+        return self.get_array_3d()[nth,:,:]
 
     def get_data_at_epoch_no_interpolation(self, epoch):
         '''
         :param epoch: int
         :return: np.ndarray
         '''
-        assert epoch in self.get_epochs
-        idx = self.get_epochs().index(epoch)
-        return self.get_array_3d()[idx,:,:]
+        epochs = self.get_epochs()
+        assert epoch in epochs
+        nth = epochs.index(epoch)
+        return self.get_data_at_nth_epoch(nth)
 
     def get_data_at_epoch(self, epoch):
-        if epoch in self.get_epochs:
+        epochs = self.get_epochs()
+        self._assert_epoch_within_range(epoch)
+        if epoch in epochs:
             return self.get_data_at_epoch_no_interpolation(epoch)
 
-        for nth, ti in enumerate(self.get_epochs[1:]):
+        for nth, ti in enumerate(epochs[1:]):
             if epoch <= ti:
                 break
 
-        t1 = self.get_epochs()[nth]
-        t2 = self.get_epochs()[nth+1]
+        t1 = epochs[nth]
+        t2 = epochs[nth+1]
 
         val1 = self.get_array_3d()[nth, :, :]
         val2 = self.get_array_3d()[nth, :, :]
@@ -104,6 +119,14 @@ class Epoch3DArray(_Epoch3DArray):
         val = (epoch-t1) / (t2-t1) * (val2-val1) + val1
 
         return val
+
+    def _assert_epoch_within_range(self, epoch):
+        epochs = self.get_epochs()
+        max_day = max(epochs)
+        min_day = min(epochs)
+        assert epoch <= max_day, 'Max day: %d'%max_day
+        assert epoch >= min_day, 'Min day: %d'%min_day
+
 
 
 

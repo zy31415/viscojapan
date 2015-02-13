@@ -28,7 +28,7 @@ class Displacement(EpochSites3DArray):
         return disp - disp[0,:,:]
 
     def get_coseismic_disp(self):
-        return self.get_cumu_disp_3d[0,:,:]
+        return self.get_cumu_at_nth_epoch(0)
 
     def get_cumu_at_nth_epoch(self, nth):
         return self.get_data_at_nth_epoch(nth)
@@ -37,26 +37,37 @@ class Displacement(EpochSites3DArray):
         return self.get_post_disp_3d[nth,:,:]
 
     def cumu_ts(self,site, cmpt):
-        return self._extract_time_series(self.get_cumu_disp_3d, site, cmpt)
+        return self._extract_time_series(self.get_cumu_disp_3d(), site, cmpt)
 
     def post_ts(self,site, cmpt):
-        return self._extract_time_series(self.get_post_disp_3d, site, cmpt)
+        return self._extract_time_series(self.get_post_disp_3d(), site, cmpt)
 
     def vel_ts(self,site, cmpt):
-        return self._extract_time_series(self.get_velocity_3d, site, cmpt)
+        return self._extract_time_series(self.get_velocity_3d(), site, cmpt)
 
     def _extract_time_series(self, arr3d, site, cmpt):
-        site_idx = self.sites.index(site)
+        site_idx = self.get_index_in_mask_sites(site)
         cmpt_idx = 'enu'.index(cmpt)
         return arr3d[:,site_idx, cmpt_idx]
 
-    def get_mask(self):
-        ch = []
-        for site in self.mask_sites:
-            ch.append(self.sites.index(site))
-        ch = np.asarray(ch)
-        ch1 = np.asarray([ch*3, ch*3+1, ch*3+2]).T.flatten()
-        return ch1
+    @classmethod
+    def load(cls,fid,
+             mask_sites = None,
+             memory_mode = False # if memory_mode is True, all the data will be loaded into memory.
+    ):
+        if memory_mode:
+            array_3d = fid[cls.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
+        else:
+            array_3d = fid[cls.HDF5_DATASET_NAME_FOR_3D_ARRAY]
+
+        epochs = fid['epochs'][...]
+        sites = [site.decode() for site in fid['sites'][...]]
+
+        return cls(cumu_disp_3d = array_3d,
+                   epochs = epochs,
+                   sites = sites,
+                   mask_sites=mask_sites)
+
 
 
 

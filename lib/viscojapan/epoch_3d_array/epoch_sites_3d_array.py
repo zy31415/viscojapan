@@ -1,8 +1,15 @@
 import h5py
 import numpy as np
+
 __author__ = 'zy'
+__all__ = ['EpochSites3DArray']
 
 from .epoch_3d_array import Epoch3DArray
+
+def if_ascending(ll):
+    if len(ll) == 1:
+        return True
+    return all(ll[i] <= ll[i+1] for i in range(len(ll)-1))
 
 class EpochSites3DArray(Epoch3DArray):
     def __init__(self,
@@ -54,12 +61,7 @@ class EpochSites3DArray(Epoch3DArray):
         for site in self._mask_sites:
             ch.append(self._sites.index(site))
         ch = np.asarray(ch)
-        return ch
-
-    def get_array_3d(self):
-        mask = self.get_mask()
-        array_3d = super().get_array_3d()
-        return array_3d[:,mask,:]
+        return list(ch)
 
     def get_index_in_sites(self, site):
         return self._sites.index(site)
@@ -67,27 +69,44 @@ class EpochSites3DArray(Epoch3DArray):
     def get_index_in_mask_sites(self, site):
         return self._mask_sites.index(site)
 
+    def get_array_3d(self):
+        ''' This function overrides get_array_3d, which will mask outputs according to the mask array.
+        :return: ndarray(dim=3)
+        '''
+        '''
+        :return:
+        '''
+        mask = self.get_mask()
+        array_3d = super().get_array_3d()
+
+        # faster if mask is ascending
+        if if_ascending(mask):
+            return array_3d[:,mask,:]
+
+        # slower if mask is not ordered.
+        return np.hstack([array_3d[:,(mi,),:] for mi in mask])
+
     @classmethod
-    def load(cls,fn,
+    def load(cls,fid,
              mask_sites = None,
              memory_mode = False # if memory_mode is True, all the data will be loaded into memory.
     ):
-        with h5py.File(fn, 'w') as fid:
-            if memory_mode:
-                array_3d = fid['array3d'][...]
-            else:
-                array_3d = fid['array3d']
+        epoch_array = Epoch3DArray.load(fid=fid, memory_mode=memory_mode)
 
-            epochs = fid['epochs'][...]
+        sites = fid['sites'][...]
+        sites = [site.decode() for site in sites]
 
-            sites = fid['sites'][...]
-
-        return cls(array_3d = array_3d, epochs = epochs, sites = sites, mask_sites=mask_sites)
+        return cls(array_3d = epoch_array.get_array_3d(),
+                   epochs = epoch_array.get_epochs(),
+                   sites = sites,
+                   mask_sites=mask_sites)
 
     def save(self, fn):
         super().save(fn)
         with h5py.File(fn) as fid:
-            fid['sites'] = self._sites()
+            sites = self.get_sites()
+            sites = [site.encode() for site in sites]
+            fid['sites'] = sites
 
 
 
