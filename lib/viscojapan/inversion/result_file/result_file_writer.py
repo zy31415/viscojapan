@@ -73,15 +73,15 @@ class ResultFileWriter(FileIOBase):
         inv = self.inv
         fid = self.fid
 
-        num_epochs = len(inv.get_epochs)
+        num_epochs = len(inv.epochs)
 
-        fid['epochs'] = inv.get_epochs
-        fid['sites'] = as_bytes(inv.get_sites)
-        ch_inland_sites = choose_inland_GPS_cmpts_for_all_epochs(inv.get_sites, num_epochs)
+        fid['epochs'] = inv.epochs
+        fid['sites'] = as_bytes(inv.sites)
+        ch_inland_sites = choose_inland_GPS_cmpts_for_all_epochs(inv.sites, num_epochs)
         fid['misfit/rms_inland'] = inv.get_residual_rms(subset = ch_inland_sites)
     
         rms_inland_at_epoch = []
-        for nth, epoch in enumerate(inv.get_epochs):
+        for nth, epoch in enumerate(inv.epochs):
             ch_inland_sites = choose_inland_GPS_cmpts_at_nth_epochs(
                 inv.get_sites,
                 nth,

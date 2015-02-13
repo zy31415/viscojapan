@@ -18,7 +18,7 @@ class TestDisp(vj.test_utils.MyTestCase):
         reader = vj.inv.ResultFileReader(res_file)
         disp = reader.get_pred_disp()
 
-        disp.cumu_slip_3d
+        disp.get_cumu_slip_3d
         disp.get_post_disp_3d
 
         np.testing.assert_array_almost_equal(disp.get_co_disp(),
