@@ -1,34 +1,19 @@
-import sqlite3
+import viscojapan as vj
 
 from pylab import plt
 
-db_file = '~pred_disp.db'
+partition_file = './partition.h5'
+result_file = '../../outs/nrough_05_naslip_11.h5'
+
+plotter = vj.inv.PredictedTimeSeriesPlotter(
+    partition_file = partition_file,
+    result_file = result_file,
+    )
+
 
 site = 'J550'
-
-def read_ts_from_table(table, site, cmpt):
-    with sqlite3.connect(db_file) as conn:
-        c = conn.cursor()
-        res = c.execute('select day,{cmpt} from {table} where site=? order by day'\
-                        .format(cmpt=cmpt, table=table),
-                        (site,)).fetchall()
-        epochs = [ii[0] for ii in res]
-        ys = [ii[1] for ii in res]
-    return epochs, ys
-
-epochs, ys = read_ts_from_table(
-    'view_cumu_disp_added',
-    site,
-    'e'
-    )
-plt.plot(epochs, ys,'x')
-
-epochs, ys = read_ts_from_table(
-    'tb_cumu_disp_pred',
-    site,
-    'e'
-    )
-plt.plot(epochs, ys,'.')
-
+cmpt = 'e'
+plotter.plot_cumu_disp(site, cmpt, added_label='added')
 plt.show()
+plt.close()
     

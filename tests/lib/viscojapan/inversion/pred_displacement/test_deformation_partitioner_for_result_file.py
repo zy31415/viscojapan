@@ -12,6 +12,7 @@ class Test_DeformPartitionerForResultFile(vj.test_utils.MyTestCase):
 
     def test1(self):
         res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
+        sites_for_prediction = ['J550']
 
         pred = vj.inv.DeformPartitionerForResultFile(
             result_file = res_file,
@@ -20,7 +21,8 @@ class Test_DeformPartitionerForResultFile(vj.test_utils.MyTestCase):
                         '/home/zy/workspace/viscojapan/tests/share/G2_He60km_VisM6.3E18_Rake83.h5',
                         '/home/zy/workspace/viscojapan/tests/share/G3_He50km_VisM6.3E18_Rake90.h5'
                         ],
-            file_slip0 = '/home/zy/workspace/viscojapan/tests/share/slip0.h5'
+            file_slip0 = '/home/zy/workspace/viscojapan/tests/share/slip0.h5',
+            sites_for_prediction = sites_for_prediction
         )
 
         disp = pred.E_co()
