@@ -51,8 +51,8 @@ class EpochSites3DArray(Epoch3DArray):
 
     def get_mask(self):
         ch = []
-        for site in self.mask_sites:
-            ch.append(self.sites.index(site))
+        for site in self._mask_sites:
+            ch.append(self._sites.index(site))
         ch = np.asarray(ch)
         return ch
 
