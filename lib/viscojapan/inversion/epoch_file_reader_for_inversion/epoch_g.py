@@ -55,7 +55,7 @@ class EpochG(GClass):
 
     def __getitem__(self, name):
         if isinstance(name, int):
-            return self[name]
+            return super().__getitem__(name)
         elif isinstance(name, str):
             return self.get_info(name)
         else:

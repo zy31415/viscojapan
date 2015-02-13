@@ -11,13 +11,13 @@ __author__ = 'zy'
 
 class DeformPartitioner(object):
     def __init__(self,
-                 file_G0, # TODO - fix the file reader here
+                 file_G0,
                  epochs,
                  slip,
-                 files_Gs = None, # TODO - fix the file reader here
+                 files_Gs = None,
                  nlin_pars = None,
                  nlin_par_names = None,
-                 file_slip0 = None, # TODO change file_incr_slip0 to slip object to allow more flexibility.
+                 file_slip0 = None,
                  sites_for_prediction = None
                  ):
 
@@ -27,7 +27,7 @@ class DeformPartitioner(object):
 
         self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction)
         if sites_for_prediction is None:
-            sites_for_prediction = self.G0.sites
+            sites_for_prediction = self.G0.get_sites()
 
         self.sites_for_prediction = sites_for_prediction
 
@@ -40,7 +40,7 @@ class DeformPartitioner(object):
         self.nlin_par_names = nlin_par_names
 
 
-        self.slip0 = EpochSlip.init_from_file(file_slip0)
+        self.slip0 = EpochSlip(file_slip0)
 
         if files_Gs is not None:
             self._get_delta_nlin_pars()
