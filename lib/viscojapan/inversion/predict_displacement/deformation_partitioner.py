@@ -41,11 +41,10 @@ class DeformPartitioner(object):
         self.nlin_par_names = nlin_par_names
 
 
-        self.slip0 = EpochSlip(file_slip0)
+        self.slip0 = EpochSlip.init_from_file(file_slip0)
 
         if files_Gs is not None:
             self._get_delta_nlin_pars()
-
 
     def _get_delta_nlin_pars(self):
         self.delta_nlin_pars = []
