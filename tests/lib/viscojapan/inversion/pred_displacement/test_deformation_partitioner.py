@@ -28,12 +28,15 @@ class Test_DeformPartitioner(vj.MyTestCase):
         )
 
         disp = pred.E_co()
-        disp = pred.E_aslip(10)
-        disp = pred.R_nth_epoch(3, 500)
-        disp = pred.R_co(500)
-        disp = pred.R_aslip(500)
+        
+        #disp = pred.E_aslip(10)
+        #disp = pred.R_nth_epoch(3, 500)
+        #disp = pred.R_co(500)
+        #disp = pred.R_aslip(500)
 
-        pred.save(join(self.outs_dir, 'deformation_partition.h5'))
+        #print(disp)
+
+        #pred.save(join(self.outs_dir, 'deformation_partition.h5'))
 
 
 
