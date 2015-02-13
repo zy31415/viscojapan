@@ -83,7 +83,7 @@ class ResultFileWriter(FileIOBase):
         rms_inland_at_epoch = []
         for nth, epoch in enumerate(inv.epochs):
             ch_inland_sites = choose_inland_GPS_cmpts_at_nth_epochs(
-                inv.get_sites,
+                inv.sites,
                 nth,
                 num_epochs
                 )        
@@ -93,7 +93,7 @@ class ResultFileWriter(FileIOBase):
 
     def _save_misfit_at_sites(self):
         num_epochs = self.inv.num_epochs
-        num_sites = len(self.inv.get_sites)
+        num_sites = len(self.inv.sties)
         d = self.inv.d_pred - self.inv.d        
         d = d.reshape((num_epochs, num_sites, 3))
         rms = np.sqrt((d**2).sum(axis=0)/num_epochs)
