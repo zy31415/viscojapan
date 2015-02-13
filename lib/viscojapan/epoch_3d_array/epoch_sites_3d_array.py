@@ -79,6 +79,8 @@ class EpochSites3DArray(Epoch3DArray):
         mask = self.get_mask()
         array_3d = super().get_array_3d()
 
+        # return array_3d[:,mask,:]
+
         # faster if mask is ascending
         if if_ascending(mask):
             return array_3d[:,mask,:]
