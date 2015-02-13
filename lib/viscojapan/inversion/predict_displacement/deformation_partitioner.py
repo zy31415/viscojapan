@@ -57,8 +57,8 @@ class DeformPartitioner(object):
         G0 = self.G0[0]
         disp = np.dot(G0, cumuslip)
 
-        if len(self.Gs) > 0:
-            disp += self._nlin_correction_E_cumu_slip(nth_epoch)
+        # if len(self.Gs) > 0:
+        #     disp += self._nlin_correction_E_cumu_slip(nth_epoch)
 
         return disp
 

@@ -31,12 +31,12 @@ class Slip(object):
 
     @classmethod
     def init_from_incr3d(cls, incr3d, epochs):
-        cumu3d = cumu3d_to_incr3d(incr3d)
-        return cls(cumu3d, epochs)
+        return cls(incr3d=incr3d, epochs=epochs)
 
     @classmethod
     def init_from_cumu3d(cls, cumu3d, epochs):
-        return cls(cumu3d, epochs)
+        incr3d = cumu3d_to_incr3d(cumu3d)
+        return cls(incr3d=incr3d, epochs=epochs)
 
 
     def _init(self):
