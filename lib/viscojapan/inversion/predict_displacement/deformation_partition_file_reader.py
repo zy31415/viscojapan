@@ -46,7 +46,7 @@ class DeformPartitionResultReader(object):
 
     def check_partition_result(self, result_file):
 
-        pred = ResultFileReader(result_file).get_pred_disp().cumu3d
+        pred = ResultFileReader(result_file).get_pred_disp().cumu_slip_3d
 
         Ecumu = self.Ecumu.cumu3d
         Rco = self.Rco.cumu3d
