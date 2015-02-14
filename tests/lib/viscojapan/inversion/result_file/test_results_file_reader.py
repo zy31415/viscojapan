@@ -14,11 +14,13 @@ class Test_results_file_reader(MyTestCase):
 
     def test1(self):
         reader = ResultFileReader(
-            join(self.share_dir,'nrough_05_naslip_11.h5')
+            '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
             )
         
         slip = reader.incr_slip
         reader.num_sites
+        reader.get_obs_disp()
+        reader.get_pred_disp()
         print(reader.get_slip())
         
 if __name__ == '__main__':

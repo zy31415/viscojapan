@@ -9,7 +9,7 @@ class Displacement(EpochSites3DArray):
                  cumu_disp_3d,
                  epochs,
                  sites,
-                 mask_sites):
+                 mask_sites=None):
 
         assert epochs[0] == 0, 'The class is designed to represent slip that starts at t=0.'
 
