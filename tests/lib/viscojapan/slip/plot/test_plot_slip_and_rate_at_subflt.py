@@ -22,6 +22,7 @@ class Test_plot_slip_and_rate_at_subflt(vj.MyTestCase):
             slip, 8, 8)
 
         plt.savefig(join(self.outs_dir, 'slip_and_rate.pdf'))
+        #plt.show()
 
 if __name__ == '__main__':
     unittest.main()

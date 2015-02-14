@@ -13,7 +13,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         super().setUp()
 
     def test1(self):
-        partition_file = '/home/zy/workspace/viscojapan/tests/share/deformation_partition.h5'
+        partition_file = '/home/zy/workspace/viscojapan/tests/lib/viscojapan/inversion/pred_displacement/~outs/deformation_partition.h5'
         res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
 
 

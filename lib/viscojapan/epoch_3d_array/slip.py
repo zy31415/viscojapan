@@ -39,8 +39,8 @@ class Slip(Epoch3DArray):
     # constructors
     @classmethod
     def init_with_incr_slip_3d(cls, incr_slip_3d, epochs):
-        cumu3d = incr3d_to_cumu3d(incr_slip_3d)
-        return cls(cumu_slip_3d=incr_slip_3d, epochs=epochs)
+        cumu_slip_3d = incr3d_to_cumu3d(incr_slip_3d)
+        return cls(cumu_slip_3d=cumu_slip_3d, epochs=epochs)
 
     @classmethod
     def init_with_cumu_slip_3d(cls, cumu_slip_3d, epochs):
