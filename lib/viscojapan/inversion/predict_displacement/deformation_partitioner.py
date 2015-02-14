@@ -53,7 +53,6 @@ class DeformPartitioner(object):
 
 
     def E_cumu_slip(self, nth_epoch):
-        print(self.slip._array_3d)
         cumuslip = self.slip.get_cumu_slip_at_nth_epoch(nth_epoch).reshape([-1,1])
         G0 = self.G0[0]
         disp = np.dot(G0, cumuslip)
