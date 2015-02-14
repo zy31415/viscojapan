@@ -35,10 +35,10 @@ class MomentCalculator(object):
         return mo, mw
 
     def get_cumu_slip_Mos_Mws(self, slip):
-        return self._get_Mos_Mws(slip3d=slip.get_3d_cumu_slip())
+        return self._get_Mos_Mws(slip3d=slip.get_cumu_slip_3d())
 
     def get_afterslip_Mos_Mws(self, slip):
-        return self._get_Mos_Mws(slip3d=slip.get_3d_afterslip())
+        return self._get_Mos_Mws(slip3d=slip.get_afterslip_3d())
 
     def _get_Mos_Mws(self, slip3d):
         mos = []
