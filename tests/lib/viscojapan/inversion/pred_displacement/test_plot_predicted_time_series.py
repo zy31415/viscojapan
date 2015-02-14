@@ -13,7 +13,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         super().setUp()
 
     def test1(self):
-        partition_file = '/home/zy/workspace/viscojapan/tests/lib/viscojapan/inversion/pred_displacement/~outs/deformation_partition.h5'
+        partition_file = '/home/zy/workspace/viscojapan/tests/share/deformation_partition.h5'
         res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
 
 
@@ -26,7 +26,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         site = 'J550'
         cmpt = 'e'
         #plotter.plot_cumu_disp_pred(site, cmpt)
-        #plotter.plot_cumu_disp_pred_added(site, cmpt)
+        #plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
         # plotter.plot_post_disp_pred_added(site, cmpt)
         #plotter.plot_cumu_obs_linres(site, cmpt)
         #plotter.plot_R_co(site, cmpt)
@@ -39,6 +39,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         #plt.close()
 
         plotter.plot_cumu_disp(site, cmpt)
+        plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
         plt.show()
         plt.close()
         #
