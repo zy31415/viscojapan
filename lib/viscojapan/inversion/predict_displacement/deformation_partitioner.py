@@ -4,7 +4,7 @@ import h5py
 
 from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochSlip
 from ...sites import Site
-from ...displacement import Disp
+from ...epoch_3d_array import Displacement
 
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
@@ -165,8 +165,8 @@ class DeformPartitioner(object):
 
         res = np.asarray(res)
 
-        sites = [Site(s) for s in self.G0.mask_sites]
-        disp = Disp(cumu_disp3d=res,
+        sites = [Site(s) for s in self.G0.get_mask_sites()]
+        disp = Displacement(cumu_disp_3d=res,
              epochs=self.epochs,
              sites = sites
         )
