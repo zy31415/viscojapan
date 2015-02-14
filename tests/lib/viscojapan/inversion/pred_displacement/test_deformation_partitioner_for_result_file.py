@@ -12,7 +12,8 @@ class Test_DeformPartitionerForResultFile(vj.test_utils.MyTestCase):
 
     def test1(self):
         res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
-        sites_for_prediction = ['J550']
+        #sites_for_prediction = ['J550']
+        sites_for_prediction = None
 
         pred = vj.inv.DeformPartitionerForResultFile(
             result_file = res_file,

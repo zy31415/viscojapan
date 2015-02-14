@@ -3,7 +3,8 @@ from os.path import exists
 import h5py
 import numpy as np
 
-from ...displacement import Disp
+from ...epoch_3d_array import Displacement
+
 from ..result_file import ResultFileReader
 
 __author__ = 'zy'
@@ -38,7 +39,7 @@ class DeformPartitionResultReader(object):
 
         sites = [site.decode() for site in sites]
 
-        return Disp(cumu_disp3d=disp3d,
+        return Displacement(cumu_disp_3d=disp3d,
              epochs=epochs,
              sites=sites
         )

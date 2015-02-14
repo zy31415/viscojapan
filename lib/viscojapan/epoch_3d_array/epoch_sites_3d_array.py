@@ -31,6 +31,9 @@ class EpochSites3DArray(Epoch3DArray):
 
         self._sites = sites
 
+        # core data, replacing _array_3d
+        self._array_3d_masked = None
+
         self.set_mask_sites(mask_sites)
 
 
@@ -53,13 +56,25 @@ class EpochSites3DArray(Epoch3DArray):
     def set_mask_sites(self, mask_sites):
         if mask_sites is None:
             mask_sites = self.get_sites()
-        self.assert_in_sites(mask_sites)
+        else:
+            self.assert_in_sites(mask_sites)
         self._mask_sites = mask_sites
+
+        mask = self.get_mask()
+
+        array_3d = super().get_array_3d()
+
+        if if_ascending(mask):
+            # faster if mask is ascending
+            self._array_3d_masked = array_3d[:,mask,:]
+        else:
+            # slower if mask is not ordered.
+            self._array_3d_masked = np.hstack([array_3d[:,(mi,),:] for mi in mask])
 
     def get_mask(self):
         ch = []
         for site in self._mask_sites:
-            ch.append(self._sites.index(site))
+            ch.append(self.get_index_in_sites(site))
         ch = np.asarray(ch)
         return list(ch)
 
@@ -73,20 +88,7 @@ class EpochSites3DArray(Epoch3DArray):
         ''' This function overrides get_array_3d, which will mask outputs according to the mask array.
         :return: ndarray(dim=3)
         '''
-        '''
-        :return:
-        '''
-        mask = self.get_mask()
-        array_3d = super().get_array_3d()
-
-        # return array_3d[:,mask,:]
-
-        # faster if mask is ascending
-        if if_ascending(mask):
-            return array_3d[:,mask,:]
-
-        # slower if mask is not ordered.
-        return np.hstack([array_3d[:,(mi,),:] for mi in mask])
+        return self._array_3d_masked
 
     @classmethod
     def load(cls,fid,

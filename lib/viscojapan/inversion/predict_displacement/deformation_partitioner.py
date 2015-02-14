@@ -24,14 +24,13 @@ class DeformPartitioner(object):
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
 
-
-        self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction, memory_mode=True)
+        self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction)
         if sites_for_prediction is None:
             sites_for_prediction = self.G0.get_sites()
 
         self.sites_for_prediction = sites_for_prediction
 
-        self.Gs = [EpochG(f, mask_sites=sites_for_prediction, memory_mode=True) for f in files_Gs]
+        self.Gs = [EpochG(f, mask_sites=sites_for_prediction) for f in files_Gs]
 
         self.slip = slip
 
@@ -177,15 +176,15 @@ class DeformPartitioner(object):
     def save(self,fn):
         with h5py.File(fn,'w') as fid:
             print('Ecumu ...')
-            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().cumu3d
+            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().get_cumu_disp_3d()
             fid['Ecumu'] = disp3d_Ecumu
 
             print('Rco ...')
-            disp3d_Rco = self.R_co_to_disp_obj().cumu3d
+            disp3d_Rco = self.R_co_to_disp_obj().get_cumu_disp_3d()
             fid['Rco'] = disp3d_Rco
 
             print('Raslip ...')
-            disp3d_Raslip = self.R_aslip_to_disp_obj().cumu3d
+            disp3d_Raslip = self.R_aslip_to_disp_obj().get_cumu_disp_3d()
             fid['Raslip'] = disp3d_Raslip
 
             fid['d_added'] = disp3d_Ecumu + disp3d_Rco + disp3d_Raslip

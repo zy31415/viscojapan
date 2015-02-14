@@ -96,7 +96,6 @@ class Epoch3DArray(_Epoch3DArray):
         :return: np.ndarray
         '''
         epochs = self.get_epochs()
-        assert epoch in epochs
         nth = epochs.index(epoch)
         return self.get_data_at_nth_epoch(nth)
 

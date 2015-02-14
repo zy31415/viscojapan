@@ -50,7 +50,7 @@ class PredictedTimeSeriesPlotter(object):
         
     def plot_cumu_disp_pred(self, site, cmpt, color='red', lw=2, **kwargs):
         ys = self.d_pred.cumu_ts(site, cmpt)
-        ts = self.d_pred.get_epochs
+        ts = self.d_pred.get_epochs()
 
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw, color=color, **kwargs)
         return list(ys)
@@ -80,7 +80,7 @@ class PredictedTimeSeriesPlotter(object):
     def plot_R_co(self, site, cmpt,
                   style = '-^', lw=1, **kwargs):
         ys = self.Rco.post_ts(site, cmpt)
-        ts = self.Rco.get_epochs
+        ts = self.Rco.get_epochs()
 
         plt.plot_date(shift_t(ts), regularize_y(ys), style, lw=lw, ms = 4*lw, **kwargs)
         return list(ys)
