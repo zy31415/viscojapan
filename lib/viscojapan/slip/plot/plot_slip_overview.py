@@ -17,7 +17,7 @@ def plot_slip_overview(slip,
     num_subflts_strike = slip.num_subflt_along_strike
     num_subflts_dip = slip.num_subflt_along_dip
 
-    epochs = slip.get_epochs
+    epochs = slip.get_epochs()
 
     fig, axes = plt.subplots(num_subflts_dip,
                              num_subflts_strike,
