@@ -25,14 +25,13 @@ class DeformPartitioner(object):
         self.num_epochs = len(self.epochs)
 
 
-        self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction)
+        self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction, memory_mode=True)
         if sites_for_prediction is None:
             sites_for_prediction = self.G0.get_sites()
 
         self.sites_for_prediction = sites_for_prediction
 
-        self.Gs = [EpochG(f, mask_sites=sites_for_prediction) for f in files_Gs]
-
+        self.Gs = [EpochG(f, mask_sites=sites_for_prediction, memory_mode=True) for f in files_Gs]
 
         self.slip = slip
 
@@ -57,8 +56,8 @@ class DeformPartitioner(object):
         G0 = self.G0[0]
         disp = np.dot(G0, cumuslip)
 
-        # if len(self.Gs) > 0:
-        #     disp += self._nlin_correction_E_cumu_slip(nth_epoch)
+        if len(self.Gs) > 0:
+            disp += self._nlin_correction_E_cumu_slip(nth_epoch)
 
         return disp
 
