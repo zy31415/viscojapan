@@ -57,8 +57,7 @@ class PredictedTimeSeriesPlotter(object):
 
     def plot_cumu_disp_pred_added(self, site, cmpt, color='red', lw=1, label=None, **kwargs):        
         ys = self.d_added.cumu_ts(site, cmpt)
-        ts = self.d_added.get_epochs
-
+        ts = self.d_added.get_epochs()
         plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
                       color=color, label=label,
                       **kwargs)
@@ -66,8 +65,7 @@ class PredictedTimeSeriesPlotter(object):
 
     def plot_post_disp_pred_added(self, site, cmpt, color='red', lw=1, label=None, **kwargs):        
         ys = self.d_added.post_ts(site, cmpt)
-        ts = self.d_added.get_epochs
-
+        ts = self.d_added.get_epochs()
         plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
                       color=color, label=label,
                       **kwargs)
@@ -87,8 +85,7 @@ class PredictedTimeSeriesPlotter(object):
 
     def plot_post_disp_pred(self, site, cmpt, color='red', lw=2.5, **kwargs):
         ys = self.d_pred.post_ts(site, cmpt)
-        ts = self.d_pred.get_epochs
-
+        ts = self.d_pred.get_epochs()
         ys = np.asarray(regularize_y(ys), float)
         ys = np.nan_to_num(ys)
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=3*lw, color=color, **kwargs)
@@ -105,8 +102,7 @@ class PredictedTimeSeriesPlotter(object):
                          lw=1, ms = 7,
                          label='E',**kwargs):
         ys = self.Ecumu.cumu_ts(site, cmpt)
-        ts = self.Ecumu.get_epochs
-
+        ts = self.Ecumu.get_epochs()
         plt.plot_date(shift_t(ts), regularize_y(ys), '-+', lw=lw, ms=ms,
                  label = label,
                  **kwargs)
@@ -116,8 +112,7 @@ class PredictedTimeSeriesPlotter(object):
                      lw=1, ms=7,
                      label='Easlip',**kwargs):
         ys = self.Ecumu.post_ts(site, cmpt)
-        ts = self.Ecumu.get_epochs
-
+        ts = self.Ecumu.get_epochs()
         plt.plot_date(shift_t(ts), regularize_y(ys), '-+', lw=lw, ms=ms,
                  label = label,
                  **kwargs)
@@ -127,8 +122,7 @@ class PredictedTimeSeriesPlotter(object):
                      ls='-', marker='o',
                      lw=1, ms=2, label='Raslip',**kwargs):
         ys = self.Raslip.post_ts(site, cmpt)
-        ts = self.Raslip.get_epochs
-
+        ts = self.Raslip.get_epochs()
         plt.plot_date(shift_t(ts), regularize_y(ys), ls=ls, marker=marker, lw=lw, ms=ms,
                  label = label,
                  **kwargs)
