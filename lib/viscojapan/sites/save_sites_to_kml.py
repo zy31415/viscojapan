@@ -9,7 +9,7 @@ def save_sites_to_kml(sites, fn, label_color='red', icon_name='flag'):
     kml = sk.Kml()
     for site in sites:
         site_id= site.id
-        site_name = get_site_true_name(site)
+        site_name = get_site_true_name(site=site)
 
         pnt = kml.newpoint(name = site_name)
         pnt.coords = [(site.lon, site.lat)]
@@ -44,14 +44,14 @@ def get_kml_html_description_for_onshore(site):
     {name} ({id})</a>
 <br>
 <img src="http://geodesy.unr.edu/tsplots/IGS08/TimeSeries/{id}.png">
-]]>'''.format(id=site.id, name=get_site_true_name(site))
+]]>'''.format(id=site.id, name=get_site_true_name(site=site))
     return description
 
 def get_kml_html_description_for_seafloor(site):
     description = '''<![CDATA[
 Seafloor station:  {name}{id} <br>
 <br>
-]]>'''.format(id=site.id, name=get_site_true_name(site))
+]]>'''.format(id=site.id, name=get_site_true_name(site=site))
     return description
 
 

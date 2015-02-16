@@ -12,7 +12,7 @@ class Test_sites_true_name(MyTestCase):
 
     def test(self):
         reader = vj.sites_db.SitesDB()
-        sites = reader.gets(['J550','J460'])
+        sites = ['J550','J460']
         
         names = vj.sites_db.get_site_true_name(sites)
         #print(names)
