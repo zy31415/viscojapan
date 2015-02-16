@@ -34,7 +34,12 @@ class Displacement(EpochSites3DArray):
         return self.get_data_at_nth_epoch(nth)
 
     def get_post_at_nth_epoch(self, nth):
-        return self.get_post_disp_3d[nth,:,:]
+        return self.get_post_disp_3d()[nth,:,:]
+
+    def get_post_hor_mag_at_nth_epoch(self, nth):
+        tp = self.get_post_at_nth_epoch(nth)
+        hor_mag = np.sqrt(tp[:,0]**2 + tp[:,1]**2)
+        return hor_mag
 
     def cumu_ts(self,site, cmpt):
         return self._extract_time_series(self.get_cumu_disp_3d(), site, cmpt)
