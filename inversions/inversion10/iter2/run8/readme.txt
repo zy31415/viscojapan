@@ -10,10 +10,15 @@ and 0zth order for afterslip.
 
 Use BasisMatrixBSpline as basis function.
 
-Run 8
-Based on Run3.
-In this version, make sure that the initial value of slip (Bm) is given, 
-no the m.
 
-Jan 6, 2015
+Run7
+Use unit matrix for basis matrix.
+I didn't handle basis matrix carefully, thus causes a lot trouble.
+Jan 05, 2015
+
+=====
+Run8
+(1) Evenly space the time. 
+(2) According to euler's performance, I use more epochs.
+Feb 16, 2015
 
