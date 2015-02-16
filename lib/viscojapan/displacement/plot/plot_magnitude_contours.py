@@ -13,7 +13,9 @@ class MagnitudeContoursPlotter(object):
     def plot(self,
              lons, lats, mags,
              output_file,
-             if_topo = True
+             contours = [0.001, 0.0026, 0.005,0.01,0.1,0.2],
+             if_topo = True,
+             unit_label = 'm',
     ):
         gmt = pGMT.GMT()
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
@@ -61,11 +63,12 @@ class MagnitudeContoursPlotter(object):
             #pltxyz.maskout_water(A='1000k',D='h')
             #pltxyz.plot_xyz()
             pltxyz.plot_contour(
-                contours=[0.001, 0.0026, 0.005,0.01,0.1,0.2],
+                contours = contours,
                 W='thick,red',
                 label_line = 'L142.37/38.30/80/60,142.37/38.30/90/20,142.37/38.30/-160/40,158/38.30/180/5',
                 label_font_size = 8,
                 smooth_factor = 100,
+                unit_label=unit_label,
                 )
 
 

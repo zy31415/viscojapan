@@ -82,6 +82,37 @@ class Epoch3DArray(_Epoch3DArray):
         vel = np.diff(self.get_array_3d(), axis=0)/dt
         return vel
 
+    def get_velocity_at_nth_epoch(self, nth):
+        assert nth>0
+        return self.get_velocity_3d()[nth-1,:,:]
+
+    def get_velocity_at_epoch(self, epoch):
+        epochs = self.get_epochs()
+        self._assert_epoch_within_range(epoch)
+
+        assert epoch > 0
+
+        if epoch < epochs[1]:
+            return self.get_velocity_at_nth_epoch(1)
+
+        if epoch in epochs:
+            nth = epochs.index(epoch)
+            return self.get_velocity_at_nth_epoch(nth)
+
+        for nth, ti in enumerate(epochs[1:], start=1):
+            if epoch <= ti:
+                break
+
+        t1 = epochs[nth-1]
+        val1 = self.get_velocity_at_nth_epoch(nth-1)
+
+        t2 = epochs[nth]
+        val2 = self.get_velocity_at_nth_epoch(nth)
+
+        val = (epoch-t1) / (t2-t1) * (val2-val1) + val1
+
+        return val
+
     # Get data at an epoch
     def get_data_at_nth_epoch(self, nth):
         '''
@@ -90,34 +121,36 @@ class Epoch3DArray(_Epoch3DArray):
         '''
         return self.get_array_3d()[nth,:,:]
 
-    def get_data_at_epoch_no_interpolation(self, epoch):
-        '''
-        :param epoch: int
-        :return: np.ndarray
-        '''
-        epochs = self.get_epochs()
-        nth = epochs.index(epoch)
-        return self.get_data_at_nth_epoch(nth)
+    # def get_data_at_epoch_no_interpolation(self, epoch):
+    #     '''
+    #     :param epoch: int
+    #     :return: np.ndarray
+    #     '''
+    #     epochs = self.get_epochs()
+    #     nth = epochs.index(epoch)
+    #     return self.get_data_at_nth_epoch(nth)
 
     def get_data_at_epoch(self, epoch):
         epochs = self.get_epochs()
         self._assert_epoch_within_range(epoch)
         if epoch in epochs:
-            return self.get_data_at_epoch_no_interpolation(epoch)
+            nth = epochs.index(epoch)
+            return self.get_data_at_nth_epoch(nth)
 
-        for nth, ti in enumerate(epochs[1:]):
+        for nth, ti in enumerate(epochs[1:], start=1):
             if epoch <= ti:
                 break
 
-        t1 = epochs[nth]
-        t2 = epochs[nth+1]
+        t1 = epochs[nth-1]
+        val1 = self.get_data_at_nth_epoch(nth-1)
 
-        val1 = self.get_array_3d()[nth, :, :]
-        val2 = self.get_array_3d()[nth, :, :]
+        t2 = epochs[nth]
+        val2 = self.get_data_at_nth_epoch(nth)
 
         val = (epoch-t1) / (t2-t1) * (val2-val1) + val1
 
         return val
+
 
     def __getitem__(self, name):
         return self.get_data_at_epoch(name)

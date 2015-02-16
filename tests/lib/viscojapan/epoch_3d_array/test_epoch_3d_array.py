@@ -55,8 +55,6 @@ class Test_Epoch3DArray(vj.MyTestCase):
 
             data = arr.get_data_at_nth_epoch(0)
 
-            data = arr.get_data_at_epoch_no_interpolation(60)
-
             data = arr.get_data_at_epoch(1620)
 
             #print(data)

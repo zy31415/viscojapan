@@ -30,14 +30,34 @@ class Displacement(EpochSites3DArray):
     def get_coseismic_disp(self):
         return self.get_cumu_at_nth_epoch(0)
 
+    def get_coseismic_disp_hor_mag(self):
+        tp = self.get_coseismic_disp()
+        return np.sqrt(tp[:,0]**2 + tp[:,1]**2)
+
+    def get_cumu_at_epoch(self, epoch):
+        return self.get_data_at_epoch(epoch)
+
     def get_cumu_at_nth_epoch(self, nth):
         return self.get_data_at_nth_epoch(nth)
+
+    def get_post_at_epoch(self, epoch):
+        return self.get_data_at_epoch(epoch) - self.get_data_at_epoch(0)
 
     def get_post_at_nth_epoch(self, nth):
         return self.get_post_disp_3d()[nth,:,:]
 
+    def get_post_hor_mag_at_epoch(self, epoch):
+        tp = self.get_post_at_epoch(epoch)
+        hor_mag = np.sqrt(tp[:,0]**2 + tp[:,1]**2)
+        return hor_mag
+
     def get_post_hor_mag_at_nth_epoch(self, nth):
         tp = self.get_post_at_nth_epoch(nth)
+        hor_mag = np.sqrt(tp[:,0]**2 + tp[:,1]**2)
+        return hor_mag
+
+    def get_velocity_hor_mag_at_epoch(self, epoch):
+        tp = self.get_velocity_at_epoch(epoch)
         hor_mag = np.sqrt(tp[:,0]**2 + tp[:,1]**2)
         return hor_mag
 
