@@ -3,7 +3,8 @@ from os.path import exists
 import h5py
 import numpy as np
 
-from ...displacement import Disp
+from ...epoch_3d_array import Displacement
+
 from ..result_file import ResultFileReader
 
 __author__ = 'zy'
@@ -38,20 +39,37 @@ class DeformPartitionResultReader(object):
 
         sites = [site.decode() for site in sites]
 
-        return Disp(cumu_disp3d=disp3d,
+        return Displacement(cumu_disp_3d=disp3d,
              epochs=epochs,
              sites=sites
         )
 
+    @property
+    def sites(self):
+        with h5py.File(self.fn,'r') as fid:
+            sites = fid['sites_for_prediction'][...]
+        sites = [site.decode() for site in sites]
+        return sites
 
     def check_partition_result(self, result_file):
+        result_reader = ResultFileReader(result_file)
+        disp_pred = result_reader.get_pred_disp()
+        pred = disp_pred.get_cumu_disp_3d()
 
-        pred = ResultFileReader(result_file).get_pred_disp().cumu3d
+        sites = result_reader.sites
 
-        Ecumu = self.Ecumu.cumu3d
-        Rco = self.Rco.cumu3d
-        Raslip = self.Raslip.cumu3d
+        tp = self.Ecumu
+        tp.set_mask_sites(sites)
+        Ecumu =  tp.get_cumu_disp_3d()
 
-        np.testing.assert_array_almost_equal(pred, Ecumu+Rco+Raslip, decimal=1)
+        tp = self.Rco
+        tp.set_mask_sites(sites)
+        Rco = tp.get_cumu_disp_3d()
+
+        tp = self.Raslip
+        tp.set_mask_sites(sites)
+        Raslip = tp.get_cumu_disp_3d()
+
+        np.testing.assert_array_almost_equal(pred, Ecumu+Rco+Raslip)
 
         print('Pass checking! Prediction equals components added!')

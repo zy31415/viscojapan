@@ -12,10 +12,9 @@ class Test_slip_overviewer(vj.MyTestCase):
         super().setUp()
 
     def test_plot(self):
-        res_file = join(self.share_dir,'nrough_05_naslip_11.h5')
-        fault_file = join(self.share_dir, 'fault_bott80km.h5')
+        res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
         reader = vj.inv.ResultFileReader(res_file)
-        slip = reader.get_slip(fault_file)
+        slip = reader.get_slip()
 
         plotter = vj.slip.plot.plot_slip_overview(
             slip,

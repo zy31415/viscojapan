@@ -26,7 +26,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         site = 'J550'
         cmpt = 'e'
         #plotter.plot_cumu_disp_pred(site, cmpt)
-        #plotter.plot_cumu_disp_pred_added(site, cmpt)
+        #plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
         # plotter.plot_post_disp_pred_added(site, cmpt)
         #plotter.plot_cumu_obs_linres(site, cmpt)
         #plotter.plot_R_co(site, cmpt)
@@ -39,7 +39,8 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         #plt.close()
 
         plotter.plot_cumu_disp(site, cmpt)
-        plt.show()
+        plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
+        # plt.show()
         plt.close()
         #
         # plotter.plot_post_disp(site, cmpt)

@@ -11,8 +11,8 @@ class Test_DeformPartitionResultReader(vj.MyTestCase):
         super().setUp()
 
     def test1(self):
-        reader = vj.inv.DeformPartitionResultReader(join(self.share_dir, 'deform_partition.h5'))
-        reader.check_partition_result(join(self.share_dir,'nrough_05_naslip_11.h5'))
+        reader = vj.inv.DeformPartitionResultReader('/home/zy/workspace/viscojapan/tests/share/deformation_partition.h5')
+        reader.check_partition_result('/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5')
 
 
 if __name__ == '__main__':

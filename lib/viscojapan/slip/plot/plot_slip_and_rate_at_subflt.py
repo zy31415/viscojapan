@@ -5,7 +5,7 @@ __author__ = 'zy'
 __all__ = ['plot_slip_and_rate_at_subflt']
 
 def plot_slip_and_rate_at_subflt(slip, nth_dip, nth_stk):
-    epochs = slip.epochs
+    epochs = slip.get_epochs()
 
     ts_slip = slip.get_cumu_slip_at_subfault(nth_dip, nth_stk)
     ts_rate = slip.get_slip_rate_at_subfault(nth_dip, nth_stk)

@@ -3,7 +3,8 @@ from os.path import join
 
 from numpy import arange, asarray
 
-from viscojapan.basis_function.basis_matrix import BasisMatrix
+import viscojapan as vj
+#from viscojapan.basis_function.basis_matrix import BasisMatrix
 from viscojapan.plots import MapPlotFault, plt
 from viscojapan.test_utils import MyTestCase
 
@@ -20,7 +21,7 @@ class Test_BasisMatrix(MyTestCase):
 
 
     def test_gen_slip_mesh(self):                
-        bm = BasisMatrix(
+        bm = vj.inv.basis.BasisMatrixBSpline(
             dx_spline = 20.,
             xf = arange(0,701, 20),
             dy_spline = 20.,
@@ -33,7 +34,7 @@ class Test_BasisMatrix(MyTestCase):
 
 
     def test_gen_basis_matrix(self):
-        bm = BasisMatrix(
+        bm = vj.inv.basis.BasisMatrixBSpline(
             dx_spline = 20.,
             xf = arange(0,701, 20),
             dy_spline = 20.,
@@ -44,14 +45,13 @@ class Test_BasisMatrix(MyTestCase):
         self.plot_slip(basis_mat[:,20],'test_gen_basis_matrix.png')
 
     def test_gen_basis_matrix_sparse(self):
-        bm = BasisMatrix(
+        bm = vj.inv.basis.BasisMatrixBSpline(
             dx_spline = 20.,
             xf = arange(0,701, 20),
             dy_spline = 20.,
             yf = arange(0,221, 20),
             )
         basis_mat = bm.gen_basis_matrix_sparse()
-        print(basis_mat)
 
         self.plot_slip(asarray(basis_mat.todense())[:,40],
                        'test_gen_basis_matrix_sparse.png')

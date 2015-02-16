@@ -10,10 +10,10 @@ plotter = vj.inv.PredictedTimeSeriesPlotter(
     result_file = result_file,
     )
 
-
-site = 'J449'
+site = 'J550'
 cmpt = 'e'
 plotter.plot_cumu_disp(site, cmpt, added_label='added')
+plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
 plt.show()
 plt.close()
     

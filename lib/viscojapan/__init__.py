@@ -22,11 +22,13 @@ from . import latex
 from . import sites
 from . import sites_db
 from . import moment
+from . import epoch_3d_array
 
 from .test_utils import MyTestCase
 from .constants import *
 from .sites import Site
 from .sites_db import SitesDB
+
 
 adjust_mjd_for_plot_date = 678577
 t_eq = 55631

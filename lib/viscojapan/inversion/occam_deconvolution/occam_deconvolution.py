@@ -39,7 +39,7 @@ class OccamDeconvolution(Inversion):
             basis,)
 
         self.G0 = EpochG(file_G0, sites)
-        self.num_subflts = self.G0.num_subflts
+        self.num_subflts = self.G0.get_num_subflts()
 
         self.Gs = [EpochG(f, sites) for f in files_Gs]
 
@@ -49,7 +49,7 @@ class OccamDeconvolution(Inversion):
 
         self.sd = EpochDisplacementSD(file_sd, sites)
 
-        self.slip0 = EpochSlip.init_from_file(file_slip0)
+        self.slip0 = EpochSlip(file_slip0)
         self.num_subflt_along_dip = self.slip0.num_subflt_along_dip
         self.num_subflt_along_strike = self.slip0.num_subflt_along_strike
 

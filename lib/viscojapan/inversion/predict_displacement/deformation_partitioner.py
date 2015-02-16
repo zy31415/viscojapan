@@ -4,35 +4,33 @@ import h5py
 
 from ..epoch_file_reader_for_inversion import EpochG, DifferentialG, EpochSlip
 from ...sites import Site
-from ...displacement import Disp
+from ...epoch_3d_array import Displacement
 
 __all__ =['DeformPartitioner']
 __author__ = 'zy'
 
 class DeformPartitioner(object):
     def __init__(self,
-                 file_G0, # TODO - fix the file reader here
+                 file_G0,
                  epochs,
                  slip,
-                 files_Gs = None, # TODO - fix the file reader here
+                 files_Gs = None,
                  nlin_pars = None,
                  nlin_par_names = None,
-                 file_slip0 = None, # TODO change file_incr_slip0 to slip object to allow more flexibility.
+                 file_slip0 = None,
                  sites_for_prediction = None
                  ):
 
         self.epochs = epochs
         self.num_epochs = len(self.epochs)
 
-
         self.G0 = EpochG(file_G0, mask_sites=sites_for_prediction)
         if sites_for_prediction is None:
-            sites_for_prediction = self.G0.sites
+            sites_for_prediction = self.G0.get_sites()
 
         self.sites_for_prediction = sites_for_prediction
 
         self.Gs = [EpochG(f, mask_sites=sites_for_prediction) for f in files_Gs]
-
 
         self.slip = slip
 
@@ -40,7 +38,7 @@ class DeformPartitioner(object):
         self.nlin_par_names = nlin_par_names
 
 
-        self.slip0 = EpochSlip.init_from_file(file_slip0)
+        self.slip0 = EpochSlip(file_slip0)
 
         if files_Gs is not None:
             self._get_delta_nlin_pars()
@@ -166,8 +164,8 @@ class DeformPartitioner(object):
 
         res = np.asarray(res)
 
-        sites = [Site(s) for s in self.G0.mask_sites]
-        disp = Disp(cumu_disp3d=res,
+        sites = [Site(s) for s in self.G0.get_mask_sites()]
+        disp = Displacement(cumu_disp_3d=res,
              epochs=self.epochs,
              sites = sites
         )
@@ -178,15 +176,15 @@ class DeformPartitioner(object):
     def save(self,fn):
         with h5py.File(fn,'w') as fid:
             print('Ecumu ...')
-            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().cumu3d
+            disp3d_Ecumu = self.E_cumu_slip_to_disp_obj().get_cumu_disp_3d()
             fid['Ecumu'] = disp3d_Ecumu
 
             print('Rco ...')
-            disp3d_Rco = self.R_co_to_disp_obj().cumu3d
+            disp3d_Rco = self.R_co_to_disp_obj().get_cumu_disp_3d()
             fid['Rco'] = disp3d_Rco
 
             print('Raslip ...')
-            disp3d_Raslip = self.R_aslip_to_disp_obj().cumu3d
+            disp3d_Raslip = self.R_aslip_to_disp_obj().get_cumu_disp_3d()
             fid['Raslip'] = disp3d_Raslip
 
             fid['d_added'] = disp3d_Ecumu + disp3d_Rco + disp3d_Raslip

@@ -33,7 +33,7 @@ class FormPredDisplacements(object):
     def gen_pred_displacements_file(self, file_name):
         self.d = self._gen_predicated()
         
-        epochs = self.inversion.epochs
+        epochs = self.inversion.get_epochs
 
         obs = EpochalData(file_name)
         for nth, epoch in enumerate(epochs):

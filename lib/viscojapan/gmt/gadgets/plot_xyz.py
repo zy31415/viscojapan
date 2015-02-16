@@ -99,7 +99,8 @@ class GMTXYZ(object):
                      W = 'thickest',
                      label_line = None,
                      label_font_size = 9,
-                     smooth_factor = 4
+                     smooth_factor = 4,
+                     unit_label = 'm',
                      ):
         _txt = ''
         for ii in contours:
@@ -115,7 +116,8 @@ class GMTXYZ(object):
             self.gmt.gplt.grdcontour(
                 self.xyz_grd,
                 C=fid.name,
-                A='1+f%f+um'%label_font_size,
+                A='1+f{label_font_size}+u{unit_label}'.format(label_font_size=label_font_size,
+                                               unit_label=unit_label),
                 G=G, J='', R='', O='',K='',S='%d'%smooth_factor,
                 W = W,
                 )

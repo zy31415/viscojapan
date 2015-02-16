@@ -15,7 +15,7 @@ def get_site_true_name(site_id=None, site=None):
     assert len(name)==1
     name = name[0][0]
     if name is None:
-        name  = site.id
+        name  = site_id
     return name
 
 def get_sites_true_name(sites_ids=None, sites=None):
