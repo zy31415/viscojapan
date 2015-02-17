@@ -14,7 +14,6 @@ pred = vj.inv.DeformPartitionerForResultFile(
                 '../../../green_function/G3_He50km_VisM6.3E18_Rake90.h5'
                 ],
     file_slip0 = '../../slip0/slip0.h5',
-    #sites_for_prediction = ['J550'],
     )
 
 pred.save('deformation_partition.h5')
