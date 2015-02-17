@@ -40,7 +40,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
 
         plotter.plot_cumu_disp(site, cmpt)
         plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
-        # plt.show()
+        plt.show()
         plt.close()
         #
         # plotter.plot_post_disp(site, cmpt)

@@ -119,8 +119,7 @@ class Slip(Epoch3DArray):
 
         array_3d = np.vstack(tp)
 
-        print(array_3d.shape)
-        return self.__init__(
+        return self.init_with_cumu_slip_3d(
             cumu_slip_3d = array_3d,
             epochs = epochs
             )

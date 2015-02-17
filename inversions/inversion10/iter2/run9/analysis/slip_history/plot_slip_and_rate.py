@@ -9,7 +9,7 @@ reader = vj.inv.ResultFileReader(fn)
 
 slip = reader.get_slip()
 
-nx = 7
+nx = 6
 ny = 13
 vj.slip.plot.plot_slip_and_rate_at_subflt(slip, nx, ny)
 

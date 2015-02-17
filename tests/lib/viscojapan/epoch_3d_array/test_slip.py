@@ -2,6 +2,7 @@ from os.path import join
 import unittest
 
 import numpy as np
+from pylab import plt
 import h5py
 
 import viscojapan as vj
@@ -48,10 +49,17 @@ class Test_Slip(vj.MyTestCase):
     def test_respace(self):
         fn = '/home/zy/workspace/viscojapan/tests/share/slip0.h5'
 
-        with h5py.File(fn,'r') as fid:
-            arr = vj.epoch_3d_array.Slip.load(fid)
+        arr = vj.epoch_3d_array.Slip.load(fn)
 
-            arr1 = arr.respace([0, 100, 200, 300])
+        epochs = [0, 100, 200, 300]
+        arr1 = arr.respace(epochs)
+
+        nx= 2
+        ny = 13
+        plt.plot(arr.get_epochs(), arr.get_cumu_slip_at_subfault(nx, ny))
+        plt.plot(arr1.get_epochs(), arr1.get_cumu_slip_at_subfault(nx, ny), 'x')
+
+        #plt.show()
 
 
 

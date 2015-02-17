@@ -4,8 +4,8 @@ import viscojapan as vj
 
 fault_file = '../../../fault_model/fault_bott80km.h5'
 
-reader = vj.inv.ResultFileReader('../../outs/nrough_06_naslip_10.h5',
-                                 fault_file)
+reader = vj.inv.ResultFileReader('../../outs/nrough_05_naslip_11.h5',
+                                 )
 co_slip = reader.get_incr_slip_at_nth_epoch(0)
 aslip = reader.get_after_slip_at_nth_epoch(2)
 

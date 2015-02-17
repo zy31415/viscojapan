@@ -38,7 +38,7 @@ class DeformPartitioner(object):
         self.nlin_par_names = nlin_par_names
 
 
-        self.slip0 = EpochSlip(file_slip0)
+        self.slip0 = EpochSlip(file_slip0).respace(self.epochs)
 
         if files_Gs is not None:
             self._get_delta_nlin_pars()
@@ -61,7 +61,8 @@ class DeformPartitioner(object):
         return disp
 
     def _nlin_correction_E_cumu_slip(self, nth_epoch):
-        slip0 = self.slip0.get_cumu_slip_at_nth_epoch(nth_epoch).reshape([-1,1])
+        epoch = self.epochs[nth_epoch]
+        slip0 = self.slip0.get_cumu_slip_at_epoch(epoch).reshape([-1,1])
         dGs = []
         for Gi, par in zip(self.Gs, self.nlin_par_names):
             diffG = DifferentialG(ed1=self.G0, ed2=Gi, wrt=par)
