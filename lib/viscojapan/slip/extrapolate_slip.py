@@ -73,11 +73,16 @@ class SlipExtrapolation(object):
                            shape = shape,
                            dtype = float)
 
+        fid.create_dataset(name = 'tau',
+                           shape = (shape[1], shape[2]),
+                           dtype = float)
+
         fid['epochs'] = self.epochs
 
         self.fid = fid
 
         self.data = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY]
+        self.tau = fid['tau']
 
     def _curve_fit(self, epochs, s):
         init0  = estimate_initial_values(s)
@@ -106,10 +111,15 @@ class SlipExtrapolation(object):
 
         self.data[:,nth_alg_dip, nth_alg_strike] = y_pred
 
+        tau = popt[2]
+        self.tau[nth_alg_dip, nth_alg_strike] = tau
+
+
+
     def go(self):
         for ndip in range(self.num_subflt_along_dip):
             for nstk in range(self.num_subflt_along_strike):
-                print('Subflt:',ndip, nstk)
+                # print('Subflt:',ndip, nstk)
                 self._model(ndip, nstk)
 
         self.fid.close()
