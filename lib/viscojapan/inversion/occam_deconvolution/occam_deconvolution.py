@@ -8,6 +8,8 @@ from .formulate_occam import JacobianVec, Jacobian, D_
 from ..inversion import Inversion
 from ...sites_db import choose_inland_GPS_cmpts_for_all_epochs
 
+from ..regularization.temporal_regularization import time_derivative_matrix, inflate_time_derivative_matrix_by_num_subflts
+
 __all__ = ['OccamDeconvolution']
 
 def eye_padding(mat, n):
@@ -32,6 +34,7 @@ class OccamDeconvolution(Inversion):
                  regularization,
                  basis,
                  file_slip0,
+                 decreasing_slip_rate = True,
                  ):
 
         super().__init__(
@@ -59,6 +62,8 @@ class OccamDeconvolution(Inversion):
 
         self.num_epochs = len(self.epochs)
 
+        self.decreasing_slip_rate = decreasing_slip_rate
+
         
         self._init()
 
@@ -66,6 +71,7 @@ class OccamDeconvolution(Inversion):
     def _init(self):
         self._load_nlin_initial_values()
         self._init_jacobian_vecs()
+        self._init_decreasing_slip_rate_matrix()
 
 
     def _load_nlin_initial_values(self):
@@ -91,6 +97,15 @@ class OccamDeconvolution(Inversion):
             jacobian_vecs.append(JacobianVec(dG, self.slip0))
 
         self.jacobian_vecs = jacobian_vecs
+
+    def _init_decreasing_slip_rate_matrix(self):
+        if self.decreasing_slip_rate:
+            mat1 = time_derivative_matrix(self.epochs)
+            mat2 = inflate_time_derivative_matrix_by_num_subflts(mat1, self.num_subflts)
+            self.GG = col_zeros_padding(mat2, self.num_nlin_pars)
+
+        else:
+            self.GG = None
     
     def set_data_B(self):
         print('Set data B ...')

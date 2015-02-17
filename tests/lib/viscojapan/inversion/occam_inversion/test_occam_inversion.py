@@ -38,7 +38,8 @@ class Test_OccamDeconvolution(vj.MyTestCase):
             sites = sites,
             epochs = epochs,
             regularization = regularization,
-            basis = basis,          
+            basis = basis,
+            decreasing_slip_rate=True
             )
 
         inv.set_data_all()

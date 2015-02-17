@@ -18,7 +18,8 @@ W, G, B, m, d, L, Bm0
                  W = None,
                  B = None,
                  L = None,
-                 Bm0 = None
+                 Bm0 = None,
+                 GG = None
                  ):
         self.G = G
         self.d = d
@@ -26,6 +27,7 @@ W, G, B, m, d, L, Bm0
         self.B = B
         self.L = L
         self.Bm0 = Bm0
+        self.GG = GG
 
         self._check_input()
 

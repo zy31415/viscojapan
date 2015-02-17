@@ -1,6 +1,8 @@
 import numpy as np
 from cvxopt import matrix, solvers
 
+import scipy.sparse as sparse
+
 from ..utils import assert_col_vec_and_get_nrow,\
      assert_square_array_and_get_nrow
 
@@ -29,13 +31,14 @@ class CvxoptQpWrapper(object):
     def invert(self, nonnegative=True):
         # non-negative constraint
         if nonnegative:
-            GG = -1.0 * np.identity(self.nrow_P, dtype='float')
+            GG = -1.0 * sparse.identity(self.nrow_P, dtype='float')
             if self.GG is not None:
-                GG = np.vstack([GG, self.GG])
+                GG = sparse.vstack([GG, self.GG])
 
-            h = np.zeros((self.nrow_P, 1), dtype='float')
+            h = np.zeros((GG.shape[0], 1), dtype='float')
+
             self.solution = solvers.qp(matrix(self.P),matrix(self.q),
-                                       matrix(GG),matrix(h))
+                                       matrix(GG.todense()),matrix(h))
         else:
             if self.GG is not None:
                 self.GG = matrix(self.GG)
@@ -49,5 +52,7 @@ class CvxoptQpWrapper(object):
     @classmethod
     def create_from_inversion_parameters_set(cls, inv_par_set):
         P, q = inv_par_set.gen_inputs_for_cvxopt_qp()
-        return cls(P=P, q=q)
+        obj = cls(P=P, q=q)
+        obj.GG = inv_par_set.GG
+        return obj
         

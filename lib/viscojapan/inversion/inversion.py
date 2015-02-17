@@ -14,6 +14,7 @@ class Inversion(object):
                  ):
         self.regularization = regularization
         self.basis = basis
+        self.GG = None
 
     def set_data_sd(self):
         print('Set data sd ...')
@@ -74,7 +75,9 @@ class Inversion(object):
             W = self.W,
             B = self.B,
             L = self.L,
-            Bm0 = self.Bm0)
+            Bm0 = self.Bm0,
+            GG = self.GG
+        )
 
         self.cvxopt_qp = CvxoptQpWrapper.\
                          create_from_inversion_parameters_set(self.inv_par_set)        
