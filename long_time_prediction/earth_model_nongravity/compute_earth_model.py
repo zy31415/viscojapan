@@ -48,7 +48,7 @@ if __name__ == '__main__':
                         help='Compute earth model.',
                         )
     args = parser.parse_args()
-    model = args.model[0]
+    model = args._model[0]
     if model =='all':
         for c1, c2 in zip(cmd1, cmd2):
             cmd1[c1]()

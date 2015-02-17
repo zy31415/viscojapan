@@ -16,7 +16,7 @@ epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 sites = np.loadtxt('sites_with_seafloor', '4a', usecols=(0,))
-sites = vj.utils.as_string(sites)
+sites = vj.utils.as_string(sites)[::4]
 
 #basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
 

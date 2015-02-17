@@ -20,5 +20,6 @@ Jan 05, 2015
 Run8
 (1) Evenly space the time. 
 (2) According to euler's performance, I use more epochs.
+
 Feb 16, 2015
 

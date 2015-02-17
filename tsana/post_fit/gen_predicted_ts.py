@@ -33,7 +33,7 @@ for f in os.listdir(_dir_cfs_post):
     ts=range(t1,t2+1)
     fpred[site+'/t']=ts
     for cf in cfs:
-        ys=cf.func(ts)
+        ys=cf._func(ts)
         fpred[site+'/'+cf.CMPT]=ys
 fpred.close()
 

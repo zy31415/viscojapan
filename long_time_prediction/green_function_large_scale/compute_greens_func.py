@@ -35,5 +35,5 @@ if __name__ == '__main__':
                         help='Compute G matrix for indicated model.'
                         )
     args = parser.parse_args()
-    model_num = int(args.model[0])
+    model_num = int(args._model[0])
     cmd[model_num]()

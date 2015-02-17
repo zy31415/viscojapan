@@ -44,7 +44,7 @@ if __name__ == '__main__':
                         help='Generate G matrix for indicated model.',
                         )
     args = parser.parse_args()
-    model = args.model[0]
+    model = args._model[0]
 
     if model == 'all':
         for s,c in cmd.items():

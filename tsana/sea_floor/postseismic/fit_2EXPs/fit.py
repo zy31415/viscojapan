@@ -86,7 +86,7 @@ def predict(cfs, days):
     days = np.asarray(days)
     out = []
     for cf in cfs:
-        out.append(cf.func(days+t_eq))
+        out.append(cf._func(days+t_eq))
     return out
 
 def save_prediction(site, t, e, n, u):
