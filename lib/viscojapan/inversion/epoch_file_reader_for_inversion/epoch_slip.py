@@ -10,10 +10,16 @@ __al__ = ['EpochSlip']
 
 class EpochSlip(Slip):
 
-    def __init__(self, file_name):
+    def __init__(self, file_name,
+                 memory_mode = False):
 
         fid = h5py.File(file_name, 'r')
-        cumu_slip_3d = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
+
+        if memory_mode:
+            cumu_slip_3d = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
+        else:
+            cumu_slip_3d = fid[self.HDF5_DATASET_NAME_FOR_3D_ARRAY]
+
         epochs = list(fid['epochs'][...])
 
         super().__init__(cumu_slip_3d = cumu_slip_3d,

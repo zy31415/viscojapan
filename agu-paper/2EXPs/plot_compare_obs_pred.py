@@ -22,7 +22,7 @@ y1 = f1(days)
 
 ch = cf.data.t > 55631
 t_obs = cf.data.t[ch]
-y_obs = cf.data.y0[ch] - cf.func.get_subf('TOHOKU').jump
+y_obs = cf.data.y0[ch] - cf._func.get_subf('TOHOKU').jump
 
 ax1.plot_date(t_obs +vj.adjust_mjd_for_plot_date,
               y_obs, '.',
@@ -57,7 +57,7 @@ y2 = f2(days)
 
 ch = cf.data.t > 55631
 t_obs = cf.data.t[ch]
-y_obs = cf.data.y0[ch] - cf.func.get_subf('TOHOKU').jump
+y_obs = cf.data.y0[ch] - cf._func.get_subf('TOHOKU').jump
 
 ax2.plot_date(t_obs + vj.adjust_mjd_for_plot_date,
               y_obs, '.', color='blue', label='obs.')

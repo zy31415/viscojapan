@@ -65,7 +65,7 @@ who don's like multi-inheritance, 2. composition.
             ostr2 = "Matrix is singular!"
         except FailBigChq:
             for cf in self:
-                cf.func.parsupdate(-cf.R)
+                cf._func.parsupdate(-cf.R)
             self.lam *= 10
             ostr2 = "Larger chisq! Return back!"
         except FailOverCorrection:
@@ -218,8 +218,8 @@ class JointMLReg(JointRegMod, MLUtils):
         bak_sub(LC,RC,[])
         for cf in self.cfs:
             bak_sub(cf.L,cf.R,RC)
-            cf.func.ck_parsupdate(cf.R)
-            cf.func.parsupdate(cf.R)
+            cf._func.ck_parsupdate(cf.R)
+            cf._func.parsupdate(cf.R)
 
     def uncertainty(self):
         """ Estimate uncertainty.
@@ -231,7 +231,7 @@ class JointMLReg(JointRegMod, MLUtils):
             for cf in self:
                 cf.uncertainty()
                 LC += cf.cov_1[-csz:,-csz:]
-                np += (cf.func.get_np() - csz)
+                np += (cf._func.get_np() - csz)
 
             np += csz
             cov_1 = zeros((np,np))
@@ -239,7 +239,7 @@ class JointMLReg(JointRegMod, MLUtils):
 
             ii = 0
             for cf in self:
-                np = cf.func.get_np() - csz
+                np = cf._func.get_np() - csz
                 cov_1[ii:ii+np,ii:ii+np]=cf.cov_1[0:-csz,0:-csz]
                 cov_1[-csz:,ii:ii+np] = cf.cov_1[-csz:,0:-csz]
                 cov_1[ii:ii+np,-csz:] = cf.cov_1[0:-csz,-csz:]
@@ -257,14 +257,14 @@ class JointMLReg(JointRegMod, MLUtils):
 
         n = 0
         for cf in self:
-            for subf in cf.func:
+            for subf in cf._func:
                 for pn in subf.ipns:
                     setattr(subf,pn+'_sd',self.uncer[n])
                     n+=1
 
         for cf in self:
             m = 0
-            for subf in cf.func:
+            for subf in cf._func:
                 for pn in subf.cpns:
                     setattr(subf,pn+'_sd',self.uncer[n+m])
                     m+=1

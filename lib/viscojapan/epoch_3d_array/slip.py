@@ -1,6 +1,7 @@
 __author__ = 'zy'
 
 import numpy as np
+import h5py
 
 from .epoch_3d_array import Epoch3DArray
 
@@ -125,9 +126,10 @@ class Slip(Epoch3DArray):
             )
 
     @classmethod
-    def load(cls,fid,
+    def load(cls,file,
              memory_mode = False # if memory_mode is True, all the data will be loaded into memory.
     ):
+        fid = h5py.File(file,'r')
         if memory_mode:
             array_3d = fid[cls.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]
         else:
