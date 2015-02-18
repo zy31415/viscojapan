@@ -6,7 +6,7 @@ from ...utils import as_string
 from ...epoch_3d_array import G as GClass
 
 __author__ = 'zy'
-__all__ = ['EpochG','DifferentialG']
+__all__ = ['EpochG','DifferentialG','EpochGNoRaslip', 'DifferentialGNoRaslip']
 
 def stack_G_for_convolution(self, epochs):
     N = len(epochs)
@@ -24,6 +24,24 @@ def stack_G_for_convolution(self, epochs):
               nth*sh2:(nth+1)*sh2] = G_
     return G
 
+def stack_G_for_no_Raslip(self, epochs):
+    N = len(epochs)
+    x = self.get_data_at_epoch(0)
+    sh1, sh2 = self.get_data_at_epoch(0).shape
+
+    G = np.zeros((sh1*N, sh2*N), dtype='float')
+
+    for mth in range(0, N):
+        t2 = epochs[mth]
+        #print(t2,t1,t2-t1)
+        G_ = self.get_data_at_epoch(t2)
+        #print(mth*sh1,(mth+1)*sh1,nth*sh2,(nth+1)*sh2)
+        G[mth*sh1:(mth+1)*sh1, 0:sh2] = G_
+
+    G0 = self.get_data_at_epoch(0)
+    for nth in range(1, N):
+        G[nth*sh1:(nth+1)*sh1, nth*sh2:(nth+1)*sh2] = G0
+    return G
 
 class EpochG(GClass):
     def __init__(self,file_name,
@@ -63,7 +81,8 @@ class EpochG(GClass):
 
     stack = stack_G_for_convolution
 
-
+class EpochGNoRaslip(EpochG):
+    stack = stack_G_for_no_Raslip
 
 class DifferentialG(object):
     ''' This class computes the diffretial of two EpochData objects
@@ -109,3 +128,6 @@ wrt - with respect to, variable that the change WRT.
 
     # Monkey Patch :-)
     stack = stack_G_for_convolution
+
+class DifferentialGNoRaslip(DifferentialG):
+    stack = stack_G_for_no_Raslip

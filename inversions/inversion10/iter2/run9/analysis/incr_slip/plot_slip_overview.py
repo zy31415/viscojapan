@@ -8,10 +8,10 @@ slip = reader.get_slip()
 
 plt = vj.slip.plot.plot_slip_overview(
     slip,
-    'fault_slip.pdf',
+    'slip_overview.pdf',
     if_x_log=False,
     xlim=[0, 1344],
-    ylim=[0,80],
+    ylim=[0,85],
     yticks=[20,40,60],
     xticks = [500, 1000],
     xticklabels = [r'500', r'1000'],

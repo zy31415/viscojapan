@@ -6,7 +6,6 @@ import numpy as np
 
 import latex
 
-from .disp_result_reader import DispResultReader
 from ...gmt.applications.plot_Z_at_sites import ZPlotter
 
 __all__ = ['MisfitPlotter']

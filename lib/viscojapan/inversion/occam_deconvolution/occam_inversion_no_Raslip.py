@@ -10,19 +10,12 @@ from ...sites_db import choose_inland_GPS_cmpts_for_all_epochs
 
 from ..regularization.temporal_regularization import time_derivative_matrix, inflate_time_derivative_matrix_by_num_subflts
 
-__all__ = ['OccamDeconvolution']
+from .occam_deconvolution import OccamDeconvolution
 
-def eye_padding(mat, n):
-    pad = sparse.eye(n)
-    return sparse.block_diag((mat, pad))
+__all__ = ['OccamInversionNoRaslip']
 
-def col_zeros_padding(mat, n):
-    sh = mat.shape[0]
-    pad = sparse.csr_matrix((sh,n))
-    return sparse.hstack((mat, pad))
-    
 
-class OccamDeconvolution(Inversion):
+class OccamInversionNoRaslip(OccamDeconvolution):
     def __init__(self,
                  file_G0,
                  files_Gs,
@@ -41,7 +34,10 @@ class OccamDeconvolution(Inversion):
             regularization,
             basis,)
 
-        self._init_Gs(file_G0, files_Gs, sites)
+        self.G0 = EpochG(file_G0, sites)
+        self.num_subflts = self.G0.get_num_subflts()
+
+        self.Gs = [EpochG(f, sites) for f in files_Gs]
 
         self.nlin_par_names = nlin_par_names
         
@@ -61,12 +57,9 @@ class OccamDeconvolution(Inversion):
 
         self.decreasing_slip_rate = decreasing_slip_rate
 
+        
         self._init()
 
-    def _init_Gs(self, file_G0, files_Gs, sites):
-        self.G0 = EpochG(file_G0, sites)
-        self.num_subflts = self.G0.get_num_subflts()
-        self.Gs = [EpochG(f, sites) for f in files_Gs]
 
     def _init(self):
         self._load_nlin_initial_values()
