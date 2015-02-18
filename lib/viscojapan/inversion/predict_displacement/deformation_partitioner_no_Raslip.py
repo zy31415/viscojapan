@@ -1,3 +1,4 @@
+import numpy as np
 import h5py
 
 from ..epoch_file_reader_for_inversion import EpochGNoRaslip, DifferentialGNoRaslip, EpochSlip
