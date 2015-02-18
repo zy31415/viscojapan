@@ -4,9 +4,9 @@ import numpy as np
 
 import viscojapan as vj
 
-result_file = '../../outs/nrough_05_naslip_11.h5'
+result_file = '../../outs/nrough_06_naslip_06.h5'
 
-pred = vj.inv.DeformPartitionerForResultFile(
+pred = vj.inv.DeformPartitionerNoRaslipForResultFile(
     file_G0 = '../../../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
     result_file = result_file,
     files_Gs = ['../../../green_function/G1_He50km_VisM1.0E19_Rake83.h5',

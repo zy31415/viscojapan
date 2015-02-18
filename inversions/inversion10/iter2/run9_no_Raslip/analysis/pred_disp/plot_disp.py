@@ -3,9 +3,9 @@ import viscojapan as vj
 from pylab import plt
 
 partition_file = './deformation_partition.h5'
-result_file = '../../outs/nrough_05_naslip_11.h5'
+result_file = '../../outs/nrough_06_naslip_06.h5'
 
-plotter = vj.inv.PredictedTimeSeriesPlotter(
+plotter = vj.inv.PredictedTimeSeriesPlotterNoRaslip(
     partition_file = partition_file,
     result_file = result_file,
     )
