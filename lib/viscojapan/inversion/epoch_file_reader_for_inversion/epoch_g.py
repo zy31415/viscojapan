@@ -38,6 +38,7 @@ def stack_G_for_no_Raslip(self, epochs):
     for nth in range(1, N):
         for mth in range(nth, N):
             G[mth*sh1:(mth+1)*sh1, nth*sh2:(nth+1)*sh2] = _G0
+
     return G
 
 class EpochG(GClass):
