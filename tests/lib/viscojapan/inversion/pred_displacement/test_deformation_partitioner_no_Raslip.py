@@ -5,6 +5,7 @@ from os.path import join
 
 import viscojapan as vj
 
+
 class Test_DeformPartitionerNoRaslip(vj.MyTestCase):
     def setUp(self):
         self.this_script = __file__
@@ -38,11 +39,11 @@ class Test_DeformPartitionerNoRaslip(vj.MyTestCase):
 
         #pred.save(join(self.outs_dir, 'deformation_partition.h5'))
         disp = pred.E_aslip(10)
-        disp = pred.R_nth_epoch(3, 500)
+        # disp = pred.R_nth_epoch(3, 500)
         disp = pred.R_co(500)
-        #disp = pred.R_aslip(500)
+        disp = pred.R_aslip(500)
 
-        print(disp)
+        print(disp.shape)
 
         pred.save(join(self.outs_dir, 'deformation_partition_no_Raslip.h5'))
 
