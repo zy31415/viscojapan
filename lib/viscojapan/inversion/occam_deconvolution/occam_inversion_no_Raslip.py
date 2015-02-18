@@ -1,6 +1,7 @@
-from ..epoch_file_reader_for_inversion import EpochGNoRaslip
+from ..epoch_file_reader_for_inversion import EpochGNoRaslip, DifferentialGNoRaslip
 
 from .occam_deconvolution import OccamDeconvolution
+from .formulate_occam import JacobianVec
 
 __all__ = ['OccamInversionNoRaslip']
 
@@ -37,4 +38,15 @@ class OccamInversionNoRaslip(OccamDeconvolution):
         self.G0 = EpochGNoRaslip(file_G0, sites)
         self.num_subflts = self.G0.get_num_subflts()
         self.Gs = [EpochGNoRaslip(f, sites) for f in files_Gs]
+
+    def _init_jacobian_vecs(self):
+        dGs = []
+        for G, par_name in zip(self.Gs, self.nlin_par_names):
+            dGs.append(DifferentialGNoRaslip(ed1 = self.G0, ed2 = G, wrt = par_name))
+
+        jacobian_vecs = []
+        for dG in dGs:
+            jacobian_vecs.append(JacobianVec(dG, self.slip0))
+
+        self.jacobian_vecs = jacobian_vecs
 
