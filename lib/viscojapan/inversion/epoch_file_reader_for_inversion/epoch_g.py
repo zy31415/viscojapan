@@ -6,7 +6,8 @@ from ...utils import as_string
 from ...epoch_3d_array import G as GClass
 
 __author__ = 'zy'
-__all__ = ['EpochG','DifferentialG','EpochGNoRaslip', 'DifferentialGNoRaslip']
+__all__ = ['stack_G_for_convolution','stack_G_for_no_Raslip',
+           'EpochG','DifferentialG','EpochGNoRaslip', 'DifferentialGNoRaslip']
 
 def stack_G_for_convolution(self, epochs):
     N = len(epochs)
