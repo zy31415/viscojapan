@@ -12,13 +12,10 @@ reg_roughes = logspace(-3,1,20)
 
 fault_file = '../fault_model/fault_bott80km.h5'
 
-epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 sites = np.loadtxt('sites_with_seafloor', '4a', usecols=(0,))
-sites = vj.utils.as_string(sites)[::4]
-
-#basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
+sites = vj.utils.as_string(sites)
 
 # unit basis matrix
 basis = vj.inv.basis.BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
@@ -47,13 +44,14 @@ reg_boundary = 0.06
 regs_rough = logspace(-3,1,20)
 regs_aslip = logspace(-3,1,20)
 
-for reg_aslip in regs_aslip[6:0:-1]:
+
+for reg_aslip in regs_aslip[8:0:-1]:
     nrough = 6
     reg_rough = regs_rough[nrough]
 
     naslip = list(regs_aslip).index(reg_aslip)
 
-    outfname = 'outs_test/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
+    outfname = 'outs/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
     if exists(outfname):
         print("Skip %s !"%outfname)
         continue
@@ -68,6 +66,5 @@ for reg_aslip in regs_aslip[6:0:-1]:
     inv.set_data_L()
     inv.run()
     inv.save(outfname, overwrite=True)
-
         
                 

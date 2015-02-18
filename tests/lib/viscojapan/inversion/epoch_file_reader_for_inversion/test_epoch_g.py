@@ -1,6 +1,7 @@
 import unittest
-import os
 from os.path import join
+
+from pylab import plt
 
 import viscojapan as vj
 
@@ -19,6 +20,28 @@ class Test_EpochG(vj.MyTestCase):
         out = G.get_data_at_epoch(0)
 
         stacked = G.stack([0,60,120])
+
+class Test_EpochGNoRaslip(vj.MyTestCase):
+    def setUp(self):
+        self.this_script = __file__
+        super().setUp()
+
+
+    def test1(self):
+        file_G = join(self.share_dir,'G0_He50km_VisM6.3E18_Rake83.h5')
+        G = vj.inv.ep.EpochGNoRaslip(file_G,
+                             mask_sites= ['J550']
+        )
+
+        out = G.get_data_at_epoch(0)
+
+        stacked = G.stack([0,60,120])
+
+        plt.matshow(abs(stacked)*100, aspect=5)
+        # plt.show()
+        plt.close()
+
+
 
 class Test_DifferentialG(vj.MyTestCase):
     def setUp(self):
