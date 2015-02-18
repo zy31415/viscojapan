@@ -20,7 +20,7 @@ sites = vj.utils.as_string(sites)
 # unit basis matrix
 basis = vj.inv.basis.BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
-inv = vj.inv.OcccamInversionNoRaslip(
+inv = vj.inv.OccamInversionNoRaslip(
     file_G0 = '../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
     files_Gs = ['../green_function/G1_He50km_VisM1.0E19_Rake83.h5',
                 '../green_function/G2_He60km_VisM6.3E18_Rake83.h5',
