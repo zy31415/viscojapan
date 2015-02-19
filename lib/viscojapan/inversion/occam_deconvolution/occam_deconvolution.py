@@ -22,7 +22,7 @@ def col_zeros_padding(mat, n):
     return sparse.hstack((mat, pad))
     
 
-class OccamDeconvolution(Inversion):
+class OccamDeconvolution(Inversion): #TODO: Change this class initializer to accept EpocahG and DifferentialG object. Use factor function to generate object from files.
     def __init__(self,
                  file_G0,
                  files_Gs,

@@ -7,7 +7,7 @@ __author__ = 'zy'
 __all__ = ['DeformPartitionerForResultFile',
            'DeformPartitionerNoRaslipForResultFile']
 
-class DeformPartitionerForResultFile(DeformPartitioner):
+class DeformPartitionerForResultFile(DeformPartitioner): # TODO: Replace this class with factory method.
     def __init__(self,
                  file_G0,
                  result_file,
@@ -29,7 +29,7 @@ class DeformPartitionerForResultFile(DeformPartitioner):
                          sites_for_prediction = sites_for_prediction
                          )
 
-class DeformPartitionerNoRaslipForResultFile(DeformPartitionerNoRaslip):
+class DeformPartitionerNoRaslipForResultFile(DeformPartitionerNoRaslip): # TODO: Replace this class with factory method.
     def __init__(self,
                  file_G0,
                  result_file,

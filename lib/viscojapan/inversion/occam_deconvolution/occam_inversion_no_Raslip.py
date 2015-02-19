@@ -5,7 +5,7 @@ from .occam_deconvolution import OccamDeconvolution
 __all__ = ['OccamInversionNoRaslip']
 
 
-class OccamInversionNoRaslip(OccamDeconvolution):
+class OccamInversionNoRaslip(OccamDeconvolution): #TODO - replace this class with a factory method.
     def __init__(self,
                  file_G0,
                  files_Gs,
