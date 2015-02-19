@@ -41,9 +41,9 @@ class OccamDeconvolution(Inversion):
             regularization,
             basis,)
 
-        self._init_Gs(file_G0, files_Gs, sites)
-
         self.nlin_par_names = nlin_par_names
+
+        self._init_Gs(file_G0, files_Gs, sites)
         
         self.d = EpochDisplacement(file_d, sites)
 
@@ -66,7 +66,14 @@ class OccamDeconvolution(Inversion):
     def _init_Gs(self, file_G0, files_Gs, sites):
         self.G0 = EpochG(file_G0, sites)
         self.num_subflts = self.G0.get_num_subflts()
-        self.Gs = [EpochG(f, sites) for f in files_Gs]
+
+        Gs = [EpochG(f, sites) for f in files_Gs]
+
+        dGs = []
+        for G, par_name in zip(Gs, self.nlin_par_names):
+            dGs.append(DifferentialG(ed1 = self.G0, ed2 = G, wrt = par_name))
+
+        self.dGs = dGs
 
     def _init(self):
         self._load_nlin_initial_values()
@@ -88,12 +95,8 @@ class OccamDeconvolution(Inversion):
             yield name, val
 
     def _init_jacobian_vecs(self):
-        dGs = []
-        for G, par_name in zip(self.Gs, self.nlin_par_names):
-            dGs.append(DifferentialG(ed1 = self.G0, ed2 = G, wrt = par_name))
-
         jacobian_vecs = []
-        for dG in dGs:
+        for dG in self.dGs:
             jacobian_vecs.append(JacobianVec(dG, self.slip0))
 
         self.jacobian_vecs = jacobian_vecs
