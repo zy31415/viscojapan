@@ -18,7 +18,7 @@ for file in files:
 plt.plot(epochs, rmses, '^-', label='slip only model')
 
 # no Raslip model
-result_file_no_Raslip = '../../outs/nrough_06_naslip_06.h5'
+result_file_no_Raslip = '../../outs/nrough_06_naslip_11.h5'
 
 fid = vj.inv.ResultFileReader(result_file_no_Raslip)
 epochs = fid.epochs
