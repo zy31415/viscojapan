@@ -1,13 +1,13 @@
-import os
+from ...fault_model import Fault
 
-import pGMT
-
-from viscojapan.gmt.gadgets import plot_etopo1, plot_slab,\
-     plot_fault_model, plot_seafloor_stations, \
-     plot_GEONET_Japan_stations, \
-     plot_focal_mechanism_USGS_wphase
+from ...gmt import plot_etopo1, plot_slab,\
+    plot_seafloor_stations, \
+    plot_GEONET_Japan_stations, \
+    plot_focal_mechanism_USGS_wphase
 
 from viscojapan.gmt.applications.plotter import Plotter
+
+from .plot_fault_model_utils import gplt_fault_meshes_marking_dip_changes
 
 __all__ = ['FaultModelPlotter']
 
@@ -16,7 +16,7 @@ class FaultModelPlotter(Plotter):
                  fault_file
                  ):
         super().__init__()
-        self.fault_file = fault_file
+        self.fault = Fault(fault_file)
         self.fs_focal_mechanism = 0
         
 
@@ -45,7 +45,7 @@ class FaultModelPlotter(Plotter):
             W = 'faint,100', L='f145/34/38/100+lkm+jt',
             O = '', K='')
 
-        plot_fault_model(gplt,self.fault_file)
+        gplt_fault_meshes_marking_dip_changes(gplt,self.fault)
         plot_GEONET_Japan_stations(gplt, color='red')
 
         plot_focal_mechanism_USGS_wphase(gplt,
