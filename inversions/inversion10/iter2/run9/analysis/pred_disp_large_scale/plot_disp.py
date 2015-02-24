@@ -1,34 +1,24 @@
-import sqlite3
+import viscojapan as vj
 
 from pylab import plt
 
-db_file = '~pred_disp.db'
+partition_file = './deformation_partition_large_scale.h5'
+result_file = '../../outs/nrough_06_naslip_11.h5'
 
-site = 'J799'
-
-def read_ts_from_table(table, site, cmpt):
-    with sqlite3.connect(db_file) as conn:
-        c = conn.cursor()
-        res = c.execute('select day,{cmpt} from {table} where site=? order by day'\
-                        .format(cmpt=cmpt, table=table),
-                        (site,)).fetchall()
-        epochs = [ii[0] for ii in res]
-        ys = [ii[1] for ii in res]
-    return epochs, ys
-
-epochs, ys = read_ts_from_table(
-    'view_total_disp_added',
-    site,
-    'e'
+plotter = vj.inv.PredictedTimeSeriesPlotter(
+    partition_file = partition_file,
+    result_file = result_file,
     )
-plt.plot(epochs, ys)
 
-epochs, ys = read_ts_from_table(
-    'tb_cumu_disp_pred',
-    site,
-    'e'
-    )
-plt.plot(epochs, ys)
+site = 'X310'
 
+cmpt='e'
+plotter.plot_R_co(site,cmpt, label='Rco')
+plotter.plot_E_aslip(site,cmpt, label='Easlip')
+plotter.plot_R_aslip(site,cmpt, label='Raslip')
+#plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
+plt.legend()
 plt.show()
+plt.close()
     
+

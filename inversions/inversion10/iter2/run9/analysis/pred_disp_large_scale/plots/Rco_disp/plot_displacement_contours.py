@@ -16,26 +16,20 @@ lons, lats = load_lons_lats()
 reader = vj.inv.DeformPartitionResultReader(
     '../../deformation_partition_large_scale.h5')
 
-Ecumu = reader.Ecumu
-
-
-
-contours = [0.1, 0.5, 1,5,9,20]
-
 cmpt = 'Rco'
 
 obj = getattr(reader, cmpt)
 for epoch in epochs:
     print(cmpt, epoch)
     if epoch == 0:
-        continue
-    mags = obj.get_velocity_hor_mag_at_epoch(epoch)
-    mags = mags*100*365 # m/day => cm/yr
+        mags = obj.get_coseismic_disp_hor_mag()
+    else:
+        mags = obj.get_post_hor_mag_at_epoch(epoch)
         
     plt = vj.displacement.plot.MagnitudeContoursPlotter()
     plt.plot(lons, lats, mags,
              'plots/%s_day%04d.pdf'%(cmpt,epoch),
-             contours = contours,
+#             contours = contours,
              if_topo = False,
-             unit_label = 'cm/yr'
+             unit_label = 'm'
              )

@@ -1,6 +1,6 @@
 import viscojapan as vj
 
-fn = '../../outs/nrough_05_naslip_10.h5'
+fn = '../../outs/nrough_06_naslip_11.h5'
 
 reader = vj.inv.ResultFileReader(fn)
 
