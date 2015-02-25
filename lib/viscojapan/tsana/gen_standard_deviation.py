@@ -1,6 +1,7 @@
 import shutil
 from os.path import join, exists
 
+import h5py
 import numpy as np
 
 import viscojapan as vj
@@ -43,7 +44,7 @@ def copy_and_revise_sd_file(file_sd_original, file_seafloor_sd, file_sd_out, sd 
         ep.set_value_at_site(site, 'u', day, sd[2])
         ep['seafloor sd/%s_day_%04d'%(site, day)] = sd
 
-class GenSD(object):
+class GenSD(object): #TODO: This class is dated.
     def __init__(self,
                  dir_linres,
                  sites,
@@ -101,11 +102,12 @@ class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
                  sd_seafloor = 1e99
                  ):
         self.sites = sites
-        self.ch_inland = vj.sites.choose_inland_GPS(self.sites)
+        self.ch_inland = self._choose_inland_GPS()
         self.num_sites = len(self.sites)
         self.num_obs = 3 * self.num_sites
         
         self.days = days
+        self.num_epochs = len(self.days)
 
         self.sd_co_hor = sd_co_hor
         self.sd_co_ver = sd_co_ver
@@ -114,6 +116,16 @@ class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
         self.sd_post_ver = sd_post_ver
         
         self.sd_seafloor = sd_seafloor
+
+    def _choose_inland_GPS(self):
+        ch = []
+        for site in self.sites:
+            if site[0]=='_':
+               ch.append(False)
+            else:
+                ch.append(True)
+        return np.asarray(ch)
+
         
 
     def _gen_sd_array(self, sd_east, sd_north, sd_up):
@@ -136,16 +148,20 @@ class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
                                   self.sd_post_ver)
 
     def save(self, fn):
-        for day in self.days:
-            ep = vj.EpochalData(fn)
-            day = int(day)
-            if day == 0:
-                ep[day] = self._gen_sd_for_coseismic_disp()
-            else:
-                ep[day] = self._gen_sd_for_postseismic_disp()
-        ep['sites'] = self.sites
-        ep['sd_co_hor'] = self.sd_co_hor
-        ep['sd_co_ver'] = self.sd_co_ver
-        ep['sd_post_hor'] = self.sd_post_hor
-        ep['sd_post_ver'] = self.sd_post_ver
-        ep['sd_seafloor'] = self.sd_seafloor
+        with h5py.File(fn,'w') as fid:
+            fid.create_dataset('data3d',
+                               shape=(self.num_epochs,self.num_sites,3)
+                               )
+
+            for nth, day in enumerate(self.days):
+                if day == 0:
+                    data = self._gen_sd_for_coseismic_disp()
+                else:
+                    data = self._gen_sd_for_postseismic_disp()
+                fid['data3d'][nth,:,:] = data.reshape([-1,3])
+            fid['sites'] = [site.encode() for site in self.sites]
+            fid['sd_co_hor'] = self.sd_co_hor
+            fid['sd_co_ver'] = self.sd_co_ver
+            fid['sd_post_hor'] = self.sd_post_hor
+            fid['sd_post_ver'] = self.sd_post_ver
+            fid['sd_seafloor'] = self.sd_seafloor

@@ -1,11 +1,10 @@
 from pylab import plt
 
-
-from .deformation_partition_file_reader import DeformPartitionResultReader
-from ...tsana.observation_database import ObservationDatatbaseReader
-from ...sites_db import get_site_true_name
-from ..result_file import ResultFileReader
-from .plot_predicted_time_series import PredictedTimeSeriesPlotter
+from viscojapan.inversion.predict_displacement.deformation_partition_file_reader import DeformPartitionResultReader
+from viscojapan.tsana.observation_database import ObservationDatatbaseReader
+from viscojapan.sites_db import get_site_true_name
+from viscojapan.inversion.result_file import ResultFileReader
+from viscojapan.inversion.predict_displacement.plots.plot_predicted_time_series import PredictedTimeSeriesPlotter
 
 __all__ = ['PredictedTimeSeriesPlotterNoRaslip']
 

@@ -20,7 +20,7 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
 
         plotter = vj.inv.PredictedTimeSeriesPlotter(
             partition_file = partition_file,
-            result_file = res_file,
+            #result_file = res_file,
             )
 
         site = 'J550'
@@ -38,14 +38,15 @@ class Test_PredictedTimeSeriesPlotter(vj.MyTestCase):
         #plt.show()
         #plt.close()
 
+
+        #
         plotter.plot_cumu_disp_decomposition(site, cmpt)
-        plotter.plot_cumu_disp_pred_added(site, cmpt, color='blue')
         plt.show()
         plt.close()
-        #
-        # plotter.plot_post_disp(site, cmpt)
-        # plt.show()
-        # plt.close()
+
+        plotter.plot_post_disp_decomposition(site, cmpt)
+        plt.show()
+        plt.close()
 
 
         

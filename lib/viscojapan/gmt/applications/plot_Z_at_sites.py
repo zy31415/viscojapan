@@ -17,7 +17,11 @@ class ZPlotter(Plotter):
 
     
 
-    def plot(self, clim=[-2.5,1.1]):
+    def plot(self,
+             clim=[-2.5,1.1],
+             if_log = True,
+             cpt_file = 'hot'
+             ):
         gmt = self.gmt
 
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
@@ -43,10 +47,16 @@ class ZPlotter(Plotter):
         cpt = tempfile.NamedTemporaryFile('w+t')
 
         dcolor = (clim[1] - clim[0])/50
+
+        if if_log:
+            Q = ''
+        else:
+            Q = None
+
         gmt.makecpt(
-            C='hot',
+            C=cpt_file,
             T='{clim[0]}/{clim[1]}/{dcolor}'.format(clim=clim, dcolor=dcolor),
-            I='', Q='',
+            I='', Q=Q,
             )
 
         gmt.save_stdout(cpt.name)
@@ -65,7 +75,7 @@ class ZPlotter(Plotter):
             D='3/10/3/.15',
             R='', O='', K='',
             B='af',
-            C=cpt.name, Q=''
+            C=cpt.name, Q=Q
             )
 
         cpt.close()

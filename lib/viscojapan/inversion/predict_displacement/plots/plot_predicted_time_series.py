@@ -2,10 +2,10 @@ from pylab import plt
 import numpy as np
 
 #from .pred_disp_database import PredDispToDatabaseReader
-from .deformation_partition_file_reader import DeformPartitionResultReader
-from ...tsana.observation_database import ObservationDatatbaseReader
-from ...sites_db import get_site_true_name
-from ..result_file import ResultFileReader
+from viscojapan.inversion.predict_displacement.deformation_partition_file_reader import DeformPartitionResultReader
+from viscojapan.tsana.observation_database import ObservationDatatbaseReader
+from viscojapan.sites_db import get_site_true_name
+from viscojapan.inversion.result_file import ResultFileReader
 
 from date_conversion import adjust_mjd_for_plot_date
 
@@ -51,21 +51,21 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
     def plot_cumu_disp_pred_from_result_file(self, site, cmpt, color='red', lw=2, **kwargs):
         ys = self.d_pred_from_result_file.cumu_ts(site, cmpt)
         ts = self.d_pred_from_result_file.get_epochs()
-        plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw, color=color, **kwargs)
+        plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw, color=color, **kwargs)
         return list(ys)
 
-    def plot_cumu_disp_pred_added(self, site, cmpt, color='red', lw=1, label=None, **kwargs):        
+    def plot_cumu_disp_pred_added(self, site, cmpt, color='red', lw=2, label=None, **kwargs):
         ys = self.d_added.cumu_ts(site, cmpt)
         ts = self.d_added.get_epochs()
-        plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
+        plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw,
                       color=color, label=label,
                       **kwargs)
         return list(ys)
 
-    def plot_post_disp_pred_added(self, site, cmpt, color='red', lw=1, label=None, **kwargs):        
+    def plot_post_disp_pred_added(self, site, cmpt, color='red', lw=2, label=None, **kwargs):
         ys = self.d_added.post_ts(site, cmpt)
         ts = self.d_added.get_epochs()
-        plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=2*lw,
+        plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw,
                       color=color, label=label,
                       **kwargs)
         return list(ys)
@@ -82,12 +82,12 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
         plt.plot_date(shift_t(ts), regularize_y(ys), style, lw=lw, ms = 4*lw, **kwargs)
         return list(ys)
 
-    def plot_post_disp_pred_from_result_file(self, site, cmpt, color='red', lw=2.5, **kwargs):
+    def plot_post_disp_pred_from_result_file(self, site, cmpt, color='red', lw=1, **kwargs):
         ys = self.d_pred_from_result_file.post_ts(site, cmpt)
         ts = self.d_pred_from_result_file.get_epochs()
         ys = np.asarray(regularize_y(ys), float)
         ys = np.nan_to_num(ys)
-        plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=3*lw, color=color, **kwargs)
+        plt.plot_date(shift_t(ts), regularize_y(ys), '--', lw=lw, ms=3*lw, color=color, **kwargs)
         return list(ys)
     
     def plot_post_obs_linres(self, site, cmpt, **kwargs):
@@ -128,8 +128,7 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
         return list(ys)
 
     def plot_cumu_disp_decomposition(self, site, cmpt, loc=2, leg_fs=7,
-                       if_ylim=False,
-                       added_label = None,
+                       if_ylim=False
                        ):        
         self.plot_cumu_obs_linres(site, cmpt)
         y = self.plot_cumu_disp_pred_added(site, cmpt, label='pred.')
@@ -142,7 +141,6 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
         if if_ylim:
             plt.ylim(calculate_lim(y))
 
-        self.plot_cumu_disp_pred_added(site, cmpt, label=added_label)
         plt.ylabel(r'm')
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
@@ -152,7 +150,6 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
             ))
 
     def plot_post_disp_decomposition(self, site, cmpt, loc=2, leg_fs=7,
-                       added_label = None,
                        marker_for_obs = 'x',
                        ):
         y = self.plot_post_obs_linres(site,cmpt, label='obs.', marker=marker_for_obs)
@@ -163,8 +160,6 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
         y += self.plot_R_aslip(site, cmpt, color='black')
 
         plt.grid('on')
-
-        self.plot_post_disp_pred_added(site, cmpt, label=added_label)
         
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.ylabel(r'm')
