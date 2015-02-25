@@ -3,7 +3,7 @@ import viscojapan as vj
 from pylab import plt
 
 partition_file = './deformation_partition.h5'
-result_file = '../../outs/nrough_05_naslip_11.h5'
+result_file = '../../outs/best_result.h5'
 
 plotter = vj.inv.PredictedTimeSeriesPlotter(
     partition_file = partition_file,

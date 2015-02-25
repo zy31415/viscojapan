@@ -6,11 +6,9 @@ except ImportError:
 
 import numpy as np
 
-from ..utils import get_this_script_dir
+from .share import file_gps_sites_db
 
-this_script_dir = get_this_script_dir(__file__)
-
-file_database = join(this_script_dir, 'gps_sites.sqlite3')
+file_database = file_gps_sites_db
 
 __all__ = ['get_pos_dic', 'get_pos', 'get_networks_dic','get_pos_dic_of_a_network',
            'gen_network_sites_file']

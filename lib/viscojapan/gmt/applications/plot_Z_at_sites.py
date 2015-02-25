@@ -1,6 +1,5 @@
 import tempfile
 
-from ...sites_db import get_pos
 from .plotter import Plotter
 from ..gadgets import plot_focal_mechanism_JMA
 
@@ -13,7 +12,6 @@ class ZPlotter(Plotter):
                  ):
         super().__init__()
         self.sites = sites
-        self.lons, self.lats = get_pos(sites)
         
         self.Z = Z
 
@@ -54,7 +52,7 @@ class ZPlotter(Plotter):
         gmt.save_stdout(cpt.name)
 
         with tempfile.NamedTemporaryFile('w+t') as fid:
-            for zi, lon, lat in zip(self.Z, self.lons, self.lats):
+            for zi, lon, lat in zip(self.Z, self.sites.lons, self.sites.lats):
                 fid.write('%f %f %f\n'%(lon, lat, zi))
             fid.seek(0)
             gplt.psxy(

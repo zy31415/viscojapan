@@ -12,20 +12,25 @@ from .plot_predicted_time_series import PredictedTimeSeriesPlotter
 class KMLShowTimeSeries(object):
     def __init__(self,
                  file_sites,
-                 db_pred,
+                 result_file,
+                 partition_file,
                  ):
         self.file_sites = file_sites
         sites = np.loadtxt(self.file_sites, '4a', usecols=(0,))
         self.sites = [site.decode() for site in sites]
         
-        self.db_pred = db_pred
+        self.partition_file = partition_file
+        self.result_file = result_file
         self.dir_plots = 'plots/'
 
     def plot_site(self, site, file_ext):
         if not exists(self.dir_plots):
             makedirs(self.dir_plots)
 
-        plt = PredictedTimeSeriesPlotter(self.db_pred)
+        plt = PredictedTimeSeriesPlotter(
+            partition_file = self.partition_file,
+            result_file = self.result_file
+        )
         
         print(site)
         
