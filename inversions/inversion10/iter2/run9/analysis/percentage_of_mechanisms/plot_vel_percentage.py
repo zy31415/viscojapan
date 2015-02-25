@@ -11,7 +11,7 @@ d_added = reader.d_added
 sites = reader.sites
 sites = vj.sites_db.SitesDB().gets(sites)
 
-day = 1300
+day = 200
 
 rco = Rco.get_velocity_at_epoch(day)
 raslip = Raslip.get_velocity_at_epoch(day)

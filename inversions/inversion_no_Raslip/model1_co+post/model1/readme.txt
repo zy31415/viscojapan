@@ -12,5 +12,12 @@ Feb 23, 2015
 ====
 run2:
 Increase the weights on coseismic displacement.
+decrese the sd to 0.2
+
+Feb 24, 2005
+
+=====
+run3:
+sd of coseismic observatios: 0.5
 
 Feb 24, 2005
