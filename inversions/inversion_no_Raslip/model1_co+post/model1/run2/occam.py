@@ -29,7 +29,7 @@ inv = vj.inv.OccamInversionNoRaslip(
     nlin_par_names = ['log10(visM)','log10(He)','rake'],
 
     file_d = '../obs/cumu_post_with_seafloor.h5',
-    file_sd = '../sd/sd_uniform.h5', 
+    file_sd = 'sd/sd_uniform.h5', 
     file_slip0 = 'slip0/slip0.h5',
     sites = sites,
     epochs = epochs,

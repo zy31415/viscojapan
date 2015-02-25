@@ -160,6 +160,7 @@ class GenUniformOnshoreSDWithInfiniteSeafloorSD(object):
                     data = self._gen_sd_for_postseismic_disp()
                 fid['data3d'][nth,:,:] = data.reshape([-1,3])
             fid['sites'] = [site.encode() for site in self.sites]
+            fid['epochs'] = self.days
             fid['sd_co_hor'] = self.sd_co_hor
             fid['sd_co_ver'] = self.sd_co_ver
             fid['sd_post_hor'] = self.sd_post_hor
