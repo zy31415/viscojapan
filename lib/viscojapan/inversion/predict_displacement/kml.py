@@ -35,11 +35,11 @@ class KMLShowTimeSeries(object):
         print(site)
         
         for cmpt in 'e', 'n', 'u':        
-            plt.plot_cumu_disp(site, cmpt)
+            plt.plot_cumu_disp_decomposition(site, cmpt)
             plt.plt.savefig(join(self.dir_plots, '%s.%s.cumu.%s'%(site, cmpt, file_ext)))
             plt.plt.close()
 
-            plt.plot_post_disp(site, cmpt)
+            plt.plot_post_disp_decomposition(site, cmpt)
             plt.plt.savefig(join(self.dir_plots, '%s.%s.post.%s'%(site, cmpt, file_ext)))
             plt.plt.close()
 

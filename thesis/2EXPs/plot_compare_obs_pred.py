@@ -43,7 +43,7 @@ plt.legend(loc=2, prop={'size':6})
 
 ax2 = plt.subplot(212, sharex=ax1)
 pplt = vj.inv.PredictedTimeSeriesPlotter('../../inversions/inversion10/iter2/run7/analysis/pred_disp/~pred_disp.db')
-pplt.plot_post_disp(site, cmpt)
+pplt.plot_post_disp_decomposition(site, cmpt)
 plt.title('')
 plt.ylim([0,1])
 plt.savefig('2EXPs_vs_pred_%s-%s.png'%(site, cmpt))

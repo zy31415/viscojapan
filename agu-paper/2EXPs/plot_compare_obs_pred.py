@@ -87,7 +87,7 @@ pplt = vj.inv.PredictedTimeSeriesPlotter(
     partition_file = 'partition.h5',
     result_file = 'nrough_05_naslip_11.h5'
     )
-pplt.plot_post_disp(site, cmpt,
+pplt.plot_post_disp_decomposition(site, cmpt,
                     marker_for_obs='.')
 plt.title('')
 plt.ylim(ylim)

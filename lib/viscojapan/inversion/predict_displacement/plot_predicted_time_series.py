@@ -27,10 +27,10 @@ def regularize_y(ys):
     ys = np.nan_to_num(ys)
     return ys
 
-class PredictedTimeSeriesPlotter(object):
+class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and can be break into three.
     def __init__(self,
                  partition_file,
-                 result_file,
+                 result_file = None,
                  ):
         self.partition_file = partition_file
         reader = DeformPartitionResultReader(self.partition_file)
@@ -39,19 +39,18 @@ class PredictedTimeSeriesPlotter(object):
         self.Raslip = reader.Raslip
         self.d_added = reader.d_added
 
-        self.result_file = result_file
-        reader = ResultFileReader(self.result_file)
-        self.d_pred = reader.get_pred_disp()
+        if result_file is not None:
+            reader = ResultFileReader(result_file)
+            self.d_pred_from_result_file = reader.get_pred_disp()
 
         self.plt = plt
 
         self.obs_db = '/home/zy/workspace/viscojapan/tsana/db/~observation.db'
         self.obs_reader = ObservationDatatbaseReader(self.obs_db)
         
-    def plot_cumu_disp_pred(self, site, cmpt, color='red', lw=2, **kwargs):
-        ys = self.d_pred.cumu_ts(site, cmpt)
-        ts = self.d_pred.get_epochs()
-
+    def plot_cumu_disp_pred_from_result_file(self, site, cmpt, color='red', lw=2, **kwargs):
+        ys = self.d_pred_from_result_file.cumu_ts(site, cmpt)
+        ts = self.d_pred_from_result_file.get_epochs()
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=2*lw, color=color, **kwargs)
         return list(ys)
 
@@ -83,9 +82,9 @@ class PredictedTimeSeriesPlotter(object):
         plt.plot_date(shift_t(ts), regularize_y(ys), style, lw=lw, ms = 4*lw, **kwargs)
         return list(ys)
 
-    def plot_post_disp_pred(self, site, cmpt, color='red', lw=2.5, **kwargs):
-        ys = self.d_pred.post_ts(site, cmpt)
-        ts = self.d_pred.get_epochs()
+    def plot_post_disp_pred_from_result_file(self, site, cmpt, color='red', lw=2.5, **kwargs):
+        ys = self.d_pred_from_result_file.post_ts(site, cmpt)
+        ts = self.d_pred_from_result_file.get_epochs()
         ys = np.asarray(regularize_y(ys), float)
         ys = np.nan_to_num(ys)
         plt.plot_date(shift_t(ts), regularize_y(ys), '-o', lw=lw, ms=3*lw, color=color, **kwargs)
@@ -128,12 +127,12 @@ class PredictedTimeSeriesPlotter(object):
                  **kwargs)
         return list(ys)
 
-    def plot_cumu_disp(self, site, cmpt, loc=2, leg_fs=7,
+    def plot_cumu_disp_decomposition(self, site, cmpt, loc=2, leg_fs=7,
                        if_ylim=False,
                        added_label = None,
                        ):        
         self.plot_cumu_obs_linres(site, cmpt)
-        y = self.plot_cumu_disp_pred(site, cmpt, label='pred.')
+        y = self.plot_cumu_disp_pred_added(site, cmpt, label='pred.')
         y += self.plot_R_co(site, cmpt,
                             style='-^', label='Rco', color='orange')
         y += self.plot_E_cumu_slip(site, cmpt, color='green')
@@ -152,12 +151,12 @@ class PredictedTimeSeriesPlotter(object):
             cmpt = cmpt
             ))
 
-    def plot_post_disp(self, site, cmpt, loc=2, leg_fs=7,
+    def plot_post_disp_decomposition(self, site, cmpt, loc=2, leg_fs=7,
                        added_label = None,
                        marker_for_obs = 'x',
                        ):
         y = self.plot_post_obs_linres(site,cmpt, label='obs.', marker=marker_for_obs)
-        y += self.plot_post_disp_pred(site,cmpt, label='pred.')
+        y += self.plot_post_disp_pred_added(site,cmpt, label='pred.')
         y += self.plot_R_co(site, cmpt,
                             style = '-^', label='Rco', color='orange')
         y += self.plot_E_aslip(site, cmpt, color='green')
