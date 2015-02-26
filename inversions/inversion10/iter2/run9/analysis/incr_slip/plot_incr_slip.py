@@ -3,7 +3,7 @@ import glob
 
 import viscojapan as vj
 
-files = glob.glob('../../outs/nrough_??_naslip_11.h5')
+files = glob.glob('../../outs/nrough_06_naslip_11.h5')
 
 for file in files:
     fn, _ = splitext(basename(file))
