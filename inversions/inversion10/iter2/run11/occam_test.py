@@ -12,10 +12,13 @@ reg_roughes = logspace(-3,1,20)
 
 fault_file = '../fault_model/fault_bott80km.h5'
 
+epochs = epochs[0:3]
 num_epochs = len(epochs)
 
 sites = np.loadtxt('sites_with_seafloor', '4a', usecols=(0,))
-sites = vj.utils.as_string(sites)
+sites = vj.utils.as_string(sites)[::4]
+
+#basis = vj.inv.basis.BasisMatrixBSpline.create_from_fault_file(fault_file, num_epochs = len(epochs))
 
 # unit basis matrix
 basis = vj.inv.basis.BasisMatrix.create_from_fault_file(fault_file, num_epochs = len(epochs))
@@ -29,7 +32,7 @@ inv = vj.inv.OccamDeconvolution(
     nlin_par_names = ['log10(visM)','log10(He)','rake'],
 
     file_d = '../obs/cumu_post_with_seafloor.h5',
-    file_sd = 'sd/sd_uniform.h5', 
+    file_sd = '../sd/sd_uniform.h5', 
     file_slip0 = 'slip0/slip0.h5',
     sites = sites,
     epochs = epochs,
@@ -45,9 +48,9 @@ regs_rough = logspace(-3,1,20)
 regs_aslip = logspace(-3,1,20)
 
 for nrough, reg_rough, naslip, reg_aslip in \
-    vj.utils.pop_from_center((6,11), regs_rough, regs_aslip):
+    vj.utils.pop_from_center((5,11), regs_rough, regs_aslip):
 
-    outfname = 'outs/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
+    outfname = 'outs_test/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
     if exists(outfname):
         print("Skip %s !"%outfname)
         continue
@@ -62,5 +65,6 @@ for nrough, reg_rough, naslip, reg_aslip in \
     inv.set_data_L()
     inv.run()
     inv.save(outfname, overwrite=True)
+
         
                 
