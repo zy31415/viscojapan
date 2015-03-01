@@ -5,10 +5,7 @@ import viscojapan as vj
 
 epochs = list(range(0,1621, 60)) + list(range(365*5, 365*27+1, 365))
 
-res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
-reader = vj.inv.ResultFileReader(res_file)
-slip = reader.get_slip()
-
+slip = vj.epoch_3d_array.Slip.load('slip0.h5')
 
 gen = vj.slip.SlipExtrapolationLOG(
     slip = slip,

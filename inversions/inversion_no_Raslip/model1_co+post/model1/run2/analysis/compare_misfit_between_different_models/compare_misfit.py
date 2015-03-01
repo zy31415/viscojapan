@@ -27,7 +27,7 @@ rms = fid.rms_inland_at_epoch
 plt.plot(epochs, rms, 'x-', label='no Raslip model')
 
 # coupled model
-result_file = '../../../../../../inversion10/iter2/run11/outs/nrough_06_naslip_11.h5'
+result_file = '../../../../../../inversion10/iter2/run10/outs/nrough_06_naslip_11.h5'
 fid = vj.inv.ResultFileReader(result_file)
 epochs = fid.epochs
 rms = fid.rms_inland_at_epoch

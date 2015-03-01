@@ -34,3 +34,9 @@ Run10
 Change the SD of coseismic displacement to 0.5.
 
 Feb 25, 2015
+
+=====
+Run11
+Change the SD of coseismic displacement to 0.2.
+
+Feb 25, 2015

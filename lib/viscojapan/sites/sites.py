@@ -70,4 +70,11 @@ class Sites(collections.UserList):
 
         out = '\n'.join(head + body)
         return out
+
+    def __getitem__(self, item):
+        out = super().__getitem__(item)
+        if isinstance(out, list):
+            out = Sites(out)
+
+        return out
                 

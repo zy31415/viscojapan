@@ -1,6 +1,7 @@
 import pyproj as pj
 
 from ..constants import TOHOKU_EPICENTER
+from .sites import Sites
 
 __author__ = 'zy'
 __all__ = ['get_epicentral_distance', 'sorted_by_epicentral_distance']
@@ -19,10 +20,10 @@ def get_epicentral_distance(site):
         dis /=1000. # m => km
         return dis
 
-def sorted_by_epicentral_distance(sites):
+def sorted_by_epicentral_distance(sites, ):
     dist = get_epicentral_distance(sites)
     dic1 = {s:d for s, d in zip(sites, dist)}
-    tp = sorted(dic1.items(), key=lambda x: x[1], reverse=True)
+    tp = sorted(dic1.items(), key=lambda x: x[1])
     sites_sorted = [ii[0] for ii in tp]
     dist_sorted = [ii[1] for ii in tp]
-    return sites_sorted, dist_sorted
+    return Sites(sites_sorted), dist_sorted

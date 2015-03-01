@@ -11,7 +11,7 @@ def plot_slip(slip, nx, ny,
     plt.plot(epochs, s, label, label=legend)
 
 
-res_file = '../../outs/nrough_06_naslip_11.h5'
+res_file = '../../outs/nrough_05_naslip_11.h5'
 reader = vj.inv.ResultFileReader(res_file)
 slip_pred = reader.get_slip()
 

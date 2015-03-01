@@ -5,7 +5,7 @@ import viscojapan as vj
 
 epochs = list(range(0,1621, 60)) + list(range(365*5, 365*27+1, 365))
 
-res_file = '/home/zy/workspace/viscojapan/tests/share/nrough_05_naslip_11.h5'
+res_file = '../../outs/nrough_06_naslip_11.h5'
 reader = vj.inv.ResultFileReader(res_file)
 slip = reader.get_slip()
 

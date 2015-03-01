@@ -45,7 +45,7 @@ regs_rough = logspace(-3,1,20)
 regs_aslip = logspace(-3,1,20)
 
 for nrough, reg_rough, naslip, reg_aslip in \
-    vj.utils.pop_from_center((6,11), regs_rough, regs_aslip):
+    vj.utils.pop_from_center((5,11), regs_rough, regs_aslip):
 
     outfname = 'outs/nrough_%02d_naslip_%02d.h5'%(nrough, naslip)
     if exists(outfname):

@@ -5,7 +5,7 @@ from os.path import join
 
 import viscojapan as vj
 
-class Test_DeformPartitionerForResultFile(vj.test_utils.MyTestCase):
+class Test_gen_deformation_partitioner_for_result_file(vj.test_utils.MyTestCase):
     def setUp(self):
         self.this_script = __file__
         super().setUp()
@@ -15,7 +15,7 @@ class Test_DeformPartitionerForResultFile(vj.test_utils.MyTestCase):
         #sites_for_prediction = ['J550']
         sites_for_prediction = None
 
-        pred = vj.inv.DeformPartitionerForResultFile(
+        pred = vj.inv.gen_deformation_partitioner_for_result_file(
             result_file = res_file,
             file_G0 = '/home/zy/workspace/viscojapan/tests/share/G0_He50km_VisM6.3E18_Rake83.h5',
             files_Gs = ['/home/zy/workspace/viscojapan/tests/share/G1_He50km_VisM1.0E19_Rake83.h5',
