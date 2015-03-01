@@ -5,8 +5,6 @@ from os.path import join
 from viscojapan.pollitz.compute_greens_function \
      import ComputeGreensFunction
 
-from epochs import epochs
-
 epochs = range(0,2000, 60)
 
 subflts_files_rake90 = \
