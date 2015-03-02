@@ -7,7 +7,7 @@ import viscojapan as vj
 
 FNULL = open(os.devnull, 'w')
 
-fid = vm.fm.FaultFileReader('../fault_model/fault_bott120km.h5')
+fid = vj.fm.FaultFileReader('../fault_model/fault_bott120km.h5')
 fault_bottom_depth = fid.depth_bottom
 fault_top_depth = fid.depth_top
 
