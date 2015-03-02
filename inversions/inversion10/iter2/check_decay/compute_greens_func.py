@@ -5,7 +5,7 @@ from os.path import join
 from viscojapan.pollitz.compute_greens_function \
      import ComputeGreensFunction
 
-epochs = range(0,2000, 60)
+epochs = range(0,200000, 1000)
 
 subflts_files_rake90 = \
               sorted(glob.glob('../fault_model/subflts_bott80km_rake90/flt_0154'))
@@ -20,7 +20,7 @@ def add_task_nongravity(mod_str, rake, mode_num):
         file_sites = 'near_stations.in',
         earth_file = join(earth_file_dir, 'earth.model_' + mod_str),
         earth_file_dir = earth_file_dir,
-        outputs_dir = 'outs_'+mod_str+'_Rake%2d'%rake,
+        outputs_dir = 'outs',
         subflts_files = subflts_files,
         controller_file = 'pool.config',
         )
