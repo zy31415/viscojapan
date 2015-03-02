@@ -23,6 +23,10 @@ class GMT(GMTGuru):
             self.save_ps(filename)
         elif ext == '.pdf':
             self.save_pdf(filename)
+        elif ext == '.png':
+            self.save_png(filename)
+        elif ext == '.jpeg':
+            self.save_jpeg(filename)
         else:
             raise NotImplementedError()
 
@@ -38,6 +42,21 @@ class GMT(GMTGuru):
         self.save_ps(fn + '.ps')        
         self.ps2raster(fn + '.ps', T='f', **kwargs)
         os.remove(fn + '.ps')
+
+    def save_png(self, filename, **kwargs):
+        _assert_file_name_extension(filename, '.png')
+        fn, ext = os.path.splitext(filename)
+        self.save_ps(fn + '.ps')
+        self.ps2raster(fn + '.ps', T='g', **kwargs)
+        os.remove(fn + '.ps')
+
+    def save_jpeg(self, filename, **kwargs):
+        _assert_file_name_extension(filename, '.jpeg')
+        fn, ext = os.path.splitext(filename)
+        self.save_ps(fn + '.ps')
+        self.ps2raster(fn + '.ps', T='j', **kwargs)
+        os.remove(fn + '.ps')
+
 
     def save_shell_script(self, filename, output_file=None):
         self.gplt.save_shell_script(filename, output_file)

@@ -16,6 +16,7 @@ class MagnitudeContoursPlotter(object):
              contours = [0.001, 0.0026, 0.005,0.01,0.1,0.2],
              if_topo = True,
              unit_label = 'm',
+             title = '',
     ):
         gmt = pGMT.GMT()
         gmt.gmtset('ANNOT_FONT_SIZE_PRIMARY','9',
@@ -42,7 +43,7 @@ class MagnitudeContoursPlotter(object):
                     lat2 = north,
                     wid = '9i',
                     ), # projection
-            B = '20', U='18/25/0',
+            B = '20:."%s":'%title, U='18/25/0',
             K = '')
 
         # topo
@@ -86,6 +87,7 @@ class MagnitudeContoursPlotter(object):
         # plot plate boundary
         vj.gmt.plot_plate_boundary(gplt, color='100')
         vj.gmt.plot_focal_mechanism_JMA(gplt,scale=0.2, fontsize=0)
+
         gplt.finish()
 
         gmt.save(output_file)

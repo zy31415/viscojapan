@@ -11,4 +11,23 @@ fault (dep<=80)
 iter2
 Compute longer dates.
 
+iter3
+Model0:
+visM = 8.9E18
+He = 46
+rake = 84
 
+Model1:
+visM = 9.9E18
+He = 46
+rake = 84.01
+
+Model2:
+visM = 8.9E18
+He = 50
+rake = 84
+
+Model3:
+visM = 8.9E18
+He = 46
+rake = 85
