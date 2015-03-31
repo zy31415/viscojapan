@@ -45,13 +45,15 @@ class Figure(object):
     def __init__(self,
                  caption = None,
                  label = None,
-                 if_continued = False):
+                 if_continued = False,
+                 if_centering = True):
         self._subfigures = []
 
         self.caption = caption
         self.label = label
 
         self.if_continued = if_continued
+        self.if_centering = if_centering
 
     def append_subfigure(self, sub):
         self._subfigures.append(sub)
@@ -63,8 +65,9 @@ class Figure(object):
         self._print_suffix(file=file)        
 
     def _print_prefix(self, file=sys.stdout):
-        print('''\\begin{figure}[h]
-    \\centering''', file=file)
+        print('\\begin{figure}[h]', file=file)
+        if self.if_centering:
+            print('\\centering', file=file)
         if self.if_continued:
             print('''    \\ContinuedFloat''', file=file)
 

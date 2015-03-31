@@ -8,3 +8,4 @@ from .plot_L_curve import *
 from .plot_coseismic_disp import *
 from .utils import *
 from .others import *
+from .plot_time_series_and_residual import *

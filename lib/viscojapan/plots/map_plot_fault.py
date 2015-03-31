@@ -33,9 +33,12 @@ class MapPlotFault(MapPlot):
         return self.basemap.pcolor(LLons, LLats, vval, latlon=True,
                             **kwargs)
         
-    def plot_slip(self, m, cmap=None, clim=None):        
-        self.pcolor_on_fault(m, cmap = cmap) 
-        cb = plt.colorbar()
+    def plot_slip(self, m, cmap=None, clim=None, zorder=0,
+                  cb_shrink = 0.8,
+                  cb_pad = 0.2
+                  ):
+        self.pcolor_on_fault(m, cmap = cmap, zorder=zorder)
+        cb = plt.colorbar(shrink=cb_shrink, pad=cb_pad)
         plt.clim(clim)
         cb.set_label('slip(m)')
 

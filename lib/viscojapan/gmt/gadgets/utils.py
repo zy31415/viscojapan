@@ -6,7 +6,7 @@ from ...fault_model import FaultFileReader
 
 from ..share import file_etopo1, topo_cpts
 
-__all__=['plot_vector_legend', 'plot_etopo1']
+__all__=['plot_vector_legend', 'plot_etopo1', 'plot_polygon']
 
 def plot_vector_legend(gplt,
                        legend_len , scale,
@@ -63,6 +63,16 @@ def plot_etopo1(gplt, A='-70/20', file_topo_cpt=topo_cpts['afrikakarte']):
     file_topo_cut.close()
     file_topo_grad.close()
 
-
-
+def plot_polygon(gplt, points,
+                 lw = 'thick',
+                 color = 'red'):
+    with tempfile.NamedTemporaryFile('w+t') as fid:
+        for point in points:
+            fid.write('%f %f\n'%(point[0], point[1]))
+        fid.seek(0)
+        gplt.psxy(
+            fid.name,
+            R = '', J = '',
+            O = '', K = '', L='', W='{lw},{color}'.format(lw=lw, color=color),
+        )
     

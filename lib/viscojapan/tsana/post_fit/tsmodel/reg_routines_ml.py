@@ -65,7 +65,7 @@ who don's like multi-inheritance, 2. composition.
             ostr2 = "Matrix is singular!"
         except FailBigChq:
             for cf in self:
-                cf._func.parsupdate(-cf.R)
+                cf.func.parsupdate(-cf.R)
             self.lam *= 10
             ostr2 = "Larger chisq! Return back!"
         except FailOverCorrection:
@@ -218,8 +218,8 @@ class JointMLReg(JointRegMod, MLUtils):
         bak_sub(LC,RC,[])
         for cf in self.cfs:
             bak_sub(cf.L,cf.R,RC)
-            cf._func.ck_parsupdate(cf.R)
-            cf._func.parsupdate(cf.R)
+            cf.func.ck_parsupdate(cf.R)
+            cf.func.parsupdate(cf.R)
 
     def uncertainty(self):
         """ Estimate uncertainty.

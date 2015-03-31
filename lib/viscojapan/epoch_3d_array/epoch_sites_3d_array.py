@@ -39,7 +39,7 @@ class EpochSites3DArray(Epoch3DArray):
 
     def assert_in_sites(self, sites):
         for s in sites:
-            assert s in self._sites
+            assert s in self._sites, "%s is not in the sites list."%s
 
     def get_sites(self):
         return self._sites

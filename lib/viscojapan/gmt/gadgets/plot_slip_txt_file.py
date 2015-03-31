@@ -187,17 +187,7 @@ class GMTSlipPlotter(object):
             B='{tick_interval}::/:m:'.format(tick_interval=tick_interval),
             )
             
-            
-##        with tempfile.NamedTemporaryFile('w+t') as text:
-##            text.write('''#
-##B %s 0.1 0.2 -Baf::/:m:
-##'''%(self.cpt_file))
-##            text.seek(0,0)
-##            self.gplt.pslegend(
-##                text.name, R='', J='', O='', K='',
-##                F='+gazure1', C='0.04i/0.07i', L='1.2',
-##                D='143.5/35.2/4/1.2/BL'
-##                )
+
         
 
     

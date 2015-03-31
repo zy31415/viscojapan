@@ -133,7 +133,7 @@ class JointRegMod(RegMod):
         RegMod.__init__(self)
         self.cfs = cfs
         if csz == None:
-            self.csz = cfs[0]._func.get_ncp()
+            self.csz = cfs[0].func.get_ncp()
         else:
             self.csz = csz
 

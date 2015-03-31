@@ -57,5 +57,5 @@ if __name__ == '__main__':
             print(s)
             c()
     else:
-        cmd[model]()
+        cmd[int(model)]()
 

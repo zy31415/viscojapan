@@ -20,10 +20,10 @@ def get_epicentral_distance(site):
         dis /=1000. # m => km
         return dis
 
-def sorted_by_epicentral_distance(sites, ):
+def sorted_by_epicentral_distance(sites, reverse=False):
     dist = get_epicentral_distance(sites)
     dic1 = {s:d for s, d in zip(sites, dist)}
-    tp = sorted(dic1.items(), key=lambda x: x[1])
+    tp = sorted(dic1.items(), key=lambda x: x[1],reverse=reverse)
     sites_sorted = [ii[0] for ii in tp]
     dist_sorted = [ii[1] for ii in tp]
     return Sites(sites_sorted), dist_sorted

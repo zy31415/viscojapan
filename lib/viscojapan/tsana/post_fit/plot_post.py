@@ -30,7 +30,7 @@ def plot_cf(cf, color):
     t1 = min(t)
     t2 = max(t)
     ls=200
-    plot_func(cf._func,linspace(t1,t2,ls))
+    plot_func(cf.func,linspace(t1,t2,ls))
     plt.title(cf.SITE+'-'+cf.CMPT)
     plt.gcf().autofmt_xdate()
     

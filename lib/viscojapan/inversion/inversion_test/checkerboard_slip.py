@@ -3,7 +3,10 @@ import warnings
 from numpy import zeros
 
 from viscojapan.fault_model import FaultFileReader
+
 from ...utils import assert_nonnegative_integer
+
+__all__ = ['gen_checkerboard_slip','gen_checkerboard_slip_from_fault_file','gen_checkerboard_slip2']
 
 def gen_checkerboard_slip(num_subflts_dip, num_subflts_strike,
                            dip_patch_size=1,  strike_patch_size=1):

@@ -64,16 +64,25 @@ class VecFieldPlotter(object):
             )
 
     def plot_vec_legend(
-        self,
-        lon,
-        lat,
-        leg_len,
-        leg_txt,
-        text_offset_lon = 0.1,
-        text_offset_lat = 0.1,
-        ):
+            self,
+            lon,
+            lat,
+            leg_len,
+            leg_txt,
+            text_offset_lon = 0.1,
+            text_offset_lat = 0.1,
+            if_vertical = False,
+            ):
+
+        if if_vertical:
+            leg_x = 0
+            leg_y = leg_len
+        else:
+            leg_x = leg_len
+            leg_y = 0
+
         with tempfile.NamedTemporaryFile(mode='w+t') as text:
-            text.write('%f %f %f 0.'%(lon, lat, leg_len))
+            text.write('%f %f %f %f'%(lon, lat, leg_x, leg_y))
             text.seek(0,0)
             self.gplt.psvelo(
                 text.name,

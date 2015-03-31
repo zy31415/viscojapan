@@ -1,5 +1,7 @@
 __author__ = 'zy'
 
+from os.path import exists
+
 import numpy as np
 import h5py
 
@@ -128,6 +130,7 @@ class Slip(Epoch3DArray):
     def load(cls,file,
              memory_mode = False # if memory_mode is True, all the data will be loaded into memory.
     ):
+        assert exists(file), "File %s doesn't not exist"%file
         fid = h5py.File(file,'r')
         if memory_mode:
             array_3d = fid[cls.HDF5_DATASET_NAME_FOR_3D_ARRAY][...]

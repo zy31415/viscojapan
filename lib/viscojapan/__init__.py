@@ -21,7 +21,7 @@ from . import fault_model as fm
 from . import latex
 from . import sites
 from . import sites_db
-from . import moment
+from . import moment as mo
 from . import epoch_3d_array
 
 from .test_utils import MyTestCase

@@ -141,7 +141,7 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
         if if_ylim:
             plt.ylim(calculate_lim(y))
 
-        plt.ylabel(r'm')
+        plt.ylabel(r'meter')
         plt.legend(loc=loc, prop={'size':leg_fs})
         plt.gcf().autofmt_xdate()
         plt.title('Cumulative Disp.: {site} - {cmpt}'.format(
@@ -162,7 +162,7 @@ class PredictedTimeSeriesPlotter(object): #TODO: this class is not coherent and 
         plt.grid('on')
         
         plt.legend(loc=loc, prop={'size':leg_fs})
-        plt.ylabel(r'm')
+        plt.ylabel(r'meter')
         plt.gcf().autofmt_xdate()
         plt.title('Postseismic Disp. : {site} - {cmpt}'.format(
             site = get_site_true_name(site_id = site),
