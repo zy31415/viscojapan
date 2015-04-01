@@ -2,6 +2,8 @@ from .stat0A import stat0A
 from .stat2gA import stat2gA
 from .decay import decay
 from .decay4m import *
+from .decay4 import *
 from .vsphm import *
+from .vsphdep import *
 from .vtordep import vtordep
 from .strainA import strainA
