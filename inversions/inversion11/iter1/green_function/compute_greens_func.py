@@ -17,8 +17,8 @@ subflts_files_rake90 = \
 
 cmd = {}
 
-def add_task_nongravity(mod_str, rake, mode_num):
-    earth_file_dir = join('../earth_model_nongravity/', mod_str)
+def add_task_gravity(mod_str, rake, mode_num):
+    earth_file_dir = join('../earth_model_gravity/', mod_str)
     subflts_files = globals()['subflts_files_rake%02d'%rake]
     cmd[mode_num] = ComputeGreensFunction(
         epochs = epochs,
@@ -30,10 +30,10 @@ def add_task_nongravity(mod_str, rake, mode_num):
         controller_file = 'pool.config',
         )
 
-add_task_nongravity('He50km_VisM6.3E18', 83, 0)
-add_task_nongravity('He50km_VisM1.0E19', 83, 1)
-add_task_nongravity('He60km_VisM6.3E18', 83, 2)
-add_task_nongravity('He50km_VisM6.3E18', 90, 3)
+add_task_gravity('He50km_VisM6.3E18', 83, 0)
+add_task_gravity('He50km_VisM1.0E19', 83, 1)
+add_task_gravity('He60km_VisM6.3E18', 83, 2)
+add_task_gravity('He50km_VisM6.3E18', 90, 3)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compute G matrix.')
