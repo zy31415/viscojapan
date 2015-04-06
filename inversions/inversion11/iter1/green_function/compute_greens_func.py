@@ -31,7 +31,7 @@ def add_task_gravity(mod_str, rake, mode_num):
         )
 
 add_task_gravity('He50km_VisM6.3E18', 83, 0)
-add_task_gravity('He50km_VisM1.0E19', 83, 1)
+add_task_gravity('He50km_VisM9.5E18', 83, 1)
 add_task_gravity('He60km_VisM6.3E18', 83, 2)
 add_task_gravity('He50km_VisM6.3E18', 90, 3)
 

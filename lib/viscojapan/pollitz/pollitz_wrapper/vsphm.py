@@ -8,7 +8,7 @@ class vsphm(PollitzWrapper):
     ''' vsphm
 Determine spheroidal motion eigenfunctions. Gravitational program.
 Input file: decay4.out
-Output file: vsph.out
+Output file: vsph.outJ
 '''
     def __init__(self,
                  earth_model = None,
