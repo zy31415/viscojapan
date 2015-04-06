@@ -3,12 +3,11 @@ from os.path import join
 import argparse
 
 from viscojapan.pollitz.pollitz_wrapper import stat0A
-from viscojapan.fault_model import FaultFileReader
 import viscojapan as vj
 
 FNULL = open(os.devnull, 'w')
 
-fid = FaultFileReader('../fault_model/fault_bott120km.h5')
+fid = vm.fm.FaultFileReader('../fault_model/fault_bott80km.h5')
 fault_bottom_depth = fid.depth_bottom
 fault_top_depth = fid.depth_top
 
