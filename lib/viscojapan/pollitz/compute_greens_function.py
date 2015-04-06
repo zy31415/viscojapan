@@ -3,7 +3,6 @@ import os
 import subprocess
 
 from viscojapan.pollitz.pollitz_wrapper import stat2gA, strainA
-from .pollitz_outputs_to_epoch_file import PollitzOutputsToEpochalData
 from dpool2 import Task, DPool
 
 __all__ = ['ComputeGreensFunction']

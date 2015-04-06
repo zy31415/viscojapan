@@ -8,7 +8,7 @@ import viscojapan as vj
 
 FNULL = open(os.devnull, 'w')
 
-fid = FaultFileReader('../fault_model/fault_bott80km.h5')
+fid = FaultFileReader('../fault_model/fault_bott120km.h5')
 fault_bottom_depth = fid.depth_bottom
 fault_top_depth = fid.depth_top
 
@@ -31,7 +31,7 @@ def add_model(model_str, l_max, model_num):
         stdout = FNULL
         )
 
-    cmd2['%d'%model_num] = vj.pollitz.ComputeEarthModelVISCO1D(
+    cmd2['%d'%model_num] = vj.pollitz.ComputeEarthModelVISCO1DNonGravity(
         earth_file = join(model_str, 'earth.model_'+model_str),
         l_max = lmax,
         outputs_dir = model_str,
@@ -50,7 +50,7 @@ if __name__ == '__main__':
                         help='Compute earth model.',
                         )
     args = parser.parse_args()
-    model = args.model[0]
+    model = args._model[0]
     if model =='all':
         for c1, c2 in zip(cmd1, cmd2):
             cmd1[c1]()

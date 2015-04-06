@@ -6,7 +6,7 @@ from numpy import inf
 import viscojapan as vj
 from viscojapan.earth_model import raw_file_He50km, raw_file_He60km
 
-fid = vj.FaultFileReader('../fault_model/fault_bott120km.h5')
+fid = vj.fm.FaultFileReader('../fault_model/fault_bott80km.h5')
 fault_bottom_depth = fid.depth_bottom
 
 
