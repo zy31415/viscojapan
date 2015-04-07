@@ -35,7 +35,8 @@ Return:
     Jacobian vector    
 '''
         dG_stacked = self.dG.stack(epochs)
-        m_stacked = self.slip0.stack()
+
+        m_stacked = self.slip0.respace(epochs).stack()
 
         _check_shape_for_matrix_product(dG_stacked, m_stacked)
         
