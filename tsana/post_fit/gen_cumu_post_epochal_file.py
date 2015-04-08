@@ -19,7 +19,7 @@ for nth, site in enumerate(sites):
 epochs = list(tp[:,0])
 
 with h5py.File('cumu_post_with_seafloor.h5','w') as fid:
-    fid['data3d'] = data
+    fid['data3d'] = nan_to_num(data)
     fid['epochs'] = epochs
     fid['sites'] = sites
 
