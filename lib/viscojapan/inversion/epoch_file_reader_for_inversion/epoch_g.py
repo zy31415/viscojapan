@@ -1,3 +1,5 @@
+from os.path import exists
+
 import numpy as np
 import h5py
 
@@ -46,6 +48,8 @@ class EpochG(GClass):
     def __init__(self,file_name,
                  mask_sites=None,
                  memory_mode = False):
+
+        assert exists(file_name), 'File %s does not exist!'%file_name
 
         fid = h5py.File(file_name,'r')
 

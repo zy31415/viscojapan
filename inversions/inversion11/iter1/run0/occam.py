@@ -22,7 +22,7 @@ basis = vj.inv.basis.BasisMatrix.create_from_fault_file(fault_file, num_epochs =
 
 inv = vj.inv.OccamDeconvolution(
     file_G0 = '../green_function/G0_He50km_VisM6.3E18_Rake83.h5',
-    files_Gs = ['../green_function/G1_He50km_VisM1.0E19_Rake83.h5',
+    files_Gs = ['../green_function/G1_He50km_VisM9.5E18_Rake83.h5',
                 '../green_function/G2_He60km_VisM6.3E18_Rake83.h5',
                 '../green_function/G3_He50km_VisM6.3E18_Rake90.h5'
                 ],
