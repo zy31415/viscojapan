@@ -39,5 +39,6 @@ cm2 = vj.pollitz.ComputeEarthModelVISCO1D(
     )
 
 cm1()
-cm2()
+cm2.run()
+
 
