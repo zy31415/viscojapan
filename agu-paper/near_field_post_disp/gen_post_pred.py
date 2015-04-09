@@ -16,7 +16,7 @@ sites = [site.decode() for site in np.loadtxt(sites_file,'4a')]
 
 sites = vj.sites_db.SitesDB().gets(sites)
 
-with open('post_1344_pred', 'wt') as fid:
+with open('share/post_1344_pred', 'wt') as fid:
     for d, s in zip(post, sites):
         lon = s.lon
         lat = s.lat

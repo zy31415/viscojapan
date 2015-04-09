@@ -5,7 +5,7 @@ import viscojapan as vj
 
 
 fault_file = '../../../fault_model/fault_bott80km.h5'
-earth_file = '../../../earth_model_nongravity/He50km_VisM6.3E18/earth.model_He50km_VisM6.3E18'
+earth_file = '../../../earth_model_gravity/He50km_VisM6.3E18/earth.model_He50km_VisM6.3E18'
 
 ##
 reader = vj.inv.ResultFileReader('../../outs/nrough_06_naslip_11.h5')
