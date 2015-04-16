@@ -10,7 +10,7 @@ plotter = vj.inv.PredictedTimeSeriesPlotter(
     result_file = result_file,
     )
 
-site = 'X310'
+site = 'X375'
 
 cmpt='e'
 plotter.plot_R_co(site,cmpt, label='Rco')

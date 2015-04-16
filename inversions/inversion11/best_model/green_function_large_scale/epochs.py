@@ -4,4 +4,6 @@ epochs_long = list(range(365*5, 365*27+1, 365))
 
 epochs += epochs_long
 
-epochs += [36500]
+epochs_long_long = list(range(365*30, 365*100+1, 365*10))
+
+epochs += epochs_long_long

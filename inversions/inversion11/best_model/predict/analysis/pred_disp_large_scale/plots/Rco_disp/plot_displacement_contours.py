@@ -29,7 +29,7 @@ for epoch in epochs:
         
     plt = vj.displacement.plot.MagnitudeContoursPlotter()
     plt.plot(lons, lats, mags,
-             'plots/%s_day%04d.pdf'%(cmpt,epoch),
+             'plots/%s_day%04d.png'%(cmpt,epoch),
 #             contours = contours,
              if_topo = False,
              unit_label = 'm',

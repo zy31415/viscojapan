@@ -3,7 +3,7 @@ from os.path import join
 
 import viscojapan as vj
 
-epochs = list(range(0,1621, 60)) + list(range(365*5, 365*27+1, 365))
+from epochs import epochs
 
 slip = vj.epoch_3d_array.Slip.load('slip.h5')
 
