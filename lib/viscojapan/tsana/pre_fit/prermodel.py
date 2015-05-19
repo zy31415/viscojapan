@@ -234,7 +234,7 @@ Logic index indicating outliers.
         return sqrt(S**2 + C**2)
 
 if __name__=='__main__':
-        
+    # local testing code        
     mod=PreRModel()
 
     # model:

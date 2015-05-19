@@ -33,4 +33,5 @@ doc = latex.LatexDoc()
 doc.elements = [fig]
 
 cmpl = latex.PDFComplie(doc)
-cmpl.compile('_2EXPs_EXP_pred.pdf')
+#cmpl.save('_2EXPs_EXP_pred.pdf')
+cmpl.save('_2EXPs_EXP_pred.png', density=300)

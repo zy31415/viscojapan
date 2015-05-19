@@ -47,7 +47,8 @@ vj.gmt.plot_focal_mechanism_USGS_wphase(
 
 gplt.finish()
 
-gmt.save('fault_model.pdf')
+#gmt.save('fault_model.pdf')
+gmt.save('fault_model.png')
 
 
 

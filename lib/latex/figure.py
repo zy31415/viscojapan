@@ -137,6 +137,9 @@ class PDFComplie(object):
         self.latex = latex
 
     def compile(self, out_file):
+        _, ext = os.path.splitext(out_file)
+        assert ext == '.pdf', "%s should be pdf file."%out_file
+
         fid = tempfile.NamedTemporaryFile(mode='w+t', dir='./')
         self.latex.print(fid)
         fid.seek(0)
@@ -158,6 +161,38 @@ class PDFComplie(object):
         fid.close()
         self._clean(base_name)
         os.rename(base_name+'.pdf', out_file)
+
+    def save(self, out_file, **kwargs):
+        fn, ext = os.path.splitext(out_file)
+
+        if ext == '.pdf':
+            self.save_pdf(out_file, **kwargs)
+        elif ext == '.png':
+            self.save_png(out_file, **kwargs)
+        else:
+            raise ValueError('Not recognized file type: %s'%out_file)
+
+    def save_pdf(self, out_file):
+        fn, ext = os.path.splitext(out_file)
+        assert ext == '.pdf', "%s should be pdf file."%out_file
+
+        self.compile(out_file)
+
+    def save_png(self, out_file, density=200):
+        fn, ext = os.path.splitext(out_file)
+        assert ext == '.png', "%s should be png file."%out_file
+
+        with tempfile.NamedTemporaryFile(suffix='.pdf') as fid:
+            self.save_pdf(fid.name)
+            fid.seek(0)
+            subprocess.check_call(
+                ['convert', '-density', '{density}'.format(density=density),
+                 '-trim',
+                 fid.name,
+                 '-quality', '100',
+                 '-sharpen', '0x1.0',
+                 out_file,
+                 ])
 
     def _clean(self, basename):
         os.remove(basename + '.aux')

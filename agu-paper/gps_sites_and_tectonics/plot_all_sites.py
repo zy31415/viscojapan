@@ -87,7 +87,8 @@ S 0.1i d 0.16 {color_IGS} faint,{color_IGS} 0.3i IGS stations
     
 gplt.finish()
 
-gmt.save('all_networks_sites.pdf')
+#gmt.save('all_networks_sites.pdf')
+gmt.save('all_networks_sites.png')
 
 
 
