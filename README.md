@@ -14,11 +14,11 @@
 	this earthquake and do the linear and non-linear modeling to infer earthquake 
 	parameters and the rheological parameters of the Earth.
 
-1) GPS time series management;
-2) GPS time series modeling­ Linear modeling of pre­seismic GPS time series;
+1) GPS time series management;  
+2) GPS time series modeling­ Linear modeling of pre­seismic GPS time series;  
 3) GPS time series modeling ­ Nonlinear inversion of co­seismic slip and afterslip 
-	(solve for more than 10, 000 parameters);
-4) Results analysis and report.
+	(solve for more than 10, 000 parameters);  
+4) Results analysis and report.  
 
 ##	Languages used
 
