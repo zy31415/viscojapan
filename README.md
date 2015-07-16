@@ -16,22 +16,23 @@
 
 ##	Languages used
 
-* Python3 : Python is the main language used to write this package.
-* R	 	  : R is integrated with Python to do linear regression analysis of 
+* 	Python3 : Python is the main language used to write this package.
+* 	R	 	  : R is integrated with Python to do linear regression analysis of 
 				GPS time series.
-* C/C++   : Some parts of Python are written with C/C++ to enhance 
+* 	C/C++   : Some parts of Python are written with C/C++ to enhance 
 				performance.
 
 ## Third-party Python libraries required
-	* numpy : for scientific computation
-	* scipy : for scientific computation
-	* matplotlib : for 2D plotting
-	* basemap : for 2D geographic plotting
-	* rpy2 : R python wrapper
-	* h5py : For results storage and efficient large data accessing
-	* cvxopt : Python library for convex optimization
-	* pyproj : Performs cartographic transformations and geodetic computations
-	* simplekml : generate kml (or kmz) for displaying data on google map/earth
+
+* 	numpy : for scientific computation
+* 	scipy : for scientific computation
+* 	matplotlib : for 2D plotting
+* 	basemap : for 2D geographic plotting
+* 	rpy2 : R python wrapper
+* 	h5py : For results storage and efficient large data accessing
+* 	cvxopt : Python library for convex optimization
+* 	pyproj : Performs cartographic transformations and geodetic computations
+* 	simplekml : generate kml (or kmz) for displaying data on google map/earth
 	
 
 ##	Author
