@@ -19,18 +19,55 @@
     </section>
 
     <section class="main-content">
-      <pre><code>VISCOJAPAN - deformation analysis and modeling for the 2011 Tohoku-oki earthquake
----------------------------------------------------------------------------------
+      <h1>
+<a id="viscojapan" class="anchor" href="#viscojapan" aria-hidden="true"><span class="octicon octicon-link"></span></a>VISCOJAPAN</h1>
+
+<pre><code>Deformation Analysis and Modeling for the 2011 Tohoku-Oki Earthquake
 </code></pre>
 
-<ul>
-<li><p>Introduction</p></li>
-<li>
-<p>Author</p>
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>Yang Zhang (<a href="mailto:zy31415@gmail.com">zy31415@gmail.com</a>)</p>
-</li>
-</ul>
+<pre><code>On March 11th, 2011, a giant megathrust happened off the Pacific coast of 
+Tohoku, Japan. This earthquake was the most powerful earthquake ever recorded to 
+have hit Japan and causes extensive co- and post-seismic deformation, which
+is recorded by more than one thousands GPS stations in and around Japan.
+
+This software package is designed for the analyze of GPS time series that are related with
+this earthquake and do the linear and non-linear modeling to infer earthquake 
+parameters and the rheological parameters of the Earth.
+</code></pre>
+
+<h2>
+<a id="languages-used" class="anchor" href="#languages-used" aria-hidden="true"><span class="octicon octicon-link"></span></a>Languages used</h2>
+
+<pre><code>* Python3 : Python is the main language used to write this package.
+* R       : R is integrated with Python to do linear regression analysis of 
+            GPS time series.
+* C/C++   : Some parts of Python are written with C/C++ to enhance 
+            performance.
+</code></pre>
+
+<h2>
+<a id="third-party-python-libraries-required" class="anchor" href="#third-party-python-libraries-required" aria-hidden="true"><span class="octicon octicon-link"></span></a>Third-party Python libraries required</h2>
+
+<pre><code>* numpy : for scientific computation
+* scipy : for scientific computation
+* matplotlib : for 2D plotting
+* basemap : for 2D geographic plotting
+* rpy2 : R python wrapper
+* h5py : For results storage and efficient large data accessing
+* cvxopt : Python library for convex optimization
+* pyproj : Performs cartographic transformations and geodetic computations
+* simplekml : generate kml (or kmz) for displaying data on google map/earth
+</code></pre>
+
+<h2>
+<a id="author" class="anchor" href="#author" aria-hidden="true"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<pre><code>Yang Zhang (zy31415@gmail.com)
+University of Nevada, Reno
+</code></pre>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/zy31415/viscojapan">Viscojapan</a> is maintained by <a href="https://github.com/zy31415">zy31415</a>.</span>
