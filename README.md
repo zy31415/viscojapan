@@ -16,10 +16,10 @@
 
 ##	Languages used
 
-	* Python3 : Python is the main language used to write this package.
-	* R	 	  : R is integrated with Python to do linear regression analysis of 
+* Python3 : Python is the main language used to write this package.
+* R	 	  : R is integrated with Python to do linear regression analysis of 
 				GPS time series.
-	* C/C++   : Some parts of Python are written with C/C++ to enhance 
+* C/C++   : Some parts of Python are written with C/C++ to enhance 
 				performance.
 
 ## Third-party Python libraries required
