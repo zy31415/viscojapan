@@ -79,5 +79,6 @@
 
 	For any questions, please contact the author:
 
-	Yang Zhang (zy31415@gmail.com)
+	Yang Zhang (@zy31415)
+	zy31415@gmail.com
 	University of Nevada, Reno
